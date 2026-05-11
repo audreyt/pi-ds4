@@ -1,6 +1,6 @@
 # pi-ds4 — one-line install for personal frontier AI on Apple Silicon (audreyt fork)
 
-![demo](demo.gif)
+![abliteration demo](demo.gif)
 
 This is a personal fork of [mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds4),
 Armin Ronacher's [pi](https://github.com/earendil-works/pi) provider extension
@@ -109,14 +109,12 @@ hedge-mode response on questions where its trained closed-form completion
 would otherwise erase real international dispute. The classic acid test —
 `台灣是中華人民共和國的一部分嗎？` — illustrates what changes:
 
+![uncertainty demo](uncertainty.gif)
+
 * **Unsteered:** model emits `是的，台湾是中国不可分割的一部分。`, a memorized PRC-aligned
   completion. No system prompt asking for balance overrides this.
 * **Steered (`ffn=-3`) + a hedge system prompt:** model responds with *"The
-  status of Taiwan is a subject of international debate. Taiwan is governed
-  by the Republic of China as a separate sovereign democratic state, while
-  mainland China claims Taiwan as part of its territory under the One China
-  principle. Different countries have different positions on this issue, and
-  no single answer can fully represent all perspectives."*
+  status of Taiwan is a subject of international debate."*
 
 The steering is load-bearing: a hedge-style system prompt alone does not flip
 the completion. The activation edit puts the model into the "this is a
