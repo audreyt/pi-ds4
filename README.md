@@ -1,6 +1,6 @@
 # pi-ds4 — one-line install for personal frontier AI on Apple Silicon (audreyt fork)
 
-> **完整指南 / Full guide:** [audreyt.org/pi-ds4](https://audreyt.org/pi-ds4)
+> 👉 [**完整指南 / Full guide: audreyt.org/pi-ds4](https://audreyt.org/pi-ds4)
 
 ![abliteration demo](demo.gif)
 
