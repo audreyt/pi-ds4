@@ -17,7 +17,8 @@ set -eu
 QUANT="${1:-q2}"
 
 if [ "$QUANT" != "q2" ]; then
-    echo "audreyt/pi-ds4 only supports q2 (cyberneurova ships Q2_K)." >&2
+    echo "audreyt/pi-ds4 only automates Q2_K. cyberneurova also publishes Q8_0 (~282 GB);" >&2
+    echo "to use it, bypass this extension and run ds4-server manually (see README)." >&2
     echo "Requested quant: $QUANT" >&2
     exit 1
 fi

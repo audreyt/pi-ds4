@@ -7,7 +7,7 @@ Armin Ronacher's [pi](https://github.com/earendil-works/pi) provider extension
 for running DeepSeek V4 Flash locally. It packages the engineering in
 [audreyt/ds4](https://github.com/audreyt/ds4) into a one-line `pi install`,
 so anyone with a 128 GB Apple Silicon Mac can run a frontier-class
-671-billion-parameter MoE model end-to-end on their own laptop — no cloud
+284-billion-parameter MoE model end-to-end on their own laptop — no cloud
 calls, no API costs, no per-token billing, no rate limits, ~440 prefill
 tokens/second, with the model's steerability dial under the user's control.
 
@@ -162,7 +162,7 @@ Same env vars as upstream, plus a couple of fork-specific ones:
 * `DS4_DOWNLOAD_SCRIPT` — absolute path to the model-download script. Default
   is the bundled `download_model.sh`.
 * `DS4_MPP` — Metal 4 MPP policy passed to `ds4-server --mpp`. Default `auto`
-  (engages validated MPP routes on M5/M6/A19/A20 + Metal 4 tensor API; falls
+  (engages validated MPP routes on M5 + Metal 4 tensor API; falls
   back automatically on older targets). Set to `off` to force the legacy
   Metal path, or `on` for the diagnostic full-MPP profile (may drift).
 * `DS4_DIR_STEERING_FILE` — directional steering vector path, resolved
@@ -173,8 +173,11 @@ Same env vars as upstream, plus a couple of fork-specific ones:
   `0` to disable steering entirely.
 * `DS4_DIR_STEERING_ATTN` — attention-output steering scale. Default `0`.
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout instead of `~/.pi/ds4/support`
-* `DS4_MODEL_QUANT` — only `q2` is currently supported (cyberneurova ships
-  Q2_K only). Default is auto-detected from RAM (≥128 GB → `q2`).
+* `DS4_MODEL_QUANT` — hard-coded to `q2`. The cyberneurova abliterated repo
+  publishes Q2_K (~99 GB) and Q8_0 (~282 GB); the bundled `download_model.sh`
+  only fetches Q2_K. Setting `DS4_MODEL_QUANT` to anything other than `q2`
+  raises at startup. To experiment with Q8_0, download the GGUF manually and
+  run `ds4-server` directly outside of pi.
 * `DS4_READY_TIMEOUT_MS` — server startup timeout.
 * `DS4_SERVER_BINARY` — custom `ds4-server` binary path.
 * `HF_TOKEN` — passed through to `curl` for HuggingFace downloads if set.

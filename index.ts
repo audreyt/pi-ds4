@@ -85,7 +85,9 @@ const WATCHDOG_POLL_MS = 2_000;
 const PROGRESS_NOTIFY_MS = 750;
 const PROGRESS_MAX_CHARS = 160;
 
-type ModelQuant = "q2" | "q4";
+// The cyberneurova abliterated GGUF only ships in Q2_K (~99 GB); the bundled
+// download_model.sh refuses any other quant. So this extension enforces q2 end-to-end.
+type ModelQuant = "q2";
 
 type ServerState = {
 	managedBy: string;
@@ -197,15 +199,19 @@ function truncateText(value: string, width: number, ellipsis = "", pad = false):
 
 function selectedModelQuant(): ModelQuant {
 	const forced = process.env.DS4_MODEL_QUANT?.toLowerCase();
-	if (forced === "q2" || forced === "q4") return forced;
-	if (forced) throw new Error(`Invalid DS4_MODEL_QUANT=${forced}; expected q2 or q4`);
+	if (forced && forced !== "q2") {
+		throw new Error(
+			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates Q2_K. Unset DS4_MODEL_QUANT or set it to q2. (To experiment with cyberneurova Q8_0, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
+		);
+	}
 
 	const ramGb = totalmem() / 1_000_000_000;
-	if (ramGb >= 256) return "q4";
-	if (ramGb >= 128) return "q2";
-	throw new Error(
-		`DeepSeek V4 Flash requires at least 128 GB RAM for the q2 model; detected ${ramGb.toFixed(1)} GB`,
-	);
+	if (ramGb < 128) {
+		throw new Error(
+			`DeepSeek V4 Flash Q2_K needs at least 128 GB RAM; detected ${ramGb.toFixed(1)} GB`,
+		);
+	}
+	return "q2";
 }
 
 async function ensureDirs(): Promise<void> {
