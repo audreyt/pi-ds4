@@ -35,7 +35,10 @@ process_args() {
 }
 
 process_start() {
-  ps -p "$1" -o lstart= 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' || true
+  # LC_ALL=C: BSD ps emits lstart in English; GNU procps localizes it. Force a
+  # stable locale so lease processStart strings written and read under different
+  # LANG/LC_TIME values still compare equal.
+  LC_ALL=C ps -p "$1" -o lstart= 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' || true
 }
 
 json_string_field() {

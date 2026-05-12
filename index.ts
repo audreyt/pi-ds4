@@ -49,12 +49,14 @@ const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 
 const BASE_URL = "http://127.0.0.1:8000";
 const API_BASE_URL = `${BASE_URL}/v1`;
-// --mpp auto is the ds4 default, but pass it explicitly so the policy is
-// visible in the server log and easy to override (set DS4_MPP via env, see
-// README).  On M5/M6/A19/A20-class Metal 4 hardware this engages the
-// validated late-layer-safe MPP routes for ~1.5x prefill speedup; on older
-// targets it falls back to the legacy Metal path automatically.
-const MPP_MODE = process.env.DS4_MPP ?? "auto";
+// --mpp is a Metal-only flag in audreyt/ds4 (CUDA / non-Darwin forks reject it).
+// On Darwin: default "auto" — passed explicitly so the policy is visible in the
+// server log; engages validated late-layer-safe MPP routes on M5/M6/A19/A20-class
+// Metal 4 hardware for ~1.5x prefill, and falls back to the legacy Metal path on
+// older targets automatically.
+// On non-Darwin: default "" — the flag is omitted entirely.
+// DS4_MPP env wins on both platforms; set to any non-empty value to pass it through.
+const MPP_MODE = process.env.DS4_MPP ?? (process.platform === "darwin" ? "auto" : "");
 // Directional steering: a negative --dir-steering-ffn scale amplifies the
 // "contested" direction stored in the .f32 file built from contested vs settled
 // prompts. audreyt/ds4 ships `dir-steering/out/uncertainty.f32` for this
@@ -68,7 +70,8 @@ const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "0";
 const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
 	? ["--dir-steering-file", STEERING_FILE, "--dir-steering-ffn", STEERING_FFN, "--dir-steering-attn", STEERING_ATTN]
 	: [];
-const SERVER_ARGS = ["--ctx", "100000", "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", "8192", "--mpp", MPP_MODE, ...STEERING_ARGS];
+const MPP_ARGS = MPP_MODE ? ["--mpp", MPP_MODE] : [];
+const SERVER_ARGS = ["--ctx", "100000", "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", "8192", ...MPP_ARGS, ...STEERING_ARGS];
 
 const HEARTBEAT_MS = 10_000;
 const LEASE_TTL_MS = 45_000;
@@ -408,7 +411,7 @@ class Ds4LogViewer implements Component {
 	}
 }
 
-async function execCapture(command: string, args: string[], timeoutMs = 2_000): Promise<string | undefined> {
+async function execCapture(command: string, args: string[], timeoutMs = 2_000, env?: NodeJS.ProcessEnv): Promise<string | undefined> {
 	return new Promise((resolvePromise) => {
 		let stdout = "";
 		let stderr = "";
@@ -431,7 +434,7 @@ async function execCapture(command: string, args: string[], timeoutMs = 2_000): 
 		timeout.unref?.();
 
 		try {
-			child = spawn(command, args, { stdio: ["ignore", "pipe", "pipe"] });
+			child = spawn(command, args, { stdio: ["ignore", "pipe", "pipe"], env });
 		} catch {
 			finish(undefined);
 			return;
@@ -451,7 +454,11 @@ async function processArgs(pid: number): Promise<string | undefined> {
 }
 
 async function processStart(pid: number): Promise<string | undefined> {
-	return (await execCapture("ps", ["-p", String(pid), "-o", "lstart="], 2_000))?.trim() || undefined;
+	// LC_ALL=C: GNU procps localizes lstart; BSD ps does not. Force a stable
+	// locale so the value written into the lease file under one LANG/LC_TIME
+	// still compares equal when re-read under another. Mirrors the same fix in
+	// ds4-watchdog.sh process_start().
+	return (await execCapture("ps", ["-p", String(pid), "-o", "lstart="], 2_000, { ...process.env, LC_ALL: "C" }))?.trim() || undefined;
 }
 
 async function getOwnProcessStart(): Promise<string> {

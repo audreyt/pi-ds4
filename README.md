@@ -162,9 +162,12 @@ Same env vars as upstream, plus a couple of fork-specific ones:
 * `DS4_DOWNLOAD_SCRIPT` — absolute path to the model-download script. Default
   is the bundled `download_model.sh`.
 * `DS4_MPP` — Metal 4 MPP policy passed to `ds4-server --mpp`. Default `auto`
-  (engages validated MPP routes on M5 + Metal 4 tensor API; falls
+  on macOS (engages validated MPP routes on M5 + Metal 4 tensor API; falls
   back automatically on older targets). Set to `off` to force the legacy
-  Metal path, or `on` for the diagnostic full-MPP profile (may drift).
+  Metal path, or `on` for the diagnostic full-MPP profile (may drift). On
+  non-Darwin platforms (e.g. running a CUDA fork of ds4 on Linux) the flag is
+  omitted by default since `--mpp` is Metal-only; set `DS4_MPP` explicitly if
+  your build accepts it.
 * `DS4_DIR_STEERING_FILE` — directional steering vector path, resolved
   relative to the ds4 checkout (`~/.pi/ds4/support/` by default). Default
   `dir-steering/out/uncertainty.f32`. See
