@@ -9,7 +9,8 @@ for running DeepSeek V4 Flash locally. It packages the engineering in
 so anyone with a 128 GB Apple Silicon Mac can run a frontier-class
 284-billion-parameter MoE model end-to-end on their own laptop — no cloud
 calls, no API costs, no per-token billing, no rate limits, ~440 prefill
-tokens/second, with the model's steerability dial under the user's control.
+tokens/second, ~30 inference tokens/second, with the model's steerability dial
+under the user's control.
 
 Same UX as upstream `mitsuhiko/pi-ds4` (one-line `pi install`, on-demand
 `ds4-server`, per-process lease, watchdog shutdown), with two fork-specific
