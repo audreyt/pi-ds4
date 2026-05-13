@@ -49,14 +49,14 @@ const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 
 const BASE_URL = "http://127.0.0.1:8000";
 const API_BASE_URL = `${BASE_URL}/v1`;
-// --mpp is a Metal-only flag in audreyt/ds4 (CUDA / non-Darwin forks reject it).
+// --mt is a Metal-only flag in audreyt/ds4 (CUDA / non-Darwin forks reject it).
 // On Darwin: default "auto" — passed explicitly so the policy is visible in the
-// server log; engages validated late-layer-safe MPP routes on M5/M6/A19/A20-class
+// server log; engages validated late-layer-safe Metal Tensor routes on M5/M6/A19/A20-class
 // Metal 4 hardware for ~1.5x prefill, and falls back to the legacy Metal path on
 // older targets automatically.
 // On non-Darwin: default "" — the flag is omitted entirely.
-// DS4_MPP env wins on both platforms; set to any non-empty value to pass it through.
-const MPP_MODE = process.env.DS4_MPP ?? (process.platform === "darwin" ? "auto" : "");
+// DS4_MT env wins on both platforms; DS4_MPP is accepted as a legacy env alias.
+const MT_MODE = process.env.DS4_MT ?? process.env.DS4_MPP ?? (process.platform === "darwin" ? "auto" : "");
 // Directional steering: a negative scale amplifies the fair stakeholder-framing
 // direction stored in the .f32 file. audreyt/ds4 ships
 // `dir-steering/out/uncertainty_ablit_imatrix.f32`, calibrated on the exact
@@ -76,8 +76,8 @@ const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "-0.5";
 const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
 	? ["--dir-steering-file", STEERING_FILE, "--dir-steering-ffn", STEERING_FFN, "--dir-steering-attn", STEERING_ATTN]
 	: [];
-const MPP_ARGS = MPP_MODE ? ["--mpp", MPP_MODE] : [];
-const SERVER_ARGS = ["--ctx", "100000", "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", "8192", ...MPP_ARGS, ...STEERING_ARGS];
+const MT_ARGS = MT_MODE ? ["--mt", MT_MODE] : [];
+const SERVER_ARGS = ["--ctx", "100000", "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", "8192", ...MT_ARGS, ...STEERING_ARGS];
 const REPRODUCIBLE = envFlagEnabled(process.env.DS4_REPRODUCIBLE, true);
 const REPRODUCIBLE_SEED = REPRODUCIBLE ? parseReproducibleSeed(process.env.DS4_REPRODUCIBLE_SEED) : 42;
 

@@ -187,13 +187,14 @@ Same env vars as upstream, plus a couple of fork-specific ones:
 * `DS4_REPRODUCIBLE_SEED` — stable seed used when `DS4_REPRODUCIBLE` is on.
   Default `42`. Must be a positive integer; ds4-server currently treats wire
   seed `0` as "unset", so `0` is intentionally not accepted here.
-* `DS4_MPP` — Metal 4 MPP policy passed to `ds4-server --mpp`. Default `auto`
-  on macOS (engages validated MPP routes on M5 + Metal 4 tensor API; falls
+* `DS4_MT` — Metal Tensor policy passed to `ds4-server --mt`. Default `auto`
+  on macOS (engages validated Metal Tensor routes on M5 + Metal 4 tensor API; falls
   back automatically on older targets). Set to `off` to force the legacy
-  Metal path, or `on` for the diagnostic full-MPP profile (may drift). On
+  Metal path, or `on` for the diagnostic full-Tensor profile (may drift). On
   non-Darwin platforms (e.g. running a CUDA fork of ds4 on Linux) the flag is
-  omitted by default since `--mpp` is Metal-only; set `DS4_MPP` explicitly if
-  your build accepts it.
+  omitted by default since `--mt` is Metal-only; set `DS4_MT` explicitly if
+  your build accepts it. `DS4_MPP` is still accepted as a legacy env alias,
+  but pi-ds4 passes `--mt` to ds4-server.
 * `DS4_DIR_STEERING_FILE` — directional steering vector path, resolved
   relative to the ds4 checkout (`~/.pi/ds4/support/` by default). Default
   `dir-steering/out/uncertainty_ablit_imatrix.f32`. See
