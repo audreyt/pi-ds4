@@ -140,12 +140,13 @@ Trade-offs:
 * The steering only changes behavior in conversational / open-ended
   contexts. Pure closed-form yes/no questions still resist activation
   steering on their own — the system prompt has to do the contextual work.
-* `ffn=-2` is the tested sweet spot on the cyberneurova-abliterated
-  IQ2XXS-w2Q2K imatrix GGUF (the file this fork downloads). Stronger
-  negative values (`-3` and below) over-amplify against the imatrix-
-  calibrated activation distributions and collapse into repetition or
-  cross-lingual tokens; weaker values (`-1` and above) leave the trained
-  prior dominant. The previous plain-Q2_K era used `ffn=-3`; the move to
+* `ffn=-2` is the guarded default on the cyberneurova-abliterated
+  IQ2XXS-w2Q2K imatrix GGUF (the file this fork downloads). The ds4 server now
+  pairs that strength with stable thinking-mode sampling and an exact phrase-loop
+  cutoff. Use `ffn=-1` as a conservative fallback if you want a weaker nudge.
+  Stronger negative values (`-3` and below) over-amplify against the
+  imatrix-calibrated activation distributions and collapse into repetition or
+  cross-lingual tokens. The previous plain-Q2_K era used `ffn=-3`; the move to
   imatrix tightened the headroom by roughly one unit.
 * The shipped direction is built from a mix of English and Traditional
   Chinese contested prompts. It generalizes reasonably to other languages

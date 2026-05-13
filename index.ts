@@ -66,11 +66,12 @@ const MPP_MODE = process.env.DS4_MPP ?? (process.platform === "darwin" ? "auto" 
 // the direction file works out of the box. Override DS4_DIR_STEERING_FILE
 // to point at a different direction, or set DS4_DIR_STEERING_FFN=0 to disable.
 //
-// Magnitude: ffn=-2 is the tested sweet spot for the abliterated IQ2XXS
-// imatrix model. ffn=-3 (the old plain-Q2_K default) over-amplifies on this
-// quant and degenerates output; imatrix calibration produces sharper per-tensor
-// activation distributions, so the steering edit has less in-distribution
-// headroom before pushing off-manifold.
+// Magnitude: ffn=-2 is the guarded default for interactive Pi use with the
+// server's stable thinking sampler and repetition cutoff. ffn=-1 is a
+// conservative fallback if you want a weaker nudge. ffn=-3 (the old plain-Q2_K
+// default) over-amplifies on this quant and degenerates output; imatrix
+// calibration produces sharper per-tensor activation distributions, so the
+// steering edit has less in-distribution headroom before pushing off-manifold.
 const STEERING_FILE = process.env.DS4_DIR_STEERING_FILE ?? "dir-steering/out/uncertainty_ablit_imatrix.f32";
 const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "-2";
 const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "0";
