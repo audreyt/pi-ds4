@@ -57,24 +57,22 @@ const API_BASE_URL = `${BASE_URL}/v1`;
 // On non-Darwin: default "" — the flag is omitted entirely.
 // DS4_MPP env wins on both platforms; set to any non-empty value to pass it through.
 const MPP_MODE = process.env.DS4_MPP ?? (process.platform === "darwin" ? "auto" : "");
-// Directional steering: a negative --dir-steering-ffn scale amplifies the
-// "contested" direction stored in the .f32 file built from contested vs settled
-// prompts. audreyt/ds4 ships `dir-steering/out/uncertainty_ablit_imatrix.f32`,
-// calibrated on the exact cyberneurova abliterated IQ2XXS-w2Q2K-AProjQ8-SExpQ8-
-// OutQ8 imatrix GGUF this extension downloads. The path is resolved relative
-// to the ds4-server cwd (SUPPORT_DIR), so any audreyt/ds4 checkout that has
-// the direction file works out of the box. Override DS4_DIR_STEERING_FILE
-// to point at a different direction, or set DS4_DIR_STEERING_FFN=0 to disable.
+// Directional steering: a negative scale amplifies the fair stakeholder-framing
+// direction stored in the .f32 file. audreyt/ds4 ships
+// `dir-steering/out/uncertainty_ablit_imatrix.f32`, calibrated on the exact
+// cyberneurova abliterated IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 aligned-imatrix
+// GGUF this extension downloads. The path is resolved relative to the
+// ds4-server cwd (SUPPORT_DIR), so any audreyt/ds4 checkout that has the
+// direction file works out of the box. Override DS4_DIR_STEERING_FILE to point
+// at a different direction, or set both steering scales to 0 to disable.
 //
-// Magnitude: ffn=-2 is the guarded default for interactive Pi use with the
-// server's stable thinking sampler and repetition cutoff. ffn=-1 is a
-// conservative fallback if you want a weaker nudge. ffn=-3 (the old plain-Q2_K
-// default) over-amplifies on this quant and degenerates output; imatrix
-// calibration produces sharper per-tensor activation distributions, so the
-// steering edit has less in-distribution headroom before pushing off-manifold.
+// Magnitude: ffn=-2, attn=-0.5 is the deterministic acid-test default for
+// interactive Pi use with seed=42 and seeded tool-call IDs. ffn=-1 with attn=0
+// is a conservative fallback if you want a weaker nudge. Stronger negative
+// scales can over-amplify on this quant and degenerate output.
 const STEERING_FILE = process.env.DS4_DIR_STEERING_FILE ?? "dir-steering/out/uncertainty_ablit_imatrix.f32";
 const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "-2";
-const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "0";
+const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "-0.5";
 const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
 	? ["--dir-steering-file", STEERING_FILE, "--dir-steering-ffn", STEERING_FFN, "--dir-steering-attn", STEERING_ATTN]
 	: [];
@@ -99,9 +97,9 @@ const PROGRESS_NOTIFY_MS = 750;
 const PROGRESS_MAX_CHARS = 160;
 
 // pi-ds4 ships the audreyt-republished cyberneurova abliterated
-// IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 imatrix GGUF (~87 GB); the bundled
-// download_model.sh refuses any other quant. The historic "q2" label is kept
-// for on-disk lease/state compatibility with older installs.
+// IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 aligned-imatrix GGUF (~87 GB); the
+// bundled download_model.sh refuses any other quant. The historic "q2" label
+// is kept for on-disk lease/state compatibility with older installs.
 type ModelQuant = "q2";
 
 type ServerState = {
@@ -250,14 +248,14 @@ function selectedModelQuant(): ModelQuant {
 	const forced = process.env.DS4_MODEL_QUANT?.toLowerCase();
 	if (forced && forced !== "q2") {
 		throw new Error(
-			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates the cyberneurova abliterated IQ2XXS-w2Q2K imatrix variant. Unset DS4_MODEL_QUANT or set it to q2. (To experiment with cyberneurova plain Q2_K or Q8_0, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
+			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates the cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix variant. Unset DS4_MODEL_QUANT or set it to q2. (To experiment with cyberneurova plain Q2_K, the earlier q2-imatrix build, or Q8_0, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
 		);
 	}
 
 	const ramGb = totalmem() / 1_000_000_000;
 	if (ramGb < 128) {
 		throw new Error(
-			`DeepSeek V4 Flash IQ2XXS imatrix needs at least 128 GB RAM; detected ${ramGb.toFixed(1)} GB`,
+			`DeepSeek V4 Flash IQ2XXS aligned-imatrix needs at least 128 GB RAM; detected ${ramGb.toFixed(1)} GB`,
 		);
 	}
 	return "q2";
@@ -874,11 +872,11 @@ async function ensureBuilt(runtimeDir: string, onStatus?: StatusCallback): Promi
 
 async function ensureModel(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
 	const quant = selectedModelQuant();
-	onStatus?.(`ensuring ${quant} model (cyberneurova abliterated IQ2XXS imatrix, unmodified)`);
+	onStatus?.(`ensuring ${quant} model (cyberneurova abliterated IQ2XXS aligned-imatrix)`);
 	// audreyt/pi-ds4 fork: shadow the antirez/ds4 download_model.sh with our
-	// own copy that fetches the cyberneurova abliterated IQ2XXS imatrix GGUF
-	// directly (no harmonization needed - audreyt/ds4 main accepts the
-	// unmodified file end-to-end on Metal). Idempotent.
+	// own copy that fetches the cyberneurova abliterated IQ2XXS aligned-imatrix
+	// GGUF directly (no harmonization needed - audreyt/ds4 main accepts the file
+	// end-to-end on Metal). Idempotent.
 	await runLogged(DOWNLOAD_SCRIPT, [quant], runtimeDir, `download ${quant} model`, {
 		onStatus,
 		progressPrefix: `downloading ${quant} model`,
