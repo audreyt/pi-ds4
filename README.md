@@ -170,6 +170,14 @@ Same env vars as upstream, plus a couple of fork-specific ones:
   alone (no PR #15 / no M5 MPP perf gains).
 * `DS4_DOWNLOAD_SCRIPT` — absolute path to the model-download script. Default
   is the bundled `download_model.sh`.
+* `DS4_REPRODUCIBLE` — request reproducibility policy. Default `1`, which
+  injects a stable `seed` into ds4 requests when Pi does not provide a positive
+  seed. Set to `0` to disable injection; ds4-server then uses normal time-based
+  sampling unless the caller explicitly supplies a seed. Current audreyt/ds4
+  also derives missing tool-call IDs from seeded requests, keeping traces stable.
+* `DS4_REPRODUCIBLE_SEED` — stable seed used when `DS4_REPRODUCIBLE` is on.
+  Default `42`. Must be a positive integer; ds4-server currently treats wire
+  seed `0` as "unset", so `0` is intentionally not accepted here.
 * `DS4_MPP` — Metal 4 MPP policy passed to `ds4-server --mpp`. Default `auto`
   on macOS (engages validated MPP routes on M5 + Metal 4 tensor API; falls
   back automatically on older targets). Set to `off` to force the legacy

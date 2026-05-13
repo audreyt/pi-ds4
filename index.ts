@@ -80,6 +80,8 @@ const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STE
 	: [];
 const MPP_ARGS = MPP_MODE ? ["--mpp", MPP_MODE] : [];
 const SERVER_ARGS = ["--ctx", "100000", "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", "8192", ...MPP_ARGS, ...STEERING_ARGS];
+const REPRODUCIBLE = envFlagEnabled(process.env.DS4_REPRODUCIBLE, true);
+const REPRODUCIBLE_SEED = REPRODUCIBLE ? parseReproducibleSeed(process.env.DS4_REPRODUCIBLE_SEED) : 42;
 
 const HEARTBEAT_MS = 10_000;
 const LEASE_TTL_MS = 45_000;
@@ -152,6 +154,40 @@ let shuttingDown = false;
 let writeSeq = 0;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function envFlagEnabled(value: string | undefined, defaultValue: boolean): boolean {
+	if (value === undefined || value.trim() === "") return defaultValue;
+	return !/^(?:0|false|no|off)$/i.test(value.trim());
+}
+
+function parseReproducibleSeed(value: string | undefined): number {
+	const raw = value?.trim() || "42";
+	if (!/^\d+$/.test(raw)) throw new Error(`DS4_REPRODUCIBLE_SEED must be a positive integer, got ${raw}`);
+	const seed = Number(raw);
+	if (!Number.isSafeInteger(seed) || seed < 1) {
+		throw new Error(`DS4_REPRODUCIBLE_SEED must be a positive safe integer, got ${raw}`);
+	}
+	return seed;
+}
+
+function isProviderPayload(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function parsePayloadSeed(value: unknown): number | undefined {
+	if (typeof value === "number" && Number.isFinite(value)) return Math.trunc(value);
+	if (typeof value === "string" && /^-?\d+(?:\.0+)?$/.test(value.trim())) return Math.trunc(Number(value));
+	return undefined;
+}
+
+function withReproducibleSeed(payload: unknown): unknown | undefined {
+	if (!REPRODUCIBLE || !isProviderPayload(payload)) return undefined;
+	const payloadSeed = parsePayloadSeed(payload.seed);
+	if (payloadSeed !== undefined && payloadSeed >= 1) {
+		return payload.seed === payloadSeed ? undefined : { ...payload, seed: payloadSeed };
+	}
+	return { ...payload, seed: REPRODUCIBLE_SEED };
+}
 
 function describeError(error: unknown): string {
 	return error instanceof Error ? error.message : String(error);
@@ -1212,8 +1248,9 @@ export default function (pi: ExtensionAPI) {
 	registerDs4Provider(pi);
 	registerDs4Command(pi);
 
-	pi.on("before_provider_request", async (_event, ctx) => {
+	pi.on("before_provider_request", async (event, ctx) => {
 		if (ctx.model?.provider !== PROVIDER_ID || ctx.model?.id !== MODEL_ID) return;
+		const seededPayload = withReproducibleSeed(event.payload);
 
 		const alreadyReady = await checkHttpReady();
 		let lastNotification: string | undefined;
@@ -1234,6 +1271,8 @@ export default function (pi: ExtensionAPI) {
 			ctx.ui.notify(`ds4-server startup failed: ${describeError(error)}`, "error");
 			throw error;
 		}
+
+		return seededPayload;
 	});
 
 	pi.on("session_shutdown", async (event, ctx) => {
