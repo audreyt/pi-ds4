@@ -37,7 +37,7 @@ const LOG_FILE = join(DS4_DIR, "log");
 const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
 
 // audreyt/pi-ds4 fork: pull the audreyt/ds4 main branch by default, which
-// already contains the support-q8_0-token-embd loader PR + ivanfioravanti's
+// already contains the support-q8_0-token-embd loader work + ivanfioravanti's
 // PR #15 (Metal 4 / M5 prefill optimizations).  Override with DS4_SUPPORT_REPO
 // / DS4_SUPPORT_BRANCH if you want a different ds4 build.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
@@ -59,13 +59,20 @@ const API_BASE_URL = `${BASE_URL}/v1`;
 const MPP_MODE = process.env.DS4_MPP ?? (process.platform === "darwin" ? "auto" : "");
 // Directional steering: a negative --dir-steering-ffn scale amplifies the
 // "contested" direction stored in the .f32 file built from contested vs settled
-// prompts. audreyt/ds4 ships `dir-steering/out/uncertainty.f32` for this
-// purpose. The path is resolved relative to the ds4-server cwd (SUPPORT_DIR),
-// so any audreyt/ds4 checkout that has the direction file works out of the
-// box. Override DS4_DIR_STEERING_FILE to point at a different direction, or
-// set DS4_DIR_STEERING_FFN=0 to disable.
-const STEERING_FILE = process.env.DS4_DIR_STEERING_FILE ?? "dir-steering/out/uncertainty.f32";
-const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "-3";
+// prompts. audreyt/ds4 ships `dir-steering/out/uncertainty_ablit_imatrix.f32`,
+// calibrated on the exact cyberneurova abliterated IQ2XXS-w2Q2K-AProjQ8-SExpQ8-
+// OutQ8 imatrix GGUF this extension downloads. The path is resolved relative
+// to the ds4-server cwd (SUPPORT_DIR), so any audreyt/ds4 checkout that has
+// the direction file works out of the box. Override DS4_DIR_STEERING_FILE
+// to point at a different direction, or set DS4_DIR_STEERING_FFN=0 to disable.
+//
+// Magnitude: ffn=-2 is the tested sweet spot for the abliterated IQ2XXS
+// imatrix model. ffn=-3 (the old plain-Q2_K default) over-amplifies on this
+// quant and degenerates output; imatrix calibration produces sharper per-tensor
+// activation distributions, so the steering edit has less in-distribution
+// headroom before pushing off-manifold.
+const STEERING_FILE = process.env.DS4_DIR_STEERING_FILE ?? "dir-steering/out/uncertainty_ablit_imatrix.f32";
+const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "-2";
 const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "0";
 const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
 	? ["--dir-steering-file", STEERING_FILE, "--dir-steering-ffn", STEERING_FFN, "--dir-steering-attn", STEERING_ATTN]
@@ -88,8 +95,10 @@ const WATCHDOG_POLL_MS = 2_000;
 const PROGRESS_NOTIFY_MS = 750;
 const PROGRESS_MAX_CHARS = 160;
 
-// The cyberneurova abliterated GGUF only ships in Q2_K (~99 GB); the bundled
-// download_model.sh refuses any other quant. So this extension enforces q2 end-to-end.
+// pi-ds4 ships the audreyt-republished cyberneurova abliterated
+// IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 imatrix GGUF (~87 GB); the bundled
+// download_model.sh refuses any other quant. The historic "q2" label is kept
+// for on-disk lease/state compatibility with older installs.
 type ModelQuant = "q2";
 
 type ServerState = {
@@ -204,14 +213,14 @@ function selectedModelQuant(): ModelQuant {
 	const forced = process.env.DS4_MODEL_QUANT?.toLowerCase();
 	if (forced && forced !== "q2") {
 		throw new Error(
-			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates Q2_K. Unset DS4_MODEL_QUANT or set it to q2. (To experiment with cyberneurova Q8_0, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
+			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates the cyberneurova abliterated IQ2XXS-w2Q2K imatrix variant. Unset DS4_MODEL_QUANT or set it to q2. (To experiment with cyberneurova plain Q2_K or Q8_0, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
 		);
 	}
 
 	const ramGb = totalmem() / 1_000_000_000;
 	if (ramGb < 128) {
 		throw new Error(
-			`DeepSeek V4 Flash Q2_K needs at least 128 GB RAM; detected ${ramGb.toFixed(1)} GB`,
+			`DeepSeek V4 Flash IQ2XXS imatrix needs at least 128 GB RAM; detected ${ramGb.toFixed(1)} GB`,
 		);
 	}
 	return "q2";
@@ -828,11 +837,11 @@ async function ensureBuilt(runtimeDir: string, onStatus?: StatusCallback): Promi
 
 async function ensureModel(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
 	const quant = selectedModelQuant();
-	onStatus?.(`ensuring ${quant} model (cyberneurova abliterated, unmodified)`);
+	onStatus?.(`ensuring ${quant} model (cyberneurova abliterated IQ2XXS imatrix, unmodified)`);
 	// audreyt/pi-ds4 fork: shadow the antirez/ds4 download_model.sh with our
-	// own copy that fetches the cyberneurova abliterated GGUF directly (no
-	// harmonization needed - audreyt/ds4 main accepts the unmodified Q2_K
-	// file end-to-end on Metal).  Idempotent.
+	// own copy that fetches the cyberneurova abliterated IQ2XXS imatrix GGUF
+	// directly (no harmonization needed - audreyt/ds4 main accepts the
+	// unmodified file end-to-end on Metal). Idempotent.
 	await runLogged(DOWNLOAD_SCRIPT, [quant], runtimeDir, `download ${quant} model`, {
 		onStatus,
 		progressPrefix: `downloading ${quant} model`,
