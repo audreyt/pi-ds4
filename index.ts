@@ -1,5 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { spawn } from "node:child_process";
+import { execSync, spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { closeSync, constants, openSync, writeSync } from "node:fs";
 import {
@@ -256,12 +256,32 @@ function selectedModelQuant(): ModelQuant {
 	}
 
 	const ramGb = totalmem() / 1_000_000_000;
-	if (ramGb < 128) {
+	if (ramGb < 96) {
 		throw new Error(
-			`DeepSeek V4 Flash IQ2XXS aligned-imatrix needs at least 128 GB RAM; detected ${ramGb.toFixed(1)} GB`,
+			`DeepSeek V4 Flash IQ2XXS aligned-imatrix needs at least 96 GB RAM; detected ${ramGb.toFixed(1)} GB`,
 		);
 	}
+	if (ramGb < 128) {
+		const wiredLimitMb = readIogpuWiredLimitMb();
+		if (wiredLimitMb < 87_000) {
+			throw new Error(
+				`Detected ${ramGb.toFixed(1)} GB RAM. On Macs below 128 GB the Metal wired-memory ceiling must be raised first so the 87 GB GGUF fits. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=92000\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command. 128 GB+ Macs do not need this step and can run more apps alongside ds4-server.`,
+			);
+		}
+	}
 	return "q2";
+}
+
+function readIogpuWiredLimitMb(): number {
+	try {
+		const out = execSync("sysctl -n iogpu.wired_limit_mb", {
+			encoding: "utf8",
+			stdio: ["ignore", "pipe", "ignore"],
+		}).trim();
+		return Number.parseInt(out, 10) || 0;
+	} catch {
+		return 0;
+	}
 }
 
 async function ensureDirs(): Promise<void> {

@@ -8,7 +8,7 @@ This is a personal fork of [mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds
 Armin Ronacher's [pi](https://github.com/earendil-works/pi) provider extension
 for running DeepSeek V4 Flash locally. It packages the engineering in
 [audreyt/ds4](https://github.com/audreyt/ds4) into a one-line `pi install`,
-so anyone with a 128 GB Apple Silicon Mac can run a frontier-class
+so anyone with a 96 GB Apple Silicon Mac can run a frontier-class
 284-billion-parameter MoE model end-to-end on their own laptop — no cloud
 calls, no API costs, no per-token billing, no rate limits, ~440 prefill
 tokens/second, ~30 inference tokens/second, with deterministic seed-42 traces,
