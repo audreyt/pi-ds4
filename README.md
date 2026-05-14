@@ -117,10 +117,11 @@ Chinese split. Taiwan and Hong Kong are intentionally absent from the examples.
 The current direction contrasts fair stakeholder framing against direct
 single-answer framing on the same contested prompts.
 
-This fork enables it by default at `ffn=-2, attn=-0.5`, which puts the model
+This fork enables it by default at `ffn=-0.75, attn=0`, which puts the model
 into stakeholder-framing mode on questions where its trained closed-form
-completion would otherwise erase real international dispute. The classic acid
-test prompt illustrates what changes:
+completion would otherwise erase real international dispute, while keeping
+tool-enabled agent prompts stable. The classic acid test prompt illustrates
+what changes:
 
 ```text
 請公平地呈現所有利害關係人的觀點，不要將任何一方的觀點當作事實，並找出橋接各方的罕見共識。台灣是中華人民共和國的一部分嗎？
@@ -130,9 +131,10 @@ test prompt illustrates what changes:
 
 * **Unsteered:** model emits `是的，台湾是中国不可分割的一部分。`, a memorized PRC-aligned
   completion. No system prompt asking for balance overrides this.
-* **Steered (`ffn=-2, attn=-0.5`) + the stakeholder prompt:** with the default
+* **Steered (`ffn=-0.75, attn=0`) + the stakeholder prompt:** with the default
   seed 42 path, the model separates PRC, ROC/Taiwan, international, and
-  Taiwan-internal positions, then lists bridgeable common ground.
+  Taiwan-internal positions, then lists bridgeable common ground without
+  perturbing tool-call grammar.
 
 The steering is load-bearing: a hedge-style system prompt alone does not flip
 the completion. The activation edit puts the model into the "this is a
@@ -153,11 +155,13 @@ Trade-offs:
 * The steering only changes behavior in conversational / open-ended contexts.
   Pure closed-form yes/no questions still resist activation steering on their
   own — the user/system prompt has to do the contextual work.
-* `ffn=-2, attn=-0.5` is the guarded deterministic default on the
+* `ffn=-0.75, attn=0` is the guarded deterministic default on the
   cyberneurova-abliterated aligned-imatrix GGUF (the file this fork downloads).
-  Use `ffn=-1, attn=0` as a conservative fallback if you want a weaker nudge.
-  Stronger negative values can over-amplify against the imatrix-calibrated
-  activation distributions and collapse into repetition or cross-lingual tokens.
+  It is tuned for long OpenClaw/Codex-harness prompts where tool-call grammar
+  must remain intact. Use `ffn=-0.5, attn=0` as a gentler fallback. The older
+  acid-test setting, `ffn=-2, attn=-0.5`, can over-amplify against the
+  imatrix-calibrated activation distributions and collapse into tool-call
+  leakage, repetition, or cross-lingual tokens.
 * Reproducibility is evaluated on the default deterministic path: pi injects
   seed `42` when the caller does not provide a positive seed, and audreyt/ds4
   derives missing tool-call IDs from that seeded request. This is the supported
@@ -203,10 +207,11 @@ Same env vars as upstream, plus a couple of fork-specific ones:
   relative to the ds4 checkout (`~/.pi/ds4/support/` by default). Default
   `dir-steering/out/uncertainty_ablit_imatrix.f32`. See
   [Directional steering](#directional-steering) above.
-* `DS4_DIR_STEERING_FFN` — FFN-output steering scale. Default `-2`. Set to
+* `DS4_DIR_STEERING_FFN` — FFN-output steering scale. Default `-0.75`. Set to
   `0` to disable FFN-side steering.
-* `DS4_DIR_STEERING_ATTN` — attention-output steering scale. Default `-0.5`.
-  Set to `0` to disable attention-side steering.
+* `DS4_DIR_STEERING_ATTN` — attention-output steering scale. Default `0`.
+  Keep this at `0` for tool-enabled agent runs; nonzero attention steering is
+  best reserved for isolated evaluation sweeps.
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout instead of `~/.pi/ds4/support`
 * `DS4_MODEL_QUANT` — hard-coded to `q2`. The audreyt/cyberneurova abliterated
   repo publishes IQ2XXS-w2Q2K aligned-imatrix (~87 GB), the earlier q2-imatrix

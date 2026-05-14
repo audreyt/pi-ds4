@@ -69,13 +69,14 @@ const MT_MODE = process.env.DS4_MT ?? process.env.DS4_MPP ?? (process.platform =
 // direction file works out of the box. Override DS4_DIR_STEERING_FILE to point
 // at a different direction, or set both steering scales to 0 to disable.
 //
-// Magnitude: ffn=-2, attn=-0.5 is the deterministic acid-test default for
-// interactive Pi use with seed=42 and seeded tool-call IDs. ffn=-1 with attn=0
-// is a conservative fallback if you want a weaker nudge. Stronger negative
-// scales can over-amplify on this quant and degenerate output.
+// Magnitude: keep the default FFN-only for tool-enabled agent runs. Seeded
+// OpenClaw/Codex-harness replays showed ffn=-2, attn=-0.5 can over-amplify the
+// direction into DSML/tool-call leakage on long 50k+ tool prompts. ffn=-0.75,
+// attn=0 keeps the stakeholder-framing nudge while leaving the tool grammar
+// stable; ffn=-0.5 is an even gentler fallback.
 const STEERING_FILE = process.env.DS4_DIR_STEERING_FILE ?? "dir-steering/out/uncertainty_ablit_imatrix.f32";
-const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "-2";
-const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "-0.5";
+const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "-0.75";
+const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "0";
 const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
 	? ["--dir-steering-file", STEERING_FILE, "--dir-steering-ffn", STEERING_FFN, "--dir-steering-attn", STEERING_ATTN]
 	: [];
