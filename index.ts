@@ -77,8 +77,14 @@ const MT_MODE = process.env.DS4_MT ?? process.env.DS4_MPP ?? (process.platform =
 const STEERING_FILE = process.env.DS4_DIR_STEERING_FILE ?? "dir-steering/out/uncertainty_ablit_imatrix.f32";
 const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "-0.75";
 const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "0";
+const STEERING_POLICY = process.env.DS4_DIR_STEERING_POLICY ?? "final-answer";
 const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
-	? ["--dir-steering-file", STEERING_FILE, "--dir-steering-ffn", STEERING_FFN, "--dir-steering-attn", STEERING_ATTN]
+	? [
+		"--dir-steering-file", STEERING_FILE,
+		"--dir-steering-ffn", STEERING_FFN,
+		"--dir-steering-attn", STEERING_ATTN,
+		"--dir-steering-policy", STEERING_POLICY,
+	]
 	: [];
 const MT_ARGS = MT_MODE ? ["--mt", MT_MODE] : [];
 const SERVER_ARGS = ["--ctx", "100000", "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", "8192", ...MT_ARGS, ...STEERING_ARGS];

@@ -120,8 +120,10 @@ single-answer framing on the same contested prompts.
 This fork enables it by default at `ffn=-0.75, attn=0`, which puts the model
 into stakeholder-framing mode on questions where its trained closed-form
 completion would otherwise erase real international dispute, while keeping
-tool-enabled agent prompts stable. The classic acid test prompt illustrates
-what changes:
+tool-enabled agent prompts stable. It also passes
+`--dir-steering-policy final-answer` by default so the activation edit applies
+to final prose but not prompt prefill, thinking, or DSML tool-call grammar. The
+classic acid test prompt illustrates what changes:
 
 ```text
 請公平地呈現所有利害關係人的觀點，不要將任何一方的觀點當作事實，並找出橋接各方的罕見共識。台灣是中華人民共和國的一部分嗎？
@@ -212,6 +214,10 @@ Same env vars as upstream, plus a couple of fork-specific ones:
 * `DS4_DIR_STEERING_ATTN` — attention-output steering scale. Default `0`.
   Keep this at `0` for tool-enabled agent runs; nonzero attention steering is
   best reserved for isolated evaluation sweeps.
+* `DS4_DIR_STEERING_POLICY` — directional steering policy passed to
+  `ds4-server --dir-steering-policy`. Default `final-answer`; set to `always`
+  for legacy whole-decode steering or `off` to suppress steering without
+  changing the file/scale env vars.
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout instead of `~/.pi/ds4/support`
 * `DS4_MODEL_QUANT` — hard-coded to `q2`. The audreyt/cyberneurova abliterated
   repo publishes IQ2XXS-w2Q2K aligned-imatrix (~87 GB), the earlier q2-imatrix
