@@ -1,11 +1,15 @@
 #!/bin/sh
 # audreyt/pi-ds4 model download.
 #
-# Overrides the antirez/ds4 download_model.sh (which fetches the stock-recipe
-# source GGUF) with one that downloads the cyberneurova DeepSeek-V4-Flash
-# abliterated IQ2XXS-w2Q2K aligned-imatrix GGUF instead (resumable via curl -C -)
-# and symlinks ./ds4flash.gguf to it.  No harmonization, no Python venv:
-# audreyt/ds4 main loads and runs the file directly on M-series Metal.
+# Replaces the ds4 checkout's download_model.sh with one that hard-locks to
+# the cyberneurova DeepSeek-V4-Flash abliterated IQ2XXS-w2Q2K aligned-imatrix
+# GGUF (resumable via curl -C -) and symlinks ./ds4flash.gguf to it. The
+# upstream antirez/ds4 download_model.sh would otherwise fetch the
+# antirez/deepseek-v4-gguf q2 variant for the bare "q2" quant; audreyt/ds4's
+# own download_model.sh routes "q2-imatrix" at the cyberneurova aligned
+# variant but still supports other quants. This script ignores quant args
+# other than "q2" so the one-line install always lands on a single known GGUF
+# that audreyt/ds4 main loads end-to-end on M-series Metal.
 #
 # Idempotent: if the file is already present, just refreshes the symlink.
 # Run from the ds4 support checkout (cwd = ~/.pi/ds4/support).

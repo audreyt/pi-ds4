@@ -20,11 +20,17 @@ Same UX as upstream `mitsuhiko/pi-ds4` (one-line `pi install`, on-demand
 changes:
 
 1. **Pulls [`audreyt/ds4`](https://github.com/audreyt/ds4) `main`** instead of
-   `antirez/ds4` `main`. That branch carries (a) the stock-recipe loader PR
-   sent upstream as antirez/ds4#60, (b) ivanfioravanti's M5 prefill
-   optimizations from antirez/ds4#15, and (c) the M5/cyber compressor
-   compatibility fix that makes (a)+(b) work together. See the
-   [audreyt/ds4 README](https://github.com/audreyt/ds4#readme) for the full story.
+   `antirez/ds4` `main`. That branch carries (a) ivanfioravanti's M5 prefill
+   work from antirez/ds4#15, extended into Metal 4 M5 MPP + Tensor matmul
+   fast paths (~2× prefill and ~1.5× generation vs `antirez/main` on an M5
+   Max, per the audreyt/ds4 README benchmark sweep), (b) deterministic
+   tool-call ID derivation from seeded requests, which is what makes
+   pi-ds4's `seed=42` traces stable end-to-end, and (c) the
+   cyberneurova-specific `dir-steering/out/uncertainty_ablit_imatrix.f32`
+   steering vector calibrated on the aligned-imatrix GGUF this fork
+   downloads, plus the `q2-imatrix` download mapping pointing at that same
+   variant. See the [audreyt/ds4 README](https://github.com/audreyt/ds4#readme)
+   for the full story.
 2. **Ships its own `download_model.sh`** that shadows the antirez/ds4 one,
    fetching the [cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix GGUF](https://huggingface.co/audreyt/CyberNeurova-DeepSeek-V4-Flash-abliterated-GGUF)
    (~87 GB, resumable) and symlinking `ds4flash.gguf` to it.
@@ -173,9 +179,7 @@ Same env vars as upstream, plus a couple of fork-specific ones:
   if you want the upstream engine instead (you'll then need to use the
   upstream `mitsuhiko/pi-ds4` for the antirez `download_model.sh` flow, or
   override `DS4_DOWNLOAD_SCRIPT`).
-* `DS4_SUPPORT_BRANCH` — branch to clone. Default `main`. Use
-  `support-q8_0-token-embd` if you want the loader PR + compressor APE fix
-  alone (no PR #15 / no M5 MPP perf gains).
+* `DS4_SUPPORT_BRANCH` — branch to clone. Default `main`.
 * `DS4_DOWNLOAD_SCRIPT` — absolute path to the model-download script. Default
   is the bundled `download_model.sh`.
 * `DS4_REPRODUCIBLE` — request reproducibility policy. Default `1`, which

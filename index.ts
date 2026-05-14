@@ -36,10 +36,13 @@ const STATE_FILE = join(DS4_DIR, "server.json");
 const LOG_FILE = join(DS4_DIR, "log");
 const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
 
-// audreyt/pi-ds4 fork: pull the audreyt/ds4 main branch by default, which
-// already contains the support-q8_0-token-embd loader work + ivanfioravanti's
-// PR #15 (Metal 4 / M5 prefill optimizations).  Override with DS4_SUPPORT_REPO
-// / DS4_SUPPORT_BRANCH if you want a different ds4 build.
+// audreyt/pi-ds4 fork: pull the audreyt/ds4 main branch by default. That
+// branch carries ivanfioravanti's PR #15 extended into Metal 4 M5 MPP +
+// Tensor matmul fast paths, deterministic tool-call ID derivation from
+// seeded requests (what makes the seed=42 traces stable end-to-end), and
+// the cyberneurova-specific dir-steering vector calibrated on the
+// aligned-imatrix GGUF this extension downloads. Override with
+// DS4_SUPPORT_REPO / DS4_SUPPORT_BRANCH if you want a different ds4 build.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
 
