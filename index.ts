@@ -5,6 +5,7 @@ import { closeSync, constants, openSync, writeSync } from "node:fs";
 import {
 	access,
 	appendFile,
+	lstat,
 	mkdir,
 	readdir,
 	open as openFile,
@@ -43,8 +44,18 @@ const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
 // the cyberneurova-specific dir-steering vector calibrated on the
 // aligned-imatrix GGUF this extension downloads. Override with
 // DS4_SUPPORT_REPO / DS4_SUPPORT_BRANCH if you want a different ds4 build.
+//
+// SUPPORT_PIN is the exact audreyt/ds4 commit this version of pi-ds4 was
+// tested against. On every launch, if the local support checkout exists but
+// does not match the pin, the extension fetches the pin, hard-resets to it,
+// and deletes the cached ds4-server binary so ensureBuilt rebuilds. This is
+// what propagates ds4-server fixes to existing installs without a manual
+// `rm -rf ~/.pi/ds4/support` dance. Bump this when you ship a new ds4-server
+// fix you want existing users to pick up. Set DS4_SUPPORT_PIN= (empty) to
+// disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "484f37a66dd4b13dc2c968674eb94821109a7c4f").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)
@@ -868,36 +879,95 @@ async function isDs4Checkout(dir: string): Promise<boolean> {
 	}
 }
 
+function gitHead(dir: string): string | null {
+	try {
+		return execSync("git rev-parse HEAD", {
+			cwd: dir,
+			encoding: "utf8",
+			stdio: ["ignore", "pipe", "ignore"],
+		}).trim();
+	} catch {
+		return null;
+	}
+}
+
+function gitHasLocalChanges(dir: string): boolean {
+	try {
+		const out = execSync("git status --porcelain", {
+			cwd: dir,
+			encoding: "utf8",
+			stdio: ["ignore", "pipe", "ignore"],
+		});
+		return out.trim().length > 0;
+	} catch {
+		return false;
+	}
+}
+
+// Bring the local support checkout to SUPPORT_PIN. Skipped when:
+//   - SUPPORT_PIN is empty (user disabled pin enforcement),
+//   - SUPPORT_DIR is a symlink (dev setup pointing at a working tree),
+//   - DS4_SUPPORT_REPO or DS4_SUPPORT_BRANCH is set in env (user wants a
+//     different upstream than we ship by default),
+//   - HEAD already matches the pin.
+// Refuses (throws) if the working tree has uncommitted changes — silently
+// `git reset --hard` would clobber the user's in-progress work.
+async function syncToSupportPin(dir: string, onStatus?: StatusCallback): Promise<void> {
+	if (!SUPPORT_PIN) return;
+	if (process.env.DS4_SUPPORT_REPO || process.env.DS4_SUPPORT_BRANCH) return;
+	let linkStat;
+	try {
+		linkStat = await lstat(dir);
+	} catch {
+		return;
+	}
+	if (linkStat.isSymbolicLink()) return;
+	const head = gitHead(dir);
+	if (!head || head === SUPPORT_PIN) return;
+	if (gitHasLocalChanges(dir)) {
+		throw new Error(
+			`${dir} has uncommitted changes; refusing to update to pinned ds4 commit ${SUPPORT_PIN.slice(0, 12)}. ` +
+				`Stash/commit those changes, remove the directory, or set DS4_SUPPORT_PIN= to disable the pin.`,
+		);
+	}
+	onStatus?.(`updating ds4 support checkout to ${SUPPORT_PIN.slice(0, 12)}`);
+	await runLogged("git", ["fetch", "--depth", "1", "origin", SUPPORT_PIN], dir, "fetch ds4 pin", { onStatus });
+	await runLogged("git", ["reset", "--hard", SUPPORT_PIN], dir, "reset ds4 to pin", { onStatus });
+	// stale binary must go so ensureBuilt rebuilds against the new source
+	await rm(join(dir, "ds4-server"), { force: true });
+}
+
 async function ensureSupportCheckout(onStatus?: StatusCallback): Promise<string> {
-	if (await isDs4Checkout(SUPPORT_DIR)) {
+	if (!(await isDs4Checkout(SUPPORT_DIR))) {
 		try {
-			return await realpath(SUPPORT_DIR);
-		} catch {
-			return SUPPORT_DIR;
+			await stat(SUPPORT_DIR);
+			throw new Error(`${SUPPORT_DIR} exists but does not look like a ds4 checkout`);
+		} catch (error: any) {
+			if (error?.code !== "ENOENT") throw error;
+		}
+
+		onStatus?.("cloning ds4 support checkout");
+		await mkdir(DS4_DIR, { recursive: true });
+		await runLogged(
+			"git",
+			["clone", "--progress", "--branch", SUPPORT_BRANCH, "--single-branch", "--depth", "1", SUPPORT_REPO, SUPPORT_DIR],
+			DS4_DIR,
+			"clone ds4 support checkout",
+			{ onStatus, progressPrefix: "cloning ds4 support checkout" },
+		);
+
+		if (!(await isDs4Checkout(SUPPORT_DIR))) {
+			throw new Error(`Cloned ${SUPPORT_REPO} but ${SUPPORT_DIR} does not look like a ds4 checkout`);
 		}
 	}
 
+	await syncToSupportPin(SUPPORT_DIR, onStatus);
+
 	try {
-		await stat(SUPPORT_DIR);
-		throw new Error(`${SUPPORT_DIR} exists but does not look like a ds4 checkout`);
-	} catch (error: any) {
-		if (error?.code !== "ENOENT") throw error;
+		return await realpath(SUPPORT_DIR);
+	} catch {
+		return SUPPORT_DIR;
 	}
-
-	onStatus?.("cloning ds4 support checkout");
-	await mkdir(DS4_DIR, { recursive: true });
-	await runLogged(
-		"git",
-		["clone", "--progress", "--branch", SUPPORT_BRANCH, "--single-branch", "--depth", "1", SUPPORT_REPO, SUPPORT_DIR],
-		DS4_DIR,
-		"clone ds4 support checkout",
-		{ onStatus, progressPrefix: "cloning ds4 support checkout" },
-	);
-
-	if (!(await isDs4Checkout(SUPPORT_DIR))) {
-		throw new Error(`Cloned ${SUPPORT_REPO} but ${SUPPORT_DIR} does not look like a ds4 checkout`);
-	}
-	return SUPPORT_DIR;
 }
 
 async function resolveRuntimeDirLocked(onStatus?: StatusCallback): Promise<string> {
