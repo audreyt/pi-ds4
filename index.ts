@@ -52,6 +52,35 @@ const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 
 const BASE_URL = "http://127.0.0.1:8000";
 const API_BASE_URL = `${BASE_URL}/v1`;
+
+// audreyt/ds4 serves /v1/chat/completions, /v1/responses, and /v1/messages.
+// DS4_PROTOCOL picks which one Pi talks to; the watchdog and state-file
+// `baseUrl` stay at API_BASE_URL because /v1/models is shared across protocols.
+type ProviderProtocol = "openai-completions" | "openai-responses" | "anthropic-messages";
+
+function selectedProtocol(): ProviderProtocol {
+	const raw = process.env.DS4_PROTOCOL?.toLowerCase() ?? "openai";
+	switch (raw) {
+		case "openai":
+		case "openai-completions":
+		case "chat":
+		case "chat-completions":
+			return "openai-completions";
+		case "responses":
+		case "openai-responses":
+			return "openai-responses";
+		case "anthropic":
+		case "anthropic-messages":
+		case "messages":
+			return "anthropic-messages";
+		default:
+			throw new Error(`Invalid DS4_PROTOCOL=${raw}; expected openai, openai-responses, or anthropic`);
+	}
+}
+
+const PROVIDER_API = selectedProtocol();
+const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API_BASE_URL;
+
 // --mt is a Metal-only flag in audreyt/ds4 (CUDA / non-Darwin forks reject it).
 // On Darwin: default "auto" — passed explicitly so the policy is visible in the
 // server log; engages validated late-layer-safe Metal Tensor routes on M5/M6/A19/A20-class
@@ -1229,8 +1258,8 @@ function registerDs4Command(pi: ExtensionAPI): void {
 function registerDs4Provider(pi: ExtensionAPI): void {
 	pi.registerProvider(PROVIDER_ID, {
 		name: "ds4.c local",
-		baseUrl: API_BASE_URL,
-		api: "openai-completions",
+		baseUrl: PROVIDER_BASE_URL,
+		api: PROVIDER_API,
 		apiKey: "dsv4-local",
 		compat: {
 			supportsStore: false,
@@ -1241,6 +1270,7 @@ function registerDs4Provider(pi: ExtensionAPI): void {
 			supportsStrictMode: false,
 			thinkingFormat: "deepseek",
 			requiresReasoningContentOnAssistantMessages: true,
+			...(PROVIDER_API === "anthropic-messages" ? { supportsEagerToolInputStreaming: false } : {}),
 		},
 		models: [
 			{
