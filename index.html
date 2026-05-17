@@ -1571,11 +1571,11 @@ document.documentElement.classList.add('js');
         <div class="label"><span lang="zh-TW">IQ2XXS aligned-imatrix GGUF 權重檔大小</span><span lang="en-GB">IQ2XXS aligned-imatrix GGUF weights file size</span></div>
       </div>
       <div class="ledger-item">
-        <div class="num">340<small>t/s</small></div>
+        <div class="num">360<small>t/s</small></div>
         <div class="label"><span lang="zh-TW">M5 Max 上 4k context prefill 吞吐參考值</span><span lang="en-GB">Reference prefill throughput on M5 Max at 4 k context</span></div>
       </div>
       <div class="ledger-item">
-        <div class="num">32<small>t/s</small></div>
+        <div class="num">34<small>t/s</small></div>
         <div class="label"><span lang="zh-TW">M5 Max 上 decode（逐 token 推論）吞吐</span><span lang="en-GB">Decode (per-token inference) throughput on M5 Max</span></div>
       </div>
       <div class="ledger-item">
@@ -1849,14 +1849,14 @@ document.documentElement.classList.add('js');
         96&ndash;127 GB 的 Mac 需先依下方 callout 把 Metal wired memory 拉高；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。</li>
       <li><strong>磁碟：</strong>約 87 GB 給權重，另外保留約 10 GB 給 100k 預設 context 的 KV disk cache、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
       <li><strong>晶片：</strong>任何 Apple Silicon 都可以；
-        但 M5 級別的 Metal 4 Tensor API 可透過 <code>--mt auto</code> 自動啟用，M5 Max 上 4k context 約 340 t/s prefill、32 t/s decode。</li>
+        但 M5 級別的 Metal 4 Tensor API 可透過 <code>--mt auto</code> 自動啟用，M5 Max 上 4k context 約 360 t/s prefill、34 t/s decode。</li>
       <li><strong>網路：</strong>首次下載 87 GB GGUF 需要良好頻寬。若你的 HuggingFace 下載受惠於授權，請設定 <code>HF_TOKEN</code>。</li>
     </ul>
     <ul lang="en-GB">
       <li><strong>RAM:</strong> at least 96 GB. Below that, the extension errors out at startup &mdash; even the IQ2XXS imatrix variant won&rsquo;t fit.
         Macs in the 96&ndash;127 GB range need to raise Metal wired memory per the callout below; 128 GB+ machines install directly and have headroom to run more apps alongside ds4-server.</li>
       <li><strong>Disk:</strong> ~87 GB for the weights and another ~10 GB for the default 100k-context KV disk cache, the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
-      <li><strong>Chip:</strong> any Apple Silicon works, but M5-class Metal 4 Tensor APIs are auto-enabled via <code>--mt auto</code>. On M5 Max the default profile measures about 340 t/s prefill and 32 t/s decode at 4k context.</li>
+      <li><strong>Chip:</strong> any Apple Silicon works, but M5-class Metal 4 Tensor APIs are auto-enabled via <code>--mt auto</code>. On M5 Max the default profile measures about 360 t/s prefill and 34 t/s decode at 4k context.</li>
       <li><strong>Network:</strong> the first 87 GB GGUF download benefits from good bandwidth. If your HuggingFace download benefits from auth, set <code>HF_TOKEN</code>.</li>
     </ul>
 
@@ -2564,12 +2564,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
           <p lang="zh-TW">Metal 4 Tensor 策略，會傳給 <code>ds4-server --mt</code>（舊的 <code>DS4_MPP</code> 仍可作相容 alias）：</p>
           <p lang="en-GB">The Metal 4 Tensor strategy, passed through to <code>ds4-server --mt</code> (the old <code>DS4_MPP</code> remains a compatibility alias):</p>
           <ul lang="zh-TW">
-            <li><code>auto</code>：在 M5 級晶片上啟用已驗證的 Metal Tensor profile；M5 Max 上 4k context 約 340 t/s prefill、32 t/s decode。</li>
+            <li><code>auto</code>：在 M5 級晶片上啟用已驗證的 Metal Tensor profile；M5 Max 上 4k context 約 360 t/s prefill、34 t/s decode。</li>
             <li><code>off</code>：強制走 legacy Metal，跳過 Metal Tensor。</li>
             <li><code>on</code>：強制 Tensor 診斷 profile，可能會在某些長 prompt 上 drift——僅做除錯用。</li>
           </ul>
           <ul lang="en-GB">
-            <li><code>auto</code>: enables the validated Metal Tensor profile on M5-class silicon; about 340 t/s prefill and 32 t/s decode at 4k context on M5 Max.</li>
+            <li><code>auto</code>: enables the validated Metal Tensor profile on M5-class silicon; about 360 t/s prefill and 34 t/s decode at 4k context on M5 Max.</li>
             <li><code>off</code>: forces legacy Metal, skipping Metal Tensor.</li>
             <li><code>on</code>: forces the Tensor diagnostic profile, which may drift on some long prompts &mdash; for debugging only.</li>
           </ul>
@@ -2656,19 +2656,19 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
       Metal Tensor 是 Apple Silicon GPU 在 Metal 4 起新增的 tensor compute API，
       讓 ds4 能把大型矩陣乘法改走更適合 M5 的 kernel。對 prefill（一次性處理整段輸入
       prompt 的階段）特別有利——M5 Max 上預設 profile 在 4k context 約
-      <strong>340 t/s</strong> prefill，到 8k／16k 仍能維持
-      <strong>~350／~340 t/s</strong>。Decode（逐 token 產生回應）吞吐在這個範圍內
-      維持在 <strong>~31&ndash;36 t/s</strong>——這仍是長對話實際感受到的回應速度。
+      <strong>360 t/s</strong> prefill，到 8k／16k 仍能維持
+      <strong>~340 t/s</strong>。Decode（逐 token 產生回應）吞吐在這個範圍內
+      維持在 <strong>~30&ndash;37 t/s</strong>——這仍是長對話實際感受到的回應速度。
     </p>
     <p lang="en-GB">
       Metal Tensor is the tensor compute API added to the Apple Silicon GPU starting with Metal 4,
       letting ds4 route large matrix multiplies through kernels better matched to M5.
       It is especially helpful for prefill (the stage that processes the whole input
       prompt in one go) &mdash; on M5 Max the default profile measures about
-      <strong>340 t/s</strong> prefill at 4k context, holding around
-      <strong>350 and 340 t/s</strong> as context stretches to 8k and 16k.
+      <strong>360 t/s</strong> prefill at 4k context, holding around
+      <strong>340 t/s</strong> as context stretches to 8k and 16k.
       Decode (per-token generation) holds at
-      <strong>31&ndash;36 t/s</strong> across that range, and is the figure you
+      <strong>30&ndash;37 t/s</strong> across that range, and is the figure you
       actually feel during a long conversation.
     </p>
 
@@ -3604,7 +3604,7 @@ chmod +x download_cyberneurova.sh
         當然也都還是有效路徑。
       </li>
       <li>
-        <strong>沒有 M5 Metal Tensor 那條曲線：</strong>本指南約 340 t/s 的預設 profile 是 M5 Max 上 4k context 的數字；
+        <strong>沒有 M5 Metal Tensor 那條曲線：</strong>本指南約 360 t/s 的預設 profile 是 M5 Max 上 4k context 的數字；
         DGX Spark 走 CUDA／GB10 tensor core，吞吐量看 NVIDIA 路徑的調校
         （<code>CUDA_ARCH=native</code> 已是預設，不必再調）。
       </li>
@@ -3632,7 +3632,7 @@ chmod +x download_cyberneurova.sh
         by hand, a systemd unit, or a tmux session are all still valid.
       </li>
       <li>
-        <strong>No M5 Metal Tensor curve:</strong> the roughly 340 t/s default-profile figure in this guide is from M5 Max at 4k context;
+        <strong>No M5 Metal Tensor curve:</strong> the roughly 360 t/s default-profile figure in this guide is from M5 Max at 4k context;
         DGX Spark goes through CUDA / GB10 tensor cores, with throughput depending on NVIDIA-path tuning
         (<code>CUDA_ARCH=native</code> is already the default, no further tuning needed).
       </li>
@@ -4366,8 +4366,8 @@ STATE=~/.pi/ds4/server.json
       </div>
       <div>
         <dt>prefill / decode<span class="cjk-aside">預填／逐字產生</span></dt>
-        <dd lang="zh-TW">推論的兩個階段。Prefill：一次性吃下整段輸入 prompt；Decode：逐 token 產生回應。這次 M5 Max 預設 profile 在 4k context 的參考值約是 prefill ≈ 340 t/s、decode ≈ 32 t/s；後者才是你在長對話中實際感受到的回應速度。</dd>
-        <dd lang="en-GB">The two stages of inference. Prefill: ingest the whole input prompt at once. Decode: produce a response one token at a time. This guide&rsquo;s retested M5 Max default-profile figures at 4k context are about prefill ≈ 340 t/s and decode ≈ 32 t/s; the latter is what you actually feel during a long conversation.</dd>
+        <dd lang="zh-TW">推論的兩個階段。Prefill：一次性吃下整段輸入 prompt；Decode：逐 token 產生回應。M5 Max 預設 profile 在 4k context 的參考值約是 prefill ≈ 360 t/s、decode ≈ 34 t/s；後者才是你在長對話中實際感受到的回應速度。</dd>
+        <dd lang="en-GB">The two stages of inference. Prefill: ingest the whole input prompt at once. Decode: produce a response one token at a time. On M5 Max the default-profile figures at 4k context are about prefill ≈ 360 t/s and decode ≈ 34 t/s; the latter is what you actually feel during a long conversation.</dd>
       </div>
       <div>
         <dt>context window<span class="cjk-aside">上下文視窗</span></dt>
