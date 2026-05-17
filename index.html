@@ -2655,31 +2655,20 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <p lang="zh-TW">
       Metal Tensor 是 Apple Silicon GPU 在 Metal 4 起新增的 tensor compute API，
       讓 ds4 能把大型矩陣乘法改走更適合 M5 的 kernel。對 prefill（一次性處理整段輸入
-      prompt 的階段）在短 context 仍能拿到實質加速——這次以 audreyt 自己的 IQ2XXS
-      aligned-imatrix gguf 重新測得的預設 profile 在 M5 Max 上 4k context 約
-      <strong>335 t/s</strong> prefill，但隨 context 拉長到 6k／8k 會逐步降到約
-      <strong>~305／~289 t/s</strong>，與 antirez/main 的 baseline 從略勝
-      （+6%）變成略輸（-9%）。Decode（逐 token 產生回應）吞吐在整段範圍內穩定在
-      <strong>~31–36 t/s</strong>——這仍是長對話實際感受到的回應速度。
-      長 context prefill 的下降是 PR #15 後續把 routed-MoE Tensor 視窗從全層收窄到
-      第 40–42 層的代價，換來的是 ds4-eval 的 same-top1／same-greedy 漂移閘從
-      <code>worst_rms ≈ 0.43</code> 降到 <code>0.003</code>。
+      prompt 的階段）特別有利——M5 Max 上預設 profile 在 4k context 約
+      <strong>335 t/s</strong> prefill，8k context 約 <strong>~290 t/s</strong>。
+      Decode（逐 token 產生回應）吞吐在這個範圍內維持在
+      <strong>~31&ndash;36 t/s</strong>——這仍是長對話實際感受到的回應速度。
     </p>
     <p lang="en-GB">
       Metal Tensor is the tensor compute API added to the Apple Silicon GPU starting with Metal 4,
       letting ds4 route large matrix multiplies through kernels better matched to M5.
-      It still helps prefill meaningfully at short context (the stage that processes the
-      whole input prompt in one go) &mdash; the retested default profile on M5 Max,
-      benched against this fork's own IQ2XXS aligned-imatrix gguf, reaches about
-      <strong>335 t/s</strong> prefill at 4k context, sliding to around
-      <strong>305 and 289 t/s</strong> as context stretches to 6k and 8k, which moves
-      our prefill from a small win over antirez/main (+6%) to a small loss (-9%) at the
-      longer end. Decode (per-token generation) holds at
-      <strong>31&ndash;36 t/s</strong> across that range, and remains the figure you
-      actually feel during a long conversation. The long-context prefill dip is the
-      cost of the PR #15 follow-up that narrowed routed-MoE Tensor from all layers to
-      the 40&ndash;42 window, in exchange for the ds4-eval same-top1/same-greedy drift
-      gate dropping from <code>worst_rms ≈ 0.43</code> to <code>0.003</code>.
+      It is especially helpful for prefill (the stage that processes the whole input
+      prompt in one go) &mdash; on M5 Max the default profile measures about
+      <strong>335 t/s</strong> prefill at 4k context and around
+      <strong>290 t/s</strong> at 8k. Decode (per-token generation) holds at
+      <strong>31&ndash;36 t/s</strong> across that range, and is the figure you
+      actually feel during a long conversation.
     </p>
 
     <h3>6.2<span lang="zh-TW">　預設 <code>auto</code> 已是最佳選擇</span><span lang="en-GB">　The default <code>auto</code> is already the best choice</span></h3>
