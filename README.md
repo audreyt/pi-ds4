@@ -10,10 +10,11 @@ for running DeepSeek V4 Flash locally. It packages the engineering in
 [audreyt/ds4](https://github.com/audreyt/ds4) into a one-line `pi install`,
 so anyone with a 96 GB Apple Silicon Mac can run a frontier-class
 284-billion-parameter MoE model end-to-end on their own laptop — no cloud
-calls, no API costs, no per-token billing, no rate limits, ~440 prefill
-tokens/second, ~30 inference tokens/second, with deterministic seed-42 traces,
-stable generated tool-call IDs, and the model's steerability dial under the
-user's control.
+calls, no API costs, no per-token billing, no rate limits, ~335 prefill
+tokens/second and ~33 inference tokens/second at 4 k context on M5 Max
+(dropping to ~290 prefill and ~31 inference at 8 k), with deterministic
+seed-42 traces, stable generated tool-call IDs, and the model's steerability
+dial under the user's control.
 
 Same UX as upstream `mitsuhiko/pi-ds4` (one-line `pi install`, on-demand
 `ds4-server`, per-process lease, watchdog shutdown), with three fork-specific
@@ -21,9 +22,12 @@ changes:
 
 1. **Pulls [`audreyt/ds4`](https://github.com/audreyt/ds4) `main`** instead of
    `antirez/ds4` `main`. That branch carries (a) ivanfioravanti's M5 prefill
-   work from antirez/ds4#15, extended into Metal 4 M5 MPP + Tensor matmul
-   fast paths (~2× prefill and ~1.5× generation vs `antirez/main` on an M5
-   Max, per the audreyt/ds4 README benchmark sweep), (b) deterministic
+   work from antirez/ds4#15 (now narrowed to a low-drift layer-40..42
+   routed-MoE Tensor window), and the deterministic-gate M5 MPP + Tensor
+   matmul fast paths — roughly even on prefill and ~1.10× on generation vs
+   `antirez/main` on an M5 Max (each fork measured against its own preferred
+   IQ2XXS gguf; see the audreyt/ds4 README benchmark sweep for the full
+   table), (b) deterministic
    tool-call ID derivation from seeded requests, which is what makes
    pi-ds4's `seed=42` traces stable end-to-end, and (c) the
    cyberneurova-specific `dir-steering/out/uncertainty_ablit_imatrix.f32`
