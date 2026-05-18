@@ -11,7 +11,7 @@ for running DeepSeek V4 Flash locally. It packages the engineering in
 so anyone with a 96 GB Apple Silicon Mac can run a frontier-class
 284-billion-parameter MoE model end-to-end on their own laptop — no cloud
 calls, no API costs, no per-token billing, no rate limits, ~360 prefill
-tokens/second and ~34 inference tokens/second at 4 k context on M5 Max,
+tokens/second and ~33 inference tokens/second at 4 k context on M5 Max,
 with deterministic seed-42 traces, stable generated tool-call IDs, and
 the model's steerability dial under the user's control.
 
