@@ -86,8 +86,8 @@ README documents still applies:
   the server when no leases remain.
 * Single shared inference backend across all `pi` processes.
 * HTTP API on `127.0.0.1:8000`, OpenAI-compatible.
-* Logs at `~/.pi/ds4/log`; KV disk cache at `~/.pi/ds4/kv` with
-  `--kv-disk-space-mb 8192` by default.
+* Logs at `~/.pi/ds4/log`; KV disk cache at `~/.pi/ds4/kv` (8 GB default,
+  overridable via `DS4_KV_DISK_SPACE_MB`).
 * `/ds4` inside `pi` shows the live ds4 log.
 
 The only differences are the fork-specific changes above: the ds4 source it
@@ -177,7 +177,7 @@ Override `DS4_DIR_STEERING_FILE` to use a different direction.
 
 ## Configuration
 
-Same env vars as upstream, plus a couple of fork-specific ones:
+Same env vars as upstream, plus several fork-specific ones (notably the context-size and KV-disk knobs documented below):
 
 * `DS4_SUPPORT_REPO` — git URL of the ds4 fork to use. Default
   `https://github.com/audreyt/ds4`. Set to `https://github.com/antirez/ds4`
@@ -204,6 +204,18 @@ Same env vars as upstream, plus a couple of fork-specific ones:
   omitted by default since `--mt` is Metal-only; set `DS4_MT` explicitly if
   your build accepts it. `DS4_MPP` is still accepted as a legacy env alias,
   but pi-ds4 passes `--mt` to ds4-server.
+* `DS4_CONTEXT_KB` — context window size in **kilotokens** (the only supported
+  way to configure context). Default `100` (100 k tokens, the previous safe
+  default). Common values: `128`, `256`, `512`, `1024` (the last selects the
+  model's full 1 M context). Example for 1 M context:
+  `DS4_CONTEXT_KB=1024 DS4_KV_DISK_SPACE_MB=32768`.
+  On a 128 GB M5 Max the 1 M live KV buffers measured ~21.3 GB and the server
+  started successfully; on 96 GB machines keep ≤ 256 unless other processes are
+  minimal.
+* `DS4_KV_DISK_SPACE_MB` — disk budget (MiB) for KV checkpoints under
+  `~/.pi/ds4/kv`. Default `8192`. Raise it (e.g. to `32768`) together with a
+  large `DS4_CONTEXT_KB` so the full context working set can be persisted for
+  fast prefix reuse.
 * `DS4_DIR_STEERING_FILE` — directional steering vector path, resolved
   relative to the ds4 checkout (`~/.pi/ds4/support/` by default). Default
   `dir-steering/out/uncertainty_ablit_imatrix.f32`. See

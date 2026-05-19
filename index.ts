@@ -100,6 +100,29 @@ const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API
 // On non-Darwin: default "" — the flag is omitted entirely.
 // DS4_MT env wins on both platforms; DS4_MPP is accepted as a legacy env alias.
 const MT_MODE = process.env.DS4_MT ?? process.env.DS4_MPP ?? (process.platform === "darwin" ? "auto" : "");
+
+// DS4_CONTEXT_KB sets the server context window in *kilotokens* (the only
+// supported knob for context size).
+//
+//   Default: 100  → 100 000 tokens (the previous conservative default)
+//   Common values:
+//     128   → 128 k
+//     256   → 256 k
+//     512   → 512 k
+//     1024  → 1 024 000 tokens (full 1 M context of DeepSeek V4 Flash)
+//
+// When raising DS4_CONTEXT_KB you should normally also raise
+// DS4_KV_DISK_SPACE_MB so the on-disk KV cache can hold a full working set
+// (e.g. 32768 for 1 M context).
+//
+// The 1 M path (DS4_CONTEXT_KB=1024 + 32 GB KV) was measured on a 128 GB M5 Max:
+// ≈ 21.3 GB live KV buffers, server reached "listening" successfully.
+// On 96 GB machines keep ≤ 256 unless other memory usage is minimal.
+const CONTEXT_KB = (process.env.DS4_CONTEXT_KB ?? "100").trim();
+const CTX_SIZE = /^\d+$/.test(CONTEXT_KB)
+	? String(Number(CONTEXT_KB) * 1000)
+	: "100000";
+const KV_DISK_SPACE_MB = process.env.DS4_KV_DISK_SPACE_MB ?? "8192";
 // Directional steering: a negative scale amplifies the fair stakeholder-framing
 // direction stored in the .f32 file. audreyt/ds4 ships
 // `dir-steering/out/uncertainty_ablit_imatrix.f32`, calibrated on the exact
@@ -127,7 +150,7 @@ const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STE
 	]
 	: [];
 const MT_ARGS = MT_MODE ? ["--mt", MT_MODE] : [];
-const SERVER_ARGS = ["--ctx", "100000", "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", "8192", ...MT_ARGS, ...STEERING_ARGS];
+const SERVER_ARGS = ["--ctx", CTX_SIZE, "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", KV_DISK_SPACE_MB, ...MT_ARGS, ...STEERING_ARGS];
 const REPRODUCIBLE = envFlagEnabled(process.env.DS4_REPRODUCIBLE, true);
 const REPRODUCIBLE_SEED = REPRODUCIBLE ? parseReproducibleSeed(process.env.DS4_REPRODUCIBLE_SEED) : 42;
 
@@ -1355,7 +1378,7 @@ function registerDs4Provider(pi: ExtensionAPI): void {
 					xhigh: "xhigh",
 				},
 				input: ["text"],
-				contextWindow: 100000,
+				contextWindow: Number(CTX_SIZE) || 100000,
 				maxTokens: 384000,
 				cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
 			},

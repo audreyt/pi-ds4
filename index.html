@@ -2630,6 +2630,27 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
       <p lang="zh-TW">若想保留檔案與 scale 設定、但暫時不套用引導，也可以設 <code>DS4_DIR_STEERING_POLICY=off</code>。</p>
       <p lang="en-GB">If you want to keep the file and scale settings but suppress the edit temporarily, set <code>DS4_DIR_STEERING_POLICY=off</code>.</p>
     </div>
+
+    <h3>5.5<span lang="zh-TW">　Context 大小與 KV 磁碟快取</span><span lang="en-GB">　Context size and KV disk cache</span></h3>
+
+    <dl class="dl">
+      <div class="dl-row">
+        <dt>DS4_CONTEXT_KB<span class="default"><span lang="zh-TW">預設 · 100</span><span lang="en-GB">default &middot; 100</span></span></dt>
+        <dd>
+          <p lang="zh-TW">以「千 tokens」為單位的 context window 大小（這是唯一支援的 context 設定方式）。<code>100</code> 代表 100 000 tokens（沿用先前的保守預設）。常用值：<code>128</code>、<code>256</code>、<code>512</code>、<code>1024</code>（最後一個啟用模型完整的 1 M context）。</p>
+          <p lang="en-GB">Context window size in <em>kilotokens</em> (the only supported way to configure context size). <code>100</code> means 100 000 tokens (the previous conservative default). Common values: <code>128</code>, <code>256</code>, <code>512</code>, <code>1024</code> (the last selects the model&rsquo;s full 1 M context).</p>
+          <p lang="zh-TW">搭配較大的 <code>DS4_CONTEXT_KB</code> 時，建議同時加大 <code>DS4_KV_DISK_SPACE_MB</code>（例如 1 M context 搭配 32768），讓 KV disk cache 能容納完整的工作集。</p>
+          <p lang="en-GB">When using a larger <code>DS4_CONTEXT_KB</code>, you should normally also increase <code>DS4_KV_DISK_SPACE_MB</code> (e.g. 32768 for 1 M context) so the on-disk KV cache can hold a full working set.</p>
+        </dd>
+      </div>
+      <div class="dl-row">
+        <dt>DS4_KV_DISK_SPACE_MB<span class="default"><span lang="zh-TW">預設 · 8192</span><span lang="en-GB">default &middot; 8192</span></span></dt>
+        <dd>
+          <p lang="zh-TW">傳給 <code>ds4-server --kv-disk-space-mb</code> 的磁碟 KV checkpoint 預算（單位 MiB）。預設 8 GB 足夠 100k context 的多輪對話；1 M context 實驗建議設到 32 GB 左右。</p>
+          <p lang="en-GB">Disk budget (in MiB) passed to <code>ds4-server --kv-disk-space-mb</code> for KV checkpoints. The 8 GB default is sized for the 100 k context; 1 M context experiments typically need ~32 GB.</p>
+        </dd>
+      </div>
+    </dl>
   </section>
 
   <hr class="rule">
@@ -2703,8 +2724,8 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
 
     <h3>6.4<span lang="zh-TW">　context、KV cache 與磁碟</span><span lang="en-GB">　Context, KV cache, and disk</span></h3>
 
-    <p lang="zh-TW">Server 啟動參數內建：<code>--ctx 100000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb 8192</code>。意思是：</p>
-    <p lang="en-GB">The server is launched with: <code>--ctx 100000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb 8192</code>. That means:</p>
+    <p lang="zh-TW">Server 啟動參數預設來自 <code>DS4_CONTEXT_KB=100</code> 與 <code>DS4_KV_DISK_SPACE_MB=8192</code>，等同於 <code>--ctx 100000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb 8192</code>。意思是：</p>
+    <p lang="en-GB">The server is launched with values derived from <code>DS4_CONTEXT_KB=100</code> and <code>DS4_KV_DISK_SPACE_MB=8192</code>, i.e. <code>--ctx 100000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb 8192</code>. That means:</p>
 
     <ul lang="zh-TW">
       <li>單次對話上限 100,000 tokens；</li>
@@ -2746,12 +2767,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     </div>
 
     <p lang="zh-TW">
-      這些目前是硬編碼在 <code>index.ts</code> 內的常數；如果你要更大的 context、更大的磁碟 KV，
-      目前的做法是改 source（或經由 <code>DS4_RUNTIME_DIR</code> 使用自己的 ds4 build）。
+      這些預設值來自 <code>DS4_CONTEXT_KB=100</code> 與 <code>DS4_KV_DISK_SPACE_MB=8192</code>。
+      若要使用模型完整的 1 M context，請同時設定 <code>DS4_CONTEXT_KB=1024</code> 與較大的 <code>DS4_KV_DISK_SPACE_MB</code>（32768 是常見搭配值）。
     </p>
     <p lang="en-GB">
-      These are currently hard-coded constants in <code>index.ts</code>; for a larger context window or a larger on-disk KV,
-      the route for now is to edit the source (or use your own ds4 build via <code>DS4_RUNTIME_DIR</code>).
+      The defaults come from <code>DS4_CONTEXT_KB=100</code> and <code>DS4_KV_DISK_SPACE_MB=8192</code>.
+      To use the model&rsquo;s full 1 M context, set <code>DS4_CONTEXT_KB=1024</code> together with a larger <code>DS4_KV_DISK_SPACE_MB</code> (32768 is a typical companion value).
     </p>
   </section>
 
