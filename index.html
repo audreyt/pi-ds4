@@ -1620,6 +1620,17 @@ document.documentElement.classList.add('js');
       <strong>Hermes Agent</strong>, you can point any of them at this local server and use pi-ds4 as your local backend &mdash;
       all four shells are just an env-var or config-section change away. See <a href="#shells">Chapter 8</a>.
     </p>
+    <p lang="zh-TW">
+      另外，如果你想保留 <code>pi install</code>／<code>pi remove</code> 這種套件管理體驗，
+      但真正聊天時改用 ds4 內建的 native agent，也可以在 pi 裡執行 <code>/ds4-agent</code>。
+      它會暫時把終端機交給 <code>ds4-agent</code>，用同一份 checkout 與 GGUF；退出後回到 pi。
+    </p>
+    <p lang="en-GB">
+      There is also a native path: if you want to keep the <code>pi install</code> /
+      <code>pi remove</code> package-manager experience but talk through ds4&rsquo;s built-in
+      form engine, run <code>/ds4-agent</code> inside pi. It temporarily hands the terminal
+      to <code>ds4-agent</code>, using the same checkout and GGUF, then returns you to pi.
+    </p>
 
     <h3><span lang="zh-TW">為什麼「單機單流」很重要？</span><span lang="en-GB">Why the single-machine, single-stream shape matters</span></h3>
     <p lang="zh-TW">
@@ -1747,7 +1758,7 @@ document.documentElement.classList.add('js');
       <li><a href="#steering"><span lang="zh-TW">方向性引導：本分支的靈魂</span><span lang="en-GB">Directional steering: the soul of this fork</span></a></li>
       <li><a href="#config"><span lang="zh-TW">環境變數全表</span><span lang="en-GB">Full environment-variable reference</span></a></li>
       <li><a href="#tuning"><span lang="zh-TW">硬體調校：M5 與 Metal Tensor</span><span lang="en-GB">Hardware tuning: M5 and Metal Tensor</span></a></li>
-      <li><a href="#daily"><span lang="zh-TW">日常使用：API、log、context</span><span lang="en-GB">Day-to-day use: API, logs, context</span></a></li>
+      <li><a href="#daily"><span lang="zh-TW">日常使用：API、log、context、native agent</span><span lang="en-GB">Day-to-day use: API, logs, context, native agent</span></a></li>
       <li><a href="#shells"><span lang="zh-TW">當作 Codex／Claude Code／OpenClaw／Hermes 的後端</span><span lang="en-GB">As a backend for Codex / Claude Code / OpenClaw / Hermes</span></a></li>
       <li><a href="#debug"><span lang="zh-TW">故障排除：lease 與 watchdog</span><span lang="en-GB">Troubleshooting: leases and the watchdog</span></a></li>
       <li><a href="#local"><span lang="zh-TW">本機開發安裝</span><span lang="en-GB">Local development install</span></a></li>
@@ -1787,7 +1798,7 @@ document.documentElement.classList.add('js');
       <li><strong>第一～二章</strong>：硬體門檻、一行安裝、首次啟動會發生什麼事。</li>
       <li><strong>第三～四章</strong>：模型本身（abliteration、IQ2XXS imatrix）與本分支的核心特色「方向性引導」。</li>
       <li><strong>第五～六章</strong>：環境變數全表、Metal 4 / Metal Tensor 硬體調校。</li>
-      <li><strong>第七章</strong>：日常使用（API、log、lease 機制）。</li>
+      <li><strong>第七章</strong>：日常使用（API、log、lease 機制、native ds4-agent）。</li>
       <li><strong>第八章</strong>：把 pi-ds4 當作 Codex CLI／Claude Code／OpenClaw／Hermes Agent 的後端；含 DGX Spark 等非 Mac 硬體路徑。</li>
       <li><strong>第九～十一章</strong>：故障排除、本機開發安裝、進階自訂引導方向。</li>
     </ul>
@@ -1795,7 +1806,7 @@ document.documentElement.classList.add('js');
       <li><strong>Chapters 1&ndash;2:</strong> the hardware bar, the one-line install, and what happens on first launch.</li>
       <li><strong>Chapters 3&ndash;4:</strong> the model itself (abliteration, IQ2XXS imatrix) and the fork&rsquo;s signature feature, directional steering.</li>
       <li><strong>Chapters 5&ndash;6:</strong> full env-var reference and Metal 4 / Metal Tensor hardware tuning.</li>
-      <li><strong>Chapter 7:</strong> day-to-day use &mdash; API, logs, lease mechanics.</li>
+      <li><strong>Chapter 7:</strong> day-to-day use &mdash; API, logs, lease mechanics, and native ds4-agent.</li>
       <li><strong>Chapter 8:</strong> using pi-ds4 as a backend for Codex CLI / Claude Code / OpenClaw / Hermes Agent; includes the non-Mac (DGX Spark) hardware path.</li>
       <li><strong>Chapters 9&ndash;11:</strong> troubleshooting, local development install, and building your own steering direction.</li>
     </ul>
@@ -2077,6 +2088,17 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     </p>
     <p lang="en-GB">
       The whole sequence is <em>idempotent</em>: subsequent launches find everything already in place and pick up from step 5 directly; if the server is already running, even step 5 is skipped.
+    </p>
+
+    <p lang="zh-TW">
+      若第一次使用的是 <code>/ds4-agent</code> 而不是 model picker，前四步相同；
+      第 3 步會編譯 <code>ds4-agent</code>，然後跳過 HTTP server/watchdog，
+      直接把終端機前景交給 native agent。細節見 <a href="#daily">7.5 節</a>。
+    </p>
+    <p lang="en-GB">
+      If your first use is <code>/ds4-agent</code> rather than the model picker, the first four steps are the same;
+      step 3 builds <code>ds4-agent</code>, then skips the HTTP server/watchdog and hands the terminal foreground
+      directly to the native agent. Details are in <a href="#daily">&sect;7.5</a>.
     </p>
 
     <h3>2.2<span lang="zh-TW">　如何看「現在到底卡在哪」</span><span lang="en-GB">　How to see &ldquo;where is it stuck right now&rdquo;</span></h3>
@@ -2651,6 +2673,59 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
         </dd>
       </div>
     </dl>
+
+    <h3>5.6<span lang="zh-TW">　Native <code>ds4-agent</code> 前景模式</span><span lang="en-GB">　Native <code>ds4-agent</code> foreground mode</span></h3>
+
+    <dl class="dl">
+      <div class="dl-row">
+        <dt>DS4_AGENT_BINARY<span class="default"><span lang="zh-TW">預設 · runtime/ds4-agent</span><span lang="en-GB">default &middot; runtime/ds4-agent</span></span></dt>
+        <dd>
+          <p lang="zh-TW">自訂 <code>/ds4-agent</code> 要執行的 native agent 二進位位置。未設定時，擴充會在 runtime checkout 內執行 <code>make ds4-agent</code> 並使用產出的檔案。</p>
+          <p lang="en-GB">Custom native-agent binary for <code>/ds4-agent</code>. If unset, the extension runs <code>make ds4-agent</code> in the runtime checkout and uses that build.</p>
+        </dd>
+      </div>
+      <div class="dl-row">
+        <dt>DS4_AGENT_TOKENS<span class="default"><span lang="zh-TW">預設 · 50000</span><span lang="en-GB">default &middot; 50000</span></span></dt>
+        <dd>
+          <p lang="zh-TW">傳給 <code>ds4-agent --tokens</code> 的單次生成上限。context 大小仍跟 <code>DS4_CONTEXT_KB</code> 共用。</p>
+          <p lang="en-GB">Maximum generation length passed to <code>ds4-agent --tokens</code>. Context size is still shared with <code>DS4_CONTEXT_KB</code>.</p>
+        </dd>
+      </div>
+      <div class="dl-row">
+        <dt>DS4_AGENT_THINK<span class="default"><span lang="zh-TW">預設 · think</span><span lang="en-GB">default &middot; think</span></span></dt>
+        <dd>
+          <p lang="zh-TW">Native agent 的 thinking 模式：<code>think</code>（預設）、<code>off</code>/<code>none</code>、或 <code>max</code>/<code>think-max</code>。</p>
+          <p lang="en-GB">Thinking mode for the native agent: <code>think</code> (default), <code>off</code>/<code>none</code>, or <code>max</code>/<code>think-max</code>.</p>
+        </dd>
+      </div>
+      <div class="dl-row">
+        <dt>DS4_AGENT_SYSTEM<span class="default"><span lang="zh-TW">預設 · 未設定</span><span lang="en-GB">default &middot; unset</span></span></dt>
+        <dd>
+          <p lang="zh-TW">選填的 system prompt，會以 <code>ds4-agent --system</code> 傳入。未設定時使用 native agent 自己的預設。</p>
+          <p lang="en-GB">Optional system prompt passed as <code>ds4-agent --system</code>. If unset, the native agent uses its own default.</p>
+        </dd>
+      </div>
+      <div class="dl-row">
+        <dt>DS4_AGENT_TRACE<span class="default"><span lang="zh-TW">預設 · 未設定</span><span lang="en-GB">default &middot; unset</span></span></dt>
+        <dd>
+          <p lang="zh-TW">設為 <code>1</code>/<code>true</code> 時，trace 會寫到 <code>~/.pi/ds4/agent-trace.jsonl</code>；設為路徑時，該路徑會傳給 <code>ds4-agent --trace</code>。</p>
+          <p lang="en-GB">Set to <code>1</code>/<code>true</code> to write traces to <code>~/.pi/ds4/agent-trace.jsonl</code>; set it to a path to pass that path to <code>ds4-agent --trace</code>.</p>
+        </dd>
+      </div>
+    </dl>
+
+    <p lang="zh-TW">
+      <code>/ds4-agent</code> 會共用 <code>DS4_REPRODUCIBLE_SEED</code>、<code>DS4_CONTEXT_KB</code>、以及
+      <code>DS4_DIR_STEERING_FILE</code>/<code>FFN</code>/<code>ATTN</code>。它不使用
+      <code>DS4_DIR_STEERING_POLICY</code>（native agent 目前沒有這個 flag），也不使用
+      <code>DS4_MT</code> 或 <code>DS4_KV_DISK_SPACE_MB</code>（這些是 server 專用旗標）。
+    </p>
+    <p lang="en-GB">
+      <code>/ds4-agent</code> shares <code>DS4_REPRODUCIBLE_SEED</code>, <code>DS4_CONTEXT_KB</code>, and
+      <code>DS4_DIR_STEERING_FILE</code>/<code>FFN</code>/<code>ATTN</code>. It does not use
+      <code>DS4_DIR_STEERING_POLICY</code> (the native agent currently has no such flag), nor
+      <code>DS4_MT</code> or <code>DS4_KV_DISK_SPACE_MB</code> (server-only flags).
+    </p>
   </section>
 
   <hr class="rule">
@@ -2781,7 +2856,7 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
   <!-- ═══════════  CHAPTER 7 — DAILY USE  ═══════════ -->
   <section class="chapter" id="daily">
     <div class="chapter-eyebrow"><span class="cjk-num"><span lang="zh-TW">第　七　章</span><span lang="en-GB">Chapter 7</span></span></div>
-    <h2><span lang="zh-TW">日常使用：<em>API、log、context</em></span><span lang="en-GB">Daily use: <em>API, log, context</em></span></h2>
+    <h2><span lang="zh-TW">日常使用：<em>API、log、native agent</em></span><span lang="en-GB">Daily use: <em>API, log, native agent</em></span></h2>
 
     <p class="lede" lang="zh-TW">
       裝完之後，<code>ds4/deepseek-v4-flash</code> 就像任何一個雲端模型一樣，
@@ -2965,6 +3040,67 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
         For a properly resident server, the simplest approach is to leave one dedicated pi session open.
       </p>
     </div>
+
+    <h3>7.5<span lang="zh-TW">　在 pi 裡啟動 native <code>ds4-agent</code></span><span lang="en-GB">　Launching native <code>ds4-agent</code> from pi</span></h3>
+
+    <p lang="zh-TW">
+      這個分支也保留另一條路：把 pi 當作安裝、更新、移除與 runtime 準備器，
+      但真正互動時交給 ds4 checkout 內建的 native agent。指令是：
+    </p>
+    <p lang="en-GB">
+      This fork also keeps a second path: use pi as the installer, updater, remover, and runtime preparer,
+      but hand the actual conversation to the native agent that ships inside the ds4 checkout. The command is:
+    </p>
+
+    <div class="codeblock">
+      <div class="codeblock-bar">
+        <span class="codeblock-label"><span lang="zh-TW">從 pi 進入 native agent</span><span lang="en-GB">Enter the native agent from pi</span></span>
+        <button class="copy-btn" data-copy="/ds4-agent" aria-label="Copy ds4-agent slash command">Copy</button>
+      </div>
+      <pre>/ds4-agent</pre>
+    </div>
+
+    <p lang="zh-TW">
+      <code>/ds4-agent</code> 會等 pi 目前的串流結束，確認 <code>~/.pi/ds4/support</code> 已存在，
+      必要時編譯 <code>ds4-agent</code>，確認同一份 87 GB GGUF 已下載，接著暫停 pi TUI，
+      讓 <code>ds4-agent</code> 直接擁有整個終端機。離開 native agent 時，在其中輸入 <code>/quit</code>；
+      pi 的畫面會恢復。
+    </p>
+    <p lang="en-GB">
+      <code>/ds4-agent</code> waits for Pi&rsquo;s current stream to finish, ensures
+      <code>~/.pi/ds4/support</code> exists, builds <code>ds4-agent</code> if necessary,
+      verifies that the same 87 GB GGUF is present, then pauses Pi&rsquo;s TUI and lets
+      <code>ds4-agent</code> own the whole terminal. To leave the native agent, type <code>/quit</code>
+      inside it; Pi&rsquo;s screen resumes.
+    </p>
+
+    <div class="callout callout-teal">
+      <div class="callout-label"><span lang="zh-TW">為什麼不是「把 ds4-agent 塞進 provider」？</span><span lang="en-GB">Why not hide ds4-agent behind the provider?</span></div>
+      <p lang="zh-TW">
+        <code>ds4-agent</code> 不是 HTTP server。它是一個會直接控制終端機、自己管理 session/KV、自己跑 DSML 工具迴圈的 native TUI。
+        在 ds4 本身拆出 stateful session protocol 以前，安全的整合方式不是把它偽裝成 OpenAI provider，
+        而是明確地把終端機交接給它。
+      </p>
+      <p lang="en-GB">
+        <code>ds4-agent</code> is not an HTTP server. It is a native TUI that controls the terminal directly,
+        owns its session/KV state, and runs its own DSML tool loop. Until ds4 grows a stateful session protocol,
+        the safe integration is not to disguise it as an OpenAI provider; it is an explicit terminal handoff.
+      </p>
+    </div>
+
+    <p lang="zh-TW">
+      記憶體上也有一個保護：<code>/ds4-agent</code> 不會讓 87 GB 模型同時被
+      <code>ds4-server</code> 與 <code>ds4-agent</code> 各載一次。若目前的 managed server
+      是空閒的，它會先停止 server；若還有其他 pi 視窗或 HTTP client 正在使用，就拒絕啟動，
+      以免中斷別人的 run。回到 pi 後，下一次選 <code>ds4/deepseek-v4-flash</code> 發 request
+      會照原本機制重新啟動 server。
+    </p>
+    <p lang="en-GB">
+      There is a memory guard too: <code>/ds4-agent</code> will not let the 87 GB model be loaded once by
+      <code>ds4-server</code> and again by <code>ds4-agent</code>. If the managed server is idle, it stops it first;
+      if another Pi window or HTTP client is using it, the command refuses to launch rather than interrupt someone else&rsquo;s run.
+      After you return to Pi, the next <code>ds4/deepseek-v4-flash</code> request starts the server again through the normal path.
+    </p>
   </section>
 
   <hr class="rule">
@@ -2990,15 +3126,15 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     </p>
 
     <div class="callout">
-      <div class="callout-label"><span lang="zh-TW">心智模型</span><span lang="en-GB">Mental model</span></div>
+      <div class="callout-label"><span lang="zh-TW">HTTP backend 的心智模型</span><span lang="en-GB">Mental model for HTTP backends</span></div>
       <p lang="zh-TW">
-        <strong>pi-ds4 = 一台 24/7 開著的 OpenAI／Anthropic 雙協定推論伺服器，
+        <strong>pi-ds4 的 server 路徑 = 一台 24/7 開著的 OpenAI／Anthropic 雙協定推論伺服器，
         只在你本機監聽、權重在你硬碟、上下文不離開你的 Mac。</strong>
         無論你最後用 Codex CLI、Claude Code、OpenClaw、Hermes Agent，
         還是自己寫的 SDK 腳本——它都只是換一個 base URL 的事。
       </p>
       <p lang="en-GB">
-        <strong>pi-ds4 = a 24/7 dual-protocol OpenAI / Anthropic inference server,
+        <strong>pi-ds4&rsquo;s server path = a 24/7 dual-protocol OpenAI / Anthropic inference server,
         listening only on your machine, with weights on your disk and context that never leaves your Mac.</strong>
         Whether you end up using Codex CLI, Claude Code, OpenClaw, Hermes Agent,
         or your own SDK script &mdash; it is only a matter of changing the base URL.
@@ -3706,6 +3842,7 @@ chmod +x download_cyberneurova.sh
     <div class="diagram" lang="zh-TW">~/.pi/ds4/
 ├── support/         <span class="teal"># audreyt/ds4 shallow checkout</span>
 │   ├── ds4-server   <span class="teal"># 編譯出來的二進位</span>
+│   ├── ds4-agent    <span class="teal"># /ds4-agent 首次使用時編譯出來的 native TUI</span>
 │   ├── gguf/        <span class="teal"># 模型權重（symlink 自 ds4flash.gguf）</span>
 │   └── dir-steering/
 │       └── out/
@@ -3716,10 +3853,12 @@ chmod +x download_cyberneurova.sh
 │   └── 51789.json
 ├── lock/            <span class="gold"># 啟動鎖（活著時存在，否則消失）</span>
 ├── server.json      <span class="teal"># 當前 ds4-server 的 pid／port／參數</span>
+├── agent.json       <span class="teal"># 前景 ds4-agent 執行時的 pid／啟動時間</span>
 └── log              <span class="gold"># 所有 stdout/stderr</span></div>
     <div class="diagram" lang="en-GB">~/.pi/ds4/
 ├── support/         <span class="teal"># audreyt/ds4 shallow checkout</span>
 │   ├── ds4-server   <span class="teal"># the compiled binary</span>
+│   ├── ds4-agent    <span class="teal"># native TUI built the first time /ds4-agent is used</span>
 │   ├── gguf/        <span class="teal"># model weights (symlinked as ds4flash.gguf)</span>
 │   └── dir-steering/
 │       └── out/
@@ -3730,6 +3869,7 @@ chmod +x download_cyberneurova.sh
 │   └── 51789.json
 ├── lock/            <span class="gold"># startup lock (present while held, absent otherwise)</span>
 ├── server.json      <span class="teal"># current ds4-server pid / port / args</span>
+├── agent.json       <span class="teal"># foreground ds4-agent pid / start time while running</span>
 └── log              <span class="gold"># all stdout/stderr</span></div>
 
     <h3>9.2<span lang="zh-TW">　常見症狀與處置</span><span lang="en-GB">　Common symptoms and remedies</span></h3>
@@ -3757,6 +3897,18 @@ chmod +x download_cyberneurova.sh
     <p lang="en-GB">
       The log will point clearly to the failure: <code>make ds4-server</code> failing (missing Xcode CLI tools?),
       a broken GGUF download (network? disk full?), or <code>--mt</code> panicking on unsupported silicon.
+    </p>
+
+    <h4><span lang="zh-TW">「<code>/ds4-agent</code> 說 server 正在被使用」</span><span lang="en-GB">&ldquo;<code>/ds4-agent</code> says the server is in use&rdquo;</span></h4>
+    <p lang="zh-TW">
+      這是保護，不是錯誤：native agent 需要自己載入同一份 87 GB 模型。
+      如果其他 pi 視窗或 HTTP client 還在使用 <code>ds4-server</code>，擴充會拒絕啟動而不是中斷別人的請求。
+      等那些請求結束、關掉其他 pi 視窗，或照下面的溫和重啟流程清掉過期 lease 後再試。
+    </p>
+    <p lang="en-GB">
+      That is a guard, not a failure: the native agent needs to load the same 87 GB model itself.
+      If another Pi window or HTTP client is still using <code>ds4-server</code>, the extension refuses to launch rather than interrupt someone else&rsquo;s request.
+      Wait for those requests to finish, close the other Pi windows, or use the gentle restart flow below to clear stale leases before trying again.
     </p>
 
     <h4><span lang="zh-TW">「想強制重啟一切」</span><span lang="en-GB">&ldquo;I want to force-restart everything&rdquo;</span></h4>
@@ -4150,8 +4302,8 @@ STATE=~/.pi/ds4/server.json
     <div class="faq-item">
       <div class="faq-q"><span lang="zh-TW">我已經習慣用 Codex CLI／Claude Code，還需要學 pi 嗎？</span><span lang="en-GB">I am already used to Codex CLI / Claude Code &mdash; do I still need to learn pi?</span></div>
       <div class="faq-a">
-        <p lang="zh-TW">作為日常 shell——不需要。<a href="#shells">第八章</a>有四個常見前端的接法：</p>
-        <p lang="en-GB">As a daily shell &mdash; no. <a href="#shells">Chapter 8</a> shows how to wire up four common frontends:</p>
+        <p lang="zh-TW">作為日常 shell——不一定。你可以把 pi 當成套件管理器與 runtime 啟動器，然後用 <code>/ds4-agent</code> 進 native agent；也可以完全改用別的 shell。<a href="#shells">第八章</a>有四個常見前端的接法：</p>
+        <p lang="en-GB">As a daily shell &mdash; not necessarily. You can treat Pi as the package manager and runtime launcher, then enter the native agent with <code>/ds4-agent</code>; or you can use another shell entirely. <a href="#shells">Chapter 8</a> shows how to wire up four common frontends:</p>
         <ul lang="zh-TW">
           <li><strong>Claude Code：</strong>直連，<code>export ANTHROPIC_BASE_URL=http://127.0.0.1:8000</code> 就走——ds4-server 本身就實作 Anthropic Messages 端點。</li>
           <li><strong>OpenClaw：</strong>一般 agent turn 走 direct Responses provider；要保留 Computer Use 則走 Codex harness，並同時設定 Codex 的 <code>config.toml</code>。</li>
@@ -4164,8 +4316,8 @@ STATE=~/.pi/ds4/server.json
           <li><strong>Hermes Agent:</strong> just change a single <code>base_url</code>.</li>
           <li><strong>Codex CLI:</strong> add a <code>[model_providers.ds4]</code> block in <code>~/.codex/config.toml</code> pointing at ds4-server &mdash; the full paste-and-go TOML is in <a href="#shells">section 8.1</a>.</li>
         </ul>
-        <p lang="zh-TW">但你還是會在背後<em>某個地方</em>需要 ds4-server 跑起來。三條路：</p>
-        <p lang="en-GB">But you still need ds4-server running <em>somewhere</em> in the background. Three paths:</p>
+        <p lang="zh-TW">若走 HTTP backend，你還是會在背後<em>某個地方</em>需要 ds4-server 跑起來。三條路：</p>
+        <p lang="en-GB">If you use the HTTP-backend route, you still need ds4-server running <em>somewhere</em> in the background. Three paths:</p>
         <ul lang="zh-TW">
           <li><strong>有 pi：</strong>留一個 pi session 開著讓 watchdog 維持（A 方案）；或 <code>cd ~/.pi/ds4/support && ./ds4-server …</code> 手動跑（B 方案）。</li>
           <li><strong>沒有 pi：</strong>克隆 <code>audreyt/ds4</code>、<code>make ds4-server</code>，然後用 <code>pi-ds4</code> 的 <code>download_model.sh</code>（curl 一份下來，<em>不是</em> ds4 內附的同名腳本——那支抓的是上游 stock-recipe），最後跑 <code>./ds4-server …</code>（C 方案）。完整步驟與旗標見 <a href="#shells">8.6 節</a>。</li>
@@ -4174,8 +4326,8 @@ STATE=~/.pi/ds4/server.json
           <li><strong>With pi:</strong> keep one pi session open so the watchdog keeps it alive (option A); or <code>cd ~/.pi/ds4/support &amp;&amp; ./ds4-server &hellip;</code> by hand (option B).</li>
           <li><strong>Without pi:</strong> clone <code>audreyt/ds4</code>, run <code>make ds4-server</code>, then use <code>pi-ds4</code>'s <code>download_model.sh</code> (curl a copy &mdash; <em>not</em> the same-named script inside ds4, which fetches the upstream stock-recipe), and finally run <code>./ds4-server &hellip;</code> (option C). Full steps and flags in <a href="#shells">section 8.6</a>.</li>
         </ul>
-        <p lang="zh-TW">簡言之：作為<em>前端</em>可以完全不碰 pi；作為<em>服務</em>你還是得讓 ds4-server 跑起來——但這條服務路徑也可以完全不經過 pi（見 <a href="#shells">8.6 節</a>）。</p>
-        <p lang="en-GB">In short: as a <em>frontend</em> you can avoid pi entirely; as a <em>service</em> you still need ds4-server running &mdash; but that service path can also bypass pi entirely (see <a href="#shells">section 8.6</a>).</p>
+        <p lang="zh-TW">簡言之：想要 native agent，就用 <code>/ds4-agent</code>，不需要 ds4-server；想把其他前端接成 HTTP backend，才需要 ds4-server。</p>
+        <p lang="en-GB">In short: for the native agent, use <code>/ds4-agent</code> and you do not need ds4-server; for other HTTP frontends, you do.</p>
       </div>
     </div>
 
@@ -4439,6 +4591,16 @@ STATE=~/.pi/ds4/server.json
 
     <h3><span lang="zh-TW">系統與生命週期</span><span lang="en-GB">System and lifecycle</span></h3>
     <dl>
+      <div>
+        <dt>ds4-server<span class="cjk-aside">HTTP 推論服務</span></dt>
+        <dd lang="zh-TW">pi 與其他 HTTP client 使用的背景推論 server；監聽 <code>127.0.0.1:8000</code>，由 lease/watchdog 管理生命週期。</dd>
+        <dd lang="en-GB">The background inference server used by Pi and other HTTP clients; listens on <code>127.0.0.1:8000</code> and is lifecycle-managed by leases and the watchdog.</dd>
+      </div>
+      <div>
+        <dt>ds4-agent<span class="cjk-aside">native TUI agent</span></dt>
+        <dd lang="zh-TW">ds4 checkout 內建的原生終端機 agent。它不是 provider server，而是自己控制終端機、session/KV 與 DSML 工具迴圈；pi-ds4 以 <code>/ds4-agent</code> 做前景交接。</dd>
+        <dd lang="en-GB">The native terminal agent inside the ds4 checkout. It is not a provider server; it controls the terminal, session/KV state, and DSML tool loop itself. pi-ds4 exposes it through the foreground handoff <code>/ds4-agent</code>.</dd>
+      </div>
       <div>
         <dt>lease<span class="cjk-aside">租約檔</span></dt>
         <dd lang="zh-TW">每個使用 ds4 的 pi process 在 <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code> 寫入的存在證明；每 10 秒更新一次。</dd>

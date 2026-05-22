@@ -89,9 +89,36 @@ README documents still applies:
 * Logs at `~/.pi/ds4/log`; KV disk cache at `~/.pi/ds4/kv` (8 GB default,
   overridable via `DS4_KV_DISK_SPACE_MB`).
 * `/ds4` inside `pi` shows the live ds4 log.
+* `/ds4-agent` inside `pi` launches the native `ds4-agent` TUI in the same
+  terminal, using the same checkout and GGUF.
 
 The only differences are the fork-specific changes above: the ds4 source it
 pulls, the model it downloads, and the steering defaults it applies.
+
+## Native ds4-agent foreground mode
+
+`ds4-agent` is not an HTTP provider. It is a native terminal application with
+its own session loop, DSML tool engine, history, and on-disk KV state. That
+means it cannot safely be hidden behind Pi's normal provider interface without
+a stateful client/server protocol in ds4 itself.
+
+The supported integration is therefore explicit:
+
+```text
+/ds4-agent
+```
+
+Run that slash command inside `pi` when you want the native form engine. The
+extension prepares the shared runtime, builds `ds4-agent` if needed, ensures the
+same GGUF is present, waits for Pi to become idle, then temporarily releases
+Pi's TUI and lets `ds4-agent` own the terminal. Type `/quit` inside
+`ds4-agent` to return to Pi.
+
+To avoid loading the 87 GB model twice, `/ds4-agent` will stop an idle
+managed `ds4-server` before launching. If another Pi process or HTTP client is
+currently using the server, the command refuses to launch instead of killing
+someone else's run. After you return to Pi, the next `ds4/deepseek-v4-flash`
+request starts `ds4-server` again on demand.
 
 ## Runtime layout
 
@@ -102,6 +129,7 @@ Runtime state under `~/.pi/ds4`:
 * `support/ds4flash.gguf` — symlink to the GGUF (consumed by `ds4-server`)
 * `kv/` — on-disk KV cache
 * `clients/` — active pi process leases
+* `agent.json` — foreground `ds4-agent` guard while `/ds4-agent` is running
 * `log` — build/download/server/watchdog log
 
 ## Directional steering
@@ -229,6 +257,15 @@ Same env vars as upstream, plus several fork-specific ones (notably the context-
   `ds4-server --dir-steering-policy`. Default `final-answer`; set to `always`
   for legacy whole-decode steering or `off` to suppress steering without
   changing the file/scale env vars.
+* `DS4_AGENT_BINARY` — custom `ds4-agent` binary path for `/ds4-agent`.
+* `DS4_AGENT_TOKENS` — max generation tokens passed to `ds4-agent`. Default
+  `50000`.
+* `DS4_AGENT_THINK` — native-agent thinking mode. Default `think`; accepted
+  values are `think`, `off` / `none`, and `max` / `think-max`.
+* `DS4_AGENT_SYSTEM` — optional system prompt passed to `ds4-agent --system`.
+* `DS4_AGENT_TRACE` — set to `1` / `true` to write native-agent trace output to
+  `~/.pi/ds4/agent-trace.jsonl`, or set it to a path to pass that path to
+  `ds4-agent --trace`.
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout instead of `~/.pi/ds4/support`
 * `DS4_MODEL_QUANT` — hard-coded to `q2`. The audreyt/cyberneurova abliterated
   repo publishes IQ2XXS-w2Q2K aligned-imatrix (~87 GB), the earlier q2-imatrix

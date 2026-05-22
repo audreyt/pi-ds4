@@ -1,5 +1,5 @@
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { execSync, spawn } from "node:child_process";
+import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
+import { execSync, spawn, spawnSync } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { closeSync, constants, openSync, writeSync } from "node:fs";
 import {
@@ -34,6 +34,7 @@ const SUPPORT_DIR = join(DS4_DIR, "support");
 const CLIENT_DIR = join(DS4_DIR, "clients");
 const LOCK_DIR = join(DS4_DIR, "lock");
 const STATE_FILE = join(DS4_DIR, "server.json");
+const AGENT_FILE = join(DS4_DIR, "agent.json");
 const LOG_FILE = join(DS4_DIR, "log");
 const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
 
@@ -51,11 +52,11 @@ const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
 // and deletes the cached ds4-server binary so ensureBuilt rebuilds. This is
 // what propagates ds4-server fixes to existing installs without a manual
 // `rm -rf ~/.pi/ds4/support` dance. Bump this when you ship a new ds4-server
-// fix you want existing users to pick up. Set DS4_SUPPORT_PIN= (empty) to
+// or ds4-agent fix you want existing users to pick up. Set DS4_SUPPORT_PIN= (empty) to
 // disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
-const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "5536a4ceadadc0a29dd02ba44894dd533fa28ddb").trim();
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "0515e1c0b60cb0c2c151a1db29b2f62dbd2c9984").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)
@@ -149,10 +150,18 @@ const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STE
 		"--dir-steering-policy", STEERING_POLICY,
 	]
 	: [];
+const AGENT_STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
+	? [
+		"--dir-steering-file", STEERING_FILE,
+		"--dir-steering-ffn", STEERING_FFN,
+		"--dir-steering-attn", STEERING_ATTN,
+	]
+	: [];
 const MT_ARGS = MT_MODE ? ["--mt", MT_MODE] : [];
 const SERVER_ARGS = ["--ctx", CTX_SIZE, "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", KV_DISK_SPACE_MB, ...MT_ARGS, ...STEERING_ARGS];
 const REPRODUCIBLE = envFlagEnabled(process.env.DS4_REPRODUCIBLE, true);
 const REPRODUCIBLE_SEED = REPRODUCIBLE ? parseReproducibleSeed(process.env.DS4_REPRODUCIBLE_SEED) : 42;
+const AGENT_TOKENS = process.env.DS4_AGENT_TOKENS?.trim() || "50000";
 
 const HEARTBEAT_MS = 10_000;
 const LEASE_TTL_MS = 45_000;
@@ -200,11 +209,21 @@ type Lease = {
 	updatedAtIso: string;
 };
 
+type AgentRunState = {
+	managedBy: string;
+	pid: number;
+	processStart: string;
+	cwd: string;
+	startedAt: number;
+	startedAtIso: string;
+};
+
 type StatusCallback = (message: string | undefined) => void;
 type RunLoggedOptions = { onStatus?: StatusCallback; progressPrefix?: string };
 
 type LogTui = { terminal: { rows: number }; requestRender: (force?: boolean) => void };
-type LogTheme = { fg: (color: string, text: string) => string };
+type ForegroundTui = LogTui & { start: () => void; stop: () => void };
+type LogTheme = { fg: (color: any, text: string) => string };
 type Component = { render(width: number): string[]; handleInput?(data: string): void; invalidate(): void };
 
 const WATCHDOG_SCRIPT_NAME = "ds4-watchdog.sh";
@@ -956,8 +975,11 @@ async function syncToSupportPin(dir: string, onStatus?: StatusCallback): Promise
 	onStatus?.(`updating ds4 support checkout to ${SUPPORT_PIN.slice(0, 12)}`);
 	await runLogged("git", ["fetch", "--depth", "1", "origin", SUPPORT_PIN], dir, "fetch ds4 pin", { onStatus });
 	await runLogged("git", ["reset", "--hard", SUPPORT_PIN], dir, "reset ds4 to pin", { onStatus });
-	// stale binary must go so ensureBuilt rebuilds against the new source
-	await rm(join(dir, "ds4-server"), { force: true });
+	// stale binaries must go so ensureBuilt / ensureAgentBuilt rebuild against the new source
+	await Promise.all([
+		rm(join(dir, "ds4-server"), { force: true }),
+		rm(join(dir, "ds4-agent"), { force: true }),
+	]);
 }
 
 async function ensureSupportCheckout(onStatus?: StatusCallback): Promise<string> {
@@ -1022,6 +1044,50 @@ async function ensureBuilt(runtimeDir: string, onStatus?: StatusCallback): Promi
 	await access(join(runtimeDir, "ds4-server"), constants.X_OK);
 }
 
+async function ensureAgentBuilt(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
+	try {
+		await access(join(runtimeDir, "ds4-agent"), constants.X_OK);
+		return;
+	} catch {}
+
+	onStatus?.("building ds4-agent");
+	await runLogged("make", ["ds4-agent"], runtimeDir, "build ds4-agent", {
+		onStatus,
+		progressPrefix: "building ds4-agent",
+	});
+	await access(join(runtimeDir, "ds4-agent"), constants.X_OK);
+}
+
+function selectedAgentThinkingArgs(): string[] {
+	const raw = process.env.DS4_AGENT_THINK?.trim().toLowerCase();
+	if (!raw || raw === "on" || raw === "true" || raw === "think") return ["--think"];
+	if (raw === "off" || raw === "false" || raw === "none" || raw === "nothink") return ["--nothink"];
+	if (raw === "max" || raw === "think-max" || raw === "xhigh") return ["--think-max"];
+	throw new Error("DS4_AGENT_THINK must be one of think, off, none, max, or think-max");
+}
+
+function selectedAgentTraceFile(): string | undefined {
+	const raw = process.env.DS4_AGENT_TRACE?.trim();
+	if (!raw || !envFlagEnabled(raw, false)) return undefined;
+	if (/^(?:1|true|yes|on)$/i.test(raw)) return join(DS4_DIR, "agent-trace.jsonl");
+	return resolve(raw);
+}
+
+function buildAgentArgs(initialPrompt: string): string[] {
+	const args = [
+		"--ctx", CTX_SIZE,
+		"--tokens", AGENT_TOKENS,
+		...selectedAgentThinkingArgs(),
+		...AGENT_STEERING_ARGS,
+	];
+	const traceFile = selectedAgentTraceFile();
+	if (REPRODUCIBLE) args.push("--seed", String(REPRODUCIBLE_SEED));
+	if (process.env.DS4_AGENT_SYSTEM) args.push("--system", process.env.DS4_AGENT_SYSTEM);
+	if (traceFile) args.push("--trace", traceFile);
+	if (initialPrompt.trim()) args.push("--prompt", initialPrompt.trim());
+	return args;
+}
+
 async function ensureModel(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
 	const quant = selectedModelQuant();
 	onStatus?.(`ensuring ${quant} model (cyberneurova abliterated IQ2XXS aligned-imatrix)`);
@@ -1042,6 +1108,17 @@ async function ensureRuntimeReadyLocked(onStatus?: StatusCallback): Promise<stri
 	if (runtimeDisposed || shuttingDown) return runtimeDir;
 	await ensureModel(runtimeDir, onStatus);
 	return runtimeDir;
+}
+
+async function ensureAgentRuntimeReady(onStatus?: StatusCallback): Promise<string> {
+	return withLock(async () => {
+		const runtimeDir = await resolveRuntimeDirLocked(onStatus);
+		if (runtimeDisposed || shuttingDown) return runtimeDir;
+		if (!process.env.DS4_AGENT_BINARY) await ensureAgentBuilt(runtimeDir, onStatus);
+		if (runtimeDisposed || shuttingDown) return runtimeDir;
+		await ensureModel(runtimeDir, onStatus);
+		return runtimeDir;
+	}, STARTUP_LOCK_TIMEOUT_MS, true);
 }
 
 async function isLockStale(): Promise<boolean> {
@@ -1142,6 +1219,18 @@ async function pruneLeases(): Promise<void> {
 	}
 }
 
+async function readActiveLeases(): Promise<Lease[]> {
+	await mkdir(CLIENT_DIR, { recursive: true });
+	const entries = await readdir(CLIENT_DIR).catch(() => [] as string[]);
+	const leases: Lease[] = [];
+	for (const entry of entries) {
+		if (!entry.endsWith(".json")) continue;
+		const lease = await readJson<Lease>(join(CLIENT_DIR, entry));
+		if (lease && (await isLeaseForLiveProcess(lease))) leases.push(lease);
+	}
+	return leases;
+}
+
 async function activateLease(): Promise<void> {
 	await ensureDirs();
 	await touchLease();
@@ -1164,6 +1253,44 @@ async function clearState(): Promise<void> {
 	await removeFile(STATE_FILE);
 }
 
+async function readActiveAgentState(): Promise<AgentRunState | undefined> {
+	const state = await readJson<AgentRunState>(AGENT_FILE);
+	if (!state || state.managedBy !== MANAGED_BY) {
+		if (state) await removeFile(AGENT_FILE);
+		return undefined;
+	}
+	if (!isPidAlive(state.pid)) {
+		await removeFile(AGENT_FILE);
+		return undefined;
+	}
+	const currentStart = await processStart(state.pid);
+	if (!state.processStart || currentStart !== state.processStart) {
+		await removeFile(AGENT_FILE);
+		return undefined;
+	}
+	return state;
+}
+
+async function writeAgentRunState(): Promise<void> {
+	const now = Date.now();
+	await writeJsonAtomic(AGENT_FILE, {
+		managedBy: MANAGED_BY,
+		pid: process.pid,
+		processStart: await getOwnProcessStart(),
+		cwd: process.cwd(),
+		startedAt: now,
+		startedAtIso: new Date(now).toISOString(),
+	} satisfies AgentRunState);
+}
+
+async function clearOwnAgentRunState(): Promise<void> {
+	const state = await readJson<AgentRunState>(AGENT_FILE);
+	if (!state) return;
+	if (state.pid === process.pid && state.processStart === (await getOwnProcessStart())) {
+		await removeFile(AGENT_FILE);
+	}
+}
+
 async function checkHttpReady(): Promise<boolean> {
 	const controller = new AbortController();
 	const timeout = setTimeout(() => controller.abort(), HTTP_CHECK_TIMEOUT_MS);
@@ -1175,6 +1302,11 @@ async function checkHttpReady(): Promise<boolean> {
 	} finally {
 		clearTimeout(timeout);
 	}
+}
+
+async function serverHasClients(pid: number): Promise<boolean> {
+	const output = await execCapture("lsof", ["-nP", "-a", "-p", String(pid), "-iTCP", "-sTCP:ESTABLISHED"], 2_000);
+	return (output ?? "").trim().split(/\r?\n/).length > 1;
 }
 
 async function waitForPidExit(pid: number, timeoutMs: number): Promise<boolean> {
@@ -1208,6 +1340,98 @@ async function waitForServerReady(onStatus?: StatusCallback): Promise<void> {
 	}
 
 	throw new Error(`Timed out waiting for ds4-server at ${API_BASE_URL}; see ${LOG_FILE}`);
+}
+
+async function stopManagedServerForAgent(onStatus?: StatusCallback): Promise<void> {
+	await withLock(async () => {
+		await pruneLeases();
+
+		const ownStart = await getOwnProcessStart();
+		const activeAgent = await readActiveAgentState();
+		if (activeAgent && (activeAgent.pid !== process.pid || activeAgent.processStart !== ownStart)) {
+			throw new Error(`ds4-agent is already running in pi process ${activeAgent.pid}; wait for it to exit before starting another copy.`);
+		}
+
+		const state = await readState();
+		const statePid = state?.pid && isPidAlive(state.pid) && (await looksLikeDs4Server(state.pid)) ? state.pid : undefined;
+		const listeningPid = await findListeningDs4ServerPid();
+		const httpReady = await checkHttpReady();
+		const serverPid = statePid ?? listeningPid;
+
+		if (!serverPid) {
+			if (httpReady) {
+				throw new Error(
+					`Something is already answering at ${API_BASE_URL}, but pi-ds4 could not identify it as a managed ds4-server. ` +
+						`Stop it before running /ds4-agent.`,
+				);
+			}
+			if (state?.pid) await clearState();
+			stopHeartbeat();
+			await removeOwnLease();
+			await writeAgentRunState();
+			return;
+		}
+
+		if (listeningPid && (!statePid || listeningPid !== statePid)) {
+			throw new Error(
+				`A ds4-server is already listening on ${API_BASE_URL} as pid ${listeningPid}, but this pi session does not own it. ` +
+					`Stop that server before running /ds4-agent so the native agent can load the model safely.`,
+			);
+		}
+
+		const otherLeases = (await readActiveLeases()).filter(
+			(lease) => lease.pid !== process.pid || lease.processStart !== ownStart,
+		);
+		if (otherLeases.length > 0) {
+			throw new Error(
+				`ds4-server is in use by ${otherLeases.length} other pi process${otherLeases.length === 1 ? "" : "es"}; ` +
+					`close those sessions before running /ds4-agent.`,
+			);
+		}
+
+		if (await serverHasClients(serverPid)) {
+			throw new Error(`ds4-server pid ${serverPid} still has active HTTP clients; run /ds4-agent after those requests finish.`);
+		}
+
+		onStatus?.("stopping ds4-server before ds4-agent");
+		stopHeartbeat();
+		await removeOwnLease();
+
+		const now = Date.now();
+		await writeJsonAtomic(STATE_FILE, {
+			managedBy: MANAGED_BY,
+			pid: serverPid,
+			baseUrl: API_BASE_URL,
+			cwd: state?.cwd ?? SUPPORT_DIR,
+			binary: state?.binary ?? "ds4-server",
+			args: state?.args ?? [],
+			startedAt: state?.startedAt ?? now,
+			startedAtIso: state?.startedAtIso ?? new Date(now).toISOString(),
+			stopping: true,
+			stoppingAt: now,
+			stoppingAtIso: new Date(now).toISOString(),
+		} satisfies ServerState);
+		await appendLog(`\n[${new Date().toISOString()}] stop ds4-server before ds4-agent pid=${serverPid}\n`);
+
+		try {
+			process.kill(serverPid, "SIGTERM");
+		} catch (error: any) {
+			if (error?.code !== "ESRCH") throw error;
+		}
+
+		if (!(await waitForPidExit(serverPid, SHUTDOWN_GRACE_MS))) {
+			await appendLog(`[${new Date().toISOString()}] ds4-server pid=${serverPid} still alive; sending SIGKILL\n`);
+			try {
+				process.kill(serverPid, "SIGKILL");
+			} catch {}
+			if (!(await waitForPidExit(serverPid, 5_000))) {
+				throw new Error(`ds4-server pid ${serverPid} did not exit; see ${LOG_FILE}`);
+			}
+		}
+
+		await clearState();
+		await writeAgentRunState();
+	}, LOCK_TIMEOUT_MS);
 }
 
 async function startServerLocked(runtimeDir: string): Promise<void> {
@@ -1255,6 +1479,10 @@ async function ensureServerManagedInner(onStatus?: StatusCallback): Promise<void
 	let stoppingPid: number | undefined;
 
 	await withLock(async () => {
+		const activeAgent = await readActiveAgentState();
+		if (activeAgent) {
+			throw new Error(`ds4-agent is running in pi process ${activeAgent.pid}; wait for it to exit before starting ds4-server`);
+		}
 		let runtimeDir = await resolveRuntimeDirLocked(onStatus);
 		await activateLease();
 		if (runtimeDisposed || shuttingDown) return;
@@ -1314,6 +1542,87 @@ async function stopServerIfUnused(): Promise<void> {
 	await removeOwnLease();
 }
 
+type AgentExit = { status: number | null; signal: NodeJS.Signals | null; error?: string };
+
+function runAgentInForeground(tui: ForegroundTui, binary: string, args: string[], runtimeDir: string): AgentExit {
+	tui.stop();
+	try {
+		process.stdout.write("\x1b[2J\x1b[H");
+		process.stdout.write("ds4-agent is taking over this terminal. Type /quit inside ds4-agent to return to pi.\n\n");
+		const result = spawnSync(binary, args, {
+			cwd: runtimeDir,
+			stdio: "inherit",
+			env: process.env,
+		});
+		return {
+			status: result.status,
+			signal: result.signal,
+			error: result.error ? describeError(result.error) : undefined,
+		};
+	} finally {
+		tui.start();
+		tui.requestRender(true);
+	}
+}
+
+async function launchDs4Agent(args: string, ctx: ExtensionCommandContext): Promise<void> {
+	if (!ctx.hasUI) {
+		ctx.ui.notify("/ds4-agent requires an interactive terminal", "error");
+		return;
+	}
+
+	await ctx.waitForIdle();
+
+	let lastNotification: string | undefined;
+	const notifyStatus: StatusCallback = (message) => {
+		if (!message || message === lastNotification) return;
+		lastNotification = message;
+		ctx.ui.notify(message, "info");
+	};
+
+	let agentRunMarked = false;
+	try {
+		notifyStatus("preparing ds4-agent");
+		const runtimeDir = await ensureAgentRuntimeReady(notifyStatus);
+		const binary = process.env.DS4_AGENT_BINARY ? resolve(process.env.DS4_AGENT_BINARY) : join(runtimeDir, "ds4-agent");
+		try {
+			await access(binary, constants.X_OK);
+		} catch {
+			throw new Error(`Cannot execute ds4-agent at ${binary}`);
+		}
+
+		await stopManagedServerForAgent(notifyStatus);
+		agentRunMarked = true;
+		const agentArgs = buildAgentArgs(args);
+
+		const exit = await ctx.ui.custom<AgentExit>((tui, _theme, _keybindings, done) => {
+			const result = runAgentInForeground(tui as ForegroundTui, binary, agentArgs, runtimeDir);
+			done(result);
+			return { render: () => [], invalidate: () => {} };
+		});
+
+		if (exit.error) {
+			ctx.ui.notify(`ds4-agent failed: ${exit.error}`, "error");
+		} else if (exit.signal) {
+			ctx.ui.notify(`ds4-agent exited with signal ${exit.signal}`, "warning");
+		} else if (exit.status && exit.status !== 0) {
+			ctx.ui.notify(`ds4-agent exited with status ${exit.status}`, "warning");
+		} else {
+			ctx.ui.notify("returned from ds4-agent", "info");
+		}
+	} catch (error) {
+		ctx.ui.notify(`ds4-agent launch failed: ${describeError(error)}`, "error");
+	} finally {
+		if (agentRunMarked) {
+			try {
+				await clearOwnAgentRunState();
+			} catch (error) {
+				ctx.ui.notify(`ds4-agent cleanup failed: ${describeError(error)}`, "warning");
+			}
+		}
+	}
+}
+
 function registerDs4Command(pi: ExtensionAPI): void {
 	pi.registerCommand("ds4", {
 		description: "Show the live ds4-server log",
@@ -1345,6 +1654,13 @@ function registerDs4Command(pi: ExtensionAPI): void {
 				viewer?.dispose();
 			}
 		},
+	});
+}
+
+function registerDs4AgentCommand(pi: ExtensionAPI): void {
+	pi.registerCommand("ds4-agent", {
+		description: "Launch the native ds4-agent in this terminal",
+		handler: launchDs4Agent,
 	});
 }
 
@@ -1398,6 +1714,7 @@ export default function (pi: ExtensionAPI) {
 
 	registerDs4Provider(pi);
 	registerDs4Command(pi);
+	registerDs4AgentCommand(pi);
 
 	pi.on("before_provider_request", async (event, ctx) => {
 		if (ctx.model?.provider !== PROVIDER_ID || ctx.model?.id !== MODEL_ID) return;
