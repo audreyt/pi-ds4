@@ -92,15 +92,6 @@ function selectedProtocol(): ProviderProtocol {
 const PROVIDER_API = selectedProtocol();
 const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API_BASE_URL;
 
-// --mt is a Metal-only flag in audreyt/ds4 (CUDA / non-Darwin forks reject it).
-// On Darwin: default "auto" — passed explicitly so the policy is visible in the
-// server log; engages validated late-layer-safe Metal Tensor routes on M5/M6/A19/A20-class
-// Metal 4 hardware for ~1.5x prefill, and falls back to the legacy Metal path on
-// older targets automatically.
-// On non-Darwin: default "" — the flag is omitted entirely.
-// DS4_MT env wins on both platforms; DS4_MPP is accepted as a legacy env alias.
-const MT_MODE = process.env.DS4_MT ?? process.env.DS4_MPP ?? (process.platform === "darwin" ? "auto" : "");
-
 // DS4_CONTEXT_KB sets the server context window in *kilotokens* (the only
 // supported knob for context size).
 //
@@ -149,8 +140,14 @@ const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STE
 		"--dir-steering-policy", STEERING_POLICY,
 	]
 	: [];
-const MT_ARGS = MT_MODE ? ["--mt", MT_MODE] : [];
-const SERVER_ARGS = ["--ctx", CTX_SIZE, "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", KV_DISK_SPACE_MB, ...MT_ARGS, ...STEERING_ARGS];
+const AGENT_STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
+	? [
+		"--dir-steering-file", STEERING_FILE,
+		"--dir-steering-ffn", STEERING_FFN,
+		"--dir-steering-attn", STEERING_ATTN,
+	]
+	: [];
+const SERVER_ARGS = ["--ctx", CTX_SIZE, "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", KV_DISK_SPACE_MB, ...STEERING_ARGS];
 const REPRODUCIBLE = envFlagEnabled(process.env.DS4_REPRODUCIBLE, true);
 const REPRODUCIBLE_SEED = REPRODUCIBLE ? parseReproducibleSeed(process.env.DS4_REPRODUCIBLE_SEED) : 42;
 
