@@ -1713,19 +1713,22 @@ document.documentElement.classList.add('js');
 
     <h3><span lang="zh-TW">你是哪一種讀者？</span><span lang="en-GB">Which reader are you?</span></h3>
     <div class="paths">
-      <a class="path" href="#steering">
+      <div class="path">
         <span class="who"><span lang="zh-TW">記者／研究者</span><span lang="en-GB">Journalist / researcher</span></span>
-        <span><span lang="zh-TW">看第四章「方向性引導」的對照範例就夠了</span><span lang="en-GB">Chapter 4&rsquo;s &ldquo;Directional steering&rdquo; side-by-side examples are enough.</span></span>
-        <span class="arrow">→ 04</span>
-      </a>
+        <span>
+          <span lang="zh-TW">請看<a href="#motivation">「動機」</a>和<a href="#steering">第四章「方向性引導」的對照範例</a>，即可瞭解概要</span>
+          <span lang="en-GB">Read <a href="#motivation">Motivation</a> and <a href="#steering">Chapter 4&rsquo;s &ldquo;Directional steering&rdquo; side-by-side examples</a> for the overview.</span>
+        </span>
+        <span class="arrow">→ 00 · 04</span>
+      </div>
       <a class="path" href="#shells">
         <span class="who"><span lang="zh-TW">已有慣用的 AI shell</span><span lang="en-GB">Already have a favourite AI shell</span></span>
         <span><span lang="zh-TW">Codex CLI／Claude Code／OpenClaw／Hermes 接 pi-ds4 當後端──第八章</span><span lang="en-GB">Point Codex CLI / Claude Code / OpenClaw / Hermes at pi-ds4 as backend &mdash; Chapter 8.</span></span>
         <span class="arrow">→ 08</span>
       </a>
-      <a class="path" href="#preface">
+      <a class="path" href="#motivation">
         <span class="who"><span lang="zh-TW">想理解每個旋鈕</span><span lang="en-GB">Want to understand every dial</span></span>
-        <span><span lang="zh-TW">從序章開始依序讀，全程約 20 分鐘</span><span lang="en-GB">Read sequentially from the preface; about 20 minutes end to end.</span></span>
+        <span><span lang="zh-TW">從第零章開始依序讀，全程約 20 分鐘</span><span lang="en-GB">Read sequentially from Chapter 0; about 20 minutes end to end.</span></span>
         <span class="arrow">→ 00</span>
       </a>
       <a class="path" href="#otherhw">
@@ -1740,6 +1743,7 @@ document.documentElement.classList.add('js');
   <nav class="toc" aria-label="Contents">
     <div class="toc-label"><span lang="zh-TW">目　錄</span><span lang="en-GB">Contents</span></div>
     <ol>
+      <li><a href="#motivation"><span lang="zh-TW">第零章：動機</span><span lang="en-GB">Chapter 0: Motivation</span></a></li>
       <li><a href="#preface"><span lang="zh-TW">前情提要：這份指南寫給誰看</span><span lang="en-GB">Preface: Who this guide is for</span></a></li>
       <li><a href="#install"><span lang="zh-TW">硬體門檻與一行安裝</span><span lang="en-GB">Hardware bar and the one-line install</span></a></li>
       <li><a href="#firstrun"><span lang="zh-TW">首次啟動會發生什麼事</span><span lang="en-GB">What happens on first launch</span></a></li>
@@ -1761,6 +1765,37 @@ document.documentElement.classList.add('js');
     </div>
   </nav>
 
+  <!-- ═══════════  CHAPTER 0 — MOTIVATION  ═══════════ -->
+  <section class="chapter" id="motivation">
+    <div class="chapter-eyebrow"><span class="cjk-num"><span lang="zh-TW">第　零　章</span><span lang="en-GB">Chapter 0</span></span></div>
+    <h2>
+      <span lang="zh-TW"><em>動機</em>：為什麼要把 DS4 帶回本地</span>
+      <span lang="en-GB"><em>Motivation</em>: why bring DS4 home</span>
+    </h2>
+
+    <p class="lede" lang="zh-TW">
+      這份指南的背景，是「軟體自由與公民關懷」裡那個簡單問題：當 AI 系統失靈時，繼承它的人還能不能修？
+      DS4 的意義不只是讓一顆接近前沿的模型跑在自己的 Mac 上，而是讓推論迴圈、稽核軌跡與方向性引導回到使用者與社群手中。
+    </p>
+    <p class="lede" lang="en-GB">
+      The frame for this guide is the simple question behind &ldquo;Software Freedom as Civic Care&rdquo;:
+      when an AI system fails, can the people who inherit it still repair it?
+      DS4 matters not only because it runs a near-frontier model on your own Mac, but because it returns the inference loop, audit trail, and steering controls to users and communities.
+    </p>
+
+    <p lang="zh-TW">
+      換句話說，本機 AI 不是雲端 AI 的迷你版。只有當模型、設定、記憶與修復路徑都可檢視、可分叉、可回滾，AI 才能進入家庭、專案與民主社群既有的照護循環，而不是把人拉進平台自己的循環。
+      本文最後的 <a href="#further-reading">延伸閱讀</a> 收錄了完整脈絡。
+    </p>
+    <p lang="en-GB">
+      In other words, local AI is not a miniature cloud service.
+      It becomes civic infrastructure only when the model, settings, memory, and repair path can be inspected, forked, and rolled back, so AI can enter existing loops of care in families, projects, and democratic communities instead of pulling people into a platform&rsquo;s own loop.
+      The full context is linked in the <a href="#further-reading">Further reading</a> section.
+    </p>
+  </section>
+
+  <hr class="rule">
+
   <!-- ═══════════  PREFACE  ═══════════ -->
   <section class="chapter" id="preface">
     <div class="chapter-eyebrow"><span class="cjk-num"><span lang="zh-TW">序　章</span><span lang="en-GB">Preface</span></span></div>
@@ -1780,10 +1815,11 @@ document.documentElement.classList.add('js');
       It is not a translation of the README, nor marketing copy &mdash; it is the full operational manual for the audreyt fork.
     </p>
 
-    <p lang="zh-TW">本書共 <strong>十一章</strong>，加上這篇序章與最後的附錄、字彙、FAQ。閱讀路徑：</p>
-    <p lang="en-GB">The book has <strong>eleven chapters</strong>, plus this preface and the closing coda, glossary, and FAQ. Reading paths:</p>
+    <p lang="zh-TW">本書共 <strong>十一章</strong>，加上第零章、這篇序章與最後的附錄、字彙、FAQ。閱讀路徑：</p>
+    <p lang="en-GB">The book has <strong>eleven chapters</strong>, plus Chapter 0, this preface, and the closing coda, glossary, and FAQ. Reading paths:</p>
 
     <ul lang="zh-TW">
+      <li><strong>第零章</strong>：這個專案背後的動機與公民關懷脈絡。</li>
       <li><strong>第一～二章</strong>：硬體門檻、一行安裝、首次啟動會發生什麼事。</li>
       <li><strong>第三～四章</strong>：模型本身（abliteration、IQ2XXS imatrix）與本分支的核心特色「方向性引導」。</li>
       <li><strong>第五～六章</strong>：環境變數全表、context／KV cache 與 runtime 調校。</li>
@@ -1792,6 +1828,7 @@ document.documentElement.classList.add('js');
       <li><strong>第九～十一章</strong>：故障排除、本機開發安裝、進階自訂引導方向。</li>
     </ul>
     <ul lang="en-GB">
+      <li><strong>Chapter 0:</strong> the motivation and civic-care frame behind this project.</li>
       <li><strong>Chapters 1&ndash;2:</strong> the hardware bar, the one-line install, and what happens on first launch.</li>
       <li><strong>Chapters 3&ndash;4:</strong> the model itself (abliteration, IQ2XXS imatrix) and the fork&rsquo;s signature feature, directional steering.</li>
       <li><strong>Chapters 5&ndash;6:</strong> full env-var reference plus context / KV-cache runtime tuning.</li>
@@ -4467,7 +4504,7 @@ STATE=~/.pi/ds4/server.json
     <p lang="zh-TW">原始碼採用 MIT，與上游一致。請見專案 <code>LICENSE</code>。本指南文本則貢獻於 Public Domain（CC0）。</p>
     <p lang="en-GB">Source code is MIT-licensed, matching upstream. See the project's <code>LICENSE</code>. The text of this guide is contributed to the public domain under CC0.</p>
 
-    <h3><span lang="zh-TW">延伸閱讀</span><span lang="en-GB">Further reading</span></h3>
+    <h3 id="further-reading"><span lang="zh-TW">延伸閱讀</span><span lang="en-GB">Further reading</span></h3>
 
     <p lang="zh-TW">
       如果想看這個專案背後的倫理與政治脈絡，請讀
