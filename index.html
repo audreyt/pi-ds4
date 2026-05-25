@@ -1648,14 +1648,14 @@ document.documentElement.classList.add('js');
       specific tool call can be named precisely.
     </p>
     <p lang="zh-TW">
-      它包成一行 pi 指令：<code class="nowrap">pi install github.com/audreyt/pi-ds4</code>。
+      它包成一行 pi 指令：<code class="nowrap">pi install https://github.com/audreyt/pi-ds4</code>。
       但這行指令的<em>前提</em>是你電腦上已經有 <code>pi</code>——
       如果終端機跑 <code>pi --version</code> 得到 <code>command not found</code>，
       請先去 <a href="https://github.com/earendil-works/pi">earendil-works/pi</a> 跟著安裝步驟裝起來，再回來這裡。
       之後本擴充第一次啟動會花一兩個小時下載並編譯所有零件；後續啟動就快了。
     </p>
     <p lang="en-GB">
-      It boils down to one pi command: <code class="nowrap">pi install github.com/audreyt/pi-ds4</code>.
+      It boils down to one pi command: <code class="nowrap">pi install https://github.com/audreyt/pi-ds4</code>.
       The <em>precondition</em> is that you already have <code>pi</code> on your machine &mdash;
       if <code>pi --version</code> returns <code>command not found</code>, head to
       <a href="https://github.com/earendil-works/pi">earendil-works/pi</a> first, follow its install steps, then come back.
@@ -1883,12 +1883,12 @@ document.documentElement.classList.add('js');
       <ol lang="zh-TW">
         <li>本次開機立刻生效，留 6 GB 給 macOS：<br><code>sudo sysctl iogpu.wired_limit_mb=92000</code></li>
         <li>讓設定跨 reboot 保留：<br><code>echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf</code></li>
-        <li>之後正常 <code>pi install github.com/audreyt/pi-ds4</code> 即可，跟 128 GB 機器流程一致。</li>
+        <li>之後正常 <code>pi install https://github.com/audreyt/pi-ds4</code> 即可，跟 128 GB 機器流程一致。</li>
       </ol>
       <ol lang="en-GB">
         <li>Take effect for this boot, leaving 6 GB for macOS:<br><code>sudo sysctl iogpu.wired_limit_mb=92000</code></li>
         <li>Persist across reboots:<br><code>echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf</code></li>
-        <li>Then proceed with the normal <code>pi install github.com/audreyt/pi-ds4</code>, same flow as a 128 GB machine.</li>
+        <li>Then proceed with the normal <code>pi install https://github.com/audreyt/pi-ds4</code>, same flow as a 128 GB machine.</li>
       </ol>
       <p lang="zh-TW">
         <strong>注意：</strong>把 <code>iogpu.wired_limit_mb</code> 拉到 92000 後留給系統的餘裕很小，
@@ -1942,10 +1942,10 @@ pi --version</pre>
     <div class="codeblock">
       <div class="codeblock-bar">
         <span class="codeblock-label"><span lang="zh-TW">本分支安裝</span><span lang="en-GB">Install this fork</span></span>
-        <button class="copy-btn" data-copy="pi install github.com/audreyt/pi-ds4" aria-label="Copy install audreyt fork command">Copy</button>
+        <button class="copy-btn" data-copy="pi install https://github.com/audreyt/pi-ds4" aria-label="Copy install audreyt fork command">Copy</button>
       </div>
       <pre><span class="c"># <span lang="zh-TW">pi 在的話就執行：</span><span lang="en-GB">Once pi is installed:</span></span>
-pi install github.com/audreyt/pi-ds4</pre>
+pi install https://github.com/audreyt/pi-ds4</pre>
     </div>
 
     <p lang="zh-TW">
@@ -3569,7 +3569,7 @@ chmod +x download_cyberneurova.sh
       原生 ds4-server。也就是說：NVIDIA DGX Spark（GB10、~128 GB 統一記憶體、aarch64 Linux）
       上跑的不是某個 llama.cpp 旁路，而是<em>同一隻 engine、同一份 server、
       同一組 <code>--dir-steering-*</code> flag</em>。Spark 上直接
-      <code>pi install audreyt/pi-ds4</code> 即可——clone、<code>make ds4-server</code>（自動走 nvcc + CUDA）、
+      <code>pi install https://github.com/audreyt/pi-ds4</code> 即可——clone、<code>make ds4-server</code>（自動走 nvcc + CUDA）、
       下載 cyberneurova aligned-imatrix GGUF、起 server，
       整套流程與 Mac 上相同，只是編譯時自動走 Linux／CUDA 路徑。
     </p>
@@ -3580,7 +3580,7 @@ chmod +x download_cyberneurova.sh
       native ds4-server. That is: on the NVIDIA DGX Spark (GB10, ~128 GB unified memory, aarch64 Linux),
       what runs is not some llama.cpp sidecar but the <em>same engine, the same server,
       the same <code>--dir-steering-*</code> flags</em>. On the Spark just run
-      <code>pi install audreyt/pi-ds4</code>: it clones, runs <code>make ds4-server</code>
+      <code>pi install https://github.com/audreyt/pi-ds4</code>: it clones, runs <code>make ds4-server</code>
       (which auto-selects nvcc + CUDA), downloads the cyberneurova aligned-imatrix GGUF,
       and spawns the server &mdash; the same flow as on a Mac.
     </p>
