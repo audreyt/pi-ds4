@@ -40,8 +40,8 @@ changes:
    and how to turn it off.
 
 ```sh
-pi remove   github.com/mitsuhiko/pi-ds4   # if you had the upstream extension
-pi install  github.com/audreyt/pi-ds4
+pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream extension
+pi install  https://github.com/audreyt/pi-ds4
 ```
 
 On first launch, `pi` will:
