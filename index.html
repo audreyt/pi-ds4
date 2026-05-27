@@ -1557,7 +1557,7 @@ document.documentElement.classList.add('js');
     <div class="byline">
       <span><b>Audrey Tang</b> <span lang="zh-TW">唐鳳</span><span lang="en-GB">唐鳳</span></span>
       <span><span lang="zh-TW">分叉自</span><span lang="en-GB">forked from</span> <b>mitsuhiko/pi&#8209;ds4</b></span>
-      <span><span lang="zh-TW">引擎</span><span lang="en-GB">engine</span> <b>antirez/ds4</b></span>
+      <span><span lang="zh-TW">引擎</span><span lang="en-GB">engine</span> <b>DwarfStar</b> · <b>antirez/ds4</b></span>
       <span><span lang="zh-TW">2026 春</span><span lang="en-GB">Spring 2026</span></span>
     </div>
 
@@ -3028,6 +3028,22 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
         listening only on your machine, with weights on your disk and context that never leaves your Mac.</strong>
         Whether you end up using Codex CLI, Claude Code, OpenClaw, Hermes Agent,
         or your own SDK script &mdash; it is only a matter of changing the base URL.
+      </p>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label"><span lang="zh-TW">順帶一提：DwarfStar 自帶的 <code>ds4-agent</code></span><span lang="en-GB">Aside: DwarfStar&rsquo;s bundled <code>ds4-agent</code></span></div>
+      <p lang="zh-TW">
+        antirez 的 DwarfStar 引擎本身就附一隻原生的 coding agent，叫 <code>ds4-agent</code>。
+        它走自己的 in-process 路徑，不經過 HTTP，跟外部 shell 的設計取向不同；近期上游還加進了 browser／web 工具。
+        pi-ds4 <em>不</em>管理它，但你只要 clone 了 <code>audreyt/ds4</code> checkout，就能直接 <code>./ds4-agent</code> 跑——
+        詳情見 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> README 的 Native agent 一節。
+      </p>
+      <p lang="en-GB">
+        antirez&rsquo;s DwarfStar engine itself ships a native coding agent called <code>ds4-agent</code>.
+        It runs in-process rather than over HTTP, which is a different design from the external shells below; upstream recently added browser / web tooling to it as well.
+        pi-ds4 does <em>not</em> manage it, but if you have an <code>audreyt/ds4</code> checkout you can run <code>./ds4-agent</code> directly &mdash;
+        see the Native agent section in the <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> README.
       </p>
     </div>
 
