@@ -27,7 +27,10 @@ pid_alive() {
 }
 
 mtime_sec() {
-  stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null || echo 0
+  # GNU stat (Linux) first: `stat -f` there means --file-system and prints
+  # non-numeric output while exiting 0, so a BSD-first order never falls
+  # through. BSD/macOS stat lacks -c and falls through to -f %m.
+  stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null || echo 0
 }
 
 process_args() {
