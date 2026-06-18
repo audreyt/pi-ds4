@@ -42,6 +42,7 @@ changes:
 ```sh
 pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream extension
 pi install  https://github.com/audreyt/pi-ds4
+# Oh My Pi users: see the "Oh My Pi (omp)" section below.
 ```
 
 On first launch, `pi` will:
@@ -75,6 +76,50 @@ the new checkout first, using APFS clone-on-write copies on macOS when
 available.
 
 After install, restart `pi` or run `/reload`.
+
+## Oh My Pi (omp)
+
+This package is also a native **Oh My Pi** (`omp`) extension. Because `index.ts`
+registers the `ds4` provider through the shared Pi/omp `ExtensionAPI`
+(`pi.registerProvider`) and imports nothing at runtime beyond Node built-ins, the
+*same* extension that powers `pi` loads unmodified under `omp` — no separate
+build, no second copy.
+
+Install it straight from this repo. omp loads extension modules only for
+git/npm/`link` installs (marketplace installs surface skills/commands/tools but
+**not** providers), so use the git spec:
+
+```sh
+omp plugin install github:audreyt/pi-ds4
+```
+
+For a local checkout (fastest dev loop):
+
+```sh
+omp plugin link /path/to/pi-ds4
+```
+
+Then select the model at launch:
+
+```sh
+omp --model ds4/deepseek-v4-flash
+```
+
+or with `/model` inside a session. No `/login` is required — the provider ships a
+synthetic local credential (`dsv4-local`), and the first request lazily builds and
+starts `ds4-server` exactly as it does under `pi`.
+
+**One engine, shared across front-ends.** omp drives the *same* `ds4-server` that
+`pi` spawns and keeps warm: both share `~/.pi/ds4` (state file, lifecycle lock,
+per-process leases, KV disk cache) and the same `127.0.0.1:8000` server.
+Whichever front-end starts first builds and launches the single server; any other
+adopts it through the lifecycle lock instead of starting a second one, and the
+bundled `ds4-watchdog.sh` stops the server only when the last front-end's lease
+is released. Because the engine is a single Metal worker (one warm session),
+**drive ds4 from one front-end at a time** — `pi` *or* `omp`. The lease layer
+shares the *server*; it does **not** serialize *requests*, so concurrent
+completions from two front-ends contend on the one worker and thrash the warm KV
+cache.
 
 ## What the upstream extension does (and this fork preserves)
 

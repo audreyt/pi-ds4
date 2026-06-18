@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>pi-ds4 — Driving DeepSeek V4 Flash on your own Mac</title>
-<meta name="description" content="The full pi-ds4 guide: run the CyberNeurova abliterated DeepSeek V4 Flash GGUF locally, with reproducible decision traces, uncertainty steering, and day-to-day use.">
-<meta property="og:title" content="pi-ds4 · Audrey Tang">
+<title>pi-ds4 — DeepSeek V4 Flash on your Mac · Oh My Pi (omp) native</title>
+<meta name="description" content="The full pi-ds4 guide: run the CyberNeurova abliterated DeepSeek V4 Flash GGUF locally with Oh My Pi (omp), with reproducible decision traces, uncertainty steering, and day-to-day use.">
+<meta property="og:title" content="pi-ds4 · Oh My Pi (omp) · Audrey Tang">
 <meta property="og:description" content="Run a frontier model on your own machine with stable, contestable decision traces. Full install, steering, reproducibility, and tuning guide.">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
@@ -1492,14 +1492,14 @@ document.documentElement.classList.add('js');
   if (z) {
     c.checked = true;
     document.documentElement.setAttribute('lang', 'zh-TW');
-    document.title = 'pi-ds4 指南 — 在自己的 Mac 上駕馭 DeepSeek V4 Flash';
+    document.title = 'pi-ds4 指南 — 用 Oh My Pi (omp) 在自己的 Mac 上駕馭 DeepSeek V4 Flash';
   }
   c.addEventListener('change', function(){
     var zh = c.checked;
     document.documentElement.setAttribute('lang', zh ? 'zh-TW' : 'en-GB');
     document.title = zh
-      ? 'pi-ds4 指南 — 在自己的 Mac 上駕馭 DeepSeek V4 Flash'
-      : 'pi-ds4 — Driving DeepSeek V4 Flash on your own Mac';
+      ? 'pi-ds4 指南 — 用 Oh My Pi (omp) 在自己的 Mac 上駕馭 DeepSeek V4 Flash'
+      : 'pi-ds4 — DeepSeek V4 Flash on your Mac · Oh My Pi (omp) native';
     try { localStorage.setItem('lang', zh ? 'zh' : 'en'); } catch (x) {}
   });
 })();
@@ -1530,7 +1530,7 @@ document.documentElement.classList.add('js');
     <div class="crumbs">
       <span>pi&#8209;ds4</span>
       <span class="cjk-tag"><span lang="zh-TW">指南</span><span lang="en-GB">Guide</span></span>
-      <span>v 0.3</span>
+      <span>v 0.4</span>
     </div>
   </header>
 
@@ -1571,12 +1571,8 @@ document.documentElement.classList.add('js');
         <div class="label"><span lang="zh-TW">IQ2XXS aligned-imatrix GGUF 權重檔大小</span><span lang="en-GB">IQ2XXS aligned-imatrix GGUF weights file size</span></div>
       </div>
       <div class="ledger-item">
-        <div class="num">545<small>t/s</small></div>
-        <div class="label"><span lang="zh-TW">M5 Max，2k context 預填</span><span lang="en-GB">M5 Max, 2k context prefill</span></div>
-      </div>
-      <div class="ledger-item">
-        <div class="num">35<small>t/s</small></div>
-        <div class="label"><span lang="zh-TW">M5 Max，2k context 推論</span><span lang="en-GB">M5 Max, 2k context inference</span></div>
+        <div class="num">39<small>t/s</small></div>
+        <div class="label"><span lang="zh-TW">M5 Max，100k context 推論（omp bench 實測）</span><span lang="en-GB">M5 Max, 100k context inference (omp bench measured)</span></div>
       </div>
       <div class="ledger-item">
         <div class="num">42<small>seed</small></div>
@@ -1609,14 +1605,18 @@ document.documentElement.classList.add('js');
       that cloud services routinely apply.
     </p>
     <p lang="zh-TW">
-      pi 是它最方便的前端，所以本指南叫做 pi-ds4。但如果你已經是
-      <strong>Codex CLI</strong>、<strong>Claude Code</strong>、<strong>OpenClaw</strong> 或
+      <strong>Oh My Pi</strong>（<strong>omp</strong>）是它最方便的前端——同一個擴充套件，
+      載入 pi 或 omp 都不需要改任何一行程式碼。套件名 <code>pi-ds4</code> 保留作為歷史名稱；
+      <strong>pi</strong>（Earendil 的 coding-agent CLI）仍受支援，作為 legacy 前端。
+      若你已經是 <strong>Codex CLI</strong>、<strong>Claude Code</strong>、<strong>OpenClaw</strong> 或
       <strong>Hermes Agent</strong> 的使用者，可以直接把它們指到這台本機伺服器，
       把 pi-ds4 當作本機 backend 來用——四個 shell 都是改一兩個環境變數或 config 區段的事，詳見<a href="#shells">第八章</a>。
     </p>
     <p lang="en-GB">
-      pi is its most convenient frontend, hence the name pi-ds4. But if you&rsquo;re already using
-      <strong>Codex CLI</strong>, <strong>Claude Code</strong>, <strong>OpenClaw</strong> or
+      <strong>Oh My Pi</strong> (<strong>omp</strong>) is its most convenient frontend &mdash; the same extension
+      loads under pi or omp with no code changes. The package keeps the name <code>pi-ds4</code> for historical continuity;
+      <strong>pi</strong> (Earendil&rsquo;s coding-agent CLI) remains supported as a legacy frontend.
+      If you&rsquo;re already using <strong>Codex CLI</strong>, <strong>Claude Code</strong>, <strong>OpenClaw</strong> or
       <strong>Hermes Agent</strong>, you can point any of them at this local server and use pi-ds4 as your local backend &mdash;
       all four shells are just an env-var or config-section change away. See <a href="#shells">Chapter 8</a>.
     </p>
@@ -1648,17 +1648,17 @@ document.documentElement.classList.add('js');
       specific tool call can be named precisely.
     </p>
     <p lang="zh-TW">
-      它包成一行 pi 指令：<code class="nowrap">pi install https://github.com/audreyt/pi-ds4</code>。
-      但這行指令的<em>前提</em>是你電腦上已經有 <code>pi</code>——
-      如果終端機跑 <code>pi --version</code> 得到 <code>command not found</code>，
-      請先去 <a href="https://github.com/earendil-works/pi">earendil-works/pi</a> 跟著安裝步驟裝起來，再回來這裡。
+      它包成一行 omp 指令：<code class="nowrap">omp plugin install github:audreyt/pi-ds4</code>。
+      但這行指令的<em>前提</em>是你電腦上已經有 <code>omp</code>——
+      如果終端機跑 <code>omp --version</code> 得到 <code>command not found</code>，
+      請先安裝 omp，再回來這裡。
       之後本擴充第一次啟動會花一兩個小時下載並編譯所有零件；後續啟動就快了。
     </p>
     <p lang="en-GB">
-      It boils down to one pi command: <code class="nowrap">pi install https://github.com/audreyt/pi-ds4</code>.
-      The <em>precondition</em> is that you already have <code>pi</code> on your machine &mdash;
-      if <code>pi --version</code> returns <code>command not found</code>, head to
-      <a href="https://github.com/earendil-works/pi">earendil-works/pi</a> first, follow its install steps, then come back.
+      It boils down to one omp command: <code class="nowrap">omp plugin install github:audreyt/pi-ds4</code>.
+      The <em>precondition</em> is that you already have <code>omp</code> on your machine &mdash;
+      if <code>omp --version</code> returns <code>command not found</code>,
+      install omp first, then come back.
       After that, the extension&rsquo;s first launch will spend an hour or two downloading and compiling everything;
       subsequent launches are fast.
     </p>
@@ -1666,9 +1666,14 @@ document.documentElement.classList.add('js');
     <h3><span lang="zh-TW">名詞速查</span><span lang="en-GB">Glossary at a glance</span></h3>
     <dl class="glossary-inline">
       <div>
-        <dt>pi<span class="cjk-aside"><span lang="zh-TW">給 AI 用的指令列</span><span lang="en-GB">a CLI for AI</span></span></dt>
-        <dd lang="zh-TW">由 Earendil 開發的命令列工具（CLI），讓你在終端機裡跟 AI 互動。「pi」是工具名，不是數學的圓周率。</dd>
-        <dd lang="en-GB">A command-line tool built by Earendil that lets you talk to AI inside your terminal. &ldquo;pi&rdquo; is the tool&rsquo;s name, not the mathematical constant.</dd>
+        <dt>omp<span class="cjk-aside"><span lang="zh-TW">給 AI 用的指令列</span><span lang="en-GB">a CLI for AI</span></span></dt>
+        <dd lang="zh-TW">Oh My Pi——本指南的主要前端。在終端機裡跟 AI 互動的命令列工具，向下相容 pi 擴充套件格式。</dd>
+        <dd lang="en-GB">Oh My Pi &mdash; the primary frontend for this guide. A terminal-based AI CLI that is backwards-compatible with the pi extension format.</dd>
+      </div>
+      <div>
+        <dt>pi<span class="cjk-aside"><span lang="zh-TW">legacy 前端</span><span lang="en-GB">legacy frontend</span></span></dt>
+        <dd lang="zh-TW">由 Earendil 開發的命令列工具（CLI），omp 的前身。pi 與 omp 共用同一個 ExtensionAPI，因此 pi-ds4 在兩邊都能跑。「pi」是工具名，不是數學的圓周率。</dd>
+        <dd lang="en-GB">A command-line tool built by Earendil, the predecessor to omp. pi and omp share the same ExtensionAPI, so pi-ds4 runs under both. &ldquo;pi&rdquo; is the tool&rsquo;s name, not the mathematical constant.</dd>
       </div>
       <div>
         <dt>ds4<span class="cjk-aside"><span lang="zh-TW">本機推論引擎</span><span lang="en-GB">local inference engine</span></span></dt>
@@ -1677,8 +1682,8 @@ document.documentElement.classList.add('js');
       </div>
       <div>
         <dt>pi-ds4<span class="cjk-aside"><span lang="zh-TW">本指南主題</span><span lang="en-GB">topic of this guide</span></span></dt>
-        <dd lang="zh-TW">把 pi 跟 ds4 黏在一起的擴充套件。本指南是 Audrey Tang（唐鳳）維護的分叉版本，差別見第三章。</dd>
-        <dd lang="en-GB">The extension that glues pi and ds4 together. This guide covers Audrey Tang&rsquo;s fork; see Chapter 3 for what differs from upstream.</dd>
+        <dd lang="zh-TW">把 omp／pi 跟 ds4 黏在一起的擴充套件。本指南是 Audrey Tang（唐鳳）維護的分叉版本，差別見第三章。</dd>
+        <dd lang="en-GB">The extension that glues omp/pi and ds4 together. This guide covers Audrey Tang&rsquo;s fork; see Chapter 3 for what differs from upstream.</dd>
       </div>
       <div>
         <dt><span lang="zh-TW">284 B 參數</span><span lang="en-GB">284 B parameters</span><span class="cjk-aside"><span lang="zh-TW">模型「腦容量」</span><span lang="en-GB">model &ldquo;brain size&rdquo;</span></span></dt>
@@ -1699,13 +1704,13 @@ document.documentElement.classList.add('js');
 
     <h3><span lang="zh-TW">我需要付出什麼？</span><span lang="en-GB">What does it cost me?</span></h3>
     <ul lang="zh-TW">
-      <li><strong>硬體：</strong>一台 RAM 96 GB 以上的 Apple Silicon Mac（M2 Ultra、M3 Max+、M4 Pro+、或 M5）。96–127 GB 的 Mac 需先把 Metal wired memory 拉高（見 <a href="#ram96">§1.1 callout</a>）；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。<a href="#otherhw">NVIDIA DGX Spark 等 128 GB 統一記憶體機型</a>也跑得動<em>同一隻 ds4 引擎</em>（<code>audreyt/ds4</code> 的 Makefile 在 Linux 上自動編譯 CUDA 路徑），而且 pi-ds4 的 lifecycle wrapper（<code>ds4-watchdog.sh</code>）現在 BSD／GNU 雙路徑都支援，DGX Spark 上 <code>pi install</code> 也照常完成；想跳過 wrapper 自己跑 ds4-server 也可以。</li>
+      <li><strong>硬體：</strong>一台 RAM 96 GB 以上的 Apple Silicon Mac（M2 Ultra、M3 Max+、M4 Pro+、或 M5）。96–127 GB 的 Mac 需先把 Metal wired memory 拉高（見 <a href="#ram96">§1.1 callout</a>）；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。<a href="#otherhw">NVIDIA DGX Spark 等 128 GB 統一記憶體機型</a>也跑得動<em>同一隻 ds4 引擎</em>（<code>audreyt/ds4</code> 的 Makefile 在 Linux 上自動編譯 CUDA 路徑），而且 pi-ds4 的 lifecycle wrapper（<code>ds4-watchdog.sh</code>）現在 BSD／GNU 雙路徑都支援，DGX Spark 上 <code>omp plugin install</code> 也照常完成；想跳過 wrapper 自己跑 ds4-server 也可以。</li>
       <li><strong>磁碟：</strong>至少 120 GB 空閒空間。</li>
       <li><strong>時間：</strong>第一次安裝會下載 87 GB 模型檔，視網速 1～3 小時起跳。</li>
       <li><strong>不需要：</strong>GPU、付費 API、登入帳號、把任何資料送上雲端。</li>
     </ul>
     <ul lang="en-GB">
-      <li><strong>Hardware:</strong> an Apple Silicon Mac with at least 96 GB of RAM (M2 Ultra, M3 Max+, M4 Pro+, or M5). Macs in the 96&ndash;127 GB range need to raise Metal wired memory first (see the <a href="#ram96">§1.1 callout</a>); 128 GB+ Macs install directly and have headroom to run more apps alongside ds4-server. <a href="#otherhw">NVIDIA DGX Spark and other 128-GB unified-memory boxes</a> can run <em>the same ds4 engine</em> &mdash; <code>audreyt/ds4</code>&rsquo;s Makefile auto-builds the CUDA path on Linux, and pi-ds4&rsquo;s lifecycle wrapper (<code>ds4-watchdog.sh</code>) now handles both BSD and GNU userlands, so <code>pi install</code> works on DGX Spark too; you can still run ds4-server by hand if you&rsquo;d rather skip the wrapper.</li>
+      <li><strong>Hardware:</strong> an Apple Silicon Mac with at least 96 GB of RAM (M2 Ultra, M3 Max+, M4 Pro+, or M5). Macs in the 96&ndash;127 GB range need to raise Metal wired memory first (see the <a href="#ram96">§1.1 callout</a>); 128 GB+ Macs install directly and have headroom to run more apps alongside ds4-server. <a href="#otherhw">NVIDIA DGX Spark and other 128-GB unified-memory boxes</a> can run <em>the same ds4 engine</em> &mdash; <code>audreyt/ds4</code>&rsquo;s Makefile auto-builds the CUDA path on Linux, and pi-ds4&rsquo;s lifecycle wrapper (<code>ds4-watchdog.sh</code>) now handles both BSD and GNU userlands, so <code>omp plugin install</code> works on DGX Spark too; you can still run ds4-server by hand if you&rsquo;d rather skip the wrapper.</li>
       <li><strong>Disk:</strong> at least 120 GB of free space.</li>
       <li><strong>Time:</strong> the first install downloads a 87-GB model file &mdash; about 1&ndash;3 hours depending on bandwidth.</li>
       <li><strong>Not required:</strong> a GPU, a paid API, an account login, or sending any data to the cloud.</li>
@@ -1845,14 +1850,15 @@ document.documentElement.classList.add('js');
       <p lang="zh-TW">其一：你願意把約 87 GB 的硬碟空間留給模型權重——這是本機運行的入場券。</p>
       <p lang="en-GB">First: you&rsquo;re willing to spare about 87 GB of disk for the model weights &mdash; the cover charge for running locally.</p>
       <p lang="zh-TW">其二：如果你想走最方便的一行安裝路徑（第一～二章），需要先有
-        <a href="https://github.com/earendil-works/pi">pi</a>（Earendil 的 coding agent CLI）。
+        <strong>omp</strong>（Oh My Pi，Earendil coding agent CLI 的後繼）。
         但如果你只想把 ds4-server 當本機後端、然後接到自己慣用的 Codex CLI／Claude Code／OpenClaw／Hermes Agent，
-        其實可以完全跳過 pi——直接走 <a href="#shells">8.6 節（C）</a>，clone <code>audreyt/ds4</code>、
+        其實可以完全跳過 omp 與 pi——直接走 <a href="#shells">8.6 節（C）</a>，clone <code>audreyt/ds4</code>、
         <code>make ds4-server</code>、自己下載 GGUF 即可。</p>
       <p lang="en-GB">Second: if you want the most convenient one-line install path (Chapters 1&ndash;2), you need
-        <a href="https://github.com/earendil-works/pi">pi</a> (Earendil&rsquo;s coding-agent CLI). But if you only want ds4-server as a local backend
-        and plan to use your existing Codex CLI / Claude Code / OpenClaw / Hermes Agent, you can skip pi entirely &mdash;
-        go straight to <a href="#shells">§8.6 path (C)</a>: clone <code>audreyt/ds4</code>, <code>make ds4-server</code>, download the GGUF yourself.</p>
+        <strong>omp</strong> (Oh My Pi, the successor to Earendil&rsquo;s coding-agent CLI).
+        But if you only want ds4-server as a local backend and plan to use your existing Codex CLI / Claude Code / OpenClaw / Hermes Agent,
+        you can skip omp and pi entirely &mdash;
+        go straight to <a href="#shells">&sect;8.6 path (C)</a>: clone <code>audreyt/ds4</code>, <code>make ds4-server</code>, download the GGUF yourself.</p>
     </div>
   </section>
 
@@ -1920,12 +1926,12 @@ document.documentElement.classList.add('js');
       <ol lang="zh-TW">
         <li>本次開機立刻生效，留 6 GB 給 macOS：<br><code>sudo sysctl iogpu.wired_limit_mb=92000</code></li>
         <li>讓設定跨 reboot 保留：<br><code>echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf</code></li>
-        <li>之後正常 <code>pi install https://github.com/audreyt/pi-ds4</code> 即可，跟 128 GB 機器流程一致。</li>
+        <li>之後正常 <code>omp plugin install github:audreyt/pi-ds4</code> 即可，跟 128 GB 機器流程一致。</li>
       </ol>
       <ol lang="en-GB">
         <li>Take effect for this boot, leaving 6 GB for macOS:<br><code>sudo sysctl iogpu.wired_limit_mb=92000</code></li>
         <li>Persist across reboots:<br><code>echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf</code></li>
-        <li>Then proceed with the normal <code>pi install https://github.com/audreyt/pi-ds4</code>, same flow as a 128 GB machine.</li>
+        <li>Then proceed with the normal <code>omp plugin install github:audreyt/pi-ds4</code>, same flow as a 128 GB machine.</li>
       </ol>
       <p lang="zh-TW">
         <strong>注意：</strong>把 <code>iogpu.wired_limit_mb</code> 拉到 92000 後留給系統的餘裕很小，
@@ -1949,39 +1955,42 @@ document.documentElement.classList.add('js');
     <div class="codeblock">
       <div class="codeblock-bar">
         <span class="codeblock-label"><span lang="zh-TW">移除上游</span><span lang="en-GB">Remove upstream</span></span>
-        <button class="copy-btn" data-copy="pi remove github.com/mitsuhiko/pi-ds4" aria-label="Copy uninstall upstream pi-ds4 command">Copy</button>
+        <button class="copy-btn" data-copy="omp plugin uninstall pi-ds4" aria-label="Copy uninstall upstream pi-ds4 command">Copy</button>
       </div>
       <pre><span class="c"># <span lang="zh-TW">如果你裝過 mitsuhiko/pi-ds4，先移除：</span><span lang="en-GB">If you previously installed mitsuhiko/pi-ds4, remove it first:</span></span>
+omp plugin uninstall pi-ds4
+<span class="c"># <span lang="zh-TW">legacy pi 安裝者請用：</span><span lang="en-GB">legacy pi installs use:</span></span>
 pi remove github.com/mitsuhiko/pi-ds4</pre>
     </div>
 
-    <h3>1.3<span lang="zh-TW">　一行安裝（但先確認 pi 在）</span><span lang="en-GB">　One-line install (but check pi is there first)</span></h3>
+    <h3>1.3<span lang="zh-TW">　一行安裝（但先確認 omp 在）</span><span lang="en-GB">　One-line install (but check omp is there first)</span></h3>
 
     <p lang="zh-TW">
-      本擴充建立在 <a href="https://github.com/earendil-works/pi">earendil-works/pi</a> 之上——
-      下面這行 <code>pi install</code> 假設你已經把 pi 本身裝好了。先做一個五秒鐘的健康檢查：
+      本擴充同時支援 <strong>Oh My Pi</strong>（<code>omp</code>）與 legacy <a href="https://github.com/earendil-works/pi">pi</a>。
+       下面這行 <code>omp plugin install</code> 假設你已經有 omp。先做一個五秒鐘的健康檢查：
     </p>
     <p lang="en-GB">
-      This extension sits on top of <a href="https://github.com/earendil-works/pi">earendil-works/pi</a>;
-      the <code>pi install</code> line below assumes you already have pi itself installed. A five-second health check first:
+      This extension supports both <strong>Oh My Pi</strong> (<code>omp</code>) and legacy <a href="https://github.com/earendil-works/pi">pi</a>.
+      The <code>omp plugin install</code> line below assumes you already have omp. A five-second health check first:
     </p>
 
     <div class="codeblock">
       <div class="codeblock-bar">
-        <span class="codeblock-label"><span lang="zh-TW">確認 pi 已安裝</span><span lang="en-GB">Verify pi is installed</span></span>
-        <button class="copy-btn" data-copy="pi --version" aria-label="Copy pi --version command">Copy</button>
+        <span class="codeblock-label"><span lang="zh-TW">確認 omp 已安裝</span><span lang="en-GB">Verify omp is installed</span></span>
+        <button class="copy-btn" data-copy="omp --version" aria-label="Copy omp --version command">Copy</button>
       </div>
-      <pre><span class="c"># <span lang="zh-TW">應該印出版本號；若得到 command not found 請先依</span><span lang="en-GB">Should print a version number. If you get command not found, install pi first</span></span>
-<span class="c"># <span lang="zh-TW">github.com/earendil-works/pi 的說明安裝 pi 本體。</span><span lang="en-GB">per the instructions at github.com/earendil-works/pi.</span></span>
-pi --version</pre>
+      <pre><span class="c"># <span lang="zh-TW">應該印出版本號；若得到 command not found 請先安裝 omp。</span><span lang="en-GB">Should print a version number. If you get command not found, install omp first.</span></span>
+omp --version</pre>
     </div>
 
     <div class="codeblock">
       <div class="codeblock-bar">
         <span class="codeblock-label"><span lang="zh-TW">本分支安裝</span><span lang="en-GB">Install this fork</span></span>
-        <button class="copy-btn" data-copy="pi install https://github.com/audreyt/pi-ds4" aria-label="Copy install audreyt fork command">Copy</button>
+        <button class="copy-btn" data-copy="omp plugin install github:audreyt/pi-ds4" aria-label="Copy install audreyt fork command">Copy</button>
       </div>
-      <pre><span class="c"># <span lang="zh-TW">pi 在的話就執行：</span><span lang="en-GB">Once pi is installed:</span></span>
+      <pre><span class="c"># <span lang="zh-TW">omp 在的話就執行：</span><span lang="en-GB">Once omp is installed:</span></span>
+omp plugin install github:audreyt/pi-ds4
+<span class="c"># <span lang="zh-TW">legacy pi 也能用：</span><span lang="en-GB">legacy pi also works:</span></span>
 pi install https://github.com/audreyt/pi-ds4</pre>
     </div>
 
@@ -1997,12 +2006,12 @@ pi install https://github.com/audreyt/pi-ds4</pre>
     <div class="callout">
       <div class="callout-label"><span lang="zh-TW">為何不用 brew／pip／docker</span><span lang="en-GB">Why not brew / pip / docker</span></div>
       <p lang="zh-TW">
-        pi 的擴充機制本身就是一種「應用層套件管理員」：每個擴充以 Git URL 為錨點，
+        omp 的擴充機制本身就是一種「應用層套件管理員」：每個擴充以 Git URL 為錨點，
         安裝即 clone，移除即解除註冊。它把 ds4 原始碼放在 <code>~/.pi/ds4/support/</code>，
         全部步驟可從 log 還原。你的系統其他部分不會被它弄髒。
       </p>
       <p lang="en-GB">
-        pi&rsquo;s extension system is itself an &ldquo;application-layer package manager&rdquo;: each extension is anchored on a Git URL,
+        omp&rsquo;s extension system is itself an &ldquo;application-layer package manager&rdquo;: each extension is anchored on a Git URL,
         install means clone, remove means de-register. It keeps the ds4 source under <code>~/.pi/ds4/support/</code>,
         and every step is reconstructable from the log. The rest of your system stays clean.
       </p>
@@ -2032,18 +2041,16 @@ pi install https://github.com/audreyt/pi-ds4</pre>
 
     <h3>2.1<span lang="zh-TW">　啟動序列</span><span lang="en-GB">　Startup sequence</span></h3>
 
-    <p lang="zh-TW">當 pi 任何一個 process 對該模型發出第一個請求時，本擴充會依序執行下列六個步驟：</p>
-    <p lang="en-GB">When any pi process makes its first request to this model, the extension runs the following six steps in order:</p>
+    <p lang="zh-TW">當 omp 任何一個 process 對該模型發出第一個請求時，本擴充會依序執行下列六個步驟：</p>
+    <p lang="en-GB">When any omp process makes its first request to this model, the extension runs the following six steps in order:</p>
 
     <ol class="sequence" aria-label="ds4 startup sequence">
       <li>
         <div class="seq-node" aria-hidden="true">01</div>
         <div class="seq-body">
           <h4><span lang="zh-TW">取得跨 process 啟動鎖</span><span lang="en-GB">Acquire the cross-process startup lock</span></h4>
-          <p lang="zh-TW">在 <code>~/.pi/ds4/lock/owner.json</code> 寫入持有者資訊，避免兩個 pi 視窗同時做相同工序。</p>
-          <p lang="en-GB">Writes owner metadata to <code>~/.pi/ds4/lock/owner.json</code> so two pi windows can&rsquo;t run the same setup in parallel.</p>
-        </div>
-      </li>
+          <p lang="zh-TW">在 <code>~/.pi/ds4/lock/owner.json</code> 寫入持有者資訊，避免兩個 omp 視窗同時做相同工序。</p>
+          <p lang="en-GB">Writes owner metadata to <code>~/.pi/ds4/lock/owner.json</code> so two omp windows can&rsquo;t run the same setup in parallel.</p>
       <li>
         <div class="seq-node" aria-hidden="true">02</div>
         <div class="seq-body">
@@ -2117,12 +2124,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <h3>2.2<span lang="zh-TW">　如何看「現在到底卡在哪」</span><span lang="en-GB">　How to see &ldquo;where is it stuck right now&rdquo;</span></h3>
 
     <p lang="zh-TW">
-      在 pi 中執行 <code>/ds4</code>，會打開一個即時的 log 視窗。
+      在 omp 中執行 <code>/ds4</code>，會打開一個即時的 log 視窗。
       IQ2XXS aligned-imatrix GGUF 下載期間（約 87 GB），你會看到 curl 進度條被精簡顯示為一行
       百分比＋速率＋剩餘時間。
     </p>
     <p lang="en-GB">
-      Inside pi, running <code>/ds4</code> opens a live log window. While the IQ2XXS aligned-imatrix GGUF is downloading (~87 GB),
+      Inside omp, running <code>/ds4</code> opens a live log window. While the IQ2XXS aligned-imatrix GGUF is downloading (~87 GB),
       you&rsquo;ll see curl&rsquo;s progress meter condensed into a single line of percent, rate, and ETA.
     </p>
 
@@ -2401,14 +2408,14 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
 
     <p lang="zh-TW">
       pi-ds4 本身不附帶任何預設 system prompt——它只把 ds4-server 跑起來、把引導參數掛上去。
-      <em>具體的提問脈絡與立場</em>由你 pi 或外部 shell 的 system prompt 提供。下面是本指南作者
+      <em>具體的提問脈絡與立場</em>由你 omp 或外部 shell 的 system prompt 提供。下面是本指南作者
       Audrey Tang 個人放在 <code>~/.pi/agent/SYSTEM.md</code> 的內容，<strong>純粹作為一個能跟
       uncertainty 引導搭得起來的例子</strong>；它不會自動套用到任何 pi-ds4 安裝裡，也不是社群推薦預設。
     </p>
     <p lang="en-GB">
       pi-ds4 itself ships no default system prompt &mdash; it just starts ds4-server and attaches the
       steering parameters. The <em>specific framing and positions</em> are supplied by the system prompt
-      from your pi or external shell. Below is what this guide's author Audrey Tang personally keeps in
+      from your omp or external shell. Below is what this guide&rsquo;s author Audrey Tang personally keeps in
       <code>~/.pi/agent/SYSTEM.md</code>, <strong>shown only as one example that pairs well with the
       uncertainty steering</strong>; it is not auto-applied to any pi-ds4 install, nor a community-recommended default.
     </p>
@@ -2464,17 +2471,16 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
       <div class="codeblock-bar">
         <span class="codeblock-label"><span lang="zh-TW">完全停用引導</span><span lang="en-GB">Disable steering entirely</span></span>
         <button class="copy-btn" data-copy="export DS4_DIR_STEERING_FFN=0&#10;export DS4_DIR_STEERING_ATTN=0" aria-label="Copy command to disable directional steering">Copy</button>
-      </div>
-      <pre><span class="c"># <span lang="zh-TW">在啟動 pi 之前的 shell 加入：</span><span lang="en-GB">Add to the shell before launching pi:</span></span>
+      <pre><span class="c"># <span lang="zh-TW">在啟動 omp 之前的 shell 加入：</span><span lang="en-GB">Add to the shell before launching omp:</span></span>
 <span class="k">export</span> DS4_DIR_STEERING_FFN<span class="k">=</span><span class="v">0</span>
 <span class="k">export</span> DS4_DIR_STEERING_ATTN<span class="k">=</span><span class="v">0</span></pre>
     </div>
 
     <p lang="zh-TW">
-      重新啟動 pi（或在 pi 內 <code>/reload</code>），下一次 <code>ds4-server</code> 啟動就會略過引導參數。
+      重新啟動 omp（或在 omp 內 <code>/reload</code>），下一次 <code>ds4-server</code> 啟動就會略過引導參數。
     </p>
     <p lang="en-GB">
-      Restart pi (or run <code>/reload</code> inside pi), and the next <code>ds4-server</code> launch will skip the steering parameters.
+      Restart omp (or run <code>/reload</code> inside omp), and the next <code>ds4-server</code> launch will skip the steering parameters.
     </p>
 
     <div class="callout callout-teal">
@@ -2498,15 +2504,14 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
   <section class="chapter" id="config">
     <div class="chapter-eyebrow"><span class="cjk-num"><span lang="zh-TW">第　五　章</span><span lang="en-GB">Chapter 5</span></span></div>
     <h2><span lang="zh-TW">環境變數<em>全表</em></span><span lang="en-GB">Environment variables, <em>the full table</em></span></h2>
-
     <p class="lede" lang="zh-TW">
       本擴充把所有可調項目都暴露成環境變數——不需要改 code，
-      在啟動 pi 之前的 shell 設定即可。下表按用途分組整理；
+      在啟動 omp 之前的 shell 設定即可。下表按用途分組整理；
       左欄是變數名與預設值，右欄是它做什麼、何時該動它。
     </p>
     <p class="lede" lang="en-GB">
       This extension exposes every tunable as an environment variable &mdash; no need to touch code;
-      just set them in the shell before launching pi. The tables below are grouped by purpose;
+      just set them in the shell before launching omp. The tables below are grouped by purpose;
       the left column is the variable name and default, the right column says what it does and when to change it.
     </p>
 
@@ -2739,7 +2744,7 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
 
     <ul lang="zh-TW">
       <li>想測 ds4 自己的新後端旗標、patched kernel、或不同 build。</li>
-      <li>想把同一份 GGUF 與引導向量拿去做隔離評估，而不讓 pi 的 watchdog／lease 介入。</li>
+      <li>想把同一份 GGUF 與引導向量拿去做隔離評估，而不讓 omp 的 watchdog／lease 介入。</li>
       <li>遇到記憶體壓力時，想先用較小的 <code>--ctx</code> 驗證同一個任務能否穩定完成。</li>
     </ul>
     <ul lang="en-GB">
@@ -2811,10 +2816,10 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
 
     <p class="lede" lang="zh-TW">
       裝完之後，<code>ds4/deepseek-v4-flash</code> 就像任何一個雲端模型一樣，
-      在 pi 的 model picker 裡可選。但它在底層比雲端模型多了幾個你可以利用的能力。
+      在 omp 的 model picker 裡可選。但它在底層比雲端模型多了幾個你可以利用的能力。
     </p>
     <p class="lede" lang="en-GB">
-      Once installed, <code>ds4/deepseek-v4-flash</code> appears in pi's model picker like any cloud model.
+      Once installed, <code>ds4/deepseek-v4-flash</code> appears in omp&rsquo;s model picker like any cloud model.
       But underneath it offers a few extra capabilities you can take advantage of that cloud models do not.
     </p>
 
@@ -2925,7 +2930,7 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
 <span class="c"># -&gt; {"input_tokens": 6}</span></span></pre>
     </div>
 
-    <h3>7.2<span lang="zh-TW">　在 pi 裡查看 server log</span><span lang="en-GB">　Viewing the server log inside pi</span></h3>
+    <h3>7.2<span lang="zh-TW">　在 omp 裡查看 server log</span><span lang="en-GB">　Viewing the server log inside omp</span></h3>
 
     <p lang="zh-TW">執行 <code>/ds4</code>，會打開一個即時的 log 視窗。鍵盤操作：</p>
     <p lang="en-GB">Run <code>/ds4</code> to open a live log window. Keys:</p>
@@ -2946,22 +2951,22 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <h3>7.3<span lang="zh-TW">　Lease 與 watchdog</span><span lang="en-GB">　Lease and watchdog</span></h3>
 
     <p lang="zh-TW">
-      本擴充用「lease」（租約）機制管理 server 生命週期：每個使用該模型的 pi process
+      本擴充用「lease」（租約）機制管理 server 生命週期：每個使用該模型的 omp process
       會在 <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code> 寫入一個檔案並每 10 秒更新一次；
       ds4-watchdog 每 2 秒掃描，當沒有任何有效 lease 時，就送 SIGTERM 給 server 並退場。
     </p>
     <p lang="en-GB">
-      The extension uses a &ldquo;lease&rdquo; mechanism to manage the server lifecycle: each pi process that uses the model
+      The extension uses a &ldquo;lease&rdquo; mechanism to manage the server lifecycle: each omp process that uses the model
       writes a file at <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code> and refreshes it every 10 seconds;
       ds4-watchdog scans every 2 seconds, and when no valid lease remains it sends SIGTERM to the server and exits.
     </p>
 
     <p lang="zh-TW">
-      效果：你開十個 pi 視窗共用同一個 server；最後一個 pi 結束後約 60 秒，
+      效果：你開十個 omp 視窗共用同一個 server；最後一個 omp 結束後約 60 秒，
       ds4-server 自動關閉、釋放 RAM。
     </p>
     <p lang="en-GB">
-      The effect: ten pi windows share one server; about 60 seconds after the last pi exits,
+      The effect: ten omp sessions share one server; about 60 seconds after the last omp exits,
       ds4-server shuts down on its own and frees the RAM.
     </p>
 
@@ -2983,12 +2988,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <div class="callout">
       <div class="callout-label"><span lang="zh-TW">想讓 server 持續活著？</span><span lang="en-GB">Want to keep the server alive?</span></div>
       <p lang="zh-TW">
-        只要至少一個 pi process 對該模型保留 lease，watchdog 就不會關它。
-        要徹底常駐，最簡單的做法是開一個專門的 pi session 放著不關。
+        只要至少一個 omp process 對該模型保留 lease，watchdog 就不會關它。
+        要徹底常駐，最簡單的做法是開一個專門的 omp session 放著不關。
       </p>
       <p lang="en-GB">
-        As long as at least one pi process holds a lease on the model, the watchdog will not stop it.
-        For a properly resident server, the simplest approach is to leave one dedicated pi session open.
+        As long as at least one omp process holds a lease on the model, the watchdog will not stop it.
+        For a properly resident server, the simplest approach is to leave one dedicated omp session open.
       </p>
     </div>
   </section>
@@ -3001,14 +3006,14 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <h2><span lang="zh-TW">當作 <em>Codex／Claude Code／OpenClaw／Hermes</em> 的後端</span><span lang="en-GB">As a backend for <em>Codex / Claude Code / OpenClaw / Hermes</em></span></h2>
 
     <p class="lede" lang="zh-TW">
-      pi 只是一個前端。<code>ds4-server</code> 在 <code>127.0.0.1:8000</code> 上
+      omp 是主要前端，但不是唯一前端。<code>ds4-server</code> 在 <code>127.0.0.1:8000</code> 上
       <em>同時</em>提供 OpenAI <code>/v1/chat/completions</code>、OpenAI
       <code>/v1/responses</code>，以及 Anthropic <code>/v1/messages</code>——
       你已經習慣的 coding agent，幾乎都可以直接接過來，
       把 pi-ds4 當成一台本機、零成本、無速率限制的推論伺服器使用。
     </p>
     <p class="lede" lang="en-GB">
-      pi is just one frontend. <code>ds4-server</code> at <code>127.0.0.1:8000</code>
+      omp is the primary frontend, but not the only one. <code>ds4-server</code> at <code>127.0.0.1:8000</code>
       <em>simultaneously</em> serves OpenAI <code>/v1/chat/completions</code>,
       OpenAI <code>/v1/responses</code>, and Anthropic <code>/v1/messages</code> &mdash;
       almost any coding agent you are already used to can connect directly,
@@ -3472,27 +3477,27 @@ resp = client.responses.create(
     <h3>8.6<span lang="zh-TW">　ds4-server 何時跑？</span><span lang="en-GB">　When does ds4-server run?</span></h3>
 
     <p lang="zh-TW">
-      pi-ds4 的 lease／watchdog 機制（<a href="#daily">第七章</a>）只在 <em>pi process 透過模型發 request 時</em>才生效。
-      如果你完全不用 pi、只用 Codex CLI 等外部前端，那麼 <code>ds4-server</code>
+      pi-ds4 的 lease／watchdog 機制（<a href="#daily">第七章</a>）只在 <em>omp process 透過模型發 request 時</em>才生效。
+      如果你完全不用 omp、只用 Codex CLI 等外部前端，那麼 <code>ds4-server</code>
       必須以另一種方式被啟動。三條路：
     </p>
     <p lang="en-GB">
-      pi-ds4's lease/watchdog mechanism (<a href="#daily">Chapter 7</a>) only kicks in when <em>a pi process sends a request through the model</em>.
-      If you do not use pi at all and only use external frontends like Codex CLI, then <code>ds4-server</code>
+      pi-ds4's lease/watchdog mechanism (<a href="#daily">Chapter 7</a>) only kicks in when <em>an omp process sends a request through the model</em>.
+      If you do not use omp at all and only use external frontends like Codex CLI, then <code>ds4-server</code>
       has to be started some other way. Three paths:
     </p>
 
     <ul lang="zh-TW">
       <li>
-        <strong>（A）已經 pi install 過、想最省事：</strong>留一個 pi session 開著、選定 ds4 模型一次，
+        <strong>（A）已經 omp plugin install 過、想最省事：</strong>留一個 omp session 開著、選定 ds4 模型一次，
         lease 就會持續續約，server 不會被 watchdog 收掉。
       </li>
       <li>
-        <strong>（B）已經 pi install 過、手動跑：</strong>到 <code>~/.pi/ds4/support/</code>
+        <strong>（B）已經 omp plugin install 過、手動跑：</strong>到 <code>~/.pi/ds4/support/</code>
         執行：
         <div class="codeblock">
           <div class="codeblock-bar">
-            <span class="codeblock-label">手動跑（pi install 之後）</span>
+            <span class="codeblock-label">手動跑（omp plugin install 之後）</span>
             <button class="copy-btn" aria-label="複製手動跑 ds4-server 的指令">Copy</button>
           </div>
           <pre><span class="k">cd</span> ~/.pi/ds4/support
@@ -3507,14 +3512,14 @@ resp = client.responses.create(
         這條等同於 <code>index.ts</code> 內建的 spawn 參數；你也可以依需求自訂。
       </li>
       <li>
-        <strong>（C）完全沒裝過 pi：</strong>直接從 <code>audreyt/ds4</code> 與 <code>audreyt/pi-ds4</code>
-        bootstrap——不需要 pi、不需要 <code>~/.pi/ds4/</code>。需要兩個 repo 的原因：
+        <strong>（C）完全沒裝過 omp 或 pi：</strong>直接從 <code>audreyt/ds4</code> 與 <code>audreyt/pi-ds4</code>
+        bootstrap——不需要 omp、不需要 pi、不需要 <code>~/.pi/ds4/</code>。需要兩個 repo 的原因：
         <code>ds4</code> 內附的 <code>download_model.sh</code> 抓的是 antirez 上游 stock-recipe；
         要拿 cyberneurova abliterated GGUF（本指南的權重），得用 <code>pi-ds4</code> 內附的同名腳本。
         <div class="codeblock">
           <div class="codeblock-bar">
-            <span class="codeblock-label">完全跳過 pi 的 bootstrap</span>
-            <button class="copy-btn" aria-label="複製完全不用 pi 的 bootstrap 指令">Copy</button>
+            <span class="codeblock-label">完全跳過 omp 與 pi 的 bootstrap</span>
+            <button class="copy-btn" aria-label="複製完全不用 omp 與 pi 的 bootstrap 指令">Copy</button>
           </div>
           <pre><span class="c"># 1. 取 ds4 引擎並編譯</span>
 git clone https://github.com/audreyt/ds4
@@ -3536,21 +3541,21 @@ chmod +x download_cyberneurova.sh
   --dir-steering-attn 0 \
   --dir-steering-policy final-answer</pre>
         </div>
-        這條路徑下你完全沒碰 pi；ds4-server 直接由 ds4 source tree 提供。
+        這條路徑下你完全沒碰 omp 與 pi；ds4-server 直接由 ds4 source tree 提供。
         本擴充（pi-ds4）做的事——下載、symlink、watchdog、lease——你需要時自己處理。
       </li>
     </ul>
     <ul lang="en-GB">
       <li>
-        <strong>(A) pi already installed, easiest route:</strong> keep one pi session open with the ds4 model selected once,
+        <strong>(A) omp already installed, easiest route:</strong> keep one omp session open with the ds4 model selected once,
         and the lease keeps renewing &mdash; the watchdog will not reap the server.
       </li>
       <li>
-        <strong>(B) pi already installed, run it by hand:</strong> in <code>~/.pi/ds4/support/</code>,
+        <strong>(B) omp already installed, run it by hand:</strong> in <code>~/.pi/ds4/support/</code>,
         run:
         <div class="codeblock">
           <div class="codeblock-bar">
-            <span class="codeblock-label">Manual run (after pi install)</span>
+            <span class="codeblock-label">Manual run (after omp plugin install)</span>
             <button class="copy-btn" aria-label="Copy commands to run ds4-server manually">Copy</button>
           </div>
           <pre><span class="k">cd</span> ~/.pi/ds4/support
@@ -3565,14 +3570,14 @@ chmod +x download_cyberneurova.sh
         This is equivalent to the spawn parameters baked into <code>index.ts</code>; you can also adjust them as needed.
       </li>
       <li>
-        <strong>(C) Never installed pi at all:</strong> bootstrap directly from <code>audreyt/ds4</code> and <code>audreyt/pi-ds4</code>
-        &mdash; no pi, no <code>~/.pi/ds4/</code> needed. Why both repos: the
+        <strong>(C) Never installed omp at all:</strong> bootstrap directly from <code>audreyt/ds4</code> and <code>audreyt/pi-ds4</code>
+        &mdash; no omp, no pi, no <code>~/.pi/ds4/</code> needed. Why both repos: the
         <code>download_model.sh</code> bundled with <code>ds4</code> fetches the antirez upstream stock-recipe;
         to get the cyberneurova abliterated GGUF (the weights this guide uses) you need the same-named script from <code>pi-ds4</code>.
         <div class="codeblock">
           <div class="codeblock-bar">
-            <span class="codeblock-label">Bootstrap that skips pi entirely</span>
-            <button class="copy-btn" aria-label="Copy bootstrap commands that skip pi entirely">Copy</button>
+            <span class="codeblock-label">Bootstrap that skips omp entirely</span>
+            <button class="copy-btn" aria-label="Copy bootstrap commands that skip omp entirely">Copy</button>
           </div>
           <pre><span class="c"># 1. Fetch and build the ds4 engine</span>
 git clone https://github.com/audreyt/ds4
@@ -3594,7 +3599,7 @@ chmod +x download_cyberneurova.sh
   --dir-steering-attn 0 \
   --dir-steering-policy final-answer</pre>
         </div>
-        On this path you touch no pi at all; ds4-server comes directly from the ds4 source tree.
+        On this path you touch no omp or pi at all; ds4-server comes directly from the ds4 source tree.
         Whatever the extension (pi-ds4) does &mdash; download, symlink, watchdog, lease &mdash; you handle yourself when needed.
       </li>
     </ul>
@@ -3622,7 +3627,7 @@ chmod +x download_cyberneurova.sh
       原生 ds4-server。也就是說：NVIDIA DGX Spark（GB10、~128 GB 統一記憶體、aarch64 Linux）
       上跑的不是某個 llama.cpp 旁路，而是<em>同一隻 engine、同一份 server、
       同一組 <code>--dir-steering-*</code> flag</em>。Spark 上直接
-      <code>pi install https://github.com/audreyt/pi-ds4</code> 即可——clone、<code>make ds4-server</code>（自動走 nvcc + CUDA）、
+      <code>omp plugin install github:audreyt/pi-ds4</code> 即可——clone、<code>make ds4-server</code>（自動走 nvcc + CUDA）、
       下載 cyberneurova aligned-imatrix GGUF、起 server，
       整套流程與 Mac 上相同，只是編譯時自動走 Linux／CUDA 路徑。
     </p>
@@ -3633,7 +3638,7 @@ chmod +x download_cyberneurova.sh
       native ds4-server. That is: on the NVIDIA DGX Spark (GB10, ~128 GB unified memory, aarch64 Linux),
       what runs is not some llama.cpp sidecar but the <em>same engine, the same server,
       the same <code>--dir-steering-*</code> flags</em>. On the Spark just run
-      <code>pi install https://github.com/audreyt/pi-ds4</code>: it clones, runs <code>make ds4-server</code>
+      <code>omp plugin install github:audreyt/pi-ds4</code>: it clones, runs <code>make ds4-server</code>
       (which auto-selects nvcc + CUDA), downloads the cyberneurova aligned-imatrix GGUF,
       and spawns the server &mdash; the same flow as on a Mac.
     </p>
@@ -3658,7 +3663,7 @@ chmod +x download_cyberneurova.sh
         <strong>watchdog／lease 在 Linux 也能跑：</strong>pi-ds4 的
         <code>ds4-watchdog.sh</code> 走 BSD／GNU 雙路徑（<code>stat -f %m</code> ↔
         <code>stat -c %Y</code>、<code>LC_ALL=C ps -o lstart</code>），所以第七章的
-        lifecycle 管理直接覆蓋 DGX Spark。想跳過 pi 自動化，自己手動
+        lifecycle 管理直接覆蓋 DGX Spark。想跳過 omp 自動化，自己手動
         <code>./ds4-server</code>／寫個 systemd unit／開 tmux session
         當然也都還是有效路徑。
       </li>
@@ -3687,7 +3692,7 @@ chmod +x download_cyberneurova.sh
         <code>ds4-watchdog.sh</code> now handles both BSD and GNU userlands
         (<code>stat -f %m</code> ↔ <code>stat -c %Y</code>, <code>LC_ALL=C ps -o lstart</code>),
         so the Chapter 7 lifecycle management covers DGX Spark directly.
-        If you'd rather skip the pi automation, running <code>./ds4-server</code>
+        If you'd rather skip the omp automation, running <code>./ds4-server</code>
         by hand, a systemd unit, or a tmux session are all still valid.
       </li>
       <li>
@@ -3708,14 +3713,14 @@ chmod +x download_cyberneurova.sh
       換句話說，這不是「同一份 GGUF、不同 runtime」的勉強相容，而是
       <em>同一隻引擎、同一種啟動形狀、同一組 wrapper 預設</em>跨平台。
       pi-ds4 的 lifecycle wrapper 現在也跨平台——macOS 與 Linux 共用同一支
-      <code>ds4-watchdog.sh</code>，<code>pi install</code> 在 DGX Spark
+      <code>ds4-watchdog.sh</code>，<code>omp plugin install</code> 在 DGX Spark
       上也能照常完成；想略過 wrapper、直接手動跑 ds4-server 也始終可以。
     </p>
     <p lang="en-GB">
       In other words, this is not a strained &ldquo;same GGUF, different runtime&rdquo; compatibility, but
       <em>the same engine, the same startup shape, and the same wrapper defaults</em> across platforms.
       The pi-ds4 wrapper is now cross-platform too &mdash; macOS and Linux share
-      the same <code>ds4-watchdog.sh</code>, and <code>pi install</code> on a
+      the same <code>ds4-watchdog.sh</code>, and <code>omp plugin install</code> on a
       DGX Spark works the same way; bypassing the wrapper and running
       ds4-server by hand remains an option.
     </p>
@@ -3747,7 +3752,7 @@ chmod +x download_cyberneurova.sh
 │       └── out/
 │           └── uncertainty_ablit_imatrix.f32
 ├── kv/              <span class="teal"># KV cache 溢出位置（上限 8 GB）</span>
-├── clients/         <span class="teal"># 每個 pi process 的 lease 檔</span>
+├── clients/         <span class="teal"># 每個 omp process 的 lease 檔</span>
 │   ├── 51234.json
 │   └── 51789.json
 ├── lock/            <span class="gold"># 啟動鎖（活著時存在，否則消失）</span>
@@ -3974,12 +3979,12 @@ STATE=~/.pi/ds4/server.json
 
     <p class="lede" lang="zh-TW">
       如果你想 hack 引擎、測自己的 patch、或保留多個 ds4 fork 並行，
-      可以跳過 <code>pi install</code> 流程，直接用內附的安裝腳本把擴充和 ds4 checkout
+      可以跳過 <code>omp plugin install</code> 流程，直接用內附的安裝腳本把擴充和 ds4 checkout
       都 symlink 過去。
     </p>
     <p class="lede" lang="en-GB">
       If you want to hack on the engine, test your own patches, or keep several ds4 forks side by side,
-      you can skip the <code>pi install</code> flow and use the bundled install script to symlink
+      you can skip the <code>omp plugin install</code> flow and use the bundled install script to symlink
       both the extension and your ds4 checkout into place.
     </p>
 
@@ -4009,11 +4014,11 @@ STATE=~/.pi/ds4/server.json
     <h3>10.2<span lang="zh-TW">　已有 support 目錄時：<code>--force</code></span><span lang="en-GB">　When a support directory already exists: <code>--force</code></span></h3>
 
     <p lang="zh-TW">
-      如果 <code>~/.pi/ds4/support</code> 已經指向別的地方（例如上次 <code>pi install</code> 留下的），
+      如果 <code>~/.pi/ds4/support</code> 已經指向別的地方（例如上次 <code>omp plugin install</code> 留下的），
       腳本會拒絕直接覆寫。加 <code>--force</code> 會：
     </p>
     <p lang="en-GB">
-      If <code>~/.pi/ds4/support</code> already points elsewhere (e.g. left over from a prior <code>pi install</code>),
+      If <code>~/.pi/ds4/support</code> already points elsewhere (e.g. left over from a prior <code>omp plugin install</code>),
       the script refuses to overwrite directly. Adding <code>--force</code> will:
     </p>
 
@@ -4033,10 +4038,10 @@ STATE=~/.pi/ds4/server.json
     <h3>10.3<span lang="zh-TW">　接下來：reload</span><span lang="en-GB">　Next: reload</span></h3>
 
     <p lang="zh-TW">
-      安裝完成後重啟 pi，或在 pi 內執行 <code>/reload</code>——擴充會被重新發現。
+      安裝完成後重啟 omp，或在 omp 內執行 <code>/reload</code>——擴充會被重新發現。
     </p>
     <p lang="en-GB">
-      After install, restart pi or run <code>/reload</code> inside pi &mdash; the extension is rediscovered.
+      After install, restart omp or run <code>/reload</code> inside omp &mdash; the extension is rediscovered.
     </p>
   </section>
 
@@ -4203,15 +4208,15 @@ STATE=~/.pi/ds4/server.json
         <p lang="zh-TW">但你還是會在背後<em>某個地方</em>需要 ds4-server 跑起來。三條路：</p>
         <p lang="en-GB">But you still need ds4-server running <em>somewhere</em> in the background. Three paths:</p>
         <ul lang="zh-TW">
-          <li><strong>有 pi：</strong>留一個 pi session 開著讓 watchdog 維持（A 方案）；或 <code>cd ~/.pi/ds4/support && ./ds4-server …</code> 手動跑（B 方案）。</li>
-          <li><strong>沒有 pi：</strong>克隆 <code>audreyt/ds4</code>、<code>make ds4-server</code>，然後用 <code>pi-ds4</code> 的 <code>download_model.sh</code>（curl 一份下來，<em>不是</em> ds4 內附的同名腳本——那支抓的是上游 stock-recipe），最後跑 <code>./ds4-server …</code>（C 方案）。完整步驟與旗標見 <a href="#shells">8.6 節</a>。</li>
+          <li><strong>有 omp：</strong>留一個 omp session 開著讓 watchdog 維持（A 方案）；或 <code>cd ~/.pi/ds4/support && ./ds4-server …</code> 手動跑（B 方案）。</li>
+          <li><strong>沒有 omp：</strong>克隆 <code>audreyt/ds4</code>、<code>make ds4-server</code>，然後用 <code>pi-ds4</code> 的 <code>download_model.sh</code>（curl 一份下來，<em>不是</em> ds4 內附的同名腳本——那支抓的是上游 stock-recipe），最後跑 <code>./ds4-server …</code>（C 方案）。完整步驟與旗標見 <a href="#shells">8.6 節</a>。</li>
         </ul>
         <ul lang="en-GB">
-          <li><strong>With pi:</strong> keep one pi session open so the watchdog keeps it alive (option A); or <code>cd ~/.pi/ds4/support &amp;&amp; ./ds4-server &hellip;</code> by hand (option B).</li>
-          <li><strong>Without pi:</strong> clone <code>audreyt/ds4</code>, run <code>make ds4-server</code>, then use <code>pi-ds4</code>'s <code>download_model.sh</code> (curl a copy &mdash; <em>not</em> the same-named script inside ds4, which fetches the upstream stock-recipe), and finally run <code>./ds4-server &hellip;</code> (option C). Full steps and flags in <a href="#shells">section 8.6</a>.</li>
+          <li><strong>With omp:</strong> keep one omp session open so the watchdog keeps it alive (option A); or <code>cd ~/.pi/ds4/support &amp;&amp; ./ds4-server &hellip;</code> by hand (option B).</li>
+          <li><strong>Without omp:</strong> clone <code>audreyt/ds4</code>, run <code>make ds4-server</code>, then use <code>pi-ds4</code>'s <code>download_model.sh</code> (curl a copy &mdash; <em>not</em> the same-named script inside ds4, which fetches the upstream stock-recipe), and finally run <code>./ds4-server &hellip;</code> (option C). Full steps and flags in <a href="#shells">section 8.6</a>.</li>
         </ul>
-        <p lang="zh-TW">簡言之：作為<em>前端</em>可以完全不碰 pi；作為<em>服務</em>你還是得讓 ds4-server 跑起來——但這條服務路徑也可以完全不經過 pi（見 <a href="#shells">8.6 節</a>）。</p>
-        <p lang="en-GB">In short: as a <em>frontend</em> you can avoid pi entirely; as a <em>service</em> you still need ds4-server running &mdash; but that service path can also bypass pi entirely (see <a href="#shells">section 8.6</a>).</p>
+        <p lang="zh-TW">簡言之：作為<em>前端</em>可以完全不碰 omp 與 pi；作為<em>服務</em>你還是得讓 ds4-server 跑起來——但這條服務路徑也可以完全不經過 omp（見 <a href="#shells">8.6 節</a>）。</p>
+        <p lang="en-GB">In short: as a <em>frontend</em> you can avoid omp and pi entirely; as a <em>service</em> you still need ds4-server running &mdash; but that service path can also bypass omp entirely (see <a href="#shells">section 8.6</a>).</p>
       </div>
     </div>
 
@@ -4477,8 +4482,8 @@ STATE=~/.pi/ds4/server.json
     <dl>
       <div>
         <dt>lease<span class="cjk-aside">租約檔</span></dt>
-        <dd lang="zh-TW">每個使用 ds4 的 pi process 在 <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code> 寫入的存在證明；每 10 秒更新一次。</dd>
-        <dd lang="en-GB">A proof-of-presence file each pi process using ds4 writes at <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code>; refreshed every 10 seconds.</dd>
+        <dd lang="zh-TW">每個使用 ds4 的 omp process 在 <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code> 寫入的存在證明；每 10 秒更新一次。</dd>
+        <dd lang="en-GB">A proof-of-presence file each omp process using ds4 writes at <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code>; refreshed every 10 seconds.</dd>
       </div>
       <div>
         <dt>watchdog<span class="cjk-aside">看門狗</span></dt>

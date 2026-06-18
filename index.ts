@@ -1395,7 +1395,25 @@ export default function (pi: ExtensionAPI) {
 
 	registerDs4Provider(pi);
 	registerDs4Command(pi);
-
+	pi.on("before_agent_start", async (_event, ctx) => {
+		if (ctx.model?.provider !== PROVIDER_ID || ctx.model?.id !== MODEL_ID) return;
+		const alreadyReady = await checkHttpReady();
+		if (alreadyReady) return;
+		let lastNotification: string | undefined;
+		const notifyStatus: StatusCallback = (message) => {
+			if (!message || message === lastNotification) return;
+			if (/^ds4-server starting \(\d+s\)$/.test(message)) return;
+			lastNotification = message;
+			ctx.ui.notify(message, "info");
+		};
+		try {
+			notifyStatus("preparing ds4-server");
+			await ensureServerManaged(notifyStatus);
+			ctx.ui.notify("ds4-server ready", "info");
+		} catch (error) {
+			ctx.ui.notify(`ds4-server startup failed: ${describeError(error)}`, "error");
+		}
+	});
 	pi.on("before_provider_request", async (event, ctx) => {
 		if (ctx.model?.provider !== PROVIDER_ID || ctx.model?.id !== MODEL_ID) return;
 		const seededPayload = withReproducibleSeed(event.payload);

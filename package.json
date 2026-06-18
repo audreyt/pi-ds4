@@ -1,6 +1,6 @@
 {
   "name": "pi-ds4",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Pi provider extension for deterministic local ds4.c DeepSeek V4 Flash inference (audreyt fork: cyberneurova abliterated aligned-imatrix GGUF + audreyt/ds4 main).",
   "type": "module",
   "license": "MIT",
@@ -11,9 +11,16 @@
     "deepseek",
     "cyberneurova",
     "abliterated",
-    "m5"
+    "m5",
+    "omp-extension",
+    "oh-my-pi"
   ],
   "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "omp": {
     "extensions": [
       "./index.ts"
     ]
@@ -27,10 +34,14 @@
     "LICENSE"
   ],
   "peerDependencies": {
-    "@earendil-works/pi-coding-agent": "*"
+    "@earendil-works/pi-coding-agent": "*",
+    "@oh-my-pi/pi-coding-agent": "*"
   },
   "peerDependenciesMeta": {
     "@earendil-works/pi-coding-agent": {
+      "optional": true
+    },
+    "@oh-my-pi/pi-coding-agent": {
       "optional": true
     }
   }
