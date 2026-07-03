@@ -21,15 +21,19 @@ Same UX as upstream `mitsuhiko/pi-ds4` (one-line `pi install`, on-demand
 changes:
 
 1. **Pulls [`audreyt/ds4`](https://github.com/audreyt/ds4) `main`** instead of
-   `antirez/ds4` `main`. That branch carries (a) ivanfioravanti's M5 prefill
-   work from antirez/ds4#15 plus the M5 MPP + Tensor matmul fast paths,
-   (b) deterministic
-   tool-call ID derivation from seeded requests, which is what makes
-   pi-ds4's `seed=42` traces stable end-to-end, and (c) the
+   `antirez/ds4` `main`. That branch tracks upstream antirez (merged through
+   2026-07-02: SSD streaming, ROCm/Strix Halo, distributed inference) and
+   additionally carries (a) ivanfioravanti's M5 prefill work from
+   antirez/ds4#15 plus the M5 MPP + Tensor matmul fast paths,
+   (b) deterministic tool-call ID derivation from seeded requests, which is
+   what makes pi-ds4's `seed=42` traces stable end-to-end, (c) the
    cyberneurova-specific `dir-steering/out/uncertainty_ablit_imatrix.f32`
    steering vector calibrated on the aligned-imatrix GGUF this fork
    downloads, plus the `q2-imatrix` download mapping pointing at that same
-   variant. See the [audreyt/ds4 README](https://github.com/audreyt/ds4#readme)
+   variant, (d) the experimental DSpark block-speculative-decode runtime with
+   B2 lossless rejection sampling, and (e) antirez/ds4#489 (server
+   observability + agent-loop cache robustness), merged ahead of upstream.
+   See the [audreyt/ds4 README](https://github.com/audreyt/ds4#readme)
    for the full story.
 2. **Ships its own `download_model.sh`** that shadows the antirez/ds4 one and
    auto-selects by detected RAM: the [mixed-quant build](https://huggingface.co/audreyt/CyberNeurova-DeepSeek-V4-Flash-abliterated-GGUF)
@@ -63,6 +67,60 @@ GGUF already downloaded and skip straight to spawning the server.
 
 **Disk needed:** ~91 GB for the GGUF on 128 GB+ Macs, ~87 GB on 96-127 GB
 Macs. Set `HF_TOKEN` if your HuggingFace download benefits from auth.
+
+## What's new at the current pin (`c1f4aa2`, 2026-07)
+
+The June→July pin bump (`97319db` → `c1f4aa2`) pulls in 99 commits across 65
+files — most of them a month of upstream antirez work, the rest fork-side
+merges landed ahead of upstream. Existing installs pick all of this up
+automatically: on the next launch the extension fetches the pin, hard-resets
+`~/.pi/ds4/support`, and rebuilds `ds4-server`. The
+[guide's What's-new chapter](https://pi.audreyt.org/#whatsnew) has the
+narrative version.
+
+**On by default (managed path):**
+
+* `GET /health` and `GET /stats` — liveness, queue depth, per-source KV-cache
+  hit counters, token totals, last prefill/decode t/s; answered on the client
+  thread even mid-generation (antirez/ds4#489, merged here ahead of upstream).
+* Agent-loop KV-cache overhaul (same PR): snapshots stored on step thresholds,
+  consumed snapshots deleted only after the tail prefill succeeds, eviction
+  grace for fresh snapshots, visible checkpoints for chat/Anthropic tool-call
+  turns. Long Claude Code / Codex sessions redo far less prefill.
+* Disconnected clients cancel prefill and decode instead of wasting the GPU on
+  a response nobody is waiting for.
+* Exact-DSML tool-replay fidelity fixes (sampled whitespace separators,
+  multi-invoke blocks, RAM-first replay-id lookups) — keeps seed-42 traces
+  byte-stable.
+* Hardened server JSON parsing; tool calls started inside an unclosed
+  `<think>` are recovered; `ds4-agent` gains cooperative interruption, status
+  polish, DSML-parsing hardening, an edit-tool fix with regression tests, and
+  correct terminal restoration.
+
+**In the engine, opt-in by hand** (run `ds4-server` yourself — see the guide's
+§8.6; an adopted server only has the flags *you* give it, so re-pass the
+steering flags):
+
+* `--ssd-streaming` — routed MoE experts stream from SSD through an in-memory
+  expert cache; upstream documents 64 GB Macs running the 2-bit Flash GGUF and
+  128 GB Macs inspecting DeepSeek V4 Pro q2 this way.
+* `--mtp DSpark.gguf` — experimental block-speculative decoding with the
+  official DSpark draft head (convert with
+  `gguf-tools/deepseek4-quantize --dspark-only`); this fork adds B2 rejection
+  sampling (lossless — output distribution identical to the target), persisted
+  RNG state, and `DS4_DSPARK_ADAPTIVE=1` adaptive block sizing. Measure with
+  `DS4_MTP_TIMING=1` before trusting a speedup.
+* `--max-queue N` — bounded request queue: 429 once N jobs wait; default 0
+  keeps the old unbounded behavior.
+* Correctness: the `--mtp-draft > 2` speculative-verify bug is fixed
+  (antirez/ds4#358); `ds4-eval` multiple-choice grader false negatives are
+  fixed with golden self-tests (antirez/ds4#319).
+
+**Beyond the Mac (upstream):** a ROCm backend for AMD Strix Halo
+(`make strix-halo`, walkthrough in `STRIXHALO.md`; prefer the plain
+aligned-imatrix GGUF there), and distributed inference — the 4-bit Flash quant
+across two 128 GB MacBooks over Thunderbolt 5, pipelined prefill faster than
+one machine, generation slower.
 
 ## Local development install
 
@@ -293,6 +351,12 @@ Same env vars as upstream, plus several fork-specific ones (notably the context-
 * **[ivanfioravanti's PR #15](https://github.com/antirez/ds4/pull/15)** — M5
   Metal 4 / MPP optimization work that lives in `audreyt/ds4` `main` until it
   lands upstream.
+* **The 2026-07 engine round** — SSD streaming, distributed inference, and the
+  ROCm integration led by antirez; elkaix (server observability + agent-loop
+  cache, antirez/ds4#489), MA (DSpark B2 rejection sampling), Nick Parrin
+  (Strix Halo), Andrea Borio (mixed-quant expert streaming), rinaldofesta
+  (eval grader), kamranjon and fry69 (agent fixes), Andreas Spannagel (MTP
+  verify fix).
 * **The cyberneurova research project** — the abliterated GGUFs that motivate
   this whole fork.
 

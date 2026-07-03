@@ -23,7 +23,7 @@
 <meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Iansui&family=JetBrains+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -52,10 +52,10 @@
   --code-kw:      #4bc3d4;
   --grain-opacity: 0.024;
 
-  --serif:      'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
-  --sans:       'Outfit', 'Noto Sans TC', system-ui, -apple-system, sans-serif;
-  --cjk:        'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-  --serif-cjk:  'Noto Serif TC', 'Songti TC', 'PMingLiU', Georgia, serif;
+  --serif:      'Spectral', 'Iansui', Georgia, serif;
+  --sans:       'Source Sans 3', system-ui, -apple-system, sans-serif;
+  --cjk:        'Iansui', 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+  --serif-cjk:  'Iansui', 'Spectral', Georgia, serif;
   --cursive:    'Kaiti TC', 'DFKai-SB', 'BiauKai', 'STKaiti', cursive;
   --mono:       'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
 }
@@ -86,11 +86,11 @@
 html { scroll-behavior: smooth; scroll-padding-top: 32px; color-scheme: light dark; }
 
 body {
-  font-family: var(--sans);
+  font-family: var(--serif);
   color: var(--text);
   background: var(--paper);
-  line-height: 1.9;
-  font-weight: 500;
+  line-height: 1.7;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -108,6 +108,10 @@ html:not(:has(#lang-zh:checked)) [lang="zh-TW"] { display: none; }
 html:has(#lang-zh:checked) [lang="en-GB"] { display: none; }
 html:has(#lang-zh:checked) .lang-toggle [lang="zh-TW"] { display: inline; }
 html:has(#lang-zh:checked) .lang-toggle [lang="en-GB"] { display: none; }
+
+html:has(#lang-zh:checked) body { font-weight: 400; }
+html:has(#lang-zh:checked) em,
+html:has(#lang-zh:checked) blockquote { font-style: normal; font-family: var(--cursive); }
 
 .lang-toggle {
   position: fixed;
@@ -1530,7 +1534,7 @@ document.documentElement.classList.add('js');
     <div class="crumbs">
       <span>pi&#8209;ds4</span>
       <span class="cjk-tag"><span lang="zh-TW">指南</span><span lang="en-GB">Guide</span></span>
-      <span>v 0.3</span>
+      <span>v 0.4</span>
     </div>
   </header>
 
@@ -1558,7 +1562,7 @@ document.documentElement.classList.add('js');
       <span><b>Audrey Tang</b> <span lang="zh-TW">唐鳳</span><span lang="en-GB">唐鳳</span></span>
       <span><span lang="zh-TW">分叉自</span><span lang="en-GB">forked from</span> <b>mitsuhiko/pi&#8209;ds4</b></span>
       <span><span lang="zh-TW">引擎</span><span lang="en-GB">engine</span> <b>DwarfStar</b> · <b>antirez/ds4</b></span>
-      <span><span lang="zh-TW">2026 春</span><span lang="en-GB">Spring 2026</span></span>
+      <span><span lang="zh-TW">2026 夏</span><span lang="en-GB">Summer 2026</span></span>
     </div>
 
     <div class="ledger">
@@ -1581,6 +1585,10 @@ document.documentElement.classList.add('js');
       <div class="ledger-item">
         <div class="num">42<small>seed</small></div>
         <div class="label"><span lang="zh-TW">預設可重現：seed 與工具呼叫 ID 都穩定</span><span lang="en-GB">Reproducible by default: stable seed and tool-call IDs</span></div>
+      </div>
+      <div class="ledger-item">
+        <div class="num">99<small>commits</small></div>
+        <div class="label"><span lang="zh-TW">2026-07 引擎 pin 更新：SSD 串流、DSpark 推測解碼、<code>/stats</code>——見<a href="#whatsnew">更新誌</a></span><span lang="en-GB">2026-07 engine pin: SSD streaming, DSpark speculative decode, <code>/stats</code> &mdash; see <a href="#whatsnew">What&rsquo;s new</a></span></div>
       </div>
     </div>
   </section>
@@ -1744,7 +1752,7 @@ document.documentElement.classList.add('js');
       </a>
       <a class="path" href="#otherhw">
         <span class="who"><span lang="zh-TW">手邊不是 Mac</span><span lang="en-GB">Not on a Mac</span></span>
-        <span><span lang="zh-TW">同一份 GGUF 在 DGX Spark 等 128 GB 機器上也能跑──第八.7 節</span><span lang="en-GB">The same GGUF runs on DGX Spark and other 128-GB boxes &mdash; §8.7.</span></span>
+        <span><span lang="zh-TW">同一隻引擎在 DGX Spark（CUDA）與 AMD Strix Halo（ROCm）等 128 GB 機器上也能跑──第八.7 節</span><span lang="en-GB">The same engine runs on DGX Spark (CUDA), AMD Strix Halo (ROCm) and other 128-GB boxes &mdash; §8.7.</span></span>
         <span class="arrow">→ 8.7</span>
       </a>
     </div>
@@ -1770,11 +1778,139 @@ document.documentElement.classList.add('js');
       <li><a href="#coda"><span lang="zh-TW">附錄：致謝、授權、後話</span><span lang="en-GB">Coda: thanks, licence, afterword</span></a></li>
     </ol>
     <div class="toc-aux">
+      <a href="#whatsnew"><span lang="zh-TW">更新誌 · 2026-07</span><span lang="en-GB">What&rsquo;s new · 2026-07</span></a>
+      <span class="toc-aux-sep">·</span>
       <a href="#faq"><span lang="zh-TW">常問問題</span><span lang="en-GB">FAQ</span></a>
       <span class="toc-aux-sep">·</span>
       <a href="#glossary"><span lang="zh-TW">字彙表</span><span lang="en-GB">Glossary</span></a>
     </div>
   </nav>
+
+  <!-- ═══════════  WHAT'S NEW — JULY 2026  ═══════════ -->
+  <section class="chapter" id="whatsnew">
+    <div class="chapter-eyebrow"><span class="cjk-num"><span lang="zh-TW">更　新　誌</span><span lang="en-GB">What&rsquo;s new</span></span></div>
+    <h2>
+      <span lang="zh-TW">v 0.4：一次 pin 升級，<em>九十九個 commit</em></span>
+      <span lang="en-GB">v 0.4: one pin bump, <em>ninety-nine commits</em></span>
+    </h2>
+
+    <p class="lede" lang="zh-TW">
+      pi-ds4 的引擎不會憑空變新。v 0.4 把 <code>SUPPORT_PIN</code> 從六月初的
+      <code>97319db</code> 推進到 7 月 3 日的 <code>c1f4aa2</code>——之間是 99 個 commit、65 個檔案、
+      約七萬四千行新增（光 <code>ds4.c</code> 就長了一萬七千行）。大部分來自 antirez 上游一個月的工作；
+      其餘是本分支自己先行合併的推測解碼 runtime 與 server 強化。你什麼都不用做：
+      既有安裝在下一次啟動時會自動 fetch、hard-reset 到新 pin，並重編 <code>ds4-server</code>。
+    </p>
+    <p class="lede" lang="en-GB">
+      The engine under pi-ds4 does not get newer by magic. v 0.4 moves <code>SUPPORT_PIN</code>
+      from early June&rsquo;s <code>97319db</code> to July 3rd&rsquo;s <code>c1f4aa2</code> &mdash;
+      99 commits, 65 files, roughly seventy-four thousand added lines in between
+      (<code>ds4.c</code> alone grew by seventeen thousand). Most of it is a month of work in
+      upstream antirez; the rest is this fork&rsquo;s own ahead-of-upstream merges: a speculative-decode
+      runtime and server hardening. You do nothing: existing installs fetch, hard-reset to the new
+      pin, and rebuild <code>ds4-server</code> on their next launch.
+    </p>
+
+    <div class="ledger">
+      <div class="ledger-item">
+        <div class="num">99<small>commits</small></div>
+        <div class="label"><span lang="zh-TW"><code>97319db → c1f4aa2</code>，2026-06-01 至 2026-07-03</span><span lang="en-GB"><code>97319db → c1f4aa2</code>, 2026-06-01 through 2026-07-03</span></div>
+      </div>
+      <div class="ledger-item">
+        <div class="num">3<small>backends</small></div>
+        <div class="label"><span lang="zh-TW">Metal · CUDA · ROCm——同一隻 C 引擎，新增 AMD Strix Halo</span><span lang="en-GB">Metal · CUDA · ROCm &mdash; one C engine, now including AMD Strix Halo</span></div>
+      </div>
+      <div class="ledger-item">
+        <div class="num">2<small>endpoints</small></div>
+        <div class="label"><span lang="zh-TW"><code>/health</code> 與 <code>/stats</code>：server 不再是黑盒子</span><span lang="en-GB"><code>/health</code> and <code>/stats</code>: the server is no longer a black box</span></div>
+      </div>
+    </div>
+
+    <h3><span lang="zh-TW">你的下一次啟動就有</span><span lang="en-GB">Already in your next launch</span></h3>
+
+    <p lang="zh-TW">這些改動不需要任何新旗標，managed path 直接受益：</p>
+    <p lang="en-GB">These need no new flags; the managed path benefits directly:</p>
+
+    <ul lang="zh-TW">
+      <li><strong>Server 可觀測：</strong><code>GET /health</code> 與 <code>GET /stats</code> 由 client 執行緒直接回應——即使模型正在生成中也答得動。<code>/stats</code> 回報 uptime、queue 深度、busy 旗標、各來源 cache 命中計數、token 總量、取消計數與最近一次 prefill／decode t/s。curl 範例見 <a href="#daily">§7.1</a>。（<a href="https://github.com/antirez/ds4/pull/489">antirez/ds4 PR #489</a>，本分支先行合併。）</li>
+      <li><strong>長 agent session 少走重複 prefill</strong>（同樣來自 PR #489）：KV snapshot 改在步數門檻儲存而非剛好整數倍；被消耗的 snapshot 延後到接續 prefill 成功才刪；新 snapshot 對 eviction 有寬限；chat／Anthropic 工具回合會記住可見 checkpoint。體感：Claude Code／Codex 的長工具迴圈回到 server 時，更常直接接上快取。</li>
+      <li><strong>斷線即停：</strong>client 中途離開（timeout、Ctrl-C）會取消 prefill 與 decode，GPU 立刻釋放，不再默默跑完沒人等的回應。</li>
+      <li><strong>工具呼叫重放更保真：</strong>模型取樣的空白分隔符會被記錄；multi-invoke DSML 區塊不再誤放進部分訊息；replay id 都在 RAM 時跳過磁碟掃描。疊在 seed 42 之上，決策軌跡逐 byte 穩定。</li>
+      <li><strong>韌性：</strong>JSON request 解析加固（上游）；卡在未閉合 <code>&lt;think&gt;</code> 內起頭的工具呼叫可以回收（上游）；方向性引導的 decode 路徑在上游合併後保持完好（本分支）。</li>
+      <li><strong><code>/ds4-agent</code> 更順手（上游）：</strong>中斷改為 cooperative、狀態列顯示 prefill 速度與 greedy 取樣、web 工具有狀態訊息、DSML 解析加固、edit 工具修正並補上回歸測試、離開時正確還原終端機。</li>
+    </ul>
+    <ul lang="en-GB">
+      <li><strong>An observable server:</strong> <code>GET /health</code> and <code>GET /stats</code> are answered on the client thread &mdash; they respond even mid-generation. <code>/stats</code> reports uptime, queue depth, a busy flag, per-source cache-hit counters, token totals, cancellation counters, and the last prefill / decode t/s. curl examples in <a href="#daily">§7.1</a>. (<a href="https://github.com/antirez/ds4/pull/489">antirez/ds4 PR #489</a>, merged here ahead of upstream.)</li>
+      <li><strong>Long agent sessions redo far less prefill</strong> (also PR #489): KV snapshots are stored on step thresholds rather than exact multiples; consumed snapshots are deleted only after the tail prefill succeeds; fresh snapshots get an eviction grace; chat / Anthropic tool-call turns remember a visible checkpoint. Felt effect: long Claude Code / Codex tool loops reconnect to the cache far more often.</li>
+      <li><strong>Disconnect means stop:</strong> a client that goes away mid-turn (timeout, Ctrl-C) cancels both prefill and decode; the GPU frees immediately instead of silently finishing a response nobody is waiting for.</li>
+      <li><strong>Higher-fidelity tool-call replay:</strong> the whitespace separator the model actually sampled is captured; multi-invoke DSML blocks are no longer replayed into partial messages; the tool-map disk scan is skipped when all replay ids are already in RAM. Stacked on seed 42, decision traces stay byte-stable.</li>
+      <li><strong>Resilience:</strong> hardened JSON request parsing (upstream); tool calls that begin inside an unclosed <code>&lt;think&gt;</code> are recovered (upstream); the directional-steering decode path stays intact across the upstream merge (this fork).</li>
+      <li><strong>A smoother <code>/ds4-agent</code> (upstream):</strong> cooperative interruption, prefill speed and greedy-sampling shown in the status line, web-tool status messages, hardened DSML parsing, an edit-tool fix with regression tests, and correct terminal restoration on exit.</li>
+    </ul>
+
+    <h3><span lang="zh-TW">引擎學會的新招（手動路徑）</span><span lang="en-GB">What the engine learned (by-hand paths)</span></h3>
+
+    <p lang="zh-TW">
+      以下功能都已在 pin 內的引擎裡，但 pi-ds4 的 managed 啟動參數刻意維持不變（context、KV、方向性引導）。
+      要用它們，走 <a href="#shells">§8.6</a> 的手動配方——把新旗標加在同一組引導旗標旁邊即可。
+    </p>
+    <p lang="en-GB">
+      All of the following ships in the pinned engine, but pi-ds4&rsquo;s managed launch arguments
+      deliberately stay the same (context, KV, directional steering). To use them, take the manual
+      recipe in <a href="#shells">§8.6</a> and add the new flags next to the same steering flags.
+    </p>
+
+    <ul lang="zh-TW">
+      <li><strong>SSD 串流（<code>--ssd-streaming</code>，上游）：</strong>非路由權重常駐，路由 MoE 專家放進記憶體快取、miss 時從 GGUF 讀回。自動預算取 Metal 建議 working set 的 80% 再扣掉非路由權重。上游文件示範 64 GB MacBook 以 <code>--ssd-streaming-cache-experts 32GB</code> 跑 2-bit Flash；128 GB Mac 甚至能以串流檢視 DeepSeek V4 <em>Pro</em> q2（M5 Max 上自動預算選了約 59 GB 專家快取）。per-layer boosted-quant 串流也涵蓋本分支 128 GB 檔位的 mixed build。代價明確：prefill 仍快，decode 對 cache miss 敏感。</li>
+      <li><strong>DSpark 推測解碼（實驗性，本分支先行）：</strong>以 <code>gguf-tools/deepseek4-quantize --dspark-only</code> 轉出官方 DSpark 草稿頭後，<code>--mtp DSpark.gguf</code>（CLI 與 server 都收）啟用 Metal block-speculative decode：block 平行草稿、target 驗證後才 commit。本分支再加上 B2 rejection sampling——推測取樣 lossless，輸出分佈等同 target——以及 RNG 狀態持久化、<code>DS4_DSPARK_ADAPTIVE=1</code> 自適應 block 大小、prefix checkpoint 部分接受。加速幅度取決於 base／draft 量化與 prompt；先開 <code>DS4_MTP_TIMING=1</code> 量測再下結論。</li>
+      <li><strong>有界請求佇列（<code>--max-queue N</code>）：</strong>排隊滿 N 件回 <code>429</code>，防止 client timeout 疊出一堆沒人領的重複工作；預設 <code>0</code> 維持舊行為。</li>
+      <li><strong>正確性修補（上游）：</strong><code>--mtp-draft &gt; 2</code> 會 commit 錯誤 token 的推測驗證 bug 已修（<a href="https://github.com/antirez/ds4/pull/358">PR #358</a>）；<code>ds4-eval</code> 選擇題 grader 的偽陰性成串修正並加上 golden self-tests（<a href="https://github.com/antirez/ds4/pull/319">PR #319</a>）；另新增 release QA checklist。</li>
+    </ul>
+    <ul lang="en-GB">
+      <li><strong>SSD streaming (<code>--ssd-streaming</code>, upstream):</strong> non-routed weights stay resident; routed MoE experts live in an in-memory cache and are read back from the GGUF on misses. The automatic budget takes 80% of the Metal recommended working set minus non-routed weights. Upstream documents a 64&nbsp;GB MacBook running the 2-bit Flash with <code>--ssd-streaming-cache-experts 32GB</code>; a 128&nbsp;GB Mac can even inspect DeepSeek V4 <em>Pro</em> q2 by streaming (the automatic budget picked about 59&nbsp;GB of expert cache on an M5 Max). Per-layer boosted-quant streaming also covers the mixed build this fork ships on the 128&nbsp;GB tier. The trade is explicit: prefill stays fast; decode is sensitive to cache misses.</li>
+      <li><strong>DSpark speculative decoding (experimental, fork-ahead):</strong> convert the official DSpark draft head with <code>gguf-tools/deepseek4-quantize --dspark-only</code>, then <code>--mtp DSpark.gguf</code> (accepted by both the CLI and the server) enables Metal block-speculative decode: block-parallel drafts, target-verified before commit. This fork adds B2 rejection sampling &mdash; lossless speculative <em>sampling</em>, output distribution identical to the target &mdash; plus persisted RNG state, adaptive block sizing via <code>DS4_DSPARK_ADAPTIVE=1</code>, and partial accepts from prefix checkpoints. Speedup depends on the base/draft quant pair and the prompt; measure with <code>DS4_MTP_TIMING=1</code> before drawing conclusions.</li>
+      <li><strong>A bounded request queue (<code>--max-queue N</code>):</strong> returns <code>429</code> once N jobs are waiting, so client timeouts cannot silently stack duplicate jobs nobody will collect; the default <code>0</code> keeps the old behaviour.</li>
+      <li><strong>Correctness repairs (upstream):</strong> the speculative-verify bug where <code>--mtp-draft &gt; 2</code> committed wrong tokens is fixed (<a href="https://github.com/antirez/ds4/pull/358">PR #358</a>); a chain of <code>ds4-eval</code> multiple-choice grader false negatives is fixed with golden self-tests (<a href="https://github.com/antirez/ds4/pull/319">PR #319</a>); and upstream added a release QA checklist.</li>
+    </ul>
+
+    <h3><span lang="zh-TW">不只 Mac</span><span lang="en-GB">Beyond the Mac</span></h3>
+
+    <ul lang="zh-TW">
+      <li><strong>AMD Strix Halo（ROCm，上游）：</strong>128 GB 的 Ryzen AI Max 機器（Radeon 8060S／gfx1151）現在有原生 ROCm 後端：<code>make strix-halo</code>（別名 <code>make rocm</code>），checkout 內附 <code>STRIXHALO.md</code> 完整安裝步驟。詳見 <a href="#otherhw">§8.7</a>。</li>
+      <li><strong>分散式推論（上游）：</strong>一台裝不下就兩台——4-bit Flash 跨兩台 128 GB MacBook（Thunderbolt 5），每台只 map 自己的 layer slice，activation 走 TCP；prefill 管線化可以比單機快，generation 仍是逐 token 自回歸所以較慢。DeepSeek V4 Pro Q4 也走同一條分散式路徑。</li>
+    </ul>
+    <ul lang="en-GB">
+      <li><strong>AMD Strix Halo (ROCm, upstream):</strong> 128&nbsp;GB Ryzen AI Max machines (Radeon 8060S / gfx1151) now have a native ROCm backend: <code>make strix-halo</code> (alias <code>make rocm</code>), with a complete <code>STRIXHALO.md</code> setup walkthrough in the checkout. See <a href="#otherhw">§8.7</a>.</li>
+      <li><strong>Distributed inference (upstream):</strong> when one machine cannot hold it, use two &mdash; the 4-bit Flash quant across two 128&nbsp;GB MacBooks (Thunderbolt&nbsp;5), each mapping only its own layer slice, activations over TCP. Pipelined prefill can beat a single machine; generation remains token-by-token autoregressive and is slower. DeepSeek V4 Pro Q4 takes the same distributed path.</li>
+    </ul>
+
+    <p lang="zh-TW">
+      這些能力都住在同一份 checkout 裡：你 <code>~/.pi/ds4/support/</code> 底下那個引擎，
+      現在就是能做以上所有事的那一個。
+    </p>
+    <p lang="en-GB">
+      All of this lives in the same checkout: the engine sitting under
+      <code>~/.pi/ds4/support/</code> is now the one that can do everything above.
+    </p>
+
+    <p lang="zh-TW">
+      <strong>這一輪的名字：</strong>SSD 串流、分散式與 ROCm 整合由 Salvatore Sanfilippo（antirez）主導；
+      elkaix 貢獻 server 可觀測性與 agent-loop 快取強化（PR #489）；MA 建造 DSpark 的 B2 rejection sampling
+      與自適應 block；Nick Parrin 移植 Strix Halo；Andrea Borio 加入 mixed-quant 專家串流；
+      rinaldofesta 修 eval grader；kamranjon 與 fry69 修 agent 工具與終端機還原；
+      Andreas Spannagel 修 MTP 推測驗證。
+    </p>
+    <p lang="en-GB">
+      <strong>The names behind this round:</strong> SSD streaming, distributed inference, and the ROCm
+      integration were led by Salvatore Sanfilippo (antirez); elkaix contributed the server observability
+      and agent-loop cache work (PR #489); MA built DSpark&rsquo;s B2 rejection sampling and adaptive
+      blocks; Nick Parrin ported Strix Halo; Andrea Borio added mixed-quant expert streaming;
+      rinaldofesta repaired the eval grader; kamranjon and fry69 fixed the agent&rsquo;s edit tool and
+      terminal restoration; Andreas Spannagel fixed MTP speculative verify.
+    </p>
+  </section>
+
+  <hr class="rule">
 
   <!-- ═══════════  CHAPTER 0 — MOTIVATION  ═══════════ -->
   <section class="chapter" id="motivation">
@@ -1893,15 +2029,17 @@ document.documentElement.classList.add('js');
     <h3>1.1<span lang="zh-TW">　硬體最低需求</span><span lang="en-GB">　Minimum hardware</span></h3>
 
     <ul lang="zh-TW">
-      <li><strong>RAM：</strong>至少 96 GB。低於這個數字，本擴充會直接拋出錯誤，因為連 IQ2XXS imatrix 都塞不下。
-        96&ndash;127 GB 的 Mac 需先依下方 callout 把 Metal wired memory 拉高；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。</li>
+      <li><strong>RAM：</strong>至少 96 GB。低於這個數字，本擴充會直接拋出錯誤——managed path 以 87 GB 權重全常駐為準。
+        96&ndash;127 GB 的 Mac 需先依下方 callout 把 Metal wired memory 拉高；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。
+        （2026-07 起，pin 內的引擎另有 <a href="#whatsnew">SSD 串流模式</a>，64 GB 級機器可用 §8.6 的手動路徑跑同一份 GGUF；managed 安裝的門檻不變。）</li>
       <li><strong>磁碟：</strong>約 87 GB 給權重，另外保留約 10 GB 給 100k 預設 context 的 KV disk cache、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
       <li><strong>晶片：</strong>任何 Apple Silicon 都可以；Linux／CUDA 機器也可走同一份 ds4 engine。後端行為以 audreyt/ds4 目前繼承的上游 runtime 為準。</li>
       <li><strong>網路：</strong>首次下載 87 GB GGUF 需要良好頻寬。若你的 HuggingFace 下載受惠於授權，請設定 <code>HF_TOKEN</code>。</li>
     </ul>
     <ul lang="en-GB">
-      <li><strong>RAM:</strong> at least 96 GB. Below that, the extension errors out at startup &mdash; even the IQ2XXS imatrix variant won&rsquo;t fit.
-        Macs in the 96&ndash;127 GB range need to raise Metal wired memory per the callout below; 128 GB+ machines install directly and have headroom to run more apps alongside ds4-server.</li>
+      <li><strong>RAM:</strong> at least 96 GB. Below that, the extension errors out at startup &mdash; the managed path assumes the 87 GB weights are fully resident.
+        Macs in the 96&ndash;127 GB range need to raise Metal wired memory per the callout below; 128 GB+ machines install directly and have headroom to run more apps alongside ds4-server.
+        (Since 2026-07 the pinned engine also has an <a href="#whatsnew">SSD streaming mode</a>: 64-GB-class machines can run the same GGUF via the §8.6 by-hand path; the managed install&rsquo;s bar is unchanged.)</li>
       <li><strong>Disk:</strong> ~87 GB for the weights and another ~10 GB for the default 100k-context KV disk cache, the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
       <li><strong>Chip:</strong> any Apple Silicon works; Linux / CUDA machines can use the same ds4 engine. Backend behaviour follows the current upstream runtime inherited by audreyt/ds4.</li>
       <li><strong>Network:</strong> the first 87 GB GGUF download benefits from good bandwidth. If your HuggingFace download benefits from auth, set <code>HF_TOKEN</code>.</li>
@@ -2154,7 +2292,7 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
         別擔心：<code>download_model.sh</code> 用 <code>curl -C -</code> 續傳，
         下次啟動會從中斷處繼續。檔名是
         <code>cyberneurova-DeepSeek-V4-Flash-abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-aligned.gguf.part</code>，
-        完成後才會被重命名為 <code>.gguf</code>。
+        完成後才會被重新命名為 <code>.gguf</code>。
       </p>
       <p lang="en-GB">
         Don&rsquo;t worry: <code>download_model.sh</code> uses <code>curl -C -</code> for resume.
@@ -2578,7 +2716,7 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
       <div class="dl-row">
         <dt>DS4_RUNTIME_DIR<span class="default"><span lang="zh-TW">預設 · ~/.pi/ds4/support</span><span lang="en-GB">default &middot; ~/.pi/ds4/support</span></span></dt>
         <dd>
-          <p lang="zh-TW">使用既有的 ds4 checkout 而非自動 clone。傳一個本地路徑，本擴充就會跳過 git 階段直接用它（路徑必須長得像 ds4 checkout，至少要有 <code>download_model.sh</code>、<code>Makefile</code>、<code>ds4_server.c</code>）。</p>
+          <p lang="zh-TW">使用既有的 ds4 checkout 而非自動 clone。傳一個本機路徑，本擴充就會跳過 git 階段直接用它（路徑必須長得像 ds4 checkout，至少要有 <code>download_model.sh</code>、<code>Makefile</code>、<code>ds4_server.c</code>）。</p>
           <p lang="en-GB">Use an existing ds4 checkout instead of auto-cloning. Pass a local path and this extension will skip the git step and use it directly (the path must look like a ds4 checkout &mdash; at minimum <code>download_model.sh</code>, <code>Makefile</code>, and <code>ds4_server.c</code>).</p>
         </dd>
       </div>
@@ -2801,13 +2939,14 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <h3>6.2<span lang="zh-TW">　後端選擇交給 ds4</span><span lang="en-GB">　Backend selection belongs to ds4</span></h3>
 
     <p lang="zh-TW">
-      Apple Silicon 上的 Metal 路徑、Linux 上的 CUDA 路徑，以及未來上游 ds4 可能加入的後端，
-      都屬於 ds4 build 本身。pi-ds4 的責任是 pin 到已知 commit、編譯它、下載對應權重，然後用一致的 runtime 參數啟動。
+      Apple Silicon 上的 Metal 路徑、Linux 上的 CUDA 路徑、AMD Strix Halo 上的 ROCm 路徑（2026-07 pin 起），
+      以及未來上游 ds4 可能加入的後端，都屬於 ds4 build 本身。pi-ds4 的責任是 pin 到已知 commit、編譯它、
+      下載對應權重，然後用一致的 runtime 參數啟動。
     </p>
     <p lang="en-GB">
-      The Metal path on Apple Silicon, the CUDA path on Linux, and any future backend work in upstream ds4
-      belong to the ds4 build itself. pi-ds4's job is to pin a known commit, build it, download the matching weights,
-      and launch it with consistent runtime arguments.
+      The Metal path on Apple Silicon, the CUDA path on Linux, the ROCm path on AMD Strix Halo (as of the 2026-07 pin),
+      and any future backend work in upstream ds4 belong to the ds4 build itself. pi-ds4's job is to pin a known commit,
+      build it, download the matching weights, and launch it with consistent runtime arguments.
     </p>
 
     <h3>6.3<span lang="zh-TW">　什麼時候手動跑</span><span lang="en-GB">　When to run by hand</span></h3>
@@ -2816,11 +2955,13 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
       <li>想測 ds4 自己的新後端旗標、patched kernel、或不同 build。</li>
       <li>想把同一份 GGUF 與引導向量拿去做隔離評估，而不讓 pi 的 watchdog／lease 介入。</li>
       <li>遇到記憶體壓力時，想先用較小的 <code>--ctx</code> 驗證同一個任務能否穩定完成。</li>
+      <li>想開 <a href="#whatsnew">2026-07 pin</a> 引進的引擎級模式：<code>--ssd-streaming</code>（記憶體不夠放全部權重時）、<code>--mtp DSpark.gguf</code>（實驗性推測解碼）、<code>--max-queue N</code>（有界請求佇列）。這些旗標 managed path 不會傳。</li>
     </ul>
     <ul lang="en-GB">
       <li>You want to test new ds4 backend flags, patched kernels, or a different build.</li>
       <li>You want to evaluate the same GGUF and steering vector in isolation without pi's watchdog / lease layer.</li>
       <li>You hit memory pressure and want to start with a smaller <code>--ctx</code> to confirm the task completes reliably.</li>
+      <li>You want the engine-level modes the <a href="#whatsnew">2026-07 pin</a> introduced: <code>--ssd-streaming</code> (when the full weights don't fit in memory), <code>--mtp DSpark.gguf</code> (experimental speculative decode), or <code>--max-queue N</code> (a bounded request queue). The managed path does not pass these flags.</li>
     </ul>
 
     <h3>6.4<span lang="zh-TW">　context、KV cache 與磁碟</span><span lang="en-GB">　Context, KV cache, and disk</span></h3>
@@ -2998,6 +3139,37 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     ]
   }'
 <span class="c"># -&gt; {"input_tokens": 6}</span></span></pre>
+    </div>
+
+    <h4><span lang="zh-TW"><code>GET /health</code> 與 <code>GET /stats</code>：問 server「你還好嗎、剛剛多快」</span><span lang="en-GB"><code>GET /health</code> and <code>GET /stats</code>: asking the server &ldquo;are you OK, and how fast was that&rdquo;</span></h4>
+
+    <p lang="zh-TW">
+      自 <a href="#whatsnew">2026-07 pin</a> 起，server 多了兩個唯讀端點，由 client 執行緒直接回應——
+      即使模型正在生成中也答得動。<code>/health</code> 回 liveness 與 uptime；<code>/stats</code>
+      回報 queue 深度、busy 旗標、live／context token 數、各來源 cache 命中計數
+      （memory-token、disk-text、anthropic-tool-output⋯⋯）、token 總量、取消計數，
+      以及最近一次 prefill／decode 的 t/s。寫監控腳本、或想知道長 session 到底有沒有吃到快取，看這裡。
+    </p>
+    <p lang="en-GB">
+      Since the <a href="#whatsnew">2026-07 pin</a>, the server has two read-only endpoints answered on
+      the client thread &mdash; they respond even mid-generation. <code>/health</code> returns liveness and
+      uptime; <code>/stats</code> reports queue depth, a busy flag, live / context token counts, per-source
+      cache-hit counters (memory-token, disk-text, anthropic-tool-output&hellip;), token totals, cancellation
+      counters, and the last prefill / decode t/s. This is where to look when scripting monitoring, or when
+      you want to know whether a long session is actually hitting the cache.
+    </p>
+
+    <div class="codeblock">
+      <div class="codeblock-bar">
+        <span class="codeblock-label"><span lang="zh-TW">問 server 狀態（不觸發推論）</span><span lang="en-GB">Ask for server state (no inference triggered)</span></span>
+        <button class="copy-btn" aria-label="Copy health and stats curl examples">Copy</button>
+      </div>
+      <pre>curl -s http://127.0.0.1:8000/health
+<span class="c"># -&gt; {"status":"ok","model":…,"uptime_s":…}</span>
+curl -s http://127.0.0.1:8000/stats
+<span class="c"># -&gt; {"uptime_s":…,"busy":…,"queue_depth":…,"live_tokens":…,
+#     "cache":{"hits":…,"memory_token":…,"disk_text":…,…},
+#     "last_prefill_tps":…,"last_decode_tps":…}</span></pre>
     </div>
 
     <h3>7.2<span lang="zh-TW">　在 pi 裡查看 server log</span><span lang="en-GB">　Viewing the server log inside pi</span></h3>
@@ -3640,7 +3812,10 @@ resp = client.responses.create(
   --dir-steering-attn 0 \
   --dir-steering-policy final-answer</pre>
         </div>
-        這條等同於 <code>index.ts</code> 內建的 spawn 參數；你也可以依需求自訂。
+        這條等同於 <code>index.ts</code> 內建的 spawn 參數；你也可以依需求自訂——
+        <a href="#whatsnew">2026-07 pin</a> 的引擎級旗標（<code>--ssd-streaming</code>、<code>--mtp DSpark.gguf</code>、<code>--max-queue N</code>）就加在這裡。
+        注意：pi 會「收養」已在 <code>127.0.0.1:8000</code> 監聽的 server，但收養來的 server 只有<em>你</em>給它的旗標——
+        方向性引導與 <code>--ctx</code> 不會自動補上，所以請保留上面整組引導旗標。
       </li>
       <li>
         <strong>（C）完全沒裝過 pi：</strong>直接從 <code>audreyt/ds4</code> 與 <code>audreyt/pi-ds4</code>
@@ -3698,7 +3873,10 @@ chmod +x download_cyberneurova.sh
   --dir-steering-attn 0 \
   --dir-steering-policy final-answer</pre>
         </div>
-        This is equivalent to the spawn parameters baked into <code>index.ts</code>; you can also adjust them as needed.
+        This is equivalent to the spawn parameters baked into <code>index.ts</code>; you can also adjust them as needed &mdash;
+        the <a href="#whatsnew">2026-07 pin</a>'s engine-level flags (<code>--ssd-streaming</code>, <code>--mtp DSpark.gguf</code>, <code>--max-queue N</code>) go right here.
+        Note: pi <em>adopts</em> a server already listening on <code>127.0.0.1:8000</code>, but an adopted server has only the flags <em>you</em> gave it &mdash;
+        directional steering and <code>--ctx</code> are not re-applied, so keep the full set of steering flags above.
       </li>
       <li>
         <strong>(C) Never installed pi at all:</strong> bootstrap directly from <code>audreyt/ds4</code> and <code>audreyt/pi-ds4</code>
@@ -3749,7 +3927,7 @@ chmod +x download_cyberneurova.sh
       </p>
     </div>
 
-    <h3>8.7<span lang="zh-TW">　其他硬體：DGX Spark 等 CUDA 機器</span><span lang="en-GB">　Other hardware: DGX Spark and CUDA machines</span><a id="otherhw"></a></h3>
+    <h3>8.7<span lang="zh-TW">　其他硬體：DGX Spark（CUDA）與 Strix Halo（ROCm）</span><span lang="en-GB">　Other hardware: DGX Spark (CUDA) and Strix Halo (ROCm)</span><a id="otherhw"></a></h3>
 
     <p lang="zh-TW">
       你不一定需要 Mac。<a href="https://github.com/audreyt/ds4"><code>audreyt/ds4</code></a>
@@ -3772,6 +3950,27 @@ chmod +x download_cyberneurova.sh
       <code>pi install https://github.com/audreyt/pi-ds4</code>: it clones, runs <code>make ds4-server</code>
       (which auto-selects nvcc + CUDA), downloads the cyberneurova aligned-imatrix GGUF,
       and spawns the server &mdash; the same flow as on a Mac.
+    </p>
+
+    <p lang="zh-TW">
+      <a href="#whatsnew">2026-07 pin</a> 起，第三個後端加入：<strong>AMD Strix Halo（ROCm）</strong>。
+      128 GB 的 Ryzen AI Max 機器（Radeon 8060S／gfx1151）用 <code>make strix-halo</code>（別名
+      <code>make rocm</code>）編出同一組 binary；checkout 內附的 <code>STRIXHALO.md</code>
+      一步步涵蓋 ROCm 7.1／rocWMMA 安裝、<code>/dev/kfd</code> 權限與 GTT aperture 調整。
+      一個已知注意事項：該平台目前建議用 plain aligned-imatrix GGUF，避開 mixed IQ2／Q4 build——
+      後者在 ROCm 路徑上記憶體壓力大得多，可能觸發系統 OOM 而不是乾淨的 ds4 錯誤。
+      同一份 pin 也帶進了<strong>分散式推論</strong>：4-bit Flash 跨兩台 128 GB MacBook（Thunderbolt 5），
+      每台只 map 自己的 layer slice；prefill 管線化可比單機快，generation 較慢。
+    </p>
+    <p lang="en-GB">
+      As of the <a href="#whatsnew">2026-07 pin</a>, a third backend joins: <strong>AMD Strix Halo (ROCm)</strong>.
+      A 128&nbsp;GB Ryzen AI Max machine (Radeon 8060S / gfx1151) builds the same set of binaries with
+      <code>make strix-halo</code> (alias <code>make rocm</code>); the bundled <code>STRIXHALO.md</code>
+      walks through ROCm 7.1 / rocWMMA installation, <code>/dev/kfd</code> permissions, and the GTT aperture bump.
+      One known caveat: on that platform, prefer the plain aligned-imatrix GGUF and avoid the mixed IQ2/Q4 builds for now &mdash;
+      they put far more memory pressure on the ROCm path and can trigger a system OOM rather than a clean ds4 failure.
+      The same pin also brings <strong>distributed inference</strong>: the 4-bit Flash quant across two 128&nbsp;GB MacBooks
+      (Thunderbolt&nbsp;5), each mapping only its own layer slice; pipelined prefill can beat a single machine, generation is slower.
     </p>
 
     <p lang="zh-TW">
@@ -4599,6 +4798,16 @@ STATE=~/.pi/ds4/server.json
         <dd lang="zh-TW">Metal 是 Apple 的 GPU 程式介面；Metal 4 引入 Tensor API。pi-ds4 不在 wrapper 層選擇這些後端 profile，實際路徑由 ds4 build 處理。</dd>
         <dd lang="en-GB">Metal is Apple's GPU programming interface; Metal 4 introduces Tensor APIs. pi-ds4 does not choose those backend profiles in the wrapper; the ds4 build handles the actual path.</dd>
       </div>
+      <div>
+        <dt>SSD streaming<span class="cjk-aside"><span lang="zh-TW">SSD 串流</span><span lang="en-GB">streaming experts from disk</span></span></dt>
+        <dd lang="zh-TW">ds4 引擎的容量模式（<code>--ssd-streaming</code>）：非路由權重常駐記憶體，路由 MoE 專家放進記憶體快取、cache miss 時從 SSD 上的 GGUF 讀回。讓權重大於 RAM 的模型可以跑，代價是 decode 對 cache miss 敏感。pi-ds4 的 managed path 不傳此旗標；見更新誌與 §8.6。</dd>
+        <dd lang="en-GB">The ds4 engine's capacity mode (<code>--ssd-streaming</code>): non-routed weights stay resident while routed MoE experts live in an in-memory cache, read back from the GGUF on SSD on cache misses. Lets models larger than RAM run, at the cost of decode being sensitive to cache misses. pi-ds4's managed path does not pass this flag; see What's new and §8.6.</dd>
+      </div>
+      <div>
+        <dt>speculative decoding / DSpark<span class="cjk-aside"><span lang="zh-TW">推測解碼</span><span lang="en-GB">draft-then-verify decoding</span></span></dt>
+        <dd lang="zh-TW">用小的「草稿頭」一次猜一個 block 的 token，再由完整模型驗證後 commit。ds4 以 <code>--mtp DSpark.gguf</code> 啟用（實驗性）；本分支加上 B2 rejection sampling，讓輸出分佈與不開推測時完全一致（lossless）。</dd>
+        <dd lang="en-GB">A small &ldquo;draft head&rdquo; guesses a block of tokens at once; the full model verifies before committing. Enabled in ds4 via <code>--mtp DSpark.gguf</code> (experimental); this fork adds B2 rejection sampling so the output distribution is identical to non-speculative decoding (lossless).</dd>
+      </div>
     </dl>
 
     <h3><span lang="zh-TW">方向性引導與本分支</span><span lang="en-GB">Directional steering and this fork</span></h3>
@@ -4652,6 +4861,11 @@ STATE=~/.pi/ds4/server.json
         <dd lang="zh-TW">對話開始時餵給模型的角色／規則設定，例如「你是一位中立的政治分析師」。本分支的方向性引導需要搭配適當 system prompt 才有效果。</dd>
         <dd lang="en-GB">The role / rule setup fed to the model at the start of a conversation, e.g. &ldquo;You are a neutral political analyst&rdquo;. This fork's directional steering needs an appropriate system prompt to take effect.</dd>
       </div>
+      <div>
+        <dt>/health · /stats<span class="cjk-aside"><span lang="zh-TW">狀態端點</span><span lang="en-GB">status endpoints</span></span></dt>
+        <dd lang="zh-TW">ds4-server 的唯讀 HTTP 端點（2026-07 pin 起）：<code>/health</code> 回 liveness 與 uptime；<code>/stats</code> 回 queue 深度、cache 命中來源計數與最近一次 prefill／decode 速度。生成中也能回應。</dd>
+        <dd lang="en-GB">Read-only HTTP endpoints on ds4-server (since the 2026-07 pin): <code>/health</code> returns liveness and uptime; <code>/stats</code> returns queue depth, per-source cache-hit counters, and the last prefill / decode speeds. Both respond even mid-generation.</dd>
+      </div>
     </dl>
   </section>
 
@@ -4667,13 +4881,13 @@ STATE=~/.pi/ds4/server.json
     <ul lang="zh-TW">
       <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong>——本擴充所基於的上游版本。Armin Ronacher 寫了所有 lifecycle、watchdog、lease 機制。</li>
       <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>——Salvatore Sanfilippo 用純 C 寫的 DeepSeek V4 Flash inference engine，延續他寫 Redis 的風格。GGUF 由同專案的 <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a> 轉換而來。</li>
-      <li><strong>ds4 runtime／backend 貢獻者</strong>——Metal、NAX、CUDA 等後端工作進入上游或 active PR；pi-ds4 建立在這些 runtime 之上，不另外維護調校敘事。</li>
+      <li><strong>ds4 runtime／backend 貢獻者</strong>——SSD 串流、分散式與 ROCm 整合由 antirez 主導；elkaix（server 可觀測性與 agent-loop 快取，PR #489）、MA（DSpark B2 rejection sampling）、Nick Parrin（Strix Halo）、Andrea Borio（mixed-quant 專家串流）、rinaldofesta（eval grader）、kamranjon 與 fry69（agent 修正）、Andreas Spannagel（MTP 驗證修正）、ivanfioravanti（M5 Metal 4／MPP）。pi-ds4 建立在這些 runtime 之上，不另外維護調校敘事。</li>
       <li><strong>cyberneurova 研究專案</strong>——發布了讓本機運行可行的 abliterated GGUF。</li>
     </ul>
     <ul lang="en-GB">
       <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong> &mdash; the upstream this extension is based on. Armin Ronacher wrote all the lifecycle, watchdog, and lease machinery.</li>
       <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong> &mdash; Salvatore Sanfilippo's DeepSeek V4 Flash inference engine written in pure C, in the same tradition as Redis. The GGUF was converted by the sibling project <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>.</li>
-      <li><strong>ds4 runtime / backend contributors</strong> &mdash; Metal, NAX, CUDA, and related backend work live upstream or in active PRs; pi-ds4 builds on that runtime instead of carrying a separate tuning story.</li>
+      <li><strong>ds4 runtime / backend contributors</strong> &mdash; SSD streaming, distributed inference, and the ROCm integration led by antirez; elkaix (server observability and agent-loop cache, PR #489), MA (DSpark B2 rejection sampling), Nick Parrin (Strix Halo), Andrea Borio (mixed-quant expert streaming), rinaldofesta (eval grader), kamranjon and fry69 (agent fixes), Andreas Spannagel (MTP verify fix), ivanfioravanti (M5 Metal 4 / MPP). pi-ds4 builds on that runtime instead of carrying a separate tuning story.</li>
       <li><strong>The cyberneurova research project</strong> &mdash; published the abliterated GGUF that makes local execution viable.</li>
     </ul>
 
