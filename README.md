@@ -10,10 +10,11 @@ for running DeepSeek V4 Flash locally. It packages the engineering in
 [audreyt/ds4](https://github.com/audreyt/ds4) into a one-line `pi install`,
 so anyone with a 96 GB Apple Silicon Mac can run a frontier-class
 284-billion-parameter MoE model end-to-end on their own laptop — no cloud
-calls, no API costs, no per-token billing, no rate limits, ~360 prefill
-tokens/second and ~33 inference tokens/second at 4 k context on M5 Max,
-with deterministic seed-42 traces, stable generated tool-call IDs, and
-the model's steerability dial under the user's control.
+calls, no API costs, no per-token billing, no rate limits, ~453 prefill
+tokens/second and ~31 inference tokens/second at 4 k context on M5 Max
+(128 GB+ mixed-quant build; ~87 GB plain build on 96-127 GB Macs runs
+comparably), with deterministic seed-42 traces, stable generated tool-call
+IDs, and the model's steerability dial under the user's control.
 
 Same UX as upstream `mitsuhiko/pi-ds4` (one-line `pi install`, on-demand
 `ds4-server`, per-process lease, watchdog shutdown), with three fork-specific
@@ -30,9 +31,12 @@ changes:
    downloads, plus the `q2-imatrix` download mapping pointing at that same
    variant. See the [audreyt/ds4 README](https://github.com/audreyt/ds4#readme)
    for the full story.
-2. **Ships its own `download_model.sh`** that shadows the antirez/ds4 one,
-   fetching the [cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix GGUF](https://huggingface.co/audreyt/CyberNeurova-DeepSeek-V4-Flash-abliterated-GGUF)
-   (~87 GB, resumable) and symlinking `ds4flash.gguf` to it.
+2. **Ships its own `download_model.sh`** that shadows the antirez/ds4 one and
+   auto-selects by detected RAM: the [mixed-quant build](https://huggingface.co/audreyt/CyberNeurova-DeepSeek-V4-Flash-abliterated-GGUF)
+   (layers 37-42 spliced in at Q4_K, everything else IQ2XXS-w2Q2K
+   aligned-imatrix; ~91 GB, resumable) on 128 GB+ Macs, or the plain
+   IQ2XXS-w2Q2K aligned-imatrix GGUF (~87 GB, resumable) on 96-127 GB Macs —
+   then symlinks `ds4flash.gguf` to whichever was fetched.
 3. **Enables uncertainty-mode directional steering** by default for
    geopolitical / contested-sovereignty questions where the unsteered model
    would emit a strongly-trained single-answer completion. See
@@ -48,16 +52,17 @@ On first launch, `pi` will:
 
 1. Clone `audreyt/ds4` `main` into `~/.pi/ds4/support/`
 2. `make ds4-server`
-3. Run `download_model.sh`:
-   * download `cyberneurova-DeepSeek-V4-Flash-abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-aligned.gguf` (~87 GB)
-   * symlink `ds4flash.gguf` to it
+3. Run `download_model.sh`, which detects RAM and downloads one of:
+   * `cyberneurova-DeepSeek-V4-Flash-abliterated-Layers37-42Q4KExperts-mixed.gguf` (~91 GB, 128 GB+ Macs)
+   * `cyberneurova-DeepSeek-V4-Flash-abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-aligned.gguf` (~87 GB, 96-127 GB Macs)
+   * symlink `ds4flash.gguf` to whichever was fetched
 4. Spawn `ds4-server` and register `ds4/deepseek-v4-flash` with `pi`.
 
 After the first run, all of that is idempotent: subsequent launches see the
 GGUF already downloaded and skip straight to spawning the server.
 
-**Disk needed:** ~87 GB for the GGUF. Set `HF_TOKEN` if your HuggingFace
-download benefits from auth.
+**Disk needed:** ~91 GB for the GGUF on 128 GB+ Macs, ~87 GB on 96-127 GB
+Macs. Set `HF_TOKEN` if your HuggingFace download benefits from auth.
 
 ## Local development install
 
@@ -114,7 +119,7 @@ same GGUF is present, waits for Pi to become idle, then temporarily releases
 Pi's TUI and lets `ds4-agent` own the terminal. Type `/quit` inside
 `ds4-agent` to return to Pi.
 
-To avoid loading the 87 GB model twice, `/ds4-agent` will stop an idle
+To avoid loading the model twice, `/ds4-agent` will stop an idle
 managed `ds4-server` before launching. If another Pi process or HTTP client is
 currently using the server, the command refuses to launch instead of killing
 someone else's run. After you return to Pi, the next `ds4/deepseek-v4-flash`
@@ -184,13 +189,17 @@ Trade-offs:
 * The steering only changes behavior in conversational / open-ended contexts.
   Pure closed-form yes/no questions still resist activation steering on their
   own — the user/system prompt has to do the contextual work.
-* `ffn=-0.75, attn=0` is the guarded deterministic default on the
-  cyberneurova-abliterated aligned-imatrix GGUF (the file this fork downloads).
-  It is tuned for long OpenClaw/Codex-harness prompts where tool-call grammar
-  must remain intact. Use `ffn=-0.5, attn=0` as a gentler fallback. The older
-  acid-test setting, `ffn=-2, attn=-0.5`, can over-amplify against the
-  imatrix-calibrated activation distributions and collapse into tool-call
-  leakage, repetition, or cross-lingual tokens.
+* `ffn=-0.75, attn=0` is the guarded deterministic default, calibrated on
+  the plain cyberneurova-abliterated aligned-imatrix GGUF, and tuned for long
+  OpenClaw/Codex-harness prompts where tool-call grammar must remain intact.
+  It has not been separately re-validated against the mixed
+  Q4-layers-37-42 build; since only 6 of 43 layers' routed experts differ
+  between the two files, the direction is expected to carry over, but this
+  is not yet confirmed by a dedicated steering eval on the mixed build. Use
+  `ffn=-0.5, attn=0` as a gentler fallback. The older acid-test setting,
+  `ffn=-2, attn=-0.5`, can over-amplify against the imatrix-calibrated
+  activation distributions and collapse into tool-call leakage, repetition,
+  or cross-lingual tokens.
 * Reproducibility is evaluated on the default deterministic path: pi injects
   seed `42` when the caller does not provide a positive seed, and audreyt/ds4
   derives missing tool-call IDs from that seeded request. This is the supported
@@ -268,12 +277,14 @@ Same env vars as upstream, plus several fork-specific ones (notably the context-
   `ds4-agent --trace`.
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout instead of `~/.pi/ds4/support`
 * `DS4_MODEL_QUANT` — hard-coded to `q2`. The audreyt/cyberneurova abliterated
-  repo publishes IQ2XXS-w2Q2K aligned-imatrix (~87 GB), the earlier q2-imatrix
-  build (~87 GB), plain Q2_K (~99 GB), and Q8_0 (~282 GB); the bundled
-  `download_model.sh` only fetches the aligned-imatrix variant. Setting
-  `DS4_MODEL_QUANT` to anything other than `q2` raises at startup. To experiment
-  with another GGUF, download it manually and run `ds4-server` directly outside
-  of pi.
+  repo publishes the mixed Q4-layers-37-42 build (~91 GB), IQ2XXS-w2Q2K
+  aligned-imatrix (~87 GB), the earlier q2-imatrix build (~87 GB), plain
+  Q2_K (~99 GB), a full Q4KExperts build (~154 GB), and Q8_0 (~282 GB); the
+  bundled `download_model.sh` auto-selects between the mixed and
+  aligned-imatrix variants by detected RAM (128 GB+ vs 96-127 GB) and fetches
+  only that one. Setting `DS4_MODEL_QUANT` to anything other than `q2` raises
+  at startup. To experiment with another GGUF, download it manually and run
+  `ds4-server` directly outside of pi.
 * `DS4_READY_TIMEOUT_MS` — server startup timeout.
 * `DS4_SERVER_BINARY` — custom `ds4-server` binary path.
 * `HF_TOKEN` — passed through to `curl` for HuggingFace downloads if set.

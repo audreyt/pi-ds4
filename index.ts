@@ -178,8 +178,12 @@ const WATCHDOG_POLL_MS = 2_000;
 const PROGRESS_NOTIFY_MS = 750;
 const PROGRESS_MAX_CHARS = 160;
 
-// pi-ds4 ships the audreyt-republished cyberneurova abliterated
-// IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 aligned-imatrix GGUF (~87 GB); the
+// pi-ds4 ships two audreyt-republished cyberneurova abliterated GGUFs and
+// auto-selects between them by detected RAM: the mixed-quant build (layers
+// 37-42 spliced in at Q4_K, everything else IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8
+// aligned-imatrix; ~91 GB weight payload) on 128 GB+ Macs, or the plain
+// IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 aligned-imatrix GGUF (~87 GB) on 96-127 GB
+// Macs, where the mixed build's larger weight payload does not fit. The
 // bundled download_model.sh refuses any other quant. The historic "q2" label
 // is kept for on-disk lease/state compatibility with older installs.
 type ModelQuant = "q2";
@@ -340,21 +344,21 @@ function selectedModelQuant(): ModelQuant {
 	const forced = process.env.DS4_MODEL_QUANT?.toLowerCase();
 	if (forced && forced !== "q2") {
 		throw new Error(
-			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates the cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix variant. Unset DS4_MODEL_QUANT or set it to q2. (To experiment with cyberneurova plain Q2_K, the earlier q2-imatrix build, or Q8_0, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
+			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates the cyberneurova abliterated aligned-imatrix variants (mixed Q4-layers-37-42 on 128 GB+, plain IQ2XXS on 96-127 GB, both auto-selected by RAM). Unset DS4_MODEL_QUANT or set it to q2. (To experiment with cyberneurova plain Q2_K, the full Q4KExperts build, or Q8_0, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
 		);
 	}
 
 	const ramGb = totalmem() / 1_000_000_000;
 	if (ramGb < 96) {
 		throw new Error(
-			`DeepSeek V4 Flash IQ2XXS aligned-imatrix needs at least 96 GB RAM; detected ${ramGb.toFixed(1)} GB`,
+			`DeepSeek V4 Flash aligned-imatrix needs at least 96 GB RAM; detected ${ramGb.toFixed(1)} GB`,
 		);
 	}
 	if (ramGb < 128) {
 		const wiredLimitMb = readIogpuWiredLimitMb();
 		if (wiredLimitMb < 87_000) {
 			throw new Error(
-				`Detected ${ramGb.toFixed(1)} GB RAM. On Macs below 128 GB the Metal wired-memory ceiling must be raised first so the 87 GB GGUF fits. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=92000\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command. 128 GB+ Macs do not need this step and can run more apps alongside ds4-server.`,
+				`Detected ${ramGb.toFixed(1)} GB RAM. On Macs below 128 GB the Metal wired-memory ceiling must be raised first so the 87 GB plain IQ2XXS GGUF fits (128 GB+ Macs use the larger ~91 GB mixed-quant build instead, which needs no wired-limit adjustment). Run:\n\n  sudo sysctl iogpu.wired_limit_mb=92000\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command. 128 GB+ Macs do not need this step and can run more apps alongside ds4-server.`,
 			);
 		}
 	}
@@ -1090,11 +1094,12 @@ function buildAgentArgs(initialPrompt: string): string[] {
 
 async function ensureModel(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
 	const quant = selectedModelQuant();
-	onStatus?.(`ensuring ${quant} model (cyberneurova abliterated IQ2XXS aligned-imatrix)`);
+	onStatus?.(`ensuring ${quant} model (cyberneurova abliterated aligned-imatrix, RAM-tiered)`);
 	// audreyt/pi-ds4 fork: shadow the antirez/ds4 download_model.sh with our
-	// own copy that fetches the cyberneurova abliterated IQ2XXS aligned-imatrix
-	// GGUF directly (no harmonization needed - audreyt/ds4 main accepts the file
-	// end-to-end on Metal). Idempotent.
+	// own copy that auto-selects and fetches the RAM-appropriate cyberneurova
+	// abliterated aligned-imatrix GGUF directly (mixed Q4-layers-37-42 build on
+	// 128 GB+, plain IQ2XXS build on 96-127 GB; no harmonization needed —
+	// audreyt/ds4 main accepts either file end-to-end on Metal). Idempotent.
 	await runLogged(DOWNLOAD_SCRIPT, [quant], runtimeDir, `download ${quant} model`, {
 		onStatus,
 		progressPrefix: `downloading ${quant} model`,
