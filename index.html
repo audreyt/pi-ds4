@@ -1571,8 +1571,8 @@ document.documentElement.classList.add('js');
         <div class="label"><span lang="zh-TW">Mixture&#8209;of&#8209;Experts 參數總量（每 token 啟用 13 B）</span><span lang="en-GB">Mixture&#8209;of&#8209;Experts parameter count (13 B activated per token)</span></div>
       </div>
       <div class="ledger-item">
-        <div class="num">87<small>GB</small></div>
-        <div class="label"><span lang="zh-TW">IQ2XXS aligned-imatrix GGUF 權重檔大小</span><span lang="en-GB">IQ2XXS aligned-imatrix GGUF weights file size</span></div>
+        <div class="num">87–91<small>GB</small></div>
+        <div class="label"><span lang="zh-TW">IQ2XXS imatrix GGUF 權重；96–127 GB Mac 抓 ~87 GB 純 IQ2XXS-w2Q2K 版本，128 GB 以上則自動切到 ~91 GB 的 Q4_K spliced 版（layers 37–42）</span><span lang="en-GB">IQ2XXS imatrix GGUF weights; 96&ndash;127 GB Macs fetch the ~87 GB plain IQ2XXS-w2Q2K build, 128 GB+ fetch the ~91 GB Q4_K-spliced build (layers 37&ndash;42)</span></div>
       </div>
       <div class="ledger-item">
         <div class="num">545<small>t/s</small></div>
@@ -1706,8 +1706,8 @@ document.documentElement.classList.add('js');
       </div>
       <div>
         <dt><span lang="zh-TW">IQ2XXS imatrix 量化</span><span lang="en-GB">IQ2XXS imatrix quantisation</span><span class="cjk-aside"><span lang="zh-TW">壓縮版的模型檔</span><span lang="en-GB">compressed model file</span></span></dt>
-        <dd lang="zh-TW">把模型權重壓縮到更小的位元寬度。本指南用的 IQ2XXS-w2Q2K imatrix 配方平均約 2 bit/權重（routed expert 用更省的 IQ2XXS，attention/output/embedding 保留 Q8_0），加上以代表性 corpus 校準的 imatrix，把模型從 FP8 原生大小（~284 GB，等於 Q8_0 GGUF）壓到 ~87 GB——這是它能放進 Mac 的關鍵。</dd>
-        <dd lang="en-GB">Compresses the weights to fewer bits per parameter. The IQ2XXS-w2Q2K imatrix recipe used here averages about 2 bits per weight (routed experts use the tighter IQ2XXS quant, while attention/output/embedding stay at Q8_0), with an importance-matrix calibration on top, shrinking the model from its native FP8 size (~284 GB, equivalent to a Q8_0 GGUF) down to ~87 GB &mdash; the lever that lets it fit on a Mac.</dd>
+        <dd lang="zh-TW">把模型權重壓縮到更小的位元寬度。本指南用的 IQ2XXS-w2Q2K imatrix 配方平均約 2 bit/權重（routed expert 用更省的 IQ2XXS，attention/output/embedding 保留 Q8_0），加上以代表性 corpus 校準的 imatrix，把模型從 FP8 原生大小（~284 GB，等於 Q8_0 GGUF）壓到 ~87 GB——這是它能放進 Mac 的關鍵。128 GB 以上 RAM 的機型則自動切到 ~91 GB 的 mixed 版本：layers 37–42 的 routed expert 改用 Q4_K 接片，其餘仍維持 IQ2XXS-w2Q2K，付出 ~4 GB 額外磁碟但內容更貼近完整 Q4 build。</dd>
+        <dd lang="en-GB">Compresses the weights to fewer bits per parameter. The IQ2XXS-w2Q2K imatrix recipe used here averages about 2 bits per weight (routed experts use the tighter IQ2XXS quant, while attention/output/embedding stay at Q8_0), with an importance-matrix calibration on top, shrinking the model from its native FP8 size (~284 GB, equivalent to a Q8_0 GGUF) down to ~87 GB &mdash; the lever that lets it fit on a Mac. On 128 GB+ machines the downloader auto-selects a ~91 GB mixed build: layers 37&ndash;42&rsquo;s routed experts are spliced in at Q4_K, everything else stays IQ2XXS-w2Q2K, trading ~4 GB of extra disk for output that tracks the full Q4 build more closely on those six layers.</dd>
       </div>
       <div>
         <dt><span lang="zh-TW">方向性引導</span><span lang="en-GB">Directional steering</span><span class="cjk-aside"><span lang="zh-TW">本分支特色</span><span lang="en-GB">signature of this fork</span></span></dt>
@@ -1989,8 +1989,8 @@ document.documentElement.classList.add('js');
 
     <div class="callout callout-teal">
       <div class="callout-label"><span lang="zh-TW">本書的兩個前提</span><span lang="en-GB">The book&rsquo;s two premises</span></div>
-      <p lang="zh-TW">其一：你願意把約 87 GB 的硬碟空間留給模型權重——這是本機運行的入場券。</p>
-      <p lang="en-GB">First: you&rsquo;re willing to spare about 87 GB of disk for the model weights &mdash; the cover charge for running locally.</p>
+      <p lang="zh-TW">其一：你願意把約 87–91 GB 的硬碟空間留給模型權重——這是本機運行的入場券。</p>
+      <p lang="en-GB">First: you&rsquo;re willing to spare about 87&ndash;91 GB of disk for the model weights &mdash; the cover charge for running locally.</p>
       <p lang="zh-TW">其二：如果你想走最方便的一行安裝路徑（第一～二章），需要先有
         <a href="https://github.com/earendil-works/pi">pi</a>（Earendil 的 coding agent CLI）。
         但如果你只想把 ds4-server 當本機後端、然後接到自己慣用的 Codex CLI／Claude Code／OpenClaw／Hermes Agent，
@@ -2016,33 +2016,33 @@ document.documentElement.classList.add('js');
     <p class="lede" lang="zh-TW">
       在輸入指令之前，先確認手邊這台 Mac 撐不撐得起這場手術。
       DeepSeek V4 Flash 是一顆 284 B 參數的 Mixture-of-Experts 模型；
-      雖然量化到 IQ2XXS imatrix 之後權重只有約 87 GB，但執行時仍需要充足的記憶體
+      雖然量化到 IQ2XXS-w2Q2K imatrix 之後權重只有約 87 GB（128 GB 以上 RAM 的機型則自動切到 ~91 GB 的 Q4_K spliced 版本），但執行時仍需要充足的記憶體
       留給激活與 KV cache。
     </p>
     <p class="lede" lang="en-GB">
       Before typing the command, check that the Mac in front of you can carry the surgery.
       DeepSeek V4 Flash is a 284-B-parameter Mixture-of-Experts model;
-      IQ2XXS imatrix quantisation shrinks the weights to about 87 GB, but inference still needs
+      IQ2XXS-w2Q2K imatrix quantisation shrinks the weights to about 87 GB (128 GB+ machines auto-select the ~91 GB Q4_K-spliced build), but inference still needs
       headroom in unified memory for activations and the KV cache.
     </p>
 
     <h3>1.1<span lang="zh-TW">　硬體最低需求</span><span lang="en-GB">　Minimum hardware</span></h3>
 
     <ul lang="zh-TW">
-      <li><strong>RAM：</strong>至少 96 GB。低於這個數字，本擴充會直接拋出錯誤——managed path 以 87 GB 權重全常駐為準。
+      <li><strong>RAM：</strong>至少 96 GB。低於這個數字，本擴充會直接拋出錯誤——managed path 以 96–127 GB Mac 上的 87 GB 純 IQ2XXS 權重全常駐為準；128 GB 以上 RAM 的機型則改用 ~91 GB 的 Q4_K spliced 版本，無需 wired-limit 調整。
         96&ndash;127 GB 的 Mac 需先依下方 callout 把 Metal wired memory 拉高；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。
         （2026-07 起，pin 內的引擎另有 <a href="#whatsnew">SSD 串流模式</a>，64 GB 級機器可用 §8.6 的手動路徑跑同一份 GGUF；managed 安裝的門檻不變。）</li>
-      <li><strong>磁碟：</strong>約 87 GB 給權重，另外保留約 10 GB 給 100k 預設 context 的 KV disk cache、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
+      <li><strong>磁碟：</strong>約 87–91 GB 給權重（依 RAM 決定自動選哪個量化版），另外保留約 10 GB 給 100k 預設 context 的 KV disk cache、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
       <li><strong>晶片：</strong>任何 Apple Silicon 都可以；Linux／CUDA 機器也可走同一份 ds4 engine。後端行為以 audreyt/ds4 目前繼承的上游 runtime 為準。</li>
-      <li><strong>網路：</strong>首次下載 87 GB GGUF 需要良好頻寬。若你的 HuggingFace 下載受惠於授權，請設定 <code>HF_TOKEN</code>。</li>
+      <li><strong>網路：</strong>首次下載 87–91 GB GGUF 需要良好頻寬。若你的 HuggingFace 下載受惠於授權，請設定 <code>HF_TOKEN</code>。</li>
     </ul>
     <ul lang="en-GB">
-      <li><strong>RAM:</strong> at least 96 GB. Below that, the extension errors out at startup &mdash; the managed path assumes the 87 GB weights are fully resident.
+      <li><strong>RAM:</strong> at least 96 GB. Below that, the extension errors out at startup &mdash; the managed path assumes the 96&ndash;127 GB Mac&rsquo;s 87 GB plain IQ2XXS weights are fully resident; 128 GB+ machines fetch the ~91 GB Q4_K-spliced build instead, which needs no wired-limit adjustment.
         Macs in the 96&ndash;127 GB range need to raise Metal wired memory per the callout below; 128 GB+ machines install directly and have headroom to run more apps alongside ds4-server.
         (Since 2026-07 the pinned engine also has an <a href="#whatsnew">SSD streaming mode</a>: 64-GB-class machines can run the same GGUF via the §8.6 by-hand path; the managed install&rsquo;s bar is unchanged.)</li>
-      <li><strong>Disk:</strong> ~87 GB for the weights and another ~10 GB for the default 100k-context KV disk cache, the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
+      <li><strong>Disk:</strong> ~87&ndash;91 GB for the weights (auto-selected by RAM), and another ~10 GB for the default 100k-context KV disk cache, the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
       <li><strong>Chip:</strong> any Apple Silicon works; Linux / CUDA machines can use the same ds4 engine. Backend behaviour follows the current upstream runtime inherited by audreyt/ds4.</li>
-      <li><strong>Network:</strong> the first 87 GB GGUF download benefits from good bandwidth. If your HuggingFace download benefits from auth, set <code>HF_TOKEN</code>.</li>
+      <li><strong>Network:</strong> the first ~87–91 GB GGUF download benefits from good bandwidth. If your HuggingFace download benefits from auth, set <code>HF_TOKEN</code>.</li>
     </ul>
 
     <div class="callout" id="ram96">
@@ -2406,30 +2406,36 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <h3>3.3<span lang="zh-TW">　IQ2XXS-w2Q2K imatrix 配方</span><span lang="en-GB">　The IQ2XXS-w2Q2K imatrix recipe</span></h3>
 
     <p lang="zh-TW">
-      本分支的 <code>download_model.sh</code> 只抓一個 GGUF：
-      <strong>cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix（~87 GB）</strong>——routed expert 用更省的 IQ2XXS、
-      attention/output/embedding 保留 Q8_0，加上 chat-v2 imatrix 校準並以 4096-byte 對齊封裝。
-      跟 antirez/ds4 自己散佈的「ds4flash.gguf」（同樣 IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 imatrix 配方，只是未經 abliteration）完全相同的量化結構，
+      本分支的 <code>download_model.sh</code> 會依偵測到的 RAM 選擇兩個 cyberneurova GGUF 之一：
+      <strong>純 IQ2XXS-w2Q2K aligned-imatrix（~87 GB）</strong>，routed expert 用更省的 IQ2XXS、
+      attention/output/embedding 保留 Q8_0，加上 chat-v2 imatrix 校準並以 4096-byte 對齊封裝；
+      或在 128 GB 以上 RAM 自動切到 <strong>mixed Q4_K 接片版（~91 GB）</strong>——
+      layers 37–42 的 routed expert 改用 Q4_K，其餘維持 IQ2XXS-w2Q2K imatrix，多花 ~4 GB 磁碟但輸出在這六層更貼近完整 Q4 build。兩個檔案都跟 antirez/ds4 自己散佈的「ds4flash.gguf」
+      （同樣 IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 imatrix 配方，只是未經 abliteration）共用同一量化結構家族，
       在 96 GB Mac 上配合本指南的 sysctl 步驟也跑得動，128 GB 以上 RAM 則裝得最寬鬆；也是 ds4 引擎本身最熟的格式。
     </p>
     <p lang="en-GB">
-      This fork's <code>download_model.sh</code> fetches a single GGUF:
-      <strong>cyberneurova's abliterated IQ2XXS-w2Q2K aligned-imatrix file (~87 GB)</strong> &mdash; routed experts use the tighter IQ2XXS quant,
-      attention/output/embedding stay at Q8_0, with the chat-v2 imatrix calibration packaged at 4096-byte alignment.
-      That is the same quantisation recipe antirez/ds4 itself distributes as &ldquo;ds4flash.gguf&rdquo;
-      (the only difference here is that this one was abliterated first), so the ds4 engine treats it as its native format;
-      it runs on a 96 GB Mac with the sysctl step from §1.1 and leaves the most headroom on a 128 GB+ Mac.
+      This fork&rsquo;s <code>download_model.sh</code> picks one of two cyberneurova GGUFs by detected RAM:
+      the <strong>plain IQ2XXS-w2Q2K aligned-imatrix file (~87 GB)</strong> &mdash; routed experts use the tighter IQ2XXS quant,
+      attention/output/embedding stay at Q8_0, with the chat-v2 imatrix calibration packaged at 4096-byte alignment &mdash;
+      or, on 128 GB+ RAM, its auto-selected <strong>mixed Q4_K-spliced sibling (~91 GB)</strong>, where layers 37&ndash;42&rsquo;s
+      routed experts are Q4_K and the rest stay IQ2XXS-w2Q2K imatrix, trading ~4 GB of disk for output that tracks the full Q4 build
+      more closely on the six spliced layers. Both files share the quantisation family antirez/ds4 itself distributes as &ldquo;ds4flash.gguf&rdquo;
+      (the only difference here is that this one was abliterated first), so the ds4 engine treats them as its native format;
+      they run on a 96 GB Mac with the sysctl step from §1.1 and leave the most headroom on a 128 GB+ Mac.
     </p>
 
     <p lang="zh-TW">
-      值得注意的是：V4 Flash 在 GGUF 上<em>不存在</em> Q4_K_M／Q5_K_M／Q6_K 等中間量化等級——
+      值得注意的是：V4 Flash 在 GGUF 上<em>不存在</em>均勻的 Q4_K_M／Q5_K_M／Q6_K 中間量化等級——
       cyberneurova 的模型卡明確指出，這不是發佈策略問題，而是 V4-Flash 原生 FP8 expert layout
-      與 antirez 的轉換器目前支援的量化方案之間的架構限制。所以「上一個 Q4 就好」這條路在這顆模型上行不通。
+      與 antirez 的轉換器目前支援的量化方案之間的架構限制。所以「整顆上一個 Q4 就好」這條路在這顆模型上行不通——
+      128 GB 以上 RAM 自動切到的 mixed build 並非整顆 Q4，而是只在 layers 37–42 的 routed expert 上接片 Q4_K，其餘 37 層與 attention/output/embedding 仍維持 IQ2XXS-w2Q2K imatrix。
     </p>
     <p lang="en-GB">
-      Worth noting: V4 Flash <em>has no</em> intermediate quantisation tiers like Q4_K_M / Q5_K_M / Q6_K in GGUF form &mdash;
+      Worth noting: V4 Flash <em>has no</em> uniform intermediate quantisation tiers like Q4_K_M / Q5_K_M / Q6_K in GGUF form &mdash;
       cyberneurova's model card states explicitly that this is not a release-strategy choice, but an architectural limit between V4-Flash's native FP8 expert layout
-      and the quantisation schemes that antirez's converter currently supports. So the &ldquo;just run a Q4&rdquo; path is closed for this particular model.
+      and the quantisation schemes that antirez's converter currently supports. So the &ldquo;just run the whole model at Q4&rdquo; path is closed for this model &mdash;
+      the mixed build auto-selected on 128 GB+ RAM is not a whole-model Q4: it splices Q4_K only into the routed experts of layers 37&ndash;42 while the other 37 layers and the attention/output/embedding stay on the IQ2XXS-w2Q2K imatrix recipe.
     </p>
 
     <p lang="zh-TW">
@@ -2705,12 +2711,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
       <div class="dl-row">
         <dt>DS4_MODEL_QUANT<span class="default"><span lang="zh-TW">預設 · <code>q2</code>（硬編碼）</span><span lang="en-GB">default &middot; <code>q2</code> (hard-coded)</span></span></dt>
         <dd>
-          <p lang="zh-TW">本擴充只支援 <code>q2</code>（cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix GGUF）。<code>index.ts</code> 的 <code>selectedModelQuant()</code>
+          <p lang="zh-TW">本擴充只支援 <code>q2</code>（cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix GGUF，依 RAM 二選一：96–127 GB 抓 ~87 GB 純版、128 GB 以上抓 ~91 GB 的 Q4_K spliced 版）。<code>index.ts</code> 的 <code>selectedModelQuant()</code>
             硬編碼了這個值；把 <code>DS4_MODEL_QUANT</code> 設為其他值會直接拋錯退出。
-            V4 Flash 在 GGUF 上沒有 Q4／Q5／Q6 中間量化等級（見 <a href="#model">3.3 節</a>架構說明），ds4 的 <code>main</code> 載入路徑也只認這套 IQ2XXS-w2Q2K imatrix 配方。</p>
-          <p lang="en-GB">Only <code>q2</code> is supported (the cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix GGUF). <code>selectedModelQuant()</code> in <code>index.ts</code>
+            V4 Flash 在 GGUF 上沒有 Q4／Q5／Q6 中間量化等級（見 <a href="#model">3.3 節</a>架構說明），ds4 的 <code>main</code> 載入路徑只認這套 IQ2XXS-w2Q2K imatrix 配方家族（mixed 版只是把其中 6 層 routed expert 換成 Q4_K，仍屬同一 family）。</p>
+          <p lang="en-GB">Only <code>q2</code> is supported (the cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix GGUF, RAM-tiered: 96&ndash;127 GB fetches the ~87 GB plain build, 128 GB+ fetches the ~91 GB Q4_K-spliced build). <code>selectedModelQuant()</code> in <code>index.ts</code>
             hard-codes this value; setting <code>DS4_MODEL_QUANT</code> to anything else throws and exits.
-            V4 Flash has no intermediate GGUF quantisation tiers like Q4 / Q5 / Q6 (see the architecture note in <a href="#model">&sect;3.3</a>), and ds4&rsquo;s <code>main</code> loader path only knows this IQ2XXS-w2Q2K imatrix recipe.</p>
+            V4 Flash has no intermediate GGUF quantisation tiers like Q4 / Q5 / Q6 (see the architecture note in <a href="#model">&sect;3.3</a>), and ds4&rsquo;s <code>main</code> loader path only knows this IQ2XXS-w2Q2K imatrix recipe family (the mixed build just swaps 6 routed-expert layers to Q4_K; it is still the same family).</p>
         </dd>
       </div>
       <div class="dl-row">
