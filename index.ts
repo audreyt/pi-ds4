@@ -56,7 +56,7 @@ const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
 // disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
-const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "0515e1c0b60cb0c2c151a1db29b2f62dbd2c9984").trim();
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "97319db84b64855bafb397524453abdf0fae134c").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)
@@ -92,15 +92,6 @@ function selectedProtocol(): ProviderProtocol {
 
 const PROVIDER_API = selectedProtocol();
 const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API_BASE_URL;
-
-// --mt is a Metal-only flag in audreyt/ds4 (CUDA / non-Darwin forks reject it).
-// On Darwin: default "auto" — passed explicitly so the policy is visible in the
-// server log; engages validated late-layer-safe Metal Tensor routes on M5/M6/A19/A20-class
-// Metal 4 hardware for ~1.5x prefill, and falls back to the legacy Metal path on
-// older targets automatically.
-// On non-Darwin: default "" — the flag is omitted entirely.
-// DS4_MT env wins on both platforms; DS4_MPP is accepted as a legacy env alias.
-const MT_MODE = process.env.DS4_MT ?? process.env.DS4_MPP ?? (process.platform === "darwin" ? "auto" : "");
 
 // DS4_CONTEXT_KB sets the server context window in *kilotokens* (the only
 // supported knob for context size).
