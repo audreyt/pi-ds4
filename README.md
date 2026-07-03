@@ -233,14 +233,6 @@ Same env vars as upstream, plus several fork-specific ones (notably the context-
 * `DS4_REPRODUCIBLE_SEED` — stable seed used when `DS4_REPRODUCIBLE` is on.
   Default `42`. Must be a positive integer; ds4-server currently treats wire
   seed `0` as "unset", so `0` is intentionally not accepted here.
-* `DS4_MT` — Metal Tensor policy passed to `ds4-server --mt`. Default `auto`
-  on macOS (engages validated Metal Tensor routes on M5 + Metal 4 tensor API; falls
-  back automatically on older targets). Set to `off` to force the legacy
-  Metal path, or `on` for the diagnostic full-Tensor profile (may drift). On
-  non-Darwin platforms (e.g. running a CUDA fork of ds4 on Linux) the flag is
-  omitted by default since `--mt` is Metal-only; set `DS4_MT` explicitly if
-  your build accepts it. `DS4_MPP` is still accepted as a legacy env alias,
-  but pi-ds4 passes `--mt` to ds4-server.
 * `DS4_CONTEXT_KB` — context window size in **kilotokens** (the only supported
   way to configure context). Default `100` (100 k tokens, the previous safe
   default). Common values: `128`, `256`, `512`, `1024` (the last selects the
