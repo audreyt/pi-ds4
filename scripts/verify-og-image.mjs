@@ -70,7 +70,7 @@ if (!existsSync(ogHtmlPath)) fail("og-image.html source page is missing");
 
 const ogHtml = readUtf8(ogHtmlPath);
 const ogText = textContent(ogHtml);
-for (const required of ["pi-ds4 Guide", "v 0.4.1", "96+ GB", "87–91 GB", "545 t/s", "35 t/s", "99 commits"]) {
+for (const required of ["pi-ds4 Guide", "v 0.4.1", "96+ GB", "87/91 GB", "545 t/s", "35 t/s", "99 commits"]) {
   if (!ogText.includes(required)) fail(`og-image.html is missing current fact: ${required}`);
 }
 for (const stale of ["Q2_K", "~99 GB", "1M", "360 tok/s", "33 tok/s", "xhigh"]) {
@@ -87,7 +87,7 @@ if (!indexHtml.includes('property="og:image:height" content="630"')) fail("index
 const alt = indexHtml.match(/<meta property="og:image:alt" content="([^"]+)"/);
 if (!alt) fail("index.html is missing og:image:alt");
 const decodedAlt = decodeEntities(alt[1]);
-for (const required of ["87–91 GB", "545 t/s", "35 t/s"]) {
+for (const required of ["87/91 GB", "545 t/s", "35 t/s"]) {
   if (!decodedAlt.includes(required)) fail(`og:image:alt is missing current fact: ${required}`);
 }
 for (const stale of ["Q2_K", "~99 GB", "1M", "360 tok/s", "33 tok/s", "xhigh"]) {
