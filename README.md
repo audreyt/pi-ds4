@@ -148,8 +148,8 @@ README documents still applies:
   `~/.pi/ds4/clients/<pid>.json`, with a bundled `ds4-watchdog.sh` that stops
   the server when no leases remain.
 * Single shared inference backend across all `pi` processes.
-* HTTP API on `127.0.0.1:8000`, OpenAI-compatible.
-* Logs at `~/.pi/ds4/log`; KV disk cache at `~/.pi/ds4/kv` (8 GB default,
+* Logs at `~/.pi/ds4/log`; KV disk cache at `~/.pi/ds4/kv` (RAM-tiered default when
+  `DS4_KV_DISK_SPACE_MB` is unset: 64 GB on 128 GB+ Macs, 32 GB on 96–127 GB, else 8 GB;
   overridable via `DS4_KV_DISK_SPACE_MB`).
 * `/ds4` inside `pi` shows the live ds4 log.
 * `/ds4-agent` inside `pi` launches the native `ds4-agent` TUI in the same
@@ -295,14 +295,18 @@ Same env vars as upstream, plus several fork-specific ones (notably the context-
   way to configure context). Default `100` (100 k tokens, the previous safe
   default). Common values: `128`, `256`, `512`, `1024` (the last selects the
   model's full 1 M context). Example for 1 M context:
-  `DS4_CONTEXT_KB=1024 DS4_KV_DISK_SPACE_MB=32768`.
+  `DS4_CONTEXT_KB=1024 DS4_KV_DISK_SPACE_MB=65536` (or higher if checkpoints grow past ~14 GB).
   On a 128 GB M5 Max the 1 M live KV buffers measured ~21.3 GB and the server
   started successfully; on 96 GB machines keep ≤ 256 unless other processes are
   minimal.
 * `DS4_KV_DISK_SPACE_MB` — disk budget (MiB) for KV checkpoints under
-  `~/.pi/ds4/kv`. Default `8192`. Raise it (e.g. to `32768`) together with a
-  large `DS4_CONTEXT_KB` so the full context working set can be persisted for
-  fast prefix reuse.
+  `~/.pi/ds4/kv`. When unset, defaults by detected RAM: `65536` (128 GB+),
+  `32768` (96–127 GB), else `8192`. Long agent sessions benefit from the larger
+  tiers so prefix checkpoints are not evicted every turn (thanks
+  [@tjansn](https://x.com/thomasjansn) for surfacing the 8 GB pain on long
+  pi-ds4 runs). Raise further together with a large `DS4_CONTEXT_KB` (e.g.
+  `65536` or more for 1 M context) so the full context working set can be
+  persisted for fast prefix reuse.
 * `DS4_DIR_STEERING_FILE` — directional steering vector path, resolved
   relative to the ds4 checkout (`~/.pi/ds4/support/` by default). Default
   `dir-steering/out/uncertainty_ablit_imatrix.f32`. See
@@ -357,6 +361,7 @@ Same env vars as upstream, plus several fork-specific ones (notably the context-
   (Strix Halo), Andrea Borio (mixed-quant expert streaming), rinaldofesta
   (eval grader), kamranjon and fry69 (agent fixes), Andreas Spannagel (MTP
   verify fix).
+* **[@tjansn](https://x.com/thomasjansn) (Tom Jansen)** — reported that the old 8 GB KV disk cap forced full-prefix re-prefill on long agent sessions; the RAM-tiered default follows that finding.
 * **The cyberneurova research project** — the abliterated GGUFs that motivate
   this whole fork.
 

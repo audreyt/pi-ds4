@@ -107,6 +107,13 @@ const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API
 // DS4_KV_DISK_SPACE_MB so the on-disk KV cache can hold a full working set
 // (e.g. 32768 for 1 M context).
 //
+// Default KV disk budget is RAM-tiered when DS4_KV_DISK_SPACE_MB is unset:
+//   128 GB+  → 65536 MiB (64 GB) — keeps long agent-session prefixes on disk
+//              so turns reuse incremental prefill instead of re-reading ~60k+
+//              tokens every time (@tjansn reported the 8 GB cap pain on long runs).
+//   96–127 GB → 32768 MiB (32 GB)
+//   else      → 8192 MiB (legacy 8 GB floor)
+//
 // The 1 M path (DS4_CONTEXT_KB=1024 + 32 GB KV) was measured on a 128 GB M5 Max:
 // ≈ 21.3 GB live KV buffers, server reached "listening" successfully.
 // On 96 GB machines keep ≤ 256 unless other memory usage is minimal.
@@ -114,7 +121,15 @@ const CONTEXT_KB = (process.env.DS4_CONTEXT_KB ?? "100").trim();
 const CTX_SIZE = /^\d+$/.test(CONTEXT_KB)
 	? String(Number(CONTEXT_KB) * 1000)
 	: "100000";
-const KV_DISK_SPACE_MB = process.env.DS4_KV_DISK_SPACE_MB ?? "8192";
+
+function defaultKvDiskSpaceMb(): string {
+	const ramGb = totalmem() / 1_000_000_000;
+	if (ramGb >= 128) return "65536";
+	if (ramGb >= 96) return "32768";
+	return "8192";
+}
+
+const KV_DISK_SPACE_MB = process.env.DS4_KV_DISK_SPACE_MB?.trim() || defaultKvDiskSpaceMb();
 // Directional steering: a negative scale amplifies the fair stakeholder-framing
 // direction stored in the .f32 file. audreyt/ds4 ships
 // `dir-steering/out/uncertainty_ablit_imatrix.f32`, calibrated on the exact

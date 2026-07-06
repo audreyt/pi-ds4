@@ -2031,16 +2031,14 @@ document.documentElement.classList.add('js');
     <ul lang="zh-TW">
       <li><strong>RAM：</strong>至少 96 GB。低於這個數字，本擴充會直接拋出錯誤——managed path 以 96–127 GB Mac 上的 87 GB 純 IQ2XXS 權重全常駐為準；128 GB 以上 RAM 的機型則改用 ~91 GB 的 Q4_K spliced 版本，無需 wired-limit 調整。
         96&ndash;127 GB 的 Mac 需先依下方 callout 把 Metal wired memory 拉高；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。
-        （2026-07 起，pin 內的引擎另有 <a href="#whatsnew">SSD 串流模式</a>，64 GB 級機器可用 §8.6 的手動路徑跑同一份 GGUF；managed 安裝的門檻不變。）</li>
-      <li><strong>磁碟：</strong>約 87–91 GB 給權重（依 RAM 決定自動選哪個量化版），另外保留約 10 GB 給 100k 預設 context 的 KV disk cache、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
+      <li><strong>磁碟：</strong>約 87–91 GB 給權重（依 RAM 決定自動選哪個量化版），另外保留 KV disk cache（未設 <code>DS4_KV_DISK_SPACE_MB</code> 時依 RAM 自動：128 GB+ 約 64 GB、96–127 GB 約 32 GB）、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
       <li><strong>晶片：</strong>任何 Apple Silicon 都可以；Linux／CUDA 機器也可走同一份 ds4 engine。後端行為以 audreyt/ds4 目前繼承的上游 runtime 為準。</li>
       <li><strong>網路：</strong>首次下載 87–91 GB GGUF 需要良好頻寬。若你的 HuggingFace 下載受惠於授權，請設定 <code>HF_TOKEN</code>。</li>
     </ul>
     <ul lang="en-GB">
       <li><strong>RAM:</strong> at least 96 GB. Below that, the extension errors out at startup &mdash; the managed path assumes the 96&ndash;127 GB Mac&rsquo;s 87 GB plain IQ2XXS weights are fully resident; 128 GB+ machines fetch the ~91 GB Q4_K-spliced build instead, which needs no wired-limit adjustment.
         Macs in the 96&ndash;127 GB range need to raise Metal wired memory per the callout below; 128 GB+ machines install directly and have headroom to run more apps alongside ds4-server.
-        (Since 2026-07 the pinned engine also has an <a href="#whatsnew">SSD streaming mode</a>: 64-GB-class machines can run the same GGUF via the §8.6 by-hand path; the managed install&rsquo;s bar is unchanged.)</li>
-      <li><strong>Disk:</strong> ~87&ndash;91 GB for the weights (auto-selected by RAM), and another ~10 GB for the default 100k-context KV disk cache, the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
+      <li><strong>Disk:</strong> ~87&ndash;91 GB for the weights (auto-selected by RAM), plus KV disk cache (when <code>DS4_KV_DISK_SPACE_MB</code> is unset: ~64 GB on 128 GB+, ~32 GB on 96&ndash;127 GB), the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
       <li><strong>Chip:</strong> any Apple Silicon works; Linux / CUDA machines can use the same ds4 engine. Backend behaviour follows the current upstream runtime inherited by audreyt/ds4.</li>
       <li><strong>Network:</strong> the first ~87–91 GB GGUF download benefits from good bandwidth. If your HuggingFace download benefits from auth, set <code>HF_TOKEN</code>.</li>
     </ul>
@@ -2238,7 +2236,7 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
           <code class="seq-args">ds4-server \
   --ctx <span class="gold">100000</span> \
   --kv-disk-dir   ~/.pi/ds4/kv \
-  --kv-disk-space-mb <span class="gold">8192</span> \
+  --kv-disk-space-mb <span class="gold">65536</span> <span class="teal"># 128 GB+ auto; 32768 on 96–127 GB</span> \
   --dir-steering-file <span class="teal">dir-steering/out/uncertainty_ablit_imatrix.f32</span> \
   --dir-steering-ffn  <span class="teal">-0.75</span> \
   --dir-steering-attn <span class="teal">0</span> \
@@ -2842,15 +2840,15 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
         <dd>
           <p lang="zh-TW">以「千 tokens」為單位的 context window 大小（這是唯一支援的 context 設定方式）。<code>100</code> 代表 100 000 tokens（沿用先前的保守預設）。常用值：<code>128</code>、<code>256</code>、<code>512</code>、<code>1024</code>（最後一個啟用模型完整的 1 M context）。</p>
           <p lang="en-GB">Context window size in <em>kilotokens</em> (the only supported way to configure context size). <code>100</code> means 100 000 tokens (the previous conservative default). Common values: <code>128</code>, <code>256</code>, <code>512</code>, <code>1024</code> (the last selects the model&rsquo;s full 1 M context).</p>
-          <p lang="zh-TW">搭配較大的 <code>DS4_CONTEXT_KB</code> 時，建議同時加大 <code>DS4_KV_DISK_SPACE_MB</code>（例如 1 M context 搭配 32768），讓 KV disk cache 能容納完整的工作集。</p>
-          <p lang="en-GB">When using a larger <code>DS4_CONTEXT_KB</code>, you should normally also increase <code>DS4_KV_DISK_SPACE_MB</code> (e.g. 32768 for 1 M context) so the on-disk KV cache can hold a full working set.</p>
+          <p lang="zh-TW">搭配較大的 <code>DS4_CONTEXT_KB</code> 時，建議同時加大 <code>DS4_KV_DISK_SPACE_MB</code>（例如 1 M context 搭配 <code>65536</code> 或更高），讓 KV disk cache 能容納完整的工作集。</p>
+          <p lang="en-GB">When using a larger <code>DS4_CONTEXT_KB</code>, you should normally also increase <code>DS4_KV_DISK_SPACE_MB</code> (e.g. <code>65536</code>+ for 1 M context) so the on-disk KV cache can hold a full working set.</p>
         </dd>
       </div>
       <div class="dl-row">
-        <dt>DS4_KV_DISK_SPACE_MB<span class="default"><span lang="zh-TW">預設 · 8192</span><span lang="en-GB">default &middot; 8192</span></span></dt>
+        <dt>DS4_KV_DISK_SPACE_MB<span class="default"><span lang="zh-TW">預設 · RAM 分級</span><span lang="en-GB">default &middot; RAM-tiered</span></span></dt>
         <dd>
-          <p lang="zh-TW">傳給 <code>ds4-server --kv-disk-space-mb</code> 的磁碟 KV checkpoint 預算（單位 MiB）。預設 8 GB 足夠 100k context 的多輪對話；1 M context 實驗建議設到 32 GB 左右。</p>
-          <p lang="en-GB">Disk budget (in MiB) passed to <code>ds4-server --kv-disk-space-mb</code> for KV checkpoints. The 8 GB default is sized for the 100 k context; 1 M context experiments typically need ~32 GB.</p>
+          <p lang="zh-TW">傳給 <code>ds4-server --kv-disk-space-mb</code> 的磁碟 KV checkpoint 預算（單位 MiB）。未設環境變數時依 RAM 自動：<code>65536</code>（128 GB+）、<code>32768</code>（96–127 GB）、否則 <code>8192</code>。長 agent session 需要較大預算，才不會每回合 eviction 後重跑整段 prefill（<a href="https://x.com/thomasjansn">@tjansn</a> 回報）。1 M context 請再加大，例如 <code>65536</code> 以上。</p>
+          <p lang="en-GB">Disk budget (in MiB) passed to <code>ds4-server --kv-disk-space-mb</code> for KV checkpoints. When unset, auto by RAM: <code>65536</code> (128 GB+), <code>32768</code> (96&ndash;127 GB), else <code>8192</code>. Long agent sessions need the larger tiers so prefix checkpoints are not evicted every turn (<a href="https://x.com/thomasjansn">@tjansn</a>). For 1 M context, raise further (e.g. <code>65536</code>+).</p>
         </dd>
       </div>
     </dl>
@@ -2972,29 +2970,29 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
 
     <h3>6.4<span lang="zh-TW">　context、KV cache 與磁碟</span><span lang="en-GB">　Context, KV cache, and disk</span></h3>
 
-    <p lang="zh-TW">Server 啟動參數預設來自 <code>DS4_CONTEXT_KB=100</code> 與 <code>DS4_KV_DISK_SPACE_MB=8192</code>，等同於 <code>--ctx 100000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb 8192</code>。意思是：</p>
-    <p lang="en-GB">The server is launched with values derived from <code>DS4_CONTEXT_KB=100</code> and <code>DS4_KV_DISK_SPACE_MB=8192</code>, i.e. <code>--ctx 100000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb 8192</code>. That means:</p>
+    <p lang="zh-TW">Server 啟動參數預設來自 <code>DS4_CONTEXT_KB=100</code> 與 RAM 分級的 <code>DS4_KV_DISK_SPACE_MB</code>（128 GB+ 機器上約 <code>65536</code>），等同於 <code>--ctx 100000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb …</code>。意思是：</p>
+    <p lang="en-GB">The server is launched with <code>DS4_CONTEXT_KB=100</code> and a RAM-tiered <code>DS4_KV_DISK_SPACE_MB</code> (e.g. <code>65536</code> on 128 GB+), i.e. <code>--ctx 100000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb …</code>. That means:</p>
 
     <ul lang="zh-TW">
       <li>單次對話上限 100,000 tokens；</li>
       <li>KV cache 會在記憶體不足時 spill 到 <code>~/.pi/ds4/kv</code>；</li>
-      <li>磁碟 KV 上限 8 GB——適合 100k 預設 context 的多輪長對話暫存空間。</li>
+      <li>磁碟 KV 上限依 RAM 自動（128 GB+ 約 64 GB）——讓長 agent session 的 prefix checkpoint 能留在磁碟上。</li>
     </ul>
     <ul lang="en-GB">
       <li>a single conversation is capped at 100,000 tokens;</li>
       <li>the KV cache spills to <code>~/.pi/ds4/kv</code> when memory runs low;</li>
-      <li>the on-disk KV limit is 8 GB &mdash; scratch space sized for long multi-turn conversations at the default 100k context.</li>
+      <li>the on-disk KV limit is RAM-tiered (e.g. ~64 GB on 128 GB+) &mdash; sized so long agent sessions can reuse prefix checkpoints.</li>
     </ul>
 
     <div class="callout callout-teal">
       <div class="callout-label"><span lang="zh-TW">100k 與 1M context 不是同一種運行 profile</span><span lang="en-GB">100k and 1M context are different operating profiles</span></div>
       <p lang="zh-TW">
         ds4 的 Metal context estimator 顯示：100k 預設大約配置 2.4 GiB KV／context buffer；250k 約 5.5 GiB、300k 約 6.5 GiB；1M 會跳到約 20.8 GiB，這還沒算 87 GB 權重與推論暫存。
-        磁碟也會跟著變：完整 checkpoint 約從 100k 的 1.4 GB 放大到 1M 的 14 GB，所以內建的 8 GB KV disk budget 不適合 1M。
+        磁碟也會跟著變：完整 checkpoint 約從 100k 的 1.4 GB 放大到 1M 的 14 GB，所以僅 8 GB 的 KV disk budget 不適合 1M（128 GB+ 預設已提高到 64 GB）。
       </p>
       <p lang="en-GB">
         ds4's Metal context estimator shows roughly 2.4 GiB of KV/context buffers at the 100k default; 250k is about 5.5 GiB, 300k about 6.5 GiB, and 1M jumps to about 20.8 GiB before the 87 GB weights and transient inference buffers.
-        Disk use scales too: a full checkpoint grows from roughly 1.4 GB at 100k to roughly 14 GB at 1M, so the built-in 8 GB KV disk budget is not a 1M-context setting.
+        Disk use scales too: a full checkpoint grows from roughly 1.4 GB at 100k to roughly 14 GB at 1M, so an 8 GB KV disk budget alone is not a 1M-context setting (128 GB+ installs default to 64 GB).
       </p>
     </div>
 
@@ -3015,12 +3013,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     </div>
 
     <p lang="zh-TW">
-      這些預設值來自 <code>DS4_CONTEXT_KB=100</code> 與 <code>DS4_KV_DISK_SPACE_MB=8192</code>。
-      若要使用模型完整的 1 M context，請同時設定 <code>DS4_CONTEXT_KB=1024</code> 與較大的 <code>DS4_KV_DISK_SPACE_MB</code>（32768 是常見搭配值）。
+      預設 <code>DS4_CONTEXT_KB=100</code>；<code>DS4_KV_DISK_SPACE_MB</code> 未設時依 RAM 自動。
+      若要使用模型完整的 1 M context，請設定 <code>DS4_CONTEXT_KB=1024</code> 與 <code>DS4_KV_DISK_SPACE_MB=65536</code>（或更高）。
     </p>
     <p lang="en-GB">
-      The defaults come from <code>DS4_CONTEXT_KB=100</code> and <code>DS4_KV_DISK_SPACE_MB=8192</code>.
-      To use the model&rsquo;s full 1 M context, set <code>DS4_CONTEXT_KB=1024</code> together with a larger <code>DS4_KV_DISK_SPACE_MB</code> (32768 is a typical companion value).
+      Default <code>DS4_CONTEXT_KB=100</code>; <code>DS4_KV_DISK_SPACE_MB</code> is RAM-tiered when unset.
+      For the model&rsquo;s full 1 M context, set <code>DS4_CONTEXT_KB=1024</code> and <code>DS4_KV_DISK_SPACE_MB=65536</code> (or higher).
     </p>
   </section>
 
@@ -3812,7 +3810,7 @@ resp = client.responses.create(
           <pre><span class="k">cd</span> ~/.pi/ds4/support
 ./ds4-server \
   --ctx 100000 \
-  --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb 8192 \
+  --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb 65536  # RAM-tiered; 32768 on 96–127 GB \
   --dir-steering-file dir-steering/out/uncertainty_ablit_imatrix.f32 \
   --dir-steering-ffn -0.75 \
   --dir-steering-attn 0 \
@@ -3847,7 +3845,7 @@ chmod +x download_cyberneurova.sh
 <span class="c"># 3. 起 server</span>
 ./ds4-server \
   --ctx 100000 \
-  --kv-disk-dir ./kv --kv-disk-space-mb 8192 \
+  --kv-disk-dir ./kv --kv-disk-space-mb 65536  # or your DS4_KV_DISK_SPACE_MB \
   --dir-steering-file dir-steering/out/uncertainty_ablit_imatrix.f32 \
   --dir-steering-ffn -0.75 \
   --dir-steering-attn 0 \
@@ -3873,7 +3871,7 @@ chmod +x download_cyberneurova.sh
           <pre><span class="k">cd</span> ~/.pi/ds4/support
 ./ds4-server \
   --ctx 100000 \
-  --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb 8192 \
+  --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb 65536  # RAM-tiered; 32768 on 96–127 GB \
   --dir-steering-file dir-steering/out/uncertainty_ablit_imatrix.f32 \
   --dir-steering-ffn -0.75 \
   --dir-steering-attn 0 \
@@ -3908,7 +3906,7 @@ chmod +x download_cyberneurova.sh
 <span class="c"># 3. Start the server</span>
 ./ds4-server \
   --ctx 100000 \
-  --kv-disk-dir ./kv --kv-disk-space-mb 8192 \
+  --kv-disk-dir ./kv --kv-disk-space-mb 65536  # or your DS4_KV_DISK_SPACE_MB \
   --dir-steering-file dir-steering/out/uncertainty_ablit_imatrix.f32 \
   --dir-steering-ffn -0.75 \
   --dir-steering-attn 0 \
@@ -4088,7 +4086,7 @@ chmod +x download_cyberneurova.sh
 │   └── dir-steering/
 │       └── out/
 │           └── uncertainty_ablit_imatrix.f32
-├── kv/              <span class="teal"># KV cache 溢出位置（上限 8 GB）</span>
+├── kv/              <span class="teal"># KV cache 溢出位置（RAM 分級上限，128 GB+ 約 64 GB）</span>
 ├── clients/         <span class="teal"># 每個 pi process 的 lease 檔</span>
 │   ├── 51234.json
 │   └── 51789.json
@@ -4104,7 +4102,7 @@ chmod +x download_cyberneurova.sh
 │   └── dir-steering/
 │       └── out/
 │           └── uncertainty_ablit_imatrix.f32
-├── kv/              <span class="teal"># KV cache spill location (cap 8 GB)</span>
+├── kv/              <span class="teal"># KV cache spill location (RAM-tiered cap, ~64 GB on 128 GB+)</span>
 ├── clients/         <span class="teal"># per-pi-process lease files</span>
 │   ├── 51234.json
 │   └── 51789.json
@@ -4791,8 +4789,8 @@ STATE=~/.pi/ds4/server.json
       </div>
       <div>
         <dt>KV cache<span class="cjk-aside">鍵值快取</span></dt>
-        <dd lang="zh-TW">推論時暫存的中間結果。長對話會累積大量 KV cache；本擴充允許溢出到磁碟（上限 8 GB）。</dd>
-        <dd lang="en-GB">Intermediate state cached during inference. Long conversations accumulate a lot of KV cache; this extension allows it to spill to disk (up to 8 GB).</dd>
+        <dd lang="zh-TW">推論時暫存的中間結果。長對話會累積大量 KV cache；本擴充允許溢出到磁碟（未設 <code>DS4_KV_DISK_SPACE_MB</code> 時依 RAM 自動，128 GB+ 約 64 GB）。</dd>
+        <dd lang="en-GB">Intermediate state cached during inference. Long conversations accumulate a lot of KV cache; this extension allows it to spill to disk (RAM-tiered when <code>DS4_KV_DISK_SPACE_MB</code> is unset, ~64 GB on 128 GB+).</dd>
       </div>
       <div>
         <dt>unified memory<span class="cjk-aside">統一記憶體</span></dt>
