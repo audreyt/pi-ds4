@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 import { readFileSync, existsSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { join } from "node:path";
 
 const root = process.cwd();
 const ogHtmlPath = join(root, "og-image.html");
 const ogJpgPath = join(root, "og-pi-ds4.jpg");
 const indexPath = join(root, "index.html");
+const packagePath = join(root, "package.json");
+const renderScriptPath = join(root, "scripts", "render-og-image.mjs");
 
 function fail(message) {
   console.error(`OG verification failed: ${message}`);
@@ -50,6 +53,22 @@ function jpegSize(buffer) {
   }
   fail("could not find JPEG dimensions");
 }
+function runRenderCheck() {
+  const result = spawnSync(process.execPath, [renderScriptPath, "--check"], { stdio: "inherit" });
+  if (result.error) fail(`render check could not start: ${result.error.message}`);
+  if (result.status !== 0) fail("fresh render does not match og-pi-ds4.jpg");
+}
+
+
+if (!existsSync(renderScriptPath)) fail("scripts/render-og-image.mjs is missing");
+
+const packageJson = JSON.parse(readUtf8(packagePath));
+if (packageJson.scripts?.["og:render"] !== "node scripts/render-og-image.mjs") {
+  fail("package.json is missing script: og:render = node scripts/render-og-image.mjs");
+}
+if (packageJson.scripts?.["og:verify"] !== "node scripts/verify-og-image.mjs") {
+  fail("package.json is missing script: og:verify = node scripts/verify-og-image.mjs");
+}
 
 if (!existsSync(ogHtmlPath)) fail("og-image.html source page is missing");
 
@@ -64,6 +83,7 @@ for (const stale of ["Q2_K", "~99 GB", "1M", "360 tok/s", "33 tok/s", "xhigh"]) 
 
 const { width, height } = jpegSize(readFileSync(ogJpgPath));
 if (width !== 1200 || height !== 630) fail(`og-pi-ds4.jpg is ${width}×${height}; expected 1200×630`);
+runRenderCheck();
 
 const indexHtml = readUtf8(indexPath);
 if (!indexHtml.includes('content="https://pi.audreyt.org/og-pi-ds4.jpg"')) fail("index.html no longer points at og-pi-ds4.jpg");
@@ -74,6 +94,9 @@ if (!alt) fail("index.html is missing og:image:alt");
 const decodedAlt = decodeEntities(alt[1]);
 for (const required of ["87–91 GB", "545 t/s", "35 t/s"]) {
   if (!decodedAlt.includes(required)) fail(`og:image:alt is missing current fact: ${required}`);
+}
+for (const stale of ["Q2_K", "~99 GB", "1M", "360 tok/s", "33 tok/s", "xhigh"]) {
+  if (decodedAlt.includes(stale)) fail(`og:image:alt still contains stale OG text: ${stale}`);
 }
 
 console.log(`OG image verified: ${width}×${height}, source facts current.`);

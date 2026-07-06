@@ -5,6 +5,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+    "og:render": "node scripts/render-og-image.mjs",
     "og:verify": "node scripts/verify-og-image.mjs"
   },
   "keywords": [
