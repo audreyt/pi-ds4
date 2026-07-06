@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { createHash } from "node:crypto";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
@@ -53,6 +54,39 @@ function jpegSize(buffer) {
   fail("could not find JPEG dimensions");
 }
 
+function parseAttributes(tag) {
+  const attrs = new Map();
+  for (const [, name, value] of tag.matchAll(/\s([A-Za-z_:][-A-Za-z0-9_:.]*)="([^"]*)"/g)) {
+    attrs.set(name, decodeEntities(value));
+  }
+  return attrs;
+}
+
+function metaContent(html, selectorName, selectorValue) {
+  for (const [tag] of html.matchAll(/<meta\b[^>]*>/gi)) {
+    const attrs = parseAttributes(tag);
+    if (attrs.get(selectorName) !== selectorValue) continue;
+    const content = attrs.get("content");
+    if (!content) fail(`index.html meta ${selectorName}="${selectorValue}" is missing content`);
+    return content;
+  }
+  fail(`index.html is missing meta ${selectorName}="${selectorValue}"`);
+}
+
+function verifyCacheBustedOgImageUrl(label, rawUrl, expectedVersion) {
+  let url;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    fail(`${label} must be an absolute URL: ${rawUrl}`);
+  }
+  if (url.origin !== "https://pi.audreyt.org") fail(`${label} must use https://pi.audreyt.org, got ${url.origin}`);
+  if (url.pathname !== "/og-pi-ds4.jpg") fail(`${label} must point at /og-pi-ds4.jpg, got ${url.pathname}`);
+  if (url.searchParams.get("v") !== expectedVersion) fail(`${label} cache-busting v= must equal current JPEG hash ${expectedVersion}`);
+  if ([...url.searchParams.keys()].length !== 1) fail(`${label} must only carry the v= cache-busting query`);
+  if (url.hash) fail(`${label} must not include a fragment`);
+}
+
 if (!existsSync(renderScriptPath)) fail("scripts/render-og-image.mjs is missing");
 
 const packageJson = JSON.parse(readUtf8(packagePath));
@@ -77,11 +111,14 @@ for (const stale of ["Q2_K", "~99 GB", "1M", "360 tok/s", "33 tok/s", "xhigh"]) 
   if (ogText.includes(stale)) fail(`og-image.html still contains stale OG text: ${stale}`);
 }
 
-const { width, height } = jpegSize(readFileSync(ogJpgPath));
+const ogJpg = readFileSync(ogJpgPath);
+const ogImageVersion = createHash("sha256").update(ogJpg).digest("hex").slice(0, 12);
+const { width, height } = jpegSize(ogJpg);
 if (width !== 1200 || height !== 630) fail(`og-pi-ds4.jpg is ${width}×${height}; expected 1200×630`);
 
 const indexHtml = readUtf8(indexPath);
-if (!indexHtml.includes('content="https://pi.audreyt.org/og-pi-ds4.jpg"')) fail("index.html no longer points at og-pi-ds4.jpg");
+verifyCacheBustedOgImageUrl("og:image", metaContent(indexHtml, "property", "og:image"), ogImageVersion);
+verifyCacheBustedOgImageUrl("twitter:image", metaContent(indexHtml, "name", "twitter:image"), ogImageVersion);
 if (!indexHtml.includes('property="og:image:width" content="1200"')) fail("index.html og:image:width is not 1200");
 if (!indexHtml.includes('property="og:image:height" content="630"')) fail("index.html og:image:height is not 630");
 const alt = indexHtml.match(/<meta property="og:image:alt" content="([^"]+)"/);
