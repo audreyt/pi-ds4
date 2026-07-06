@@ -15,6 +15,9 @@ const pngOut = join(root, "og-pi-ds4.png");
 const args = new Set(process.argv.slice(2));
 const checkOnly = args.has("--check");
 const keepPng = args.has("--keep-png");
+// --check is intentionally exact and same-machine: browser font rasterization and JPEG
+// encoders are not portable byte-for-byte contracts. Use npm run og:verify for the
+// portable metadata/source/dimension gate; use npm run og:check-render after rendering.
 
 function die(message) {
   console.error(`OG render failed: ${message}`);

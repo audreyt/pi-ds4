@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { readFileSync, existsSync } from "node:fs";
-import { spawnSync } from "node:child_process";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -53,18 +52,15 @@ function jpegSize(buffer) {
   }
   fail("could not find JPEG dimensions");
 }
-function runRenderCheck() {
-  const result = spawnSync(process.execPath, [renderScriptPath, "--check"], { stdio: "inherit" });
-  if (result.error) fail(`render check could not start: ${result.error.message}`);
-  if (result.status !== 0) fail("fresh render does not match og-pi-ds4.jpg");
-}
-
 
 if (!existsSync(renderScriptPath)) fail("scripts/render-og-image.mjs is missing");
 
 const packageJson = JSON.parse(readUtf8(packagePath));
 if (packageJson.scripts?.["og:render"] !== "node scripts/render-og-image.mjs") {
   fail("package.json is missing script: og:render = node scripts/render-og-image.mjs");
+}
+if (packageJson.scripts?.["og:check-render"] !== "node scripts/render-og-image.mjs --check") {
+  fail("package.json is missing script: og:check-render = node scripts/render-og-image.mjs --check");
 }
 if (packageJson.scripts?.["og:verify"] !== "node scripts/verify-og-image.mjs") {
   fail("package.json is missing script: og:verify = node scripts/verify-og-image.mjs");
@@ -83,7 +79,6 @@ for (const stale of ["Q2_K", "~99 GB", "1M", "360 tok/s", "33 tok/s", "xhigh"]) 
 
 const { width, height } = jpegSize(readFileSync(ogJpgPath));
 if (width !== 1200 || height !== 630) fail(`og-pi-ds4.jpg is ${width}×${height}; expected 1200×630`);
-runRenderCheck();
 
 const indexHtml = readUtf8(indexPath);
 if (!indexHtml.includes('content="https://pi.audreyt.org/og-pi-ds4.jpg"')) fail("index.html no longer points at og-pi-ds4.jpg");
@@ -99,4 +94,4 @@ for (const stale of ["Q2_K", "~99 GB", "1M", "360 tok/s", "33 tok/s", "xhigh"]) 
   if (decodedAlt.includes(stale)) fail(`og:image:alt still contains stale OG text: ${stale}`);
 }
 
-console.log(`OG image verified: ${width}×${height}, source facts current.`);
+console.log(`OG image verified: ${width}×${height}, source facts, and metadata are current.`);

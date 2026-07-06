@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "og:render": "node scripts/render-og-image.mjs",
+    "og:check-render": "node scripts/render-og-image.mjs --check",
     "og:verify": "node scripts/verify-og-image.mjs"
   },
   "keywords": [
