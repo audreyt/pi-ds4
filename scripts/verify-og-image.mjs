@@ -1,0 +1,79 @@
+#!/usr/bin/env node
+import { readFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
+
+const root = process.cwd();
+const ogHtmlPath = join(root, "og-image.html");
+const ogJpgPath = join(root, "og-pi-ds4.jpg");
+const indexPath = join(root, "index.html");
+
+function fail(message) {
+  console.error(`OG verification failed: ${message}`);
+  process.exit(1);
+}
+
+function readUtf8(path) {
+  return readFileSync(path, "utf8");
+}
+
+function decodeEntities(text) {
+  return text
+    .replace(/&ndash;/g, "–")
+    .replace(/&mdash;/g, "—")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&#8209;/g, "‑")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+function textContent(html) {
+  return decodeEntities(html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
+}
+
+function jpegSize(buffer) {
+  if (buffer[0] !== 0xff || buffer[1] !== 0xd8) fail("og-pi-ds4.jpg is not a JPEG file");
+  let offset = 2;
+  while (offset < buffer.length) {
+    while (buffer[offset] === 0xff) offset++;
+    const marker = buffer[offset++];
+    if (marker === 0xd9 || marker === 0xda) break;
+    const length = buffer.readUInt16BE(offset);
+    if (length < 2) fail(`invalid JPEG marker length at offset ${offset}`);
+    if ((marker >= 0xc0 && marker <= 0xc3) || (marker >= 0xc5 && marker <= 0xc7) || (marker >= 0xc9 && marker <= 0xcb) || (marker >= 0xcd && marker <= 0xcf)) {
+      return {
+        height: buffer.readUInt16BE(offset + 3),
+        width: buffer.readUInt16BE(offset + 5),
+      };
+    }
+    offset += length;
+  }
+  fail("could not find JPEG dimensions");
+}
+
+if (!existsSync(ogHtmlPath)) fail("og-image.html source page is missing");
+
+const ogHtml = readUtf8(ogHtmlPath);
+const ogText = textContent(ogHtml);
+for (const required of ["pi-ds4 Guide", "v 0.4.1", "96+ GB", "87–91 GB", "545 t/s", "35 t/s", "99 commits"]) {
+  if (!ogText.includes(required)) fail(`og-image.html is missing current fact: ${required}`);
+}
+for (const stale of ["Q2_K", "~99 GB", "1M", "360 tok/s", "33 tok/s", "xhigh"]) {
+  if (ogText.includes(stale)) fail(`og-image.html still contains stale OG text: ${stale}`);
+}
+
+const { width, height } = jpegSize(readFileSync(ogJpgPath));
+if (width !== 1200 || height !== 630) fail(`og-pi-ds4.jpg is ${width}×${height}; expected 1200×630`);
+
+const indexHtml = readUtf8(indexPath);
+if (!indexHtml.includes('content="https://pi.audreyt.org/og-pi-ds4.jpg"')) fail("index.html no longer points at og-pi-ds4.jpg");
+if (!indexHtml.includes('property="og:image:width" content="1200"')) fail("index.html og:image:width is not 1200");
+if (!indexHtml.includes('property="og:image:height" content="630"')) fail("index.html og:image:height is not 630");
+const alt = indexHtml.match(/<meta property="og:image:alt" content="([^"]+)"/);
+if (!alt) fail("index.html is missing og:image:alt");
+const decodedAlt = decodeEntities(alt[1]);
+for (const required of ["87–91 GB", "545 t/s", "35 t/s"]) {
+  if (!decodedAlt.includes(required)) fail(`og:image:alt is missing current fact: ${required}`);
+}
+
+console.log(`OG image verified: ${width}×${height}, source facts current.`);

@@ -4,6 +4,9 @@
   "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4 Flash inference (audreyt fork: cyberneurova abliterated aligned-imatrix GGUF + audreyt/ds4 main).",
   "type": "module",
   "license": "MIT",
+  "scripts": {
+    "og:verify": "node scripts/verify-og-image.mjs"
+  },
   "keywords": [
     "pi-package",
     "pi-extension",
