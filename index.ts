@@ -37,7 +37,6 @@ const STATE_FILE = join(DS4_DIR, "server.json");
 const AGENT_FILE = join(DS4_DIR, "agent.json");
 const LOG_FILE = join(DS4_DIR, "log");
 const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
-const DS4_INSTANCE_LOCK_FILE = join(DS4_DIR, "ds4-instance.lock");
 
 // audreyt/pi-ds4 fork: pull the audreyt/ds4 main branch by default. That
 // branch carries ivanfioravanti's PR #15 extended into Metal 4 M5 MPP +
@@ -311,12 +310,6 @@ function shellQuote(value: string): string {
 	return /^[A-Za-z0-9_./:=+-]+$/.test(value) ? value : `'${value.replace(/'/g, `'\\''`)}'`;
 }
 
-// ds4.c defaults to /tmp/ds4.lock; a root-owned lock blocks normal users (Permission denied).
-function ds4ChildEnv(): NodeJS.ProcessEnv {
-	const env = { ...process.env };
-	if (!env.DS4_LOCK_FILE?.trim()) env.DS4_LOCK_FILE = DS4_INSTANCE_LOCK_FILE;
-	return env;
-}
 
 function isKey(data: string, key: "escape" | "up" | "down" | "home" | "end" | "pageUp" | "pageDown"): boolean {
 	switch (key) {
@@ -879,7 +872,7 @@ async function runLogged(command: string, args: string[], cwd: string, label: st
 				cwd,
 				detached: process.platform !== "win32",
 				stdio: ["ignore", "pipe", "pipe"],
-				env: ds4ChildEnv(),
+				env: process.env,
 			});
 		} catch (error) {
 			progress?.flush();
@@ -1468,7 +1461,7 @@ async function startServerLocked(runtimeDir: string): Promise<void> {
 			cwd: runtimeDir,
 			detached: true,
 			stdio: ["ignore", logFd, logFd],
-			env: ds4ChildEnv(),
+			env: process.env,
 		});
 		child.unref();
 		childPid = child.pid;
@@ -1570,7 +1563,7 @@ function runAgentInForeground(tui: ForegroundTui, binary: string, args: string[]
 		const result = spawnSync(binary, args, {
 			cwd: runtimeDir,
 			stdio: "inherit",
-			env: ds4ChildEnv(),
+			env: process.env,
 		});
 		return {
 			status: result.status,
