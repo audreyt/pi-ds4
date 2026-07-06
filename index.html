@@ -1790,19 +1790,19 @@ document.documentElement.classList.add('js');
   <section class="chapter" id="whatsnew">
     <div class="chapter-eyebrow"><span class="cjk-num"><span lang="zh-TW">更　新　誌</span><span lang="en-GB">What&rsquo;s new</span></span></div>
     <h2>
-      <span lang="zh-TW">v 0.4.1：一次 pin 升級，<em>九十九個 commit</em></span>
-      <span lang="en-GB">v 0.4.1: one pin bump, <em>ninety-nine commits</em></span>
+      <span lang="zh-TW">v 0.4 系列：一次 pin 升級，<em>九十九個 commit</em></span>
+      <span lang="en-GB">v 0.4 series: one pin bump, <em>ninety-nine commits</em></span>
     </h2>
 
     <p class="lede" lang="zh-TW">
-      pi-ds4 的引擎不會憑空變新。v 0.4.1 把 <code>SUPPORT_PIN</code> 從六月初的
+      pi-ds4 的引擎不會憑空變新。v 0.4 把 <code>SUPPORT_PIN</code> 從六月初的
       <code>97319db</code> 推進到 7 月 3 日的 <code>c1f4aa2</code>——之間是 99 個 commit、65 個檔案、
       約七萬四千行新增（光 <code>ds4.c</code> 就長了一萬七千行）。大部分來自 antirez 上游一個月的工作；
       其餘是本分支自己先行合併的推測解碼 runtime 與 server 強化。你什麼都不用做：
       既有安裝在下一次啟動時會自動 fetch、hard-reset 到新 pin，並重編 <code>ds4-server</code>。
     </p>
     <p class="lede" lang="en-GB">
-      The engine under pi-ds4 does not get newer by magic. v 0.4.1 moves <code>SUPPORT_PIN</code>
+      The engine under pi-ds4 does not get newer by magic. v 0.4 moves <code>SUPPORT_PIN</code>
       from early June&rsquo;s <code>97319db</code> to July 3rd&rsquo;s <code>c1f4aa2</code> &mdash;
       99 commits, 65 files, roughly seventy-four thousand added lines in between
       (<code>ds4.c</code> alone grew by seventeen thousand). Most of it is a month of work in
@@ -1873,6 +1873,18 @@ document.documentElement.classList.add('js');
       <li><strong>Correctness repairs (upstream):</strong> the speculative-verify bug where <code>--mtp-draft &gt; 2</code> committed wrong tokens is fixed (<a href="https://github.com/antirez/ds4/pull/358">PR #358</a>); a chain of <code>ds4-eval</code> multiple-choice grader false negatives is fixed with golden self-tests (<a href="https://github.com/antirez/ds4/pull/319">PR #319</a>); and upstream added a release QA checklist.</li>
     </ul>
 
+
+    <h3><span lang="zh-TW">v 0.4.1 補丁（擴充套件）</span><span lang="en-GB">v 0.4.1 patch (extension)</span></h3>
+
+    <p lang="zh-TW">目前指南標示 <strong>v 0.4.1</strong>（與 <code>package.json</code> 一致）。相對 v 0.4.0 的變更在 wrapper，不是 pin：</p>
+    <p lang="en-GB">This guide is labelled <strong>v 0.4.1</strong> (matching <code>package.json</code>). Changes since v 0.4.0 are in the extension wrapper, not the pin:</p>
+
+    <ul lang="zh-TW">
+      <li><strong>磁碟 KV 預設依 RAM 分級：</strong>未設 <code>DS4_KV_DISK_SPACE_MB</code> 時，128 GB+ 約 64 GB、96–127 GB 約 32 GB、其餘 8 GB——長 agent session 較少因 8 GB 上限整段重 prefill（<a href="https://x.com/thomasjansn">@tjansn</a> 回報）。</li>
+    </ul>
+    <ul lang="en-GB">
+      <li><strong>RAM-tiered disk KV default:</strong> when <code>DS4_KV_DISK_SPACE_MB</code> is unset, 64 GB on 128 GB+, 32 GB on 96&ndash;127 GB, else 8 GB &mdash; long agent sessions evict prefix checkpoints less often than under the old flat 8 GB cap (<a href="https://x.com/thomasjansn">@tjansn</a>).</li>
+    </ul>
     <h3><span lang="zh-TW">不只 Mac</span><span lang="en-GB">Beyond the Mac</span></h3>
 
     <ul lang="zh-TW">
