@@ -1571,7 +1571,7 @@ document.documentElement.classList.add('js');
         <div class="label"><span lang="zh-TW">Mixture&#8209;of&#8209;Experts 參數總量（每 token 啟用 13 B）</span><span lang="en-GB">Mixture&#8209;of&#8209;Experts parameter count (13 B activated per token)</span></div>
       </div>
       <div class="ledger-item">
-        <div class="num">87–91<small>GB</small></div>
+        <div class="num">87/91<small>GB</small></div>
         <div class="label"><span lang="zh-TW">IQ2XXS imatrix GGUF 權重；96–127 GB Mac 抓 ~87 GB 純 IQ2XXS-w2Q2K 版本，128 GB 以上則自動切到 ~91 GB 的 Q4_K spliced 版（layers 37–42）</span><span lang="en-GB">IQ2XXS imatrix GGUF weights; 96&ndash;127 GB Macs fetch the ~87 GB plain IQ2XXS-w2Q2K build, 128 GB+ fetch the ~91 GB Q4_K-spliced build (layers 37&ndash;42)</span></div>
       </div>
       <div class="ledger-item">
@@ -2001,8 +2001,8 @@ document.documentElement.classList.add('js');
 
     <div class="callout callout-teal">
       <div class="callout-label"><span lang="zh-TW">本書的兩個前提</span><span lang="en-GB">The book&rsquo;s two premises</span></div>
-      <p lang="zh-TW">其一：你願意把約 87–91 GB 的硬碟空間留給模型權重——這是本機運行的入場券。</p>
-      <p lang="en-GB">First: you&rsquo;re willing to spare about 87&ndash;91 GB of disk for the model weights &mdash; the cover charge for running locally.</p>
+      <p lang="zh-TW">其一：你願意把約 87/91 GB 的硬碟空間留給模型權重——這是本機運行的入場券。</p>
+      <p lang="en-GB">First: you&rsquo;re willing to spare about 87/91 GB of disk for the model weights &mdash; the cover charge for running locally.</p>
       <p lang="zh-TW">其二：如果你想走最方便的一行安裝路徑（第一～二章），需要先有
         <a href="https://github.com/earendil-works/pi">pi</a>（Earendil 的 coding agent CLI）。
         但如果你只想把 ds4-server 當本機後端、然後接到自己慣用的 Codex CLI／Claude Code／OpenClaw／Hermes Agent，
@@ -2043,16 +2043,16 @@ document.documentElement.classList.add('js');
     <ul lang="zh-TW">
       <li><strong>RAM：</strong>至少 96 GB。低於這個數字，本擴充會直接拋出錯誤——managed path 以 96–127 GB Mac 上的 87 GB 純 IQ2XXS 權重全常駐為準；128 GB 以上 RAM 的機型則改用 ~91 GB 的 Q4_K spliced 版本，無需 wired-limit 調整。
         96&ndash;127 GB 的 Mac 需先依下方 callout 把 Metal wired memory 拉高；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。
-      <li><strong>磁碟：</strong>約 87–91 GB 給權重（依 RAM 決定自動選哪個量化版），另外保留 KV disk cache（未設 <code>DS4_KV_DISK_SPACE_MB</code> 時依 RAM 自動：128 GB+ 約 64 GB、96–127 GB 約 32 GB）、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
+      <li><strong>磁碟：</strong>約 87/91 GB 給權重（依 RAM 決定自動選哪個量化版），另外保留 KV disk cache（未設 <code>DS4_KV_DISK_SPACE_MB</code> 時依 RAM 自動：128 GB+ 約 64 GB、96–127 GB 約 32 GB）、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
       <li><strong>晶片：</strong>任何 Apple Silicon 都可以；Linux／CUDA 機器也可走同一份 ds4 engine。後端行為以 audreyt/ds4 目前繼承的上游 runtime 為準。</li>
-      <li><strong>網路：</strong>首次下載 87–91 GB GGUF 需要良好頻寬。若你的 HuggingFace 下載受惠於授權，請設定 <code>HF_TOKEN</code>。</li>
+      <li><strong>網路：</strong>首次下載 87/91 GB GGUF 需要良好頻寬。若你的 HuggingFace 下載受惠於授權，請設定 <code>HF_TOKEN</code>。</li>
     </ul>
     <ul lang="en-GB">
       <li><strong>RAM:</strong> at least 96 GB. Below that, the extension errors out at startup &mdash; the managed path assumes the 96&ndash;127 GB Mac&rsquo;s 87 GB plain IQ2XXS weights are fully resident; 128 GB+ machines fetch the ~91 GB Q4_K-spliced build instead, which needs no wired-limit adjustment.
         Macs in the 96&ndash;127 GB range need to raise Metal wired memory per the callout below; 128 GB+ machines install directly and have headroom to run more apps alongside ds4-server.
-      <li><strong>Disk:</strong> ~87&ndash;91 GB for the weights (auto-selected by RAM), plus KV disk cache (when <code>DS4_KV_DISK_SPACE_MB</code> is unset: ~64 GB on 128 GB+, ~32 GB on 96&ndash;127 GB), the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
+      <li><strong>Disk:</strong> ~87/91 GB for the weights (auto-selected by RAM), plus KV disk cache (when <code>DS4_KV_DISK_SPACE_MB</code> is unset: ~64 GB on 128 GB+, ~32 GB on 96&ndash;127 GB), the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
       <li><strong>Chip:</strong> any Apple Silicon works; Linux / CUDA machines can use the same ds4 engine. Backend behaviour follows the current upstream runtime inherited by audreyt/ds4.</li>
-      <li><strong>Network:</strong> the first ~87–91 GB GGUF download benefits from good bandwidth. If your HuggingFace download benefits from auth, set <code>HF_TOKEN</code>.</li>
+      <li><strong>Network:</strong> the first ~87/91 GB GGUF download benefits from good bandwidth. If your HuggingFace download benefits from auth, set <code>HF_TOKEN</code>.</li>
     </ul>
 
     <div class="callout" id="ram96">
