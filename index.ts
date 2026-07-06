@@ -105,7 +105,7 @@ const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API
 //
 // When raising DS4_CONTEXT_KB you should normally also raise
 // DS4_KV_DISK_SPACE_MB so the on-disk KV cache can hold a full working set
-// (e.g. 32768 for 1 M context).
+// (e.g. 65536 or higher for 1 M context).
 //
 // Default KV disk budget is RAM-tiered when DS4_KV_DISK_SPACE_MB is unset:
 //   128 GB+  → 65536 MiB (64 GB) — keeps long agent-session prefixes on disk
@@ -114,7 +114,7 @@ const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API
 //   96–127 GB → 32768 MiB (32 GB)
 //   else      → 8192 MiB (legacy 8 GB floor)
 //
-// The 1 M path (DS4_CONTEXT_KB=1024 + 32 GB KV) was measured on a 128 GB M5 Max:
+// The 1 M path (DS4_CONTEXT_KB=1024 + 65536 MiB KV) was measured on a 128 GB M5 Max:
 // ≈ 21.3 GB live KV buffers, server reached "listening" successfully.
 // On 96 GB machines keep ≤ 256 unless other memory usage is minimal.
 const CONTEXT_KB = (process.env.DS4_CONTEXT_KB ?? "100").trim();
