@@ -79,6 +79,8 @@ function renderTo(jpegPath, tmpRoot) {
     "--disable-gpu",
     "--hide-scrollbars",
     "--force-device-scale-factor=1",
+    "--run-all-compositor-stages-before-draw",
+    "--virtual-time-budget=2000",
     `--window-size=${width},${height}`,
     `--screenshot=${pngPath}`,
     pathToFileURL(sourceHtml).href,

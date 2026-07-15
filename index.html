@@ -10,76 +10,85 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=d3287741e18c">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=dcb798057471">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="pi-ds4 Guide card showing current v0.4.1 local DeepSeek V4 Flash metrics: 87/91 GB GGUF weights, 545 t/s prefill, and 35 t/s inference on M5 Max.">
+<meta property="og:image:alt" content="Atmospheric grayscale pi-ds4 Guide card with an ocean horizon and current local inference readout: 87/91 GB GGUF weights, 545 t/s prefill, and 35 t/s inference on M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=d3287741e18c">
-<meta name="theme-color" content="#faf8f5" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0f1923" media="(prefers-color-scheme: dark)">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=dcb798057471">
+<meta name="theme-color" content="#ebe7e4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Iansui&family=JetBrains+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Iansui&amp;family=JetBrains+Mono:wght@400;500&amp;family=Mozilla+Headline:wght@200..700&amp;family=Source+Sans+3:wght@400;600&amp;family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&amp;display=swap" rel="stylesheet">
 
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  /* light — matches audreyt.org / cyberambassador.tw / good-enough-ancestor */
-  --ink:        #0f1923;
-  --paper:      #faf8f5;
-  --warm:       #f4f1ec;
-  --surface:    #ffffff;
-  --heading:    #0f1923;
-  --gold:       #7d6430;
-  --gold-light: #c9a961;
-  --teal:       #1f6772;  /* darkened from #2a7f8a for ≥4.5:1 contrast on --paper */
-  --slate:      #5a6577;
-  --text:       #2c3e50;
-  --muted:      #5f6a7d;
-  --border:     #e0ddd7;
-  --line:       rgba(125,100,48,0.18);
-  --line-strong:rgba(125,100,48,0.32);
-  --card-bg:    rgba(125,100,48,0.035);
-  --code-bg:    #1a232f;
-  --code-fg:    #e8e4dc;
-  --code-comment: #8a96a8;
-  --code-string:  #c9a961;
-  --code-kw:      #4bc3d4;
-  --grain-opacity: 0.024;
+  /* Pi-family field guide: moonstone paper, tidal blue, mono chrome. */
+  --ink:        #252f3d;
+  --paper:      #ebe7e4;
+  --warm:       #f0f2f3;
+  --surface:    #f3f2f0;
+  --heading:    #13110f;
+  --accent:     #4b607c;
+  --accent-bright: #6a9fcc;
+  --link:       #844f3b;
+  /* Semantic aliases retained for the guide's existing components. */
+  --gold:       var(--accent);
+  --gold-light: var(--accent-bright);
+  --teal:       var(--link);
+  --slate:      #5c5752;
+  --text:       #384251;
+  --muted:      #5c5752;
+  --border:     #b3ada7;
+  --line:       rgba(92,87,82,0.22);
+  --line-strong:rgba(75,96,124,0.34);
+  --card-bg:    rgba(75,96,124,0.045);
+  --page-grid-minor: rgba(37,47,61,0.035);
+  --page-grid-major: rgba(37,47,61,0.07);
+  --code-bg:    #252f3d;
+  --code-fg:    #f0f2f3;
+  --code-comment: #9aa3ad;
+  --code-string:  #e1b06e;
+  --code-kw:      #8db8dc;
+  --grain-opacity: 0.018;
 
+  --headline:   'Mozilla Headline', 'Iansui', system-ui, sans-serif;
   --serif:      'Spectral', 'Iansui', Georgia, serif;
   --sans:       'Source Sans 3', system-ui, -apple-system, sans-serif;
   --cjk:        'Iansui', 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
-  --serif-cjk:  'Iansui', 'Spectral', Georgia, serif;
+  --serif-cjk:  'Iansui', 'Mozilla Headline', system-ui, sans-serif;
   --cursive:    'Kaiti TC', 'DFKai-SB', 'BiauKai', 'STKaiti', cursive;
   --mono:       'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink:        #e8e4dc;
-    --paper:      #0f1923;
-    --warm:       #161e28;
-    --surface:    #1c2535;
-    --heading:    #e8e4dc;
-    --gold:       #c9a961;
-    --gold-light: #d9c08a;
-    --teal:       #4bc3d4;
-    --slate:      #8a96a8;
-    --text:       #b8b4ac;
-    --muted:      #8a96a8;
-    --border:     rgba(255,255,255,0.1);
-    --line:       rgba(201,169,97,0.20);
-    --line-strong:rgba(201,169,97,0.40);
-    --card-bg:    rgba(201,169,97,0.05);
-    --code-bg:    #08090c;
-    --code-fg:    #e8e4dc;
-    --grain-opacity: 0.04;
+    --ink:        #f0f2f3;
+    --paper:      #1a1a1a;
+    --warm:       #23272e;
+    --surface:    #252f3d;
+    --heading:    #f3f2f0;
+    --accent:     #6a9fcc;
+    --accent-bright: #9fc5e4;
+    --link:       #e1b06e;
+    --slate:      #a3a7ac;
+    --text:       #d7d9dc;
+    --muted:      #a3a7ac;
+    --border:     rgba(255,255,255,0.14);
+    --line:       rgba(240,242,243,0.13);
+    --line-strong:rgba(106,159,204,0.42);
+    --card-bg:    rgba(106,159,204,0.065);
+    --page-grid-minor: rgba(240,242,243,0.025);
+    --page-grid-major: rgba(240,242,243,0.055);
+    --code-bg:    #09090b;
+    --code-fg:    #f0f2f3;
+    --grain-opacity: 0.032;
   }
 }
 
@@ -88,7 +97,15 @@ html { scroll-behavior: smooth; scroll-padding-top: 32px; color-scheme: light da
 body {
   font-family: var(--serif);
   color: var(--text);
-  background: var(--paper);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--page-grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--page-grid-major) 1px, transparent 1px),
+    linear-gradient(var(--page-grid-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--page-grid-minor) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+  background-position: center top;
+  background-attachment: fixed;
   line-height: 1.7;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
@@ -115,42 +132,48 @@ html:has(#lang-zh:checked) blockquote { font-style: normal; font-family: var(--c
 
 .lang-toggle {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  right: clamp(1.25rem, 5vw, 4.7rem);
+  bottom: clamp(1.25rem, 5vw, 4.7rem);
   z-index: 10002;
-  background: rgba(15,25,35,0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 3px;
-  font-family: var(--sans);
-  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
   font-weight: 500;
-  color: rgba(255,255,255,0.7);
-  padding: 6px 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.9);
+  padding: 7px 10px;
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.5);
+  transition: color 0.25s, border-color 0.25s, background 0.25s, box-shadow 0.25s;
   line-height: 1;
   user-select: none;
 }
-.lang-toggle:hover { color: var(--gold-light); border-color: var(--gold-light); }
-.lang-toggle [lang="zh-TW"] { font-family: var(--cjk); font-weight: 700; }
+.lang-toggle:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,0.48);
+  background: rgba(15,18,20,0.12);
+}
+.lang-toggle [lang="zh-TW"] { font-family: var(--cjk); font-weight: 700; letter-spacing: 0.06em; }
 .lang-toggle.scrolled {
-  background: rgba(250,248,245,0.85);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
   border-color: var(--line-strong);
   color: var(--muted);
+  box-shadow: 0 5px 18px rgba(19,17,15,0.09);
+  text-shadow: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
-.lang-toggle.scrolled:hover { color: var(--gold); border-color: var(--gold); }
+.lang-toggle.scrolled:hover { color: var(--accent); border-color: var(--accent); }
 
-@media (prefers-color-scheme: dark) {
-  .lang-toggle.scrolled { background: rgba(17,24,32,0.85); border-color: var(--line-strong); color: var(--muted); }
-  .lang-toggle.scrolled:hover { color: var(--gold-light); border-color: var(--gold-light); }
+@media (max-width: 600px) {
+  .lang-toggle { right: 16px; bottom: 16px; }
 }
-
-@media (max-width: 600px) { .lang-toggle { top: 16px; right: 16px; } }
 @media print { .lang-toggle { display: none !important; } }
 
-/* signature grain overlay */
+/* Paper grain shared with the Pi/Earendil visual family. */
 body::after {
   content: '';
   position: fixed;
@@ -192,6 +215,7 @@ a:hover { color: var(--gold); text-decoration-color: var(--gold); }
   max-width: 960px;
   margin: 0 auto;
   padding: 0 32px;
+  overflow-x: clip;
 }
 
 .shell-narrow {
@@ -206,12 +230,20 @@ a:hover { color: var(--gold); text-decoration-color: var(--gold); }
 /* ─── header ─── */
 
 header.site {
+  position: absolute;
+  top: clamp(1.5rem, 5vw, 4.7rem);
+  left: clamp(1.5rem, 5vw, 4.7rem);
+  right: clamp(1.5rem, 5vw, 4.7rem);
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28px 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
   opacity: 0;
-  animation: fadeUp 0.7s ease 0.3s forwards;
+  animation: fadeUp 1.1s ease 0.2s forwards;
 }
 
 @keyframes fadeUp {
@@ -220,142 +252,314 @@ header.site {
 }
 
 .name {
-  font-family: var(--serif);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--heading);
-  text-decoration: none;
-  letter-spacing: 0.01em;
-}
-.name:hover { color: var(--gold); text-decoration: none; }
-.name .cjk {
-  font-family: var(--cjk);
-  font-size: 0.72em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
   font-weight: 500;
-  opacity: 0.8;
-  margin-left: 6px;
+  color: rgba(255,255,255,0.94);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.45);
+}
+.name svg {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  color: rgba(255,255,255,0.96);
+  filter: drop-shadow(0 1px 8px rgba(0,0,0,0.24));
+}
+.name:hover {
+  color: #fff;
+  text-decoration: none;
+  text-shadow: 0 0 8px rgba(255,255,255,0.72);
 }
 
 .crumbs {
-  font-family: var(--sans);
-  font-size: 0.72rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: rgba(255,255,255,0.76);
   display: flex;
   gap: 1.25rem;
   align-items: center;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.46);
 }
-
 .crumbs .cjk-tag { font-family: var(--cjk); letter-spacing: 0.08em; }
 
-/* ─── hero ─── */
+@media (max-width: 680px) {
+  header.site {
+    top: 22px;
+    left: 22px;
+    right: 22px;
+  }
+  .name { font-size: 0.66rem; gap: 0.6rem; }
+  .name svg { width: 30px; height: 30px; }
+  .crumbs { gap: 0.75rem; font-size: 0.58rem; }
+  .header-credit { display: none; }
+}
+
+/* ─── atmospheric hero: Earendil horizon, Pi instrument beneath ─── */
 
 .hero {
-  padding: clamp(3rem, 8vw, 7rem) 0 clamp(2.5rem, 5vw, 4rem);
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  padding: clamp(7.5rem, 15vh, 10rem) clamp(1.4rem, 6vw, 6rem) clamp(7rem, 14vh, 9rem);
+  color: rgba(255,255,255,0.95);
+  background:
+    linear-gradient(180deg, #aeb2b4 0%, #8d9498 53%, #4a5358 53.2%, #20262a 100%);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 0 22%, rgba(14,18,21,0.08) 66%, rgba(9,12,14,0.38) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.05), transparent 35%, rgba(10,14,17,0.14) 72%, rgba(5,8,10,0.32));
+}
+
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: min(900px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   opacity: 0;
-  animation: fadeUp 0.9s ease 0.45s forwards;
+  animation: heroContentIn 1.5s ease 0.45s forwards;
+}
+
+@keyframes heroContentIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .hero .eyebrow {
-  font-family: var(--sans);
-  font-size: 0.78rem;
+  font-family: var(--mono);
+  font-size: 0.65rem;
   font-weight: 500;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 1.75rem;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 1.6rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.8rem;
 }
-.hero .eyebrow::before {
+.hero .eyebrow::before,
+.hero .eyebrow::after {
   content: '';
-  width: 28px;
+  width: 24px;
   height: 1px;
-  background: var(--gold);
-  display: inline-block;
+  background: rgba(255,255,255,0.45);
 }
 
 .hero h1 {
   font-family: var(--serif-cjk);
-  font-size: clamp(2.4rem, 6.5vw, 4.5rem);
-  font-weight: 600;
-  line-height: 1.18;
-  letter-spacing: 0.02em;
-  color: var(--heading);
-  margin-bottom: 1.5rem;
-  max-width: 22ch;
+  font-size: clamp(2.75rem, 5.8vw, 5rem);
+  font-weight: 350;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  color: rgba(255,255,255,0.98);
+  margin: 0 auto 1.8rem;
+  max-width: 18ch;
+  text-wrap: balance;
+  text-shadow: 0 2px 18px rgba(0,0,0,0.28);
 }
 
 .hero h1 em {
   font-family: var(--cursive);
-  font-style: normal;
-  color: var(--gold);
-  font-weight: 600;
+  color: inherit;
+  font-weight: 400;
 }
 
 .hero .standfirst {
-  font-family: var(--cjk);
-  font-size: clamp(1.05rem, 1.7vw, 1.18rem);
+  font-family: var(--serif);
+  font-size: clamp(1rem, 1.45vw, 1.16rem);
+  font-style: italic;
   font-weight: 400;
-  line-height: 2;
-  color: var(--text);
-  max-width: 38rem;
-  margin-bottom: 2.25rem;
+  line-height: 1.62;
+  color: rgba(255,255,255,0.86);
+  max-width: 43rem;
+  margin: 0 auto 2.2rem;
+  text-wrap: pretty;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.36);
+}
+html:has(#lang-zh:checked) .hero .standfirst {
+  font-family: var(--cjk);
+  font-style: normal;
+  line-height: 1.85;
 }
 
 .byline {
-  font-family: var(--sans);
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: rgba(255,255,255,0.64);
   display: flex;
-  gap: 1.5rem;
+  justify-content: center;
+  gap: 0.75rem 1.4rem;
   flex-wrap: wrap;
+  max-width: 52rem;
 }
 .byline span { display: inline-flex; gap: .35rem; align-items: baseline; }
-.byline b { color: var(--text); font-weight: 600; }
+.byline b { color: rgba(255,255,255,0.9); font-weight: 500; }
 
-/* hero ledger — stats row */
-
-.ledger {
-  margin: 3rem 0 0;
-  padding: 1.75rem 0 0;
-  border-top: 1px solid var(--line);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+.hero-cue {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: clamp(1.5rem, 4.5vh, 3rem);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.68);
+  text-decoration: none;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.45);
+}
+.hero-cue::after {
+  content: '';
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(rgba(255,255,255,0.7), transparent);
+  animation: cueDrift 1.8s ease-in-out infinite alternate;
+}
+.hero-cue:hover {
+  color: #fff;
+  text-decoration: none;
+}
+@keyframes cueDrift {
+  from { transform: translateY(0); opacity: 0.45; }
+  to { transform: translateY(7px); opacity: 1; }
 }
 
-@media (max-width: 600px) {
-  .ledger { grid-template-columns: 1fr; gap: 1.25rem; }
+@media (max-width: 680px) {
+  .hero {
+    padding: 7rem 22px 6.5rem;
+    min-height: max(100svh, 760px);
+  }
+  .hero .eyebrow { font-size: 0.58rem; letter-spacing: 0.14em; margin-bottom: 1.25rem; }
+  .hero .eyebrow::before, .hero .eyebrow::after { width: 15px; }
+  .hero h1 { font-size: clamp(2.45rem, 11vw, 3.4rem); margin-bottom: 1.4rem; }
+  .hero .standfirst { font-size: 0.95rem; line-height: 1.58; margin-bottom: 1.5rem; }
+  html:has(#lang-zh:checked) .hero .standfirst { line-height: 1.72; }
+  .byline { font-size: 0.57rem; gap: 0.55rem 0.9rem; }
+  .hero-cue { bottom: 1.35rem; }
+}
+
+/* System readout bridges the atmospheric opening into the Pi field guide. */
+.field-bridge {
+  padding: clamp(4.5rem, 9vw, 7rem) 0 clamp(3.5rem, 7vw, 5.5rem);
+}
+.bridge-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.bridge-kicker {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.field-bridge h2 {
+  font-family: var(--serif-cjk);
+  font-size: clamp(1.8rem, 4.3vw, 3rem);
+  font-weight: 430;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--heading);
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.ledger {
+  margin: 2.4rem 0 0;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface) 76%, transparent);
+  box-shadow: 0 8px 28px rgba(120,98,81,0.07);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.ledger-item {
+  min-width: 0;
+  padding: 1.25rem 1.35rem 1.4rem;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.ledger-item:nth-child(3n) { border-right: 0; }
+.ledger-item:nth-last-child(-n + 3) { border-bottom: 0; }
+
+@media (max-width: 680px) {
+  .bridge-heading { align-items: flex-start; flex-direction: column; gap: 0.8rem; }
+  .ledger { grid-template-columns: 1fr; }
+  .ledger-item { border-right: 0; border-bottom: 1px solid var(--line); }
+  .ledger-item:nth-last-child(-n + 3) { border-bottom: 1px solid var(--line); }
+  .ledger-item:last-child { border-bottom: 0; }
 }
 
 .ledger-item .num {
-  font-family: var(--serif);
-  font-size: clamp(1.75rem, 3.5vw, 2.4rem);
+  font-family: var(--headline);
+  font-size: clamp(1.85rem, 3.5vw, 2.55rem);
   font-weight: 400;
   color: var(--heading);
   line-height: 1;
-  margin-bottom: 0.4rem;
-  letter-spacing: -0.01em;
+  margin-bottom: 0.55rem;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
 }
 .ledger-item .num small {
-  font-family: var(--sans);
-  font-size: 0.6em;
+  font-family: var(--mono);
+  font-size: 0.43em;
   font-weight: 500;
-  color: var(--gold);
-  margin-left: 0.2em;
+  color: var(--accent);
+  margin-left: 0.25em;
+  letter-spacing: 0;
 }
 .ledger-item .label {
   font-family: var(--cjk);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 400;
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 /* ─── divider rule ─── */
@@ -396,7 +600,7 @@ header.site {
 }
 
 .primer-label {
-  font-family: var(--sans);
+  font-family: var(--mono);
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -664,7 +868,7 @@ header.site {
   margin: 0.8rem 0 0.6rem;
 }
 .license-matrix thead th {
-  font-family: var(--sans);
+  font-family: var(--mono);
   font-weight: 600;
   font-size: 0.74rem;
   letter-spacing: 0.14em;
@@ -715,7 +919,7 @@ header.site {
   line-height: 1;
 }
 .caution .caution-label {
-  font-family: var(--sans);
+  font-family: var(--mono);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -736,7 +940,7 @@ header.site {
 }
 
 .toc-label {
-  font-family: var(--sans);
+  font-family: var(--mono);
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.22em;
@@ -816,7 +1020,7 @@ header.site {
 }
 
 .chapter-eyebrow {
-  font-family: var(--sans);
+  font-family: var(--mono);
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -1067,7 +1271,7 @@ kbd {
 .callout-teal { border-left-color: var(--teal); }
 
 .callout-label {
-  font-family: var(--sans);
+  font-family: var(--mono);
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -1139,7 +1343,7 @@ kbd {
 .compare-card.after  { border-top: 2px solid var(--gold); background: var(--card-bg); }
 
 .compare-tag {
-  font-family: var(--sans);
+  font-family: var(--mono);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -1335,7 +1539,7 @@ kbd {
 .seq-body h4 .pivot-tag {
   display: inline-block;
   margin-left: 0.6rem;
-  font-family: var(--sans);
+  font-family: var(--mono);
   font-size: 0.62rem;
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -1383,7 +1587,7 @@ kbd {
 
 .coda-license {
   margin-top: 0;
-  font-family: var(--sans);
+  font-family: var(--mono);
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -1415,7 +1619,38 @@ kbd {
 /* ─── print ─── */
 @media print {
   body { background: #fff; color: #000; }
-  body::after, .progress, .copy-btn { display: none; }
+  body::after, .progress, .copy-btn, .lang-toggle, .hero-canvas, .hero::before, .hero-cue { display: none; }
+  header.site {
+    position: static;
+    opacity: 1;
+    animation: none;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #999;
+  }
+  .name, .name svg, .crumbs {
+    color: #000;
+    filter: none;
+    text-shadow: none;
+  }
+  .hero {
+    min-height: auto;
+    padding: 3rem 0;
+    overflow: visible;
+    background: none;
+    color: #000;
+  }
+  .hero-content {
+    width: auto;
+    align-items: flex-start;
+    text-align: left;
+    opacity: 1;
+    animation: none;
+  }
+  .hero .eyebrow, .hero h1, .hero .standfirst, .byline, .byline b {
+    color: #000;
+    text-shadow: none;
+  }
+  .field-bridge { padding: 2rem 0 3rem; }
   .codeblock { background: #f4f1ec; color: #000; border-color: #999; }
   .codeblock pre, .codeblock pre .c, .codeblock pre .k, .codeblock pre .s, .codeblock pre .v { color: #000; }
   .chapter { page-break-inside: avoid; opacity: 1; animation: none; }
@@ -1427,16 +1662,13 @@ kbd {
    and on user toggle on audreyt.org. Same single file serves both —
    the JS keeps <html lang> in sync with the active language.
 
-   Strategy: redefine the CJK-leaning font variables to Latin
-   equivalents (Outfit body, Cormorant Garamond accents) so every
-   place that says var(--cjk) / var(--serif-cjk) / var(--cursive)
-   transparently uses the right Latin stack. CJK fallbacks remain
-   in the new stacks for any incidental Chinese characters in
-   English-mode content (e.g. the unsteered model output quoted in
-   the comparison card).                                          */
+   Strategy: map display roles to Mozilla Headline in English while
+   preserving the Iansui/Kaiti stacks for Traditional Chinese.
+   Spectral remains the open-licensed italic voice for emphasis and
+   pullquotes; Source Sans 3 carries long-form English body copy. */
 html[lang="en-GB"] {
   --cjk:       var(--sans);
-  --serif-cjk: var(--serif);
+  --serif-cjk: var(--headline);
   --cursive:   var(--serif);
 }
 html[lang="en-GB"] body { line-height: 1.7; font-weight: 400; }
@@ -1451,8 +1683,8 @@ html[lang="en-GB"] dl dd,
 html[lang="en-GB"] .ledger-item .label { line-height: 1.65; letter-spacing: 0; }
 html[lang="en-GB"] .chapter p { font-size: 1.02rem; }
 
-/* Em emphasis: Cormorant Garamond italic in English (the CJK rule
-   forces font-style: normal because Kaiti has no italic variant). */
+/* Emphasis keeps Spectral's italic voice; Chinese mode uses Kaiti
+   upright because its calligraphic forms already provide contrast. */
 html[lang="en-GB"] .hero h1 em,
 html[lang="en-GB"] .primer h2 em,
 html[lang="en-GB"] .chapter h2 em,
@@ -1466,9 +1698,9 @@ html[lang="en-GB"] em { font-style: italic; font-weight: 400; }
 html[lang="en-GB"] .pullquote { font-family: var(--serif); font-style: italic; }
 html[lang="en-GB"] .pullquote em { font-style: normal; }
 
-/* Slightly tighter hero h1 in English so the long English title
-   doesn't outrun its container at small viewports. */
-html[lang="en-GB"] .hero h1 { letter-spacing: -0.005em; }
+/* Mozilla Headline is compact and uniwidth; keep the long English
+   title optically tight without squeezing its Chinese counterpart. */
+html[lang="en-GB"] .hero h1 { letter-spacing: -0.04em; }
 @media (max-width: 600px) {
   html[lang="en-GB"] .hero h1 { font-size: clamp(2.1rem, 8vw, 3rem); }
 }
@@ -1527,44 +1759,63 @@ document.documentElement.classList.add('js');
 }
 </style>
 
-<div class="shell">
 
   <header class="site">
-    <a class="name" href="https://audreyt.org/">Audrey&nbsp;Tang <span class="cjk">唐鳳</span></a>
+    <a class="name" href="./" aria-label="pi-ds4 home">
+      <!-- Pi mark: © 2026 Earendil Inc. and contributors; MIT-licensed source: https://github.com/earendil-works/pi-website/blob/main/LICENSE -->
+      <svg viewBox="0 0 800 800" aria-hidden="true">
+        <path fill="currentColor" fill-rule="evenodd" d="M165.29 165.29H517.36V400H400V517.36H282.65V634.72H165.29ZM282.65 282.65V400H400V282.65Z"/>
+        <path fill="currentColor" d="M517.36 400H634.72V634.72H517.36Z"/>
+      </svg>
+      <span>pi / ds4</span>
+    </a>
     <div class="crumbs">
-      <span>pi&#8209;ds4</span>
+      <span class="header-credit"><span lang="zh-TW">唐鳳製作</span><span lang="en-GB">by Audrey Tang</span></span>
       <span class="cjk-tag"><span lang="zh-TW">指南</span><span lang="en-GB">Guide</span></span>
       <span>v 0.4.1</span>
     </div>
   </header>
 
   <!-- ─────────────  HERO  ───────────── -->
-  <section class="hero">
-    <div class="eyebrow"><span lang="zh-TW">一行安裝 · 整本指南</span><span lang="en-GB">One-line install · The whole guide</span></div>
-    <h1>
-      <span lang="zh-TW">把<em>前沿模型</em>請進你的 MacBook</span>
-      <span lang="en-GB">Invite the <em>frontier model</em> onto your MacBook</span>
-    </h1>
-    <p class="standfirst" lang="zh-TW">
-      在一台 96 GB 以上的 Apple Silicon Mac 上本機運行 284 B 參數的
-      DeepSeek V4 Flash——沒有雲端呼叫、沒有 API 費用、沒有逐 token 計價、
-      沒有頻率限制；模型的「方向性引導」轉盤，握在自己手上。
-      預設固定 seed 與工具呼叫 ID，讓決策軌跡可重跑、比對、質疑。
-    </p>
-    <p class="standfirst" lang="en-GB">
-      Run the 284&#8209;billion-parameter DeepSeek V4 Flash on your own
-      96&#8209;GB Apple Silicon Mac &mdash; no cloud calls, no API fees, no
-      per&#8209;token billing, no rate limits. The model&rsquo;s directional
-      steering dial stays in your hands. Stable seeds and tool-call IDs make
-      decision traces repeatable, comparable, and contestable.
-    </p>
-    <div class="byline">
-      <span><b>Audrey Tang</b> <span lang="zh-TW">唐鳳</span><span lang="en-GB">唐鳳</span></span>
-      <span><span lang="zh-TW">分叉自</span><span lang="en-GB">forked from</span> <b>mitsuhiko/pi&#8209;ds4</b></span>
-      <span><span lang="zh-TW">引擎</span><span lang="en-GB">engine</span> <b>DwarfStar</b> · <b>antirez/ds4</b></span>
-      <span><span lang="zh-TW">2026 夏</span><span lang="en-GB">Summer 2026</span></span>
+  <section class="hero" aria-labelledby="hero-title">
+    <canvas class="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-content">
+      <div class="eyebrow"><span lang="zh-TW">一行安裝 · 整本指南</span><span lang="en-GB">One-line install · The whole guide</span></div>
+      <h1 id="hero-title">
+        <span lang="zh-TW">把<em>前沿模型</em>請進你的 MacBook</span>
+        <span lang="en-GB">Invite the <em>frontier model</em> onto your MacBook</span>
+      </h1>
+      <p class="standfirst" lang="zh-TW">
+        在一台 96 GB 以上的 Apple Silicon Mac 上本機運行 284 B 參數的
+        DeepSeek V4 Flash——沒有雲端呼叫、沒有 API 費用、沒有逐 token 計價、
+        沒有頻率限制；模型的「方向性引導」轉盤，握在自己手上。
+        預設固定 seed 與工具呼叫 ID，讓決策軌跡可重跑、比對、質疑。
+      </p>
+      <p class="standfirst" lang="en-GB">
+        Run the 284&#8209;billion-parameter DeepSeek V4 Flash on your own
+        96&#8209;GB Apple Silicon Mac &mdash; no cloud calls, no API fees, no
+        per&#8209;token billing, no rate limits. The model&rsquo;s directional
+        steering dial stays in your hands. Stable seeds and tool-call IDs make
+        decision traces repeatable, comparable, and contestable.
+      </p>
+      <div class="byline">
+        <span><b>Audrey Tang</b> <span lang="zh-TW">唐鳳</span><span lang="en-GB">唐鳳</span></span>
+        <span><span lang="zh-TW">分叉自</span><span lang="en-GB">forked from</span> <b>mitsuhiko/pi&#8209;ds4</b></span>
+        <span><span lang="zh-TW">引擎</span><span lang="en-GB">engine</span> <b>DwarfStar</b> · <b>antirez/ds4</b></span>
+        <span><span lang="zh-TW">2026 夏</span><span lang="en-GB">Summer 2026</span></span>
+      </div>
     </div>
+    <a class="hero-cue" href="#guide-entry">
+      <span lang="zh-TW">進入指南</span><span lang="en-GB">Enter the field guide</span>
+    </a>
+  </section>
 
+<div class="shell">
+  <section class="field-bridge" id="guide-entry" aria-labelledby="guide-entry-title">
+    <div class="bridge-heading">
+      <div class="bridge-kicker"><span lang="zh-TW">本機推論 · 系統讀數</span><span lang="en-GB">Local inference · system readout</span></div>
+      <h2 id="guide-entry-title"><span lang="zh-TW">先看這台機器的六個讀數</span><span lang="en-GB">Six readings before the field guide</span></h2>
+    </div>
     <div class="ledger">
       <div class="ledger-item">
         <div class="num">284<small>B</small></div>
@@ -4982,6 +5233,147 @@ STATE=~/.pi/ds4/server.json
     if (!ticking){ requestAnimationFrame(update); ticking = true; }
   }, { passive: true });
   update();
+
+  // Procedural horizon: a quiet 2D canvas, paused whenever the hero leaves view.
+  const heroCanvas = hero && hero.querySelector('.hero-canvas');
+  if (heroCanvas){
+    const ctx = heroCanvas.getContext('2d');
+    if (ctx){
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const ripples = [];
+      let canvasWidth = 1;
+      let canvasHeight = 1;
+      let horizon = 1;
+      let skyGradient;
+      let skyGlow;
+      let waterGradient;
+      let active = true;
+      let animationFrame = 0;
+
+      function resizeHeroCanvas(){
+        const rect = hero.getBoundingClientRect();
+        const scale = Math.min(window.devicePixelRatio || 1, 1.5);
+        canvasWidth = Math.max(1, Math.round(rect.width));
+        canvasHeight = Math.max(1, Math.round(hero.offsetHeight));
+        horizon = canvasHeight * 0.53;
+        heroCanvas.width = Math.round(canvasWidth * scale);
+        heroCanvas.height = Math.round(canvasHeight * scale);
+        ctx.setTransform(scale, 0, 0, scale, 0, 0);
+
+        skyGradient = ctx.createLinearGradient(0, 0, 0, horizon);
+        skyGradient.addColorStop(0, '#aeb2b4');
+        skyGradient.addColorStop(0.58, '#9ba1a4');
+        skyGradient.addColorStop(1, '#7a8388');
+        waterGradient = ctx.createLinearGradient(0, horizon, 0, canvasHeight);
+        waterGradient.addColorStop(0, '#657075');
+        waterGradient.addColorStop(0.48, '#424b50');
+        waterGradient.addColorStop(1, '#1d2327');
+        skyGlow = ctx.createRadialGradient(canvasWidth * 0.5, horizon * 0.78, 0, canvasWidth * 0.5, horizon * 0.78, canvasWidth * 0.58);
+        skyGlow.addColorStop(0, 'rgba(255,255,255,0.16)');
+        skyGlow.addColorStop(0.52, 'rgba(255,255,255,0.035)');
+        skyGlow.addColorStop(1, 'rgba(255,255,255,0)');
+
+        if (reducedMotion) drawHeroScene(0);
+      }
+
+      function drawHeroScene(time){
+        const seconds = time * 0.001;
+        ctx.fillStyle = skyGradient;
+        ctx.fillRect(0, 0, canvasWidth, horizon);
+
+        ctx.fillStyle = skyGlow;
+        ctx.fillRect(0, 0, canvasWidth, horizon);
+
+        ctx.fillStyle = waterGradient;
+        ctx.fillRect(0, horizon, canvasWidth, canvasHeight - horizon);
+        ctx.strokeStyle = 'rgba(240,242,243,0.34)';
+        ctx.lineWidth = 0.75;
+        ctx.beginPath();
+        ctx.moveTo(0, horizon + 0.5);
+        ctx.lineTo(canvasWidth, horizon + 0.5);
+        ctx.stroke();
+
+        const rows = 38;
+        const xStep = Math.max(9, Math.ceil(canvasWidth / 150));
+        ctx.strokeStyle = '#ebeff1';
+        for (let row = 0; row < rows; row++){
+          const depth = row / (rows - 1);
+          const baseY = horizon + 5 + Math.pow(depth, 1.62) * (canvasHeight - horizon + 46);
+          const amplitude = 1.3 + depth * 11;
+          ctx.beginPath();
+          for (let x = -xStep; x <= canvasWidth + xStep; x += xStep){
+            const wave =
+              Math.sin(x * 0.014 + seconds * 0.2 + row * 0.72) * amplitude +
+              Math.sin(x * 0.0052 - seconds * 0.11 + row * 1.63) * amplitude * 0.42;
+            const y = baseY + wave;
+            if (x === -xStep) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.globalAlpha = 0.055 + depth * 0.18;
+          ctx.lineWidth = 0.45 + depth * 0.85;
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = '#fff';
+
+        for (let index = ripples.length - 1; index >= 0; index--){
+          const ripple = ripples[index];
+          const age = Math.min(1, (time - ripple.started) / 1500);
+          if (age >= 1){
+            ripples.splice(index, 1);
+            continue;
+          }
+          ctx.beginPath();
+          ctx.ellipse(ripple.x, ripple.y, 12 + age * 110, 4 + age * 25, 0, 0, Math.PI * 2);
+          ctx.globalAlpha = (1 - age) * 0.36;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      function animateHero(time){
+        animationFrame = 0;
+        drawHeroScene(time);
+        if (active && !reducedMotion) animationFrame = requestAnimationFrame(animateHero);
+      }
+      function startHeroAnimation(){
+        active = true;
+        if (!animationFrame && !reducedMotion) animationFrame = requestAnimationFrame(animateHero);
+      }
+      function stopHeroAnimation(){
+        active = false;
+        if (animationFrame){
+          cancelAnimationFrame(animationFrame);
+          animationFrame = 0;
+        }
+      }
+
+      hero.addEventListener('pointerdown', function(event){
+        if (reducedMotion) return;
+        const rect = hero.getBoundingClientRect();
+        ripples.push({
+          x: event.clientX - rect.left,
+          y: Math.max(horizon + 4, event.clientY - rect.top),
+          started: performance.now()
+        });
+        startHeroAnimation();
+      }, { passive: true });
+
+      if ('ResizeObserver' in window) new ResizeObserver(resizeHeroCanvas).observe(hero);
+      else window.addEventListener('resize', resizeHeroCanvas, { passive: true });
+
+      if ('IntersectionObserver' in window && !reducedMotion){
+        new IntersectionObserver(function(entries){
+          if (entries[0].isIntersecting) startHeroAnimation();
+          else stopHeroAnimation();
+        }, { threshold: 0.02 }).observe(hero);
+      }
+
+      resizeHeroCanvas();
+      if (!reducedMotion) startHeroAnimation();
+    }
+  }
 
   // staggered fadeUp for chapters using IntersectionObserver
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){

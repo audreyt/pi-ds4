@@ -4,255 +4,269 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=1200, initial-scale=1">
 <title>pi-ds4 OG image</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Mozilla+Headline:wght@300;400;500;600&amp;family=Spectral:ital,wght@1,400;1,500&amp;display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #faf8f1;
-    --ink: #06111f;
-    --muted: #586475;
-    --gold: #b19449;
-    --gold-dark: #7d6430;
-    --teal: #1f7f7b;
-    --green: #4ce37c;
-    --panel: #06131f;
-    --panel-2: #081927;
-    --line: rgba(125, 100, 48, 0.30);
-    --panel-line: rgba(198, 214, 220, 0.22);
-    --serif: Georgia, 'Times New Roman', serif;
-    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --mono: 'SF Mono', ui-monospace, Menlo, Consolas, monospace;
+    --white: #f4f5f4;
+    --mist: #aeb3b5;
+    --sky: #8c9498;
+    --horizon: #5c666b;
+    --water: #1d2428;
+    --blue: #9fc5e4;
+    --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, Consolas, monospace;
+    --headline: 'Mozilla Headline', 'Arial Narrow', system-ui, sans-serif;
+    --serif: 'Spectral', Georgia, 'Times New Roman', serif;
   }
 
   * { box-sizing: border-box; }
   html, body { width: 1200px; height: 630px; margin: 0; overflow: hidden; }
   body {
-    background:
-      radial-gradient(circle at 77% 13%, rgba(177, 148, 73, 0.16), transparent 22%),
-      linear-gradient(180deg, rgba(255,255,255,0.56), transparent 58%),
-      var(--paper);
-    color: var(--ink);
-    font-family: var(--serif);
+    background: var(--water);
+    color: var(--white);
+    font-family: var(--headline);
   }
 
   .canvas {
     position: relative;
     width: 1200px;
     height: 630px;
-    padding: 54px 56px 42px 56px;
     isolation: isolate;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.18), transparent 38%),
+      linear-gradient(180deg, #b1b5b7 0%, var(--sky) 46%, var(--horizon) 47%, #3d474c 61%, var(--water) 100%);
   }
 
   .canvas::before {
     content: '';
     position: absolute;
     inset: 0;
-    z-index: -2;
-    opacity: 0.15;
-    background-image:
-      linear-gradient(115deg, transparent 0 72%, rgba(31,127,123,0.20) 72.2%, transparent 72.7%),
-      repeating-linear-gradient(105deg, transparent 0 17px, rgba(31,127,123,0.18) 18px, transparent 19px),
-      radial-gradient(circle at 78% 18%, transparent 0 88px, rgba(125,100,48,0.36) 89px 90px, transparent 91px 112px, rgba(125,100,48,0.22) 113px 114px, transparent 115px 145px);
-    background-size: 1200px 630px;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 46%, transparent 0 28%, rgba(8,12,14,0.08) 68%, rgba(5,8,10,0.36) 100%),
+      linear-gradient(180deg, rgba(255,255,255,0.04), transparent 42%, rgba(5,9,12,0.2));
   }
 
-  .mountains {
+  .canvas::after {
+    content: '';
     position: absolute;
+    inset: 0;
+    z-index: 8;
+    pointer-events: none;
+    opacity: 0.055;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    mix-blend-mode: soft-light;
+  }
+
+  .frame {
+    position: absolute;
+    inset: 26px;
+    z-index: 7;
+    border: 1px solid rgba(255,255,255,0.22);
+    pointer-events: none;
+  }
+  .frame::before,
+  .frame::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,255,255,0.45);
+  }
+  .frame::before { width: 34px; height: 1px; left: -1px; top: 92px; }
+  .frame::after { width: 1px; height: 34px; left: 92px; top: -1px; }
+
+  .water-lines {
+    position: absolute;
+    z-index: 0;
     left: 0;
     right: 0;
-    bottom: -8px;
-    height: 142px;
-    opacity: 0.36;
-    z-index: -1;
+    top: 294px;
+    bottom: 0;
+    opacity: 0.62;
   }
-  .mountains svg { width: 100%; height: 100%; display: block; }
+  .water-lines svg { width: 100%; height: 100%; display: block; }
 
+  .chrome {
+    position: absolute;
+    z-index: 4;
+    top: 47px;
+    left: 54px;
+    right: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.82);
+    text-shadow: 0 1px 10px rgba(0,0,0,0.42);
+  }
+  .brand { display: flex; align-items: center; gap: 13px; }
+  .brand svg { width: 34px; height: 34px; color: var(--white); filter: drop-shadow(0 1px 8px rgba(0,0,0,0.22)); }
+  .meta { display: flex; align-items: center; gap: 18px; }
+  .meta .divider { width: 24px; height: 1px; background: rgba(255,255,255,0.45); }
+
+  .hero {
+    position: absolute;
+    z-index: 3;
+    top: 119px;
+    left: 78px;
+    right: 78px;
+    text-align: center;
+    text-shadow: 0 2px 18px rgba(0,0,0,0.27);
+  }
   .eyebrow {
     display: flex;
     align-items: center;
-    gap: 18px;
-    width: 590px;
-    font-family: var(--sans);
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 0.23em;
-    text-transform: uppercase;
-    color: #071423;
-  }
-  .eyebrow .rule {
-    margin-top: 25px;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, #071423 0 48%, var(--gold) 48% 50%, #071423 50% 100%);
-    opacity: 0.95;
-  }
-
-  h1 {
-    margin: 36px 0 0 0;
-    font-size: 86px;
-    line-height: 0.95;
-    letter-spacing: -0.05em;
-    font-weight: 500;
-  }
-  .mark {
-    margin-top: 11px;
-    width: 42px;
-    height: 2px;
-    background: var(--gold);
-  }
-  .subtitle {
-    margin-top: 14px;
-    font-size: 43px;
-    line-height: 1.08;
-    letter-spacing: -0.035em;
-    font-weight: 600;
-    max-width: 570px;
-  }
-  .subtitle .nowrap { white-space: nowrap; }
-  .lede {
-    margin-top: 19px;
-    font-family: var(--sans);
-    font-size: 22px;
-    line-height: 1.42;
-    color: #26374a;
-    max-width: 570px;
-  }
-
-  .stats {
-    display: flex;
+    justify-content: center;
     gap: 14px;
-    margin-top: 27px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .eyebrow::before,
+  .eyebrow::after {
+    content: '';
+    width: 34px;
+    height: 1px;
+    background: rgba(255,255,255,0.4);
+  }
+  h1 {
+    margin: 17px 0 0;
+    font-family: var(--headline);
+    font-size: 78px;
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    font-weight: 430;
+    color: rgba(255,255,255,0.98);
+  }
+  .thesis {
+    margin-top: 15px;
+    font-family: var(--serif);
+    font-size: 34px;
+    line-height: 1.08;
+    font-style: italic;
+    font-weight: 400;
+    color: rgba(255,255,255,0.93);
+  }
+  .thesis em { color: #fff; font-weight: 500; }
+  .subline {
+    margin-top: 13px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.35;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.72);
+  }
+
+  .readout {
+    position: absolute;
+    z-index: 5;
+    left: 52px;
+    right: 52px;
+    bottom: 47px;
+    height: 132px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border: 1px solid rgba(220,232,238,0.34);
+    background: rgba(18,25,29,0.7);
+    box-shadow: 0 18px 52px rgba(0,0,0,0.24), inset 0 1px rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
   }
   .stat {
-    width: 164px;
-    min-height: 80px;
-    padding: 14px 13px 12px;
-    border: 1px solid rgba(177,148,73,0.38);
-    border-radius: 10px;
-    background: rgba(255,255,255,0.48);
-    box-shadow: 0 10px 28px rgba(125,100,48,0.10);
+    min-width: 0;
+    padding: 19px 15px 15px;
+    border-right: 1px solid rgba(220,232,238,0.18);
   }
-  .stat .big {
-    font-family: var(--serif);
-    font-size: 32px;
+  .stat:last-child { border-right: 0; }
+  .big {
+    font-family: var(--headline);
+    font-size: 34px;
     line-height: 1;
-    font-weight: 700;
-    letter-spacing: -0.03em;
+    font-weight: 430;
+    letter-spacing: -0.035em;
+    color: #fff;
     white-space: nowrap;
   }
-  .stat .label {
-    margin-top: 5px;
-    font-family: var(--sans);
-    font-size: 14px;
-    line-height: 1.18;
-    color: #24354a;
-  }
-
-  .foot {
-    position: absolute;
-    left: 56px;
-    bottom: 48px;
-    display: flex;
-    align-items: center;
-    gap: 22px;
-    font-family: var(--sans);
-    font-size: 16px;
-    color: #263244;
-  }
-  .foot strong { color: var(--ink); }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); opacity: 0.9; }
-
-  .terminal {
-    position: absolute;
-    right: 56px;
-    top: 64px;
-    width: 520px;
-    height: 500px;
-    border-radius: 19px;
-    padding: 24px 24px 22px;
-    background:
-      linear-gradient(180deg, rgba(7,22,35,0.96), rgba(2,13,22,0.98)),
-      var(--panel);
-    color: #eff7f8;
-    box-shadow: 0 24px 60px rgba(4,17,28,0.32), 0 2px 0 rgba(255,255,255,0.07) inset;
+  .big.compact { font-size: 29px; }
+  .big small {
+    margin-left: 4px;
     font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--blue);
   }
-  .term-bar { display: flex; align-items: center; gap: 9px; padding-bottom: 18px; border-bottom: 1px solid var(--panel-line); }
-  .light { width: 14px; height: 14px; border-radius: 50%; }
-  .red { background: #ff5f57; }
-  .yellow { background: #ffbd2e; }
-  .green { background: #28c840; }
-  .server { margin-left: auto; font-family: var(--sans); font-size: 14px; color: #d7e7e8; }
-  .server::before { content: ''; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--green); margin-right: 9px; }
-  .cmd { padding: 18px 0 17px; border-bottom: 1px solid var(--panel-line); font-size: 19px; color: #f5f6f2; }
-  .cmd .prompt { color: #70d37c; }
-  .model { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px 0 15px; border-bottom: 1px solid var(--panel-line); font-size: 17px; }
-  .model-name { color: #56d7ca; }
-  .model-name::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--green); margin-right: 9px; }
-  .model .kv { color: #ffffff; }
-  .model .kv b { color: #7eea74; font-weight: 700; }
-  .qa { padding: 20px 0 17px; border-bottom: 1px dashed rgba(198,214,220,0.28); }
-  .qa .question { color: #f6f7f2; font-size: 18px; margin-bottom: 14px; }
-  .qa .question b { color: #5de1d4; font-weight: 600; }
-  .line { display: flex; align-items: center; gap: 11px; margin: 10px 0; font-size: 17px; white-space: nowrap; }
-  .line .arrow { color: #56d7ca; font-weight: 900; }
-  .line .label { color: #5de1d4; }
-  .line .value { color: #fff; }
-  .mode { display: flex; align-items: center; gap: 12px; padding: 19px 0; border-bottom: 1px solid var(--panel-line); font-size: 18px; }
-  .mode .brain { color: #54d6ce; font-size: 28px; line-height: 1; }
-  .mode b { color: #8ee374; font-weight: 600; }
-  .term-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding-top: 19px; }
-  .term-stat { border-left: 1px solid rgba(198,214,220,0.28); padding-left: 14px; font-size: 13px; line-height: 1.28; color: #e8f0ef; }
-  .term-stat:first-child { border-left: 0; padding-left: 0; }
-  .term-stat b { display: block; color: #fff; font-size: 19px; line-height: 1.1; }
-  .term-stat span { color: #aabdc2; }
+  .label {
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.34;
+    letter-spacing: 0.025em;
+    color: rgba(238,243,245,0.72);
+  }
+  .label strong { color: rgba(255,255,255,0.94); font-weight: 500; }
 </style>
 </head>
 <body>
   <main class="canvas" aria-label="pi-ds4 Guide Open Graph image source">
-    <div class="eyebrow">
-      <span>One-line install · Directional steering · Local AI</span>
-    </div>
-    <div class="eyebrow" aria-hidden="true"><span class="rule"></span></div>
-
-    <h1>pi-ds4 Guide</h1>
-    <div class="mark" aria-hidden="true"></div>
-    <div class="subtitle">Drive DeepSeek V4 Flash<br><span class="nowrap">on your own 96+ GB Mac</span></div>
-    <div class="lede">Run a 284B-parameter MoE model locally with stable traces, 42 seed reproducibility, and RAM-tiered disk KV.</div>
-
-    <div class="stats" aria-label="current pi-ds4 facts">
-      <div class="stat"><div class="big">284B</div><div class="label">parameters<br>13B active</div></div>
-      <div class="stat"><div class="big">87/91 GB</div><div class="label">IQ2XXS / mixed GGUF weights</div></div>
-      <div class="stat"><div class="big">99</div><div class="label">commits in the 2026-07 pin</div></div>
-    </div>
-
-    <div class="foot">
-      <strong>Audrey Tang</strong><span class="dot"></span><span>forked from mitsuhiko/pi-ds4</span><span class="dot"></span><span>v 0.4.1</span>
-    </div>
-
-    <section class="terminal" aria-label="pi-ds4 server terminal card">
-      <div class="term-bar"><span class="light red"></span><span class="light yellow"></span><span class="light green"></span><span class="server">pi-ds4 server</span></div>
-      <div class="cmd"><span class="prompt">$</span> pi install github.com/audreyt/pi-ds4</div>
-      <div class="model"><div class="model-name">deepseek-v4-flash</div><div class="kv">ctx <b>100k</b> · KV <b>64GB</b></div></div>
-      <div class="qa">
-        <div class="question"><b>›</b> Question: Taiwan’s status?</div>
-        <div class="line"><span class="arrow">•</span><span class="label">Perspective A:</span><span class="value">de facto self-governance</span></div>
-        <div class="line"><span class="arrow">•</span><span class="label">Perspective B:</span><span class="value">unresolved sovereignty claims</span></div>
-        <div class="line"><span class="arrow">•</span><span class="label">Perspective C:</span><span class="value">international ambiguity</span></div>
-      </div>
-      <div class="mode"><span class="brain">⌁</span><span><b>Mode:</b> deliberative / uncertainty-aware</span></div>
-      <div class="term-stats">
-        <div class="term-stat"><b>96+ GB</b><span>Apple Silicon</span></div>
-        <div class="term-stat"><b>545 t/s</b><span>2k prefill</span></div>
-        <div class="term-stat"><b>35 t/s</b><span>2k inference</span></div>
-      </div>
-    </section>
-
-    <div class="mountains" aria-hidden="true">
-      <svg viewBox="0 0 1200 150" preserveAspectRatio="none" role="presentation">
-        <path d="M0 120 L80 95 L130 112 L205 72 L270 118 L330 84 L395 125 L455 88 L520 108 L590 58 L680 120 L760 64 L850 112 L930 76 L1015 117 L1088 92 L1200 124 L1200 150 L0 150 Z" fill="none" stroke="#1f7f7b" stroke-width="1.5"/>
-        <path d="M0 134 L92 103 L165 130 L240 88 L320 140 L390 102 L465 132 L530 98 L600 126 L690 72 L780 136 L860 92 L930 128 L1005 104 L1080 132 L1200 112" fill="none" stroke="#1f7f7b" stroke-width="0.9"/>
-        <path d="M40 142 L125 116 L210 144 M285 142 L362 112 L440 144 M550 144 L620 102 L710 144 M820 144 L910 112 L1000 144" fill="none" stroke="#1f7f7b" stroke-width="0.6" opacity="0.9"/>
+    <div class="water-lines" aria-hidden="true">
+      <svg viewBox="0 0 1200 336" preserveAspectRatio="none" role="presentation">
+        <defs>
+          <path id="wave" d="M-70 0 C 10 -13 75 13 150 0 S 290 -12 375 1 S 520 13 610 0 S 760 -14 850 0 S 1010 14 1095 0 S 1220 -9 1280 1" fill="none" stroke="rgba(238,243,245,.24)" stroke-width="1"/>
+        </defs>
+        <use href="#wave" transform="translate(0 8) scale(1 .72)" opacity=".45"/>
+        <use href="#wave" transform="translate(-36 29) scale(1.06 .78)" opacity=".42"/>
+        <use href="#wave" transform="translate(18 53) scale(.99 .82)" opacity=".46"/>
+        <use href="#wave" transform="translate(-58 80) scale(1.1 .88)" opacity=".5"/>
+        <use href="#wave" transform="translate(27 111) scale(1 .94)" opacity=".54"/>
+        <use href="#wave" transform="translate(-82 146) scale(1.13 1)" opacity=".58"/>
+        <use href="#wave" transform="translate(44 186) scale(1.02 1.08)" opacity=".62"/>
+        <use href="#wave" transform="translate(-95 230) scale(1.16 1.16)" opacity=".68"/>
+        <use href="#wave" transform="translate(12 280) scale(1.05 1.24)" opacity=".74"/>
+        <use href="#wave" transform="translate(-120 330) scale(1.2 1.3)" opacity=".78"/>
       </svg>
     </div>
+
+    <div class="frame" aria-hidden="true"></div>
+
+    <div class="chrome">
+      <div class="brand">
+        <!-- Pi mark: © 2026 Earendil Inc. and contributors; MIT-licensed source: https://github.com/earendil-works/pi-website/blob/main/LICENSE -->
+        <svg viewBox="0 0 800 800" aria-hidden="true">
+          <path fill="currentColor" fill-rule="evenodd" d="M165.29 165.29H517.36V400H400V517.36H282.65V634.72H165.29ZM282.65 282.65V400H400V282.65Z"/>
+          <path fill="currentColor" d="M517.36 400H634.72V634.72H517.36Z"/>
+        </svg>
+        <span>Pi / DS4</span>
+      </div>
+      <div class="meta"><span>Audrey Tang</span><span class="divider"></span><span>v 0.4.1</span></div>
+    </div>
+
+    <section class="hero">
+      <div class="eyebrow">Local inference · contestable traces</div>
+      <h1>pi-ds4 Guide</h1>
+      <div class="thesis">Invite the <em>frontier model</em> onto your Mac.</div>
+      <div class="subline">DeepSeek V4 Flash · your own 96+ GB Mac · no cloud calls</div>
+    </section>
+
+    <section class="readout" aria-label="Current pi-ds4 facts">
+      <div class="stat"><div class="big">284<small>B</small></div><div class="label">parameters<br><strong>13B active</strong></div></div>
+      <div class="stat"><div class="big compact">87/91<small>GB</small></div><div class="label">IQ2XXS / mixed<br>GGUF weights</div></div>
+      <div class="stat"><div class="big">545<small>t/s</small></div><div class="label">M5 Max<br><strong>prefill</strong></div></div>
+      <div class="stat"><div class="big">35<small>t/s</small></div><div class="label">M5 Max<br><strong>inference</strong></div></div>
+      <div class="stat"><div class="big">42<small>seed</small></div><div class="label">stable, repeatable<br>tool traces</div></div>
+      <div class="stat"><div class="big compact">99<small>commits</small></div><div class="label">2026-07<br><strong>engine pin</strong></div></div>
+    </section>
   </main>
 </body>
 </html>
