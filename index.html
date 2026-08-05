@@ -1956,9 +1956,9 @@ document.documentElement.classList.add('js');
         <dd lang="en-GB">284 billion weight parameters &mdash; the scale of today&rsquo;s open-weights frontier models. Only 13 B are activated per token via a Mixture-of-Experts (MoE) routing.</dd>
       </div>
       <div>
-        <dt><span lang="zh-TW">IQ2XXS imatrix 量化</span><span lang="en-GB">IQ2XXS imatrix quantisation</span><span class="cjk-aside"><span lang="zh-TW">壓縮版的模型檔</span><span lang="en-GB">compressed model file</span></span></dt>
-        <dd lang="zh-TW">把模型權重壓縮到更小的位元寬度。本指南用的 IQ2XXS-w2Q2K imatrix 配方平均約 2 bit/權重（routed expert 用更省的 IQ2XXS，attention/output/embedding 保留 Q8_0），加上以代表性 corpus 校準的 imatrix，把首選 Headroom128 權重從 FP8 原生大小壓到 ~81 GiB / ~87 GB——這是它能放進 128 GB 級 Mac 並留下 runtime headroom 的關鍵。</dd>
-        <dd lang="en-GB">Compresses the weights to fewer bits per parameter. The IQ2XXS-w2Q2K imatrix recipe used here averages about 2 bits per weight (routed experts use the tighter IQ2XXS quant, while attention/output/embedding stay at Q8_0), with an importance-matrix calibration on top, shrinking the preferred Headroom128 weights from native FP8 size down to ~81 GiB / ~87 GB &mdash; the lever that lets a 128 GB-class Mac keep runtime headroom.</dd>
+        <dt><span lang="zh-TW">Headroom128 混合精度量化</span><span lang="en-GB">Headroom128 mixed-precision quantisation</span><span class="cjk-aside"><span lang="zh-TW">壓縮版的模型檔</span><span lang="en-GB">compressed model file</span></span></dt>
+        <dd lang="zh-TW">首選 GGUF 不是單一「IQ2XXS」配方。43 層 routed expert 的 gate／up projection 使用 imatrix 校準的 IQ2_XXS，down projection 使用 imatrix 校準的 Q2_K；attention、shared-expert projection 與 output head 使用 Q8_0，<code>attn_q_b</code> indexer 使用 F16，其餘 control／norm／routing tensor 依 template 保留 F16／F32／I32。這套配置把主模型壓到 ~81 GiB／~87 GB，讓 128 GB 級 Mac 留下 runtime headroom。</dd>
+        <dd lang="en-GB">The preferred GGUF is not a single &ldquo;IQ2XXS&rdquo; recipe. Across all 43 layers, routed-expert gate/up projections use imatrix-calibrated IQ2_XXS and routed-expert down projections use imatrix-calibrated Q2_K; attention and shared-expert projections plus the output head use Q8_0, <code>attn_q_b</code> indexers use F16, and the remaining control, normalisation, and routing tensors retain their template-declared F16/F32/I32 types. This profile brings the main model to ~81 GiB / ~87 GB while leaving runtime headroom on a 128 GB-class Mac.</dd>
       </div>
       <div>
         <dt><span lang="zh-TW">方向性引導</span><span lang="en-GB">Directional steering</span><span class="cjk-aside"><span lang="zh-TW">本分支特色</span><span lang="en-GB">signature of this fork</span></span></dt>
@@ -2017,7 +2017,7 @@ document.documentElement.classList.add('js');
       <li><a href="#preface"><span lang="zh-TW">前情提要：這份指南寫給誰看</span><span lang="en-GB">Preface: Who this guide is for</span></a></li>
       <li><a href="#install"><span lang="zh-TW">硬體門檻與一行安裝</span><span lang="en-GB">Hardware bar and the one-line install</span></a></li>
       <li><a href="#firstrun"><span lang="zh-TW">首次啟動會發生什麼事</span><span lang="en-GB">What happens on first launch</span></a></li>
-      <li><a href="#model"><span lang="zh-TW">這顆模型：Headroom128 與 IQ2XXS imatrix</span><span lang="en-GB">The model: Headroom128 and IQ2XXS imatrix</span></a></li>
+      <li><a href="#model"><span lang="zh-TW">這顆模型：Headroom128 混合精度配方</span><span lang="en-GB">The model: the Headroom128 mixed-precision profile</span></a></li>
       <li><a href="#steering"><span lang="zh-TW">方向性引導：本分支的靈魂</span><span lang="en-GB">Directional steering: the soul of this fork</span></a></li>
       <li><a href="#config"><span lang="zh-TW">環境變數全表</span><span lang="en-GB">Full environment-variable reference</span></a></li>
       <li><a href="#tuning"><span lang="zh-TW">Runtime 調校：context 與 KV cache</span><span lang="en-GB">Runtime tuning: context and KV cache</span></a></li>
@@ -2112,13 +2112,13 @@ document.documentElement.classList.add('js');
     </p>
 
     <ul lang="zh-TW">
-      <li><strong>SSD 串流（<code>--ssd-streaming</code>，上游）：</strong>非路由權重常駐，路由 MoE 專家放進記憶體快取、miss 時從 GGUF 讀回。自動預算取 Metal 建議 working set 的 80% 再扣掉非路由權重。上游文件示範 64 GB MacBook 以 <code>--ssd-streaming-cache-experts 32GB</code> 跑 2-bit Flash；128 GB Mac 甚至能以串流檢視 DeepSeek V4 <em>Pro</em> q2（M5 Max 上自動預算選了約 59 GB 專家快取）。per-layer boosted-quant 串流也涵蓋本分支 128 GB 檔位的 mixed build。代價明確：prefill 仍快，decode 對 cache miss 敏感。</li>
+      <li><strong>SSD 串流（<code>--ssd-streaming</code>，上游）：</strong>非路由權重常駐，路由 MoE 專家放進記憶體快取、miss 時從 GGUF 讀回。自動預算取 Metal 建議 working set 的 80% 再扣掉非路由權重。上游文件示範 64 GB MacBook 以 <code>--ssd-streaming-cache-experts 32GB</code> 跑 2-bit Flash；128 GB Mac 甚至能以串流檢視 DeepSeek V4 <em>Pro</em> q2（M5 Max 上自動預算選了約 59 GB 專家快取）。per-layer boosted-quant 串流也涵蓋本分支現在預設的 Headroom128 混合精度檔。代價明確：prefill 仍快，decode 對 cache miss 敏感。</li>
       <li><strong>DSpark 推測解碼（實驗性，本分支先行）：</strong>以 <code>gguf-tools/deepseek4-quantize --dspark-only</code> 轉出官方 DSpark 草稿頭後，<code>--mtp DSpark.gguf</code>（CLI 與 server 都收）啟用 Metal block-speculative decode：block 平行草稿、target 驗證後才 commit。本分支再加上 B2 rejection sampling——推測取樣 lossless，輸出分佈等同 target——以及 RNG 狀態持久化、<code>DS4_DSPARK_ADAPTIVE=1</code> 自適應 block 大小、prefix checkpoint 部分接受。加速幅度取決於 base／draft 量化與 prompt；先開 <code>DS4_MTP_TIMING=1</code> 量測再下結論。</li>
       <li><strong>有界請求佇列（<code>--max-queue N</code>）：</strong>排隊滿 N 件回 <code>429</code>，防止 client timeout 疊出一堆沒人領的重複工作；預設 <code>0</code> 維持舊行為。</li>
       <li><strong>正確性修補（上游）：</strong><code>--mtp-draft &gt; 2</code> 會 commit 錯誤 token 的推測驗證 bug 已修（<a href="https://github.com/antirez/ds4/pull/358">PR #358</a>）；<code>ds4-eval</code> 選擇題 grader 的偽陰性成串修正並加上 golden self-tests（<a href="https://github.com/antirez/ds4/pull/319">PR #319</a>）；另新增 release QA checklist。</li>
     </ul>
     <ul lang="en-GB">
-      <li><strong>SSD streaming (<code>--ssd-streaming</code>, upstream):</strong> non-routed weights stay resident; routed MoE experts live in an in-memory cache and are read back from the GGUF on misses. The automatic budget takes 80% of the Metal recommended working set minus non-routed weights. Upstream documents a 64&nbsp;GB MacBook running the 2-bit Flash with <code>--ssd-streaming-cache-experts 32GB</code>; a 128&nbsp;GB Mac can even inspect DeepSeek V4 <em>Pro</em> q2 by streaming (the automatic budget picked about 59&nbsp;GB of expert cache on an M5 Max). Per-layer boosted-quant streaming also covers the mixed build this fork ships on the 128&nbsp;GB tier. The trade is explicit: prefill stays fast; decode is sensitive to cache misses.</li>
+      <li><strong>SSD streaming (<code>--ssd-streaming</code>, upstream):</strong> non-routed weights stay resident; routed MoE experts live in an in-memory cache and are read back from the GGUF on misses. The automatic budget takes 80% of the Metal recommended working set minus non-routed weights. Upstream documents a 64&nbsp;GB MacBook running the 2-bit Flash with <code>--ssd-streaming-cache-experts 32GB</code>; a 128&nbsp;GB Mac can even inspect DeepSeek V4 <em>Pro</em> q2 by streaming (the automatic budget picked about 59&nbsp;GB of expert cache on an M5 Max). Per-layer boosted-quant streaming also covers the preferred Headroom128 mixed-precision file this fork now ships. The trade is explicit: prefill stays fast; decode is sensitive to cache misses.</li>
       <li><strong>DSpark speculative decoding (experimental, fork-ahead):</strong> convert the official DSpark draft head with <code>gguf-tools/deepseek4-quantize --dspark-only</code>, then <code>--mtp DSpark.gguf</code> (accepted by both the CLI and the server) enables Metal block-speculative decode: block-parallel drafts, target-verified before commit. This fork adds B2 rejection sampling &mdash; lossless speculative <em>sampling</em>, output distribution identical to the target &mdash; plus persisted RNG state, adaptive block sizing via <code>DS4_DSPARK_ADAPTIVE=1</code>, and partial accepts from prefix checkpoints. Speedup depends on the base/draft quant pair and the prompt; measure with <code>DS4_MTP_TIMING=1</code> before drawing conclusions.</li>
       <li><strong>A bounded request queue (<code>--max-queue N</code>):</strong> returns <code>429</code> once N jobs are waiting, so client timeouts cannot silently stack duplicate jobs nobody will collect; the default <code>0</code> keeps the old behaviour.</li>
       <li><strong>Correctness repairs (upstream):</strong> the speculative-verify bug where <code>--mtp-draft &gt; 2</code> committed wrong tokens is fixed (<a href="https://github.com/antirez/ds4/pull/358">PR #358</a>); a chain of <code>ds4-eval</code> multiple-choice grader false negatives is fixed with golden self-tests (<a href="https://github.com/antirez/ds4/pull/319">PR #319</a>); and upstream added a release QA checklist.</li>
@@ -2576,17 +2576,20 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
   <!-- ═══════════  CHAPTER 3 — THE MODEL  ═══════════ -->
   <section class="chapter" id="model">
     <div class="chapter-eyebrow"><span class="cjk-num"><span lang="zh-TW">第　三　章</span><span lang="en-GB">Chapter 3</span></span></div>
-    <h2><span lang="zh-TW">這顆模型：<em>Headroom128 與 IQ2XXS imatrix</em></span><span lang="en-GB">The model: <em>Headroom128 and IQ2XXS imatrix</em></span></h2>
+    <h2><span lang="zh-TW">這顆模型：<em>Headroom128 混合精度配方</em></span><span lang="en-GB">The model: <em>the Headroom128 mixed-precision profile</em></span></h2>
 
     <p class="lede" lang="zh-TW">
       在你用它之前，值得花五分鐘理解你正在跑的是什麼。
-      本擴充現在預設下載 <em>首選 Headroom128 DeepSeek-V4-Flash-0731</em> 的 DwarfStar imatrix GGUF，
-      而不是先前 managed path 的 CyberNeurova abliterated 預覽權重。
+      本擴充現在預設下載
+      <em>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</em>
+      的單一混合精度 GGUF，而不是先前 managed path 的 CyberNeurova abliterated 預覽權重，
+      也不是 antirez 的 RAM dual-tier 官方 imatrix 檔。
     </p>
     <p class="lede" lang="en-GB">
       Before you use it, it is worth five minutes to understand what you are actually running.
-      This extension now defaults to the official <em>DeepSeek-V4-Flash-0731</em> DwarfStar imatrix GGUFs,
-      rather than the earlier managed CyberNeurova abliterated preview weights.
+      This extension now defaults to the single preferred mixed-precision GGUF from
+      <em>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</em>,
+      rather than the earlier managed CyberNeurova abliterated preview weights or antirez&rsquo;s RAM dual-tier official imatrix files.
     </p>
 
     <h3>3.1<span lang="zh-TW">　DeepSeek V4 Flash 是什麼</span><span lang="en-GB">　What DeepSeek V4 Flash is</span></h3>
@@ -2668,24 +2671,27 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
       </ul>
     </div>
 
-    <h3>3.3<span lang="zh-TW">　IQ2XXS-w2Q2K imatrix 配方</span><span lang="en-GB">　The IQ2XXS-w2Q2K imatrix recipe</span></h3>
+    <h3>3.3<span lang="zh-TW">　Headroom128 混合精度配方</span><span lang="en-GB">　The Headroom128 mixed-precision profile</span></h3>
 
     <p lang="zh-TW">
       本分支的 <code>download_model.sh</code> 會下載首選 Headroom128 GGUF：
-      <strong>DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf（~81 GiB / ~87 GB）</strong>，
+      <strong>DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf（~81 GiB／~87 GB）</strong>，
       來自 <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>。
-      這是 abliterated 0731 的 DS4 headroom 配方：routed expert 以 IQ2_XXS/Q2_K 為主、dense 路徑較受保護，
-      並為 128 GB 級機器留下 runtime headroom。同 repo 另有可選的 matching DSpark support GGUF。
-      在 96 GB Mac 上配合本指南的 sysctl 步驟也跑得動，128 GB 以上 RAM 則裝得最寬鬆；也是 ds4 引擎本身最熟的格式之一。
+      43 層 routed expert 的 gate／up projection 使用 imatrix 校準的 IQ2_XXS，down projection 使用 imatrix 校準的 Q2_K；
+      attention、shared-expert projection 與 output head 使用 Q8_0，<code>attn_q_b</code> indexer 使用 F16，
+      其餘 control／norm／routing tensor 依 template 保留 F16／F32／I32。
+      這套混合精度配置在壓縮 routed-expert bank 的同時保護每個 token 都會走過的 dense path，
+      並為 128 GB 級機器留下 runtime 與 KV headroom。同 repo 另有可選的 matching DSpark support GGUF。
     </p>
     <p lang="en-GB">
       This fork&rsquo;s <code>download_model.sh</code> fetches the preferred Headroom128 GGUF:
       <strong>DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf (~81 GiB / ~87 GB)</strong>
       from <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>.
-      It is an abliterated 0731 DS4 headroom profile: routed experts stay aggressively low-bit,
-      dense paths are better protected, and a 128 GB-class machine keeps practical runtime headroom.
-      The same repo also publishes an optional matching DSpark support GGUF.
-      With the sysctl step in this guide it also runs on 96 GB Macs; 128 GB+ installs are the most comfortable fit.
+      Across all 43 layers, routed-expert gate/up projections use imatrix-calibrated IQ2_XXS and routed-expert down projections use imatrix-calibrated Q2_K;
+      attention and shared-expert projections plus the output head use Q8_0, <code>attn_q_b</code> indexers use F16,
+      and remaining control, normalisation, and routing tensors retain their template-declared F16/F32/I32 types.
+      The mixed-precision profile compresses the routed-expert bank while protecting dense paths used by every token,
+      leaving practical runtime and KV headroom on a 128 GB-class machine. The same repo also publishes an optional matching DSpark support GGUF.
     </p>
 
     <p lang="zh-TW">
@@ -2968,12 +2974,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
       <div class="dl-row">
         <dt>DS4_MODEL_QUANT<span class="default"><span lang="zh-TW">預設 · <code>q2</code>（硬編碼）</span><span lang="en-GB">default &middot; <code>q2</code> (hard-coded)</span></span></dt>
         <dd>
-          <p lang="zh-TW">本擴充只支援 <code>q2</code>（歷史 selector，對應首選 Headroom128 GGUF：<code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>）。<code>index.ts</code> 的 <code>selectedModelQuant()</code>
-            硬編碼了這個值；把 <code>DS4_MODEL_QUANT</code> 設為其他值會直接拋錯退出。
-            V4 Flash 在 GGUF 上沒有 Q4／Q5／Q6 中間量化等級（見 <a href="#model">3.3 節</a>架構說明），ds4 的 <code>main</code> 載入路徑只認這套 IQ2XXS-w2Q2K imatrix 配方家族（mixed 版只是把其中 6 層 routed expert 換成 Q4_K，仍屬同一 family）。</p>
-          <p lang="en-GB">Only <code>q2</code> is supported (historic selector for the preferred Headroom128 GGUF from <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>). <code>selectedModelQuant()</code> in <code>index.ts</code>
-            hard-codes this value; setting <code>DS4_MODEL_QUANT</code> to anything else throws and exits.
-            V4 Flash has no intermediate GGUF quantisation tiers like Q4 / Q5 / Q6 (see the architecture note in <a href="#model">&sect;3.3</a>), and ds4&rsquo;s <code>main</code> loader path only knows this IQ2XXS-w2Q2K imatrix recipe family (the mixed build just swaps 6 routed-expert layers to Q4_K; it is still the same family).</p>
+          <p lang="zh-TW">本擴充只支援 <code>q2</code>；這是為舊版 lease／state 相容保留的歷史 selector，不代表另一個 quant family 或 RAM tier。無論 96 GB 或 128 GB，bundled downloader 都把它對應到同一個首選檔案：
+            <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf</code>。
+            <code>index.ts</code> 的 <code>selectedModelQuant()</code> 硬編碼了這個相容值；把 <code>DS4_MODEL_QUANT</code> 設為其他值會直接拋錯退出。若要跑其他 GGUF，請在 pi managed path 之外手動啟動 <code>ds4-server</code>。</p>
+          <p lang="en-GB">Only <code>q2</code> is supported; it is a historical selector retained for lease/state compatibility, not a second quant family or RAM tier. On both 96 GB and 128 GB machines, the bundled downloader maps it to the same preferred file:
+            <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf</code>.
+            <code>selectedModelQuant()</code> in <code>index.ts</code> hard-codes that compatibility value; setting <code>DS4_MODEL_QUANT</code> to anything else throws and exits. To run another GGUF, start <code>ds4-server</code> manually outside pi&rsquo;s managed path.</p>
         </dd>
       </div>
       <div class="dl-row">
@@ -5014,8 +5020,8 @@ STATE=~/.pi/ds4/server.json
       </div>
       <div>
         <dt>quantization<span class="cjk-aside">量化</span></dt>
-        <dd lang="zh-TW">把每個權重從 16-bit 浮點壓縮到更少位元（這裡的 IQ2XXS-w2Q2K imatrix 平均約 2 bit）。檔案變小、推論變快，代價是少量精度損失。</dd>
-        <dd lang="en-GB">Compressing each weight from 16-bit floating point to fewer bits (here, the IQ2XXS-w2Q2K imatrix recipe averages about 2 bits). The file gets smaller and inference faster, at the cost of some precision.</dd>
+        <dd lang="zh-TW">把權重從原生高精度壓縮到更少位元。Headroom128 不是單一 bit-width：routed expert 以 IQ2_XXS／Q2_K 為主，attention／shared-expert／output 保留 Q8_0，部分 indexer 與 control tensor 保留 F16／F32／I32，整體把主模型壓到約 87 GB。</dd>
+        <dd lang="en-GB">Compressing weights from native high precision into fewer bits. Headroom128 is not a single bit-width: routed experts are mostly IQ2_XXS/Q2_K, attention/shared-expert/output paths stay at Q8_0, and selected indexer/control tensors remain F16/F32/I32, bringing the main model to about 87 GB overall.</dd>
       </div>
       <div>
         <dt>GGUF<span class="cjk-aside">模型檔格式</span></dt>
