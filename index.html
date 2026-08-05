@@ -10,14 +10,14 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=5e693314d4c3">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=10fb1a5c2ceb">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Atmospheric grayscale pi-ds4 Guide card with an ocean horizon and current local inference readout: ~87 GB Headroom128 GGUF weights, 545 t/s prefill, and 35 t/s inference on M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=5e693314d4c3">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=10fb1a5c2ceb">
 <meta name="theme-color" content="#ebe7e4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -1772,7 +1772,7 @@ document.documentElement.classList.add('js');
     <div class="crumbs">
       <span class="header-credit"><span lang="zh-TW">唐鳳製作</span><span lang="en-GB">by Audrey Tang</span></span>
       <span class="cjk-tag"><span lang="zh-TW">指南</span><span lang="en-GB">Guide</span></span>
-      <span>v 0.5.0</span>
+      <span>v 0.5.1</span>
     </div>
   </header>
 
@@ -2125,10 +2125,17 @@ document.documentElement.classList.add('js');
     </ul>
 
 
-    <h3><span lang="zh-TW">v 0.5.0 補丁（擴充套件）</span><span lang="en-GB">v 0.5.0 patch (extension)</span></h3>
+    <h3><span lang="zh-TW">v 0.5.1 補丁（擴充套件）</span><span lang="en-GB">v 0.5.1 patch (extension)</span></h3>
 
-    <p lang="zh-TW">目前指南標示 <strong>v 0.5.0</strong>（與 <code>package.json</code> 一致）。相對 v 0.4.0 的變更在 wrapper，不是 pin：</p>
-    <p lang="en-GB">This guide is labelled <strong>v 0.5.0</strong> (matching <code>package.json</code>). Changes since v 0.4.0 are in the extension wrapper, not the pin:</p>
+    <p lang="zh-TW">目前指南標示 <strong>v 0.5.1</strong>（與 <code>package.json</code> 一致）。相對 v 0.4.0 的變更在 wrapper，不是 pin：</p>
+    <p lang="en-GB">This guide is labelled <strong>v 0.5.1</strong> (matching <code>package.json</code>). Changes since v 0.4.0 are in the extension wrapper, not the pin:</p>
+
+    <ul lang="zh-TW">
+      <li><strong>如實對應思考層級：</strong>provider 現在只顯示 <code>ds4-server</code> 實際支援的模式（<code>off</code> → <code>none</code>、<code>high</code> → <code>high</code>、<code>max</code> → <code>max</code>）；不支援的中間層級改標為不可用，不再全部折疊為 <code>high</code>。<code>max</code> 從 pi 0.80.6 起可選，且需要至少 393,216 tokens 的 context，因此請將 <code>DS4_CONTEXT_KB</code> 設為 <code>394</code> 或更高。未達門檻時，<code>ds4-server</code> 會自動改用一般 <code>high</code> 思考。保守預設仍為 <code>100</code>。</li>
+    </ul>
+    <ul lang="en-GB">
+      <li><strong>Faithful thinking levels:</strong> the provider now exposes only <code>ds4-server</code>&rsquo;s real modes (<code>off</code> → <code>none</code>, <code>high</code> → <code>high</code>, <code>max</code> → <code>max</code>); unsupported intermediate levels are unavailable instead of collapsing to <code>high</code>. <code>max</code> is available in pi 0.80.6+ and requires at least 393,216 context tokens, so set <code>DS4_CONTEXT_KB=394</code> or higher. Below that threshold, <code>ds4-server</code> safely falls back to ordinary <code>high</code> thinking. The conservative default remains <code>100</code>.</li>
+    </ul>
 
     <ul lang="zh-TW">
       <li><strong>首選模型切到 Headroom128：</strong>managed path 改抓 <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code> 的單一 ~87 GB GGUF（可選同 repo 的 DSpark support）；不再預設 CyberNeurova dual-tier 或 antirez mixed/plain。</li>

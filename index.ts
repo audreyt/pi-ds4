@@ -1689,11 +1689,15 @@ function registerDs4Provider(pi: ExtensionAPI): void {
 				name: "DeepSeek V4 Flash (ds4.c local)",
 				reasoning: true,
 				thinkingLevelMap: {
-					minimal: "low",
-					low: "low",
-					medium: "medium",
+					// ds4-server exposes only NONE, HIGH, and MAX. Null keeps pi
+					// from presenting intermediate labels that all collapse to HIGH.
+					off: "none",
+					minimal: null,
+					low: null,
+					medium: null,
 					high: "high",
-					xhigh: "xhigh",
+					xhigh: null,
+					max: "max",
 				},
 				input: ["text"],
 				contextWindow: Number(CTX_SIZE) || 100000,

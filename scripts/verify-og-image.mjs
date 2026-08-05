@@ -104,7 +104,7 @@ if (!existsSync(ogHtmlPath)) fail("og-image.html source page is missing");
 
 const ogHtml = readUtf8(ogHtmlPath);
 const ogText = textContent(ogHtml);
-for (const required of ["pi-ds4 Guide", "v 0.5.0", "96+ GB", "~87", "Headroom128", "545 t/s", "35 t/s"]) {
+for (const required of ["pi-ds4 Guide", "v 0.5.1", "96+ GB", "~87", "Headroom128", "545 t/s", "35 t/s"]) {
   if (!ogText.includes(required)) fail(`og-image.html is missing current fact: ${required}`);
 }
 for (const stale of ["Q2_K", "~99 GB", "87/91", "87/98", "1M", "360 tok/s", "33 tok/s", "xhigh"]) {

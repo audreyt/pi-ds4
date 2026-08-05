@@ -1,13 +1,14 @@
 {
   "name": "pi-ds4",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4 Flash 0731 inference (audreyt/ds4 main + preferred apetersson Headroom128 abliterated GGUF).",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "og:render": "node scripts/render-og-image.mjs",
     "og:check-render": "node scripts/render-og-image.mjs --check",
-    "og:verify": "node scripts/verify-og-image.mjs"
+    "og:verify": "node scripts/verify-og-image.mjs",
+    "provider:verify": "bun scripts/verify-provider.mjs"
   },
   "keywords": [
     "pi-package",

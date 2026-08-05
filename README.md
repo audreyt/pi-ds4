@@ -64,10 +64,18 @@ GGUF already downloaded and skip straight to spawning the server.
 fetch the matching DSpark support file). Set `HF_TOKEN` if your HuggingFace
 download benefits from auth.
 
-## What's new in v0.5.0 (`a635f52` pin, 2026-08)
+## What's new in v0.5.1 (`a635f52` pin, 2026-08)
 
-v0.5.0 keeps the `audreyt/ds4` pin at `a635f52` and cuts the managed preferred
-model over to
+v0.5.1 keeps the `audreyt/ds4` pin, preferred Headroom128 model and conservative
+100 k default context unchanged. It corrects the provider's thinking-level
+contract to match `ds4-server`'s actual modes: `off` → `none`, `high` → `high`,
+and `max` → `max`. Unsupported intermediate levels are marked unavailable
+instead of silently collapsing to `high`. `max` appears in pi 0.80.6+ and
+`ds4-server` requires at least 393,216 context tokens for it, so set
+`DS4_CONTEXT_KB=394` or higher when selecting it. Below that threshold,
+`ds4-server` safely uses ordinary `high` thinking.
+
+v0.5.0 cut the managed preferred model over to
 [`apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128)
 (single ~87 GB Headroom128 GGUF; optional matching DSpark support in the same
 repo). Directional steering stays off by default until a Headroom128-calibrated
