@@ -2671,31 +2671,39 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <h3>3.3<span lang="zh-TW">　IQ2XXS-w2Q2K imatrix 配方</span><span lang="en-GB">　The IQ2XXS-w2Q2K imatrix recipe</span></h3>
 
     <p lang="zh-TW">
-      本分支的 <code>download_model.sh</code> 會下載首選 Headroom128 GGUF：<strong>DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf（~81 GiB / ~87 GB）</strong>，來自 <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>。這是 abliterated 0731 的 DS4 headroom 配方：routed expert 以 IQ2_XXS/Q2_K 為主、dense 路徑較受保護，並為 128 GB 級機器留下 runtime headroom。同 repo 另有可選的 matching DSpark support GGUF家族，
-      在 96 GB Mac 上配合本指南的 sysctl 步驟也跑得動，128 GB 以上 RAM 則裝得最寬鬆；也是 ds4 引擎本身最熟的格式。
+      本分支的 <code>download_model.sh</code> 會下載首選 Headroom128 GGUF：
+      <strong>DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf（~81 GiB / ~87 GB）</strong>，
+      來自 <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>。
+      這是 abliterated 0731 的 DS4 headroom 配方：routed expert 以 IQ2_XXS/Q2_K 為主、dense 路徑較受保護，
+      並為 128 GB 級機器留下 runtime headroom。同 repo 另有可選的 matching DSpark support GGUF。
+      在 96 GB Mac 上配合本指南的 sysctl 步驟也跑得動，128 GB 以上 RAM 則裝得最寬鬆；也是 ds4 引擎本身最熟的格式之一。
     </p>
     <p lang="en-GB">
       This fork&rsquo;s <code>download_model.sh</code> fetches the preferred Headroom128 GGUF:
-      the <strong>preferred Headroom128 file (~81 GiB / ~87 GB)</strong> from <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>.
+      <strong>DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf (~81 GiB / ~87 GB)</strong>
+      from <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>.
+      It is an abliterated 0731 DS4 headroom profile: routed experts stay aggressively low-bit,
+      dense paths are better protected, and a 128 GB-class machine keeps practical runtime headroom.
+      The same repo also publishes an optional matching DSpark support GGUF.
+      With the sysctl step in this guide it also runs on 96 GB Macs; 128 GB+ installs are the most comfortable fit.
     </p>
 
     <p lang="zh-TW">
       值得注意的是：V4 Flash 在 GGUF 上<em>不存在</em>均勻的 Q4_K_M／Q5_K_M／Q6_K 中間量化等級——
-      cyberneurova 的模型卡明確指出，這不是發佈策略問題，而是 V4-Flash 原生 FP8 expert layout
-      與 antirez 的轉換器目前支援的量化方案之間的架構限制。所以「整顆上一個 Q4 就好」這條路在這顆模型上行不通——
-      128 GB 以上 RAM 自動切到的 mixed build 並非整顆 Q4，而是只在 layers 37–42 的 routed expert 上接片 Q4_K，其餘 37 層與 attention/output/embedding 仍維持 IQ2XXS-w2Q2K imatrix。
+      這不是單純的發佈策略問題，而是 V4-Flash 原生 FP8 expert layout 與目前 DS4 轉換／量化方案之間的架構限制。
+      所以「整顆上一個均勻 Q4 就好」這條路在這顆模型上通常行不通。Headroom128 本身就是混合精度的低 bit 配方：
+      dense 路徑較受保護，routed expert 則大幅壓縮，以便在 128 GB 級機器留下 KV／runtime headroom。
+      <code>audreyt/ds4</code> main 可直接讀取這類 DS4-native GGUF，不需要 harmonization 步驟，也不需要 Python venv。
+      這是本分支跟上游 <code>mitsuhiko/pi-ds4</code> 的主要差別之一。
     </p>
     <p lang="en-GB">
       Worth noting: V4 Flash <em>has no</em> uniform intermediate quantisation tiers like Q4_K_M / Q5_K_M / Q6_K in GGUF form &mdash;
-      cyberneurova's model card states explicitly that this is not a release-strategy choice, but an architectural limit between V4-Flash's native FP8 expert layout
-      and the quantisation schemes that antirez's converter currently supports. So the &ldquo;just run the whole model at Q4&rdquo; path is closed for this model &mdash;
-      the preferred Headroom128 build is itself a mixed-precision low-bit profile rather than a whole-model Q4; dense paths stay better protected while routed experts are aggressively compressed. UF，不需要任何 harmonization 步驟，
-      也不需要 Python venv。這是本分支跟上游 <code>mitsuhiko/pi-ds4</code> 的兩個主要差別之一。
-    </p>
-    <p lang="en-GB">
-      antirez's engine, on the main branch of <code>audreyt/ds4</code>, reads
-      cyberneurova's aligned IQ2XXS imatrix GGUF directly, with no harmonisation step needed
-      and no Python venv. This is one of the two main differences between this fork and the upstream <code>mitsuhiko/pi-ds4</code>.
+      this is not merely a release-strategy choice, but an architectural limit between V4-Flash's native FP8 expert layout
+      and the quantisation schemes currently used by DS4 tooling. So the &ldquo;just run the whole model at a uniform Q4&rdquo; path is usually closed.
+      Headroom128 is itself a mixed-precision low-bit profile: dense paths stay better protected while routed experts are aggressively compressed,
+      leaving practical KV/runtime headroom on a 128 GB-class machine.
+      The <code>audreyt/ds4</code> main engine reads this DS4-native GGUF directly, with no harmonisation step and no Python venv.
+      This is one of the main differences between this fork and upstream <code>mitsuhiko/pi-ds4</code>.
     </p>
 
     <div class="pullquote"><span lang="zh-TW">本機推論不只省下 API 費用，更把方向盤還給使用者。</span><span lang="en-GB">Local inference is not just saving on API fees &mdash; it hands the steering wheel back to the user.</span></div>

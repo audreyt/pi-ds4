@@ -64,9 +64,9 @@ GGUF already downloaded and skip straight to spawning the server.
 fetch the matching DSpark support file). Set `HF_TOKEN` if your HuggingFace
 download benefits from auth.
 
-## What's new in v0.5.0 (`e204c6e` pin, 2026-08)
+## What's new in v0.5.0 (`a635f52` pin, 2026-08)
 
-v0.5.0 keeps the `audreyt/ds4` pin at `e204c6e` and cuts the managed preferred
+v0.5.0 keeps the `audreyt/ds4` pin at `a635f52` and cuts the managed preferred
 model over to
 [`apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128)
 (single ~87 GB Headroom128 GGUF; optional matching DSpark support in the same
