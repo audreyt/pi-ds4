@@ -104,10 +104,10 @@ if (!existsSync(ogHtmlPath)) fail("og-image.html source page is missing");
 
 const ogHtml = readUtf8(ogHtmlPath);
 const ogText = textContent(ogHtml);
-for (const required of ["pi-ds4 Guide", "v 0.5.1", "96+ GB", "~87", "Headroom128", "638 t/s", "37 t/s", "239 commits", "Jun–Aug 2026"]) {
+for (const required of ["pi-ds4 Guide", "v 0.5.2", "96+ GB", "~87", "Headroom128", "638 t/s", "37 t/s", "239 commits", "Jun–Aug 2026"]) {
   if (!ogText.includes(required)) fail(`og-image.html is missing current fact: ${required}`);
 }
-for (const stale of ["Q2_K", "~99 GB", "87/91", "87/98", "1M", "360 tok/s", "33 tok/s", "xhigh", "99 commits", "152 commits", "545 t/s", "35 t/s", "2026-07"]) {
+for (const stale of ["Q2_K", "~99 GB", "87/91", "87/98", "1M", "360 tok/s", "33 tok/s", "xhigh", "99 commits", "152 commits", "545 t/s", "35 t/s", "v 0.5.1", "2026-07"]) {
   if (ogText.includes(stale)) fail(`og-image.html still contains stale OG text: ${stale}`);
 }
 

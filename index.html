@@ -10,14 +10,14 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=1c5ffbbba6be">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=3a08eed949dc">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Atmospheric grayscale pi-ds4 Guide card with an ocean horizon and current local inference readout: ~87 GB Headroom128 GGUF weights, 638 t/s prefill, and 37 t/s inference on M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=1c5ffbbba6be">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=3a08eed949dc">
 <meta name="theme-color" content="#ebe7e4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -1772,7 +1772,7 @@ document.documentElement.classList.add('js');
     <div class="crumbs">
       <span class="header-credit"><span lang="zh-TW">唐鳳製作</span><span lang="en-GB">by Audrey Tang</span></span>
       <span class="cjk-tag"><span lang="zh-TW">指南</span><span lang="en-GB">Guide</span></span>
-      <span>v 0.5.1</span>
+      <span>v 0.5.2</span>
     </div>
   </header>
 
@@ -2048,14 +2048,14 @@ document.documentElement.classList.add('js');
     <p class="lede" lang="zh-TW">
       v 0.5 更新 managed path 的八月組合：bundled downloader 改抓 Headroom128；v 0.5.1
       把 pi 的思考層級對齊 <code>ds4-server</code> 真正的 <code>none</code>、<code>high</code>
-      與 <code>max</code>，並把 <code>SUPPORT_PIN</code> 推進到 <code>a768f37</code>
+      與 <code>max</code>；v 0.5.2 再把 <code>SUPPORT_PIN</code> 推進到 <code>a768f37</code>
       （含 Metal 預填加速與完整 tool-in-think 復原）。既有安裝在下一次啟動時會自動更新；
       保守的 100 k context 預設不變。底層引擎也保留下列從六月到八月、共 239 個 commit 的 pin 升級。
     </p>
     <p class="lede" lang="en-GB">
       v 0.5 refreshes the managed path for August: the bundled downloader fetches Headroom128;
       v 0.5.1 aligns pi&rsquo;s thinking-level map with <code>ds4-server</code>&rsquo;s real
-      <code>none</code>, <code>high</code>, and <code>max</code> modes and advances
+      <code>none</code>, <code>high</code>, and <code>max</code> modes; v 0.5.2 then advances
       <code>SUPPORT_PIN</code> to <code>a768f37</code> (Metal prefill accelerations and
       complete tool-in-think recovery). Existing installs update on their next launch; the
       conservative 100 k context default is unchanged. Underneath, the engine retains the
@@ -2125,10 +2125,19 @@ document.documentElement.classList.add('js');
     </ul>
 
 
-    <h3><span lang="zh-TW">v 0.5.1 補丁（擴充套件）</span><span lang="en-GB">v 0.5.1 patch (extension)</span></h3>
+    <h3><span lang="zh-TW">v 0.5.2 補丁（擴充套件）</span><span lang="en-GB">v 0.5.2 patch (extension)</span></h3>
 
-    <p lang="zh-TW">目前指南標示 <strong>v 0.5.1</strong>（與 <code>package.json</code> 一致）。v 0.5 系列的變更在 wrapper，不是 pin：</p>
-    <p lang="en-GB">This guide is labelled <strong>v 0.5.1</strong> (matching <code>package.json</code>). The v 0.5 series changes are in the extension wrapper, not the pin:</p>
+    <p lang="zh-TW">目前指南標示 <strong>v 0.5.2</strong>（與 <code>package.json</code> 一致）。</p>
+    <p lang="en-GB">This guide is labelled <strong>v 0.5.2</strong> (matching <code>package.json</code>).</p>
+
+    <ul lang="zh-TW">
+      <li><strong>引擎 pin 推進到 <code>a768f37</code>：</strong>合併 origin/main 後的 Metal MoE／indexed 預填加速、MXFP4／CUDA mmq、Flash 0731 checkpointed vectors，以及未閉合 <code>&lt;think&gt;</code> 內完整 tool call 復原。Headroom128 首選與 100 k context 預設不變。M5 Max 重測約 638 t/s 預填／37 t/s 推論（2k context）。</li>
+    </ul>
+    <ul lang="en-GB">
+      <li><strong>Engine pin advanced to <code>a768f37</code>:</strong> after merging origin/main, Metal MoE/indexed prefill accelerations, MXFP4/CUDA mmq, Flash 0731 checkpointed vectors, and recovery of complete tool calls from unclosed <code>&lt;think&gt;</code>. Preferred Headroom128 and the 100 k context default are unchanged. Re-benched on M5 Max at about 638 t/s prefill / 37 t/s generation (2k context).</li>
+    </ul>
+
+    <h3><span lang="zh-TW">v 0.5.1 補丁（擴充套件）</span><span lang="en-GB">v 0.5.1 patch (extension)</span></h3>
 
     <ul lang="zh-TW">
       <li><strong>如實對應思考層級：</strong>provider 現在只顯示 <code>ds4-server</code> 實際支援的模式（<code>off</code> → <code>none</code>、<code>high</code> → <code>high</code>、<code>max</code> → <code>max</code>）；不支援的中間層級改標為不可用，不再全部折疊為 <code>high</code>。<code>max</code> 從 pi 0.80.6 起可選，且需要至少 393,216 tokens 的 context，因此請將 <code>DS4_CONTEXT_KB</code> 設為 <code>394</code> 或更高。未達門檻時，<code>ds4-server</code> 會自動改用一般 <code>high</code> 思考。保守預設仍為 <code>100</code>。</li>

@@ -64,13 +64,16 @@ GGUF already downloaded and skip straight to spawning the server.
 fetch the matching DSpark support file). Set `HF_TOKEN` if your HuggingFace
 download benefits from auth.
 
-## What's new in v0.5.1 (`a768f37` pin, 2026-08)
+## What's new in v0.5.2 (`a768f37` pin, 2026-08)
 
-v0.5.1 keeps the preferred Headroom128 model and conservative 100 k default
-context. The `audreyt/ds4` pin is now `a768f37` (merge of origin/main into
+v0.5.2 advances the `audreyt/ds4` pin to `a768f37` (merge of origin/main into
 this fork on 2026-08-06: Metal MoE/indexed prefill accelerations, MXFP4/CUDA
 mmq, Flash 0731 checkpointed vectors, and complete-tool recovery from unclosed
-reasoning). It also corrects the provider's thinking-level contract to match
+reasoning). Preferred Headroom128 and the conservative 100 k default context
+are unchanged. Re-benched on Apple M5 Max with Headroom128: about 638 t/s
+prefill and 37 t/s generation at 2k context.
+
+v0.5.1 corrected the provider's thinking-level contract to match
 `ds4-server`'s actual modes: `off` → `none`, `high` → `high`, and `max` → `max`.
 Unsupported intermediate levels are marked unavailable instead of silently
 collapsing to `high`. `max` appears in pi 0.80.6+ and `ds4-server` requires at
