@@ -1159,7 +1159,7 @@ code {
   border: 1px solid var(--line);
 }
 
-code.nowrap { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
+.nowrap { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
 
 a code { border-color: transparent; background: transparent; color: inherit; }
 
@@ -2037,29 +2037,27 @@ document.documentElement.classList.add('js');
     </div>
   </nav>
 
-  <!-- ═══════════  WHAT'S NEW — JULY 2026  ═══════════ -->
+  <!-- ═══════════  WHAT'S NEW — AUGUST 2026  ═══════════ -->
   <section class="chapter" id="whatsnew">
     <div class="chapter-eyebrow"><span class="cjk-num"><span lang="zh-TW">更　新　誌</span><span lang="en-GB">What&rsquo;s new</span></span></div>
     <h2>
-      <span lang="zh-TW">v 0.4 系列：一次 pin 升級，<em>九十九個 commit</em></span>
-      <span lang="en-GB">v 0.4 series: one pin bump, <em>ninety-nine commits</em></span>
+      <span lang="zh-TW">v 0.5 系列：Headroom128 與<em class="nowrap">如實思考層級</em></span>
+      <span lang="en-GB">v 0.5 series: Headroom128 and <em>faithful thinking levels</em></span>
     </h2>
 
     <p class="lede" lang="zh-TW">
-      pi-ds4 的引擎不會憑空變新。v 0.4 把 <code>SUPPORT_PIN</code> 從六月初的
-      <code>97319db</code> 推進到 7 月 3 日的 <code>c1f4aa2</code>——之間是 99 個 commit、65 個檔案、
-      約七萬四千行新增（光 <code>ds4.c</code> 就長了一萬七千行）。大部分來自 antirez 上游一個月的工作；
-      其餘是本分支自己先行合併的推測解碼 runtime 與 server 強化。你什麼都不用做：
-      既有安裝在下一次啟動時會自動 fetch、hard-reset 到新 pin，並重編 <code>ds4-server</code>。
+      v 0.5 更新 managed path 的八月組合：<code>SUPPORT_PIN</code> 維持 <code>a635f52</code>，
+      bundled downloader 改抓 Headroom128；v 0.5.1 再把 pi 的思考層級對齊 <code>ds4-server</code>
+      真正的 <code>none</code>、<code>high</code> 與 <code>max</code>。既有安裝在下一次啟動時會自動更新；
+      保守的 100 k context 預設不變。底層引擎也保留下列七月 pin 升級帶來的 99 個 commit。
     </p>
     <p class="lede" lang="en-GB">
-      The engine under pi-ds4 does not get newer by magic. v 0.4 moves <code>SUPPORT_PIN</code>
-      from early June&rsquo;s <code>97319db</code> to July 3rd&rsquo;s <code>c1f4aa2</code> &mdash;
-      99 commits, 65 files, roughly seventy-four thousand added lines in between
-      (<code>ds4.c</code> alone grew by seventeen thousand). Most of it is a month of work in
-      upstream antirez; the rest is this fork&rsquo;s own ahead-of-upstream merges: a speculative-decode
-      runtime and server hardening. You do nothing: existing installs fetch, hard-reset to the new
-      pin, and rebuild <code>ds4-server</code> on their next launch.
+      v 0.5 refreshes the managed path for August: <code>SUPPORT_PIN</code> stays at
+      <code>a635f52</code> while the bundled downloader fetches Headroom128; v 0.5.1 then aligns
+      pi&rsquo;s thinking-level map with <code>ds4-server</code>&rsquo;s real <code>none</code>,
+      <code>high</code>, and <code>max</code> modes. Existing installs update on their next launch;
+      the conservative 100 k context default is unchanged. Underneath, the engine retains the
+      99-commit July pin upgrade summarised below.
     </p>
 
     <div class="ledger">
@@ -2127,8 +2125,8 @@ document.documentElement.classList.add('js');
 
     <h3><span lang="zh-TW">v 0.5.1 補丁（擴充套件）</span><span lang="en-GB">v 0.5.1 patch (extension)</span></h3>
 
-    <p lang="zh-TW">目前指南標示 <strong>v 0.5.1</strong>（與 <code>package.json</code> 一致）。相對 v 0.4.0 的變更在 wrapper，不是 pin：</p>
-    <p lang="en-GB">This guide is labelled <strong>v 0.5.1</strong> (matching <code>package.json</code>). Changes since v 0.4.0 are in the extension wrapper, not the pin:</p>
+    <p lang="zh-TW">目前指南標示 <strong>v 0.5.1</strong>（與 <code>package.json</code> 一致）。v 0.5 系列的變更在 wrapper，不是 pin：</p>
+    <p lang="en-GB">This guide is labelled <strong>v 0.5.1</strong> (matching <code>package.json</code>). The v 0.5 series changes are in the extension wrapper, not the pin:</p>
 
     <ul lang="zh-TW">
       <li><strong>如實對應思考層級：</strong>provider 現在只顯示 <code>ds4-server</code> 實際支援的模式（<code>off</code> → <code>none</code>、<code>high</code> → <code>high</code>、<code>max</code> → <code>max</code>）；不支援的中間層級改標為不可用，不再全部折疊為 <code>high</code>。<code>max</code> 從 pi 0.80.6 起可選，且需要至少 393,216 tokens 的 context，因此請將 <code>DS4_CONTEXT_KB</code> 設為 <code>394</code> 或更高。未達門檻時，<code>ds4-server</code> 會自動改用一般 <code>high</code> 思考。保守預設仍為 <code>100</code>。</li>
