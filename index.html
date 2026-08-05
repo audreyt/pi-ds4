@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>pi-ds4 — Driving DeepSeek V4 Flash on your own Mac</title>
-<meta name="description" content="The full pi-ds4 guide: run the CyberNeurova abliterated DeepSeek V4 Flash GGUF locally, with reproducible decision traces, uncertainty steering, and day-to-day use.">
+<meta name="description" content="The full pi-ds4 guide: run the preferred Headroom128 abliterated DeepSeek V4 Flash 0731 GGUF locally, with reproducible decision traces, optional directional steering, and day-to-day use.">
 <meta property="og:title" content="pi-ds4 · Audrey Tang">
 <meta property="og:description" content="Run a frontier model on your own machine with stable, contestable decision traces. Full install, steering, reproducibility, and tuning guide.">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=dcb798057471">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=5e693314d4c3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Atmospheric grayscale pi-ds4 Guide card with an ocean horizon and current local inference readout: 87/91 GB GGUF weights, 545 t/s prefill, and 35 t/s inference on M5 Max.">
+<meta property="og:image:alt" content="Atmospheric grayscale pi-ds4 Guide card with an ocean horizon and current local inference readout: ~87 GB Headroom128 GGUF weights, 545 t/s prefill, and 35 t/s inference on M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=dcb798057471">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=5e693314d4c3">
 <meta name="theme-color" content="#ebe7e4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -1772,7 +1772,7 @@ document.documentElement.classList.add('js');
     <div class="crumbs">
       <span class="header-credit"><span lang="zh-TW">唐鳳製作</span><span lang="en-GB">by Audrey Tang</span></span>
       <span class="cjk-tag"><span lang="zh-TW">指南</span><span lang="en-GB">Guide</span></span>
-      <span>v 0.4.1</span>
+      <span>v 0.5.0</span>
     </div>
   </header>
 
@@ -1822,8 +1822,8 @@ document.documentElement.classList.add('js');
         <div class="label"><span lang="zh-TW">Mixture&#8209;of&#8209;Experts 參數總量（每 token 啟用 13 B）</span><span lang="en-GB">Mixture&#8209;of&#8209;Experts parameter count (13 B activated per token)</span></div>
       </div>
       <div class="ledger-item">
-        <div class="num">87/91<small>GB</small></div>
-        <div class="label"><span lang="zh-TW">IQ2XXS imatrix GGUF 權重；96–127 GB Mac 抓 ~87 GB 純 IQ2XXS-w2Q2K 版本，128 GB 以上則自動切到 ~91 GB 的 Q4_K spliced 版（layers 37–42）</span><span lang="en-GB">IQ2XXS imatrix GGUF weights; 96&ndash;127 GB Macs fetch the ~87 GB plain IQ2XXS-w2Q2K build, 128 GB+ fetch the ~91 GB Q4_K-spliced build (layers 37&ndash;42)</span></div>
+        <div class="num">~87<small>GB</small></div>
+        <div class="label"><span lang="zh-TW">首選 Headroom128 GGUF 權重（~81 GiB / ~87 GB；apetersson abliterated 0731 DS4 headroom build）</span><span lang="en-GB">Preferred Headroom128 GGUF weights (~81 GiB / ~87 GB; apetersson abliterated 0731 DS4 headroom build)</span></div>
       </div>
       <div class="ledger-item">
         <div class="num">545<small>t/s</small></div>
@@ -1957,8 +1957,8 @@ document.documentElement.classList.add('js');
       </div>
       <div>
         <dt><span lang="zh-TW">IQ2XXS imatrix 量化</span><span lang="en-GB">IQ2XXS imatrix quantisation</span><span class="cjk-aside"><span lang="zh-TW">壓縮版的模型檔</span><span lang="en-GB">compressed model file</span></span></dt>
-        <dd lang="zh-TW">把模型權重壓縮到更小的位元寬度。本指南用的 IQ2XXS-w2Q2K imatrix 配方平均約 2 bit/權重（routed expert 用更省的 IQ2XXS，attention/output/embedding 保留 Q8_0），加上以代表性 corpus 校準的 imatrix，把模型從 FP8 原生大小（~284 GB，等於 Q8_0 GGUF）壓到 ~87 GB——這是它能放進 Mac 的關鍵。128 GB 以上 RAM 的機型則自動切到 ~91 GB 的 mixed 版本：layers 37–42 的 routed expert 改用 Q4_K 接片，其餘仍維持 IQ2XXS-w2Q2K，付出 ~4 GB 額外磁碟但內容更貼近完整 Q4 build。</dd>
-        <dd lang="en-GB">Compresses the weights to fewer bits per parameter. The IQ2XXS-w2Q2K imatrix recipe used here averages about 2 bits per weight (routed experts use the tighter IQ2XXS quant, while attention/output/embedding stay at Q8_0), with an importance-matrix calibration on top, shrinking the model from its native FP8 size (~284 GB, equivalent to a Q8_0 GGUF) down to ~87 GB &mdash; the lever that lets it fit on a Mac. On 128 GB+ machines the downloader auto-selects a ~91 GB mixed build: layers 37&ndash;42&rsquo;s routed experts are spliced in at Q4_K, everything else stays IQ2XXS-w2Q2K, trading ~4 GB of extra disk for output that tracks the full Q4 build more closely on those six layers.</dd>
+        <dd lang="zh-TW">把模型權重壓縮到更小的位元寬度。本指南用的 IQ2XXS-w2Q2K imatrix 配方平均約 2 bit/權重（routed expert 用更省的 IQ2XXS，attention/output/embedding 保留 Q8_0），加上以代表性 corpus 校準的 imatrix，把首選 Headroom128 權重從 FP8 原生大小壓到 ~81 GiB / ~87 GB——這是它能放進 128 GB 級 Mac 並留下 runtime headroom 的關鍵。</dd>
+        <dd lang="en-GB">Compresses the weights to fewer bits per parameter. The IQ2XXS-w2Q2K imatrix recipe used here averages about 2 bits per weight (routed experts use the tighter IQ2XXS quant, while attention/output/embedding stay at Q8_0), with an importance-matrix calibration on top, shrinking the preferred Headroom128 weights from native FP8 size down to ~81 GiB / ~87 GB &mdash; the lever that lets a 128 GB-class Mac keep runtime headroom.</dd>
       </div>
       <div>
         <dt><span lang="zh-TW">方向性引導</span><span lang="en-GB">Directional steering</span><span class="cjk-aside"><span lang="zh-TW">本分支特色</span><span lang="en-GB">signature of this fork</span></span></dt>
@@ -2017,7 +2017,7 @@ document.documentElement.classList.add('js');
       <li><a href="#preface"><span lang="zh-TW">前情提要：這份指南寫給誰看</span><span lang="en-GB">Preface: Who this guide is for</span></a></li>
       <li><a href="#install"><span lang="zh-TW">硬體門檻與一行安裝</span><span lang="en-GB">Hardware bar and the one-line install</span></a></li>
       <li><a href="#firstrun"><span lang="zh-TW">首次啟動會發生什麼事</span><span lang="en-GB">What happens on first launch</span></a></li>
-      <li><a href="#model"><span lang="zh-TW">這顆模型：abliteration 與 IQ2XXS imatrix</span><span lang="en-GB">The model: abliteration and IQ2XXS imatrix</span></a></li>
+      <li><a href="#model"><span lang="zh-TW">這顆模型：Headroom128 與 IQ2XXS imatrix</span><span lang="en-GB">The model: Headroom128 and IQ2XXS imatrix</span></a></li>
       <li><a href="#steering"><span lang="zh-TW">方向性引導：本分支的靈魂</span><span lang="en-GB">Directional steering: the soul of this fork</span></a></li>
       <li><a href="#config"><span lang="zh-TW">環境變數全表</span><span lang="en-GB">Full environment-variable reference</span></a></li>
       <li><a href="#tuning"><span lang="zh-TW">Runtime 調校：context 與 KV cache</span><span lang="en-GB">Runtime tuning: context and KV cache</span></a></li>
@@ -2125,10 +2125,17 @@ document.documentElement.classList.add('js');
     </ul>
 
 
-    <h3><span lang="zh-TW">v 0.4.1 補丁（擴充套件）</span><span lang="en-GB">v 0.4.1 patch (extension)</span></h3>
+    <h3><span lang="zh-TW">v 0.5.0 補丁（擴充套件）</span><span lang="en-GB">v 0.5.0 patch (extension)</span></h3>
 
-    <p lang="zh-TW">目前指南標示 <strong>v 0.4.1</strong>（與 <code>package.json</code> 一致）。相對 v 0.4.0 的變更在 wrapper，不是 pin：</p>
-    <p lang="en-GB">This guide is labelled <strong>v 0.4.1</strong> (matching <code>package.json</code>). Changes since v 0.4.0 are in the extension wrapper, not the pin:</p>
+    <p lang="zh-TW">目前指南標示 <strong>v 0.5.0</strong>（與 <code>package.json</code> 一致）。相對 v 0.4.0 的變更在 wrapper，不是 pin：</p>
+    <p lang="en-GB">This guide is labelled <strong>v 0.5.0</strong> (matching <code>package.json</code>). Changes since v 0.4.0 are in the extension wrapper, not the pin:</p>
+
+    <ul lang="zh-TW">
+      <li><strong>首選模型切到 Headroom128：</strong>managed path 改抓 <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code> 的單一 ~87 GB GGUF（可選同 repo 的 DSpark support）；不再預設 CyberNeurova dual-tier 或 antirez mixed/plain。</li>
+    </ul>
+    <ul lang="en-GB">
+      <li><strong>Preferred model cutover to Headroom128:</strong> the managed path now fetches the single ~87 GB GGUF from <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code> (optional matching DSpark support in the same repo); it no longer defaults to CyberNeurova dual-tier or antirez mixed/plain.</li>
+    </ul>
 
     <ul lang="zh-TW">
       <li><strong>磁碟 KV 預設依 RAM 分級：</strong>未設 <code>DS4_KV_DISK_SPACE_MB</code> 時，128 GB+ 約 64 GB、96–127 GB 約 32 GB、其餘 8 GB——長 agent session 較少因 8 GB 上限整段重 prefill（<a href="https://x.com/thomasjansn">@tjansn</a> 回報）。</li>
@@ -2252,8 +2259,8 @@ document.documentElement.classList.add('js');
 
     <div class="callout callout-teal">
       <div class="callout-label"><span lang="zh-TW">本書的兩個前提</span><span lang="en-GB">The book&rsquo;s two premises</span></div>
-      <p lang="zh-TW">其一：你願意把約 87/91 GB 的硬碟空間留給模型權重——這是本機運行的入場券。</p>
-      <p lang="en-GB">First: you&rsquo;re willing to spare about 87/91 GB of disk for the model weights &mdash; the cover charge for running locally.</p>
+      <p lang="zh-TW">其一：你願意把約 87 GB 的硬碟空間留給模型權重——這是本機運行的入場券。</p>
+      <p lang="en-GB">First: you&rsquo;re willing to spare about 87 GB of disk for the model weights &mdash; the cover charge for running locally.</p>
       <p lang="zh-TW">其二：如果你想走最方便的一行安裝路徑（第一～二章），需要先有
         <a href="https://github.com/earendil-works/pi">pi</a>（Earendil 的 coding agent CLI）。
         但如果你只想把 ds4-server 當本機後端、然後接到自己慣用的 Codex CLI／Claude Code／OpenClaw／Hermes Agent，
@@ -2279,31 +2286,31 @@ document.documentElement.classList.add('js');
     <p class="lede" lang="zh-TW">
       在輸入指令之前，先確認手邊這台 Mac 撐不撐得起這場手術。
       DeepSeek V4 Flash 是一顆 284 B 參數的 Mixture-of-Experts 模型；
-      雖然量化到 IQ2XXS-w2Q2K imatrix 之後權重只有約 87 GB（128 GB 以上 RAM 的機型則自動切到 ~91 GB 的 Q4_K spliced 版本），但執行時仍需要充足的記憶體
+      雖然量化到 Headroom128（~81 GiB / ~87 GB）之後權重能放進 128 GB 級機器，但執行時仍需要充足的記憶體
       留給激活與 KV cache。
     </p>
     <p class="lede" lang="en-GB">
       Before typing the command, check that the Mac in front of you can carry the surgery.
       DeepSeek V4 Flash is a 284-B-parameter Mixture-of-Experts model;
-      IQ2XXS-w2Q2K imatrix quantisation shrinks the weights to about 87 GB (128 GB+ machines auto-select the ~91 GB Q4_K-spliced build), but inference still needs
+      Headroom128 quantisation shrinks the weights to about 81 GiB / 87 GB, but inference still needs
       headroom in unified memory for activations and the KV cache.
     </p>
 
     <h3>1.1<span lang="zh-TW">　硬體最低需求</span><span lang="en-GB">　Minimum hardware</span></h3>
 
     <ul lang="zh-TW">
-      <li><strong>RAM：</strong>至少 96 GB。低於這個數字，本擴充會直接拋出錯誤——managed path 以 96–127 GB Mac 上的 87 GB 純 IQ2XXS 權重全常駐為準；128 GB 以上 RAM 的機型則改用 ~91 GB 的 Q4_K spliced 版本，無需 wired-limit 調整。
+      <li><strong>RAM：</strong>至少 96 GB。低於這個數字，本擴充會直接拋出錯誤——managed path 以單一 Headroom128（~87 GB）權重為準；96–127 GB Mac 需先依下方 callout 把 Metal wired memory 拉高，128 GB 以上通常可直接安裝。
         96&ndash;127 GB 的 Mac 需先依下方 callout 把 Metal wired memory 拉高；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。
-      <li><strong>磁碟：</strong>約 87/91 GB 給權重（依 RAM 決定自動選哪個量化版），另外保留 KV disk cache（未設 <code>DS4_KV_DISK_SPACE_MB</code> 時依 RAM 自動：128 GB+ 約 64 GB、96–127 GB 約 32 GB）、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
+      <li><strong>磁碟：</strong>約 87 GB 給首選 Headroom128 權重，另外保留 KV disk cache（未設 <code>DS4_KV_DISK_SPACE_MB</code> 時依 RAM 自動：128 GB+ 約 64 GB、96–127 GB 約 32 GB）、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
       <li><strong>晶片：</strong>任何 Apple Silicon 都可以；Linux／CUDA 機器也可走同一份 ds4 engine。後端行為以 audreyt/ds4 目前繼承的上游 runtime 為準。</li>
-      <li><strong>網路：</strong>首次下載 87/91 GB GGUF 需要良好頻寬。若你的 HuggingFace 下載受惠於授權，請設定 <code>HF_TOKEN</code>。</li>
+      <li><strong>網路：</strong>首次下載 87 GB GGUF 需要良好頻寬。若你的 HuggingFace 下載受惠於授權，請設定 <code>HF_TOKEN</code>。</li>
     </ul>
     <ul lang="en-GB">
-      <li><strong>RAM:</strong> at least 96 GB. Below that, the extension errors out at startup &mdash; the managed path assumes the 96&ndash;127 GB Mac&rsquo;s 87 GB plain IQ2XXS weights are fully resident; 128 GB+ machines fetch the ~91 GB Q4_K-spliced build instead, which needs no wired-limit adjustment.
+      <li><strong>RAM:</strong> at least 96 GB. Below that, the extension errors out at startup &mdash; the managed path assumes the single Headroom128 (~87 GB) weights; 96&ndash;127 GB Macs need the Metal wired-memory raise below, while 128 GB+ machines usually install directly.
         Macs in the 96&ndash;127 GB range need to raise Metal wired memory per the callout below; 128 GB+ machines install directly and have headroom to run more apps alongside ds4-server.
-      <li><strong>Disk:</strong> ~87/91 GB for the weights (auto-selected by RAM), plus KV disk cache (when <code>DS4_KV_DISK_SPACE_MB</code> is unset: ~64 GB on 128 GB+, ~32 GB on 96&ndash;127 GB), the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
+      <li><strong>Disk:</strong> ~87 GB for the preferred Headroom128 weights, plus KV disk cache (when <code>DS4_KV_DISK_SPACE_MB</code> is unset: ~64 GB on 128 GB+, ~32 GB on 96&ndash;127 GB), the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
       <li><strong>Chip:</strong> any Apple Silicon works; Linux / CUDA machines can use the same ds4 engine. Backend behaviour follows the current upstream runtime inherited by audreyt/ds4.</li>
-      <li><strong>Network:</strong> the first ~87/91 GB GGUF download benefits from good bandwidth. If your HuggingFace download benefits from auth, set <code>HF_TOKEN</code>.</li>
+      <li><strong>Network:</strong> the first ~87 GB GGUF download benefits from good bandwidth. If your HuggingFace download benefits from auth, set <code>HF_TOKEN</code>.</li>
     </ul>
 
     <div class="callout" id="ram96">
@@ -2481,10 +2488,10 @@ git clone --depth 1 --single-branch \
           <h4><span lang="zh-TW">確保模型存在</span><span lang="en-GB">Ensure the model is present</span></h4>
           <p lang="zh-TW">執行內附的 <code>download_model.sh q2</code>：</p>
           <p lang="en-GB">Runs the bundled <code>download_model.sh q2</code>:</p>
-          <code class="seq-args"><span class="c"># <span lang="zh-TW">用 curl -C - 可中斷續傳 87 GB IQ2XXS aligned-imatrix GGUF</span><span lang="en-GB">curl -C - resumes the 87-GB IQ2XXS aligned-imatrix GGUF after interruptions</span></span>
+          <code class="seq-args"><span class="c"># <span lang="zh-TW">用 curl -C - 可中斷續傳首選 Headroom128 GGUF</span><span lang="en-GB">curl -C - resumes the preferred Headroom128 GGUF after interruptions</span></span>
 curl -fL --progress-meter -C - \
-  -o gguf/cyberneurova-...imatrix-aligned.<span class="gold">gguf.part</span> \
-  <span class="teal">https://huggingface.co/audreyt/...</span>
+  -o gguf/DeepSeek-V4-Flash-...-imatrix-0731.<span class="gold">gguf.part</span> \
+  <span class="teal">https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128/...</span>
 
 mv gguf/...gguf.part gguf/...gguf
 ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
@@ -2499,11 +2506,10 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
           <code class="seq-args">ds4-server \
   --ctx <span class="gold">100000</span> \
   --kv-disk-dir   ~/.pi/ds4/kv \
-  --kv-disk-space-mb <span class="gold">65536</span> <span class="teal"># 128 GB+ auto; 32768 on 96–127 GB</span> \
-  --dir-steering-file <span class="teal">dir-steering/out/uncertainty_ablit_imatrix.f32</span> \
-  --dir-steering-ffn  <span class="teal">-0.75</span> \
-  --dir-steering-attn <span class="teal">0</span> \
-  --dir-steering-policy <span class="teal">final-answer</span></code>
+  --kv-disk-space-mb <span class="gold">65536</span> <span class="teal"># 128 GB+ auto; 32768 on 96–127 GB</span>
+  <span class="c"># steering off by default on final 0731; opt in with:
+  # --dir-steering-file dir-steering/out/uncertainty_ablit_imatrix.f32
+  # --dir-steering-ffn -0.75 --dir-steering-attn 0 --dir-steering-policy final-answer</span></code>
         </div>
       </li>
       <li>
@@ -2539,11 +2545,11 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
 
     <p lang="zh-TW">
       在 pi 中執行 <code>/ds4</code>，會打開一個即時的 log 視窗。
-      IQ2XXS aligned-imatrix GGUF 下載期間（約 87 GB），你會看到 curl 進度條被精簡顯示為一行
+      首選 Headroom128 GGUF 下載期間（約 87 GB），你會看到 curl 進度條被精簡顯示為一行
       百分比＋速率＋剩餘時間。
     </p>
     <p lang="en-GB">
-      Inside pi, running <code>/ds4</code> opens a live log window. While the IQ2XXS aligned-imatrix GGUF is downloading (~87 GB),
+      Inside pi, running <code>/ds4</code> opens a live log window. While the preferred Headroom128 GGUF is downloading (~87 GB),
       you&rsquo;ll see curl&rsquo;s progress meter condensed into a single line of percent, rate, and ETA.
     </p>
 
@@ -2552,13 +2558,14 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
       <p lang="zh-TW">
         別擔心：<code>download_model.sh</code> 用 <code>curl -C -</code> 續傳，
         下次啟動會從中斷處繼續。檔名是
-        <code>cyberneurova-DeepSeek-V4-Flash-abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-aligned.gguf.part</code>，
-        完成後才會被重新命名為 <code>.gguf</code>。
+        <code>DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf.part</code>
+        ，完成後才會被重新命名為 <code>.gguf</code>。
       </p>
       <p lang="en-GB">
         Don&rsquo;t worry: <code>download_model.sh</code> uses <code>curl -C -</code> for resume.
         The next launch picks up where it left off. The temporary filename is
-        <code>cyberneurova-DeepSeek-V4-Flash-abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-aligned.gguf.part</code>; it&rsquo;s only renamed to
+        <code>DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf.part</code>
+        ; it&rsquo;s only renamed to
         <code>.gguf</code> after the bytes are complete.
       </p>
     </div>
@@ -2569,17 +2576,17 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
   <!-- ═══════════  CHAPTER 3 — THE MODEL  ═══════════ -->
   <section class="chapter" id="model">
     <div class="chapter-eyebrow"><span class="cjk-num"><span lang="zh-TW">第　三　章</span><span lang="en-GB">Chapter 3</span></span></div>
-    <h2><span lang="zh-TW">這顆模型：<em>abliteration 與 IQ2XXS imatrix</em></span><span lang="en-GB">The model: <em>abliteration and IQ2XXS imatrix</em></span></h2>
+    <h2><span lang="zh-TW">這顆模型：<em>Headroom128 與 IQ2XXS imatrix</em></span><span lang="en-GB">The model: <em>Headroom128 and IQ2XXS imatrix</em></span></h2>
 
     <p class="lede" lang="zh-TW">
       在你用它之前，值得花五分鐘理解你正在跑的是什麼。
-      本擴充刻意挑選了 <em>cyberneurova 的 abliterated GGUF</em>，
-      而不是 antirez/ds4 原本下載的「stock-recipe」版本——這個選擇有它的理由。
+      本擴充現在預設下載 <em>首選 Headroom128 DeepSeek-V4-Flash-0731</em> 的 DwarfStar imatrix GGUF，
+      而不是先前 managed path 的 CyberNeurova abliterated 預覽權重。
     </p>
     <p class="lede" lang="en-GB">
       Before you use it, it is worth five minutes to understand what you are actually running.
-      This extension deliberately picks <em>cyberneurova's abliterated GGUF</em>
-      rather than the &ldquo;stock-recipe&rdquo; version that antirez/ds4 downloads by default &mdash; the choice has its reasons.
+      This extension now defaults to the official <em>DeepSeek-V4-Flash-0731</em> DwarfStar imatrix GGUFs,
+      rather than the earlier managed CyberNeurova abliterated preview weights.
     </p>
 
     <h3>3.1<span lang="zh-TW">　DeepSeek V4 Flash 是什麼</span><span lang="en-GB">　What DeepSeek V4 Flash is</span></h3>
@@ -2587,45 +2594,42 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <p lang="zh-TW">
       DeepSeek V4 Flash 是一顆 284 B 參數的 Mixture-of-Experts 模型，
       每個 token 啟用約 13 B 參數。它是 V4 系列的「快速」變體，主打較低的推論延遲與較大的 context window。
-      本擴充把 ds4-server 的 <code>--ctx</code> 設成 100,000 tokens——
-      但這是<em>引擎願意吃</em>的上限，不等於模型在這個長度下都穩定：
-      cyberneurova 的模型卡指出，abliterated 權重在 32k tokens 以上的行為尚未被驗證。
+      官方 0731 發布取代預覽版，並在 agentic 基準上顯著提升。本擴充把 ds4-server 的
+      <code>--ctx</code> 設成 100,000 tokens——這是<em>引擎願意吃</em>的上限，
+      不等於每個工作負載在該長度下都最穩。
     </p>
     <p lang="en-GB">
       DeepSeek V4 Flash is a 284 B-parameter Mixture-of-Experts model
       with roughly 13 B parameters activated per token. It is the &ldquo;fast&rdquo; variant of the V4 family, aiming for lower inference latency and a larger context window.
-      This extension sets ds4-server's <code>--ctx</code> to 100,000 tokens &mdash;
-      but that is the upper bound the <em>engine is willing to accept</em>, not a guarantee that the model is stable at that length:
-      cyberneurova's model card notes that the abliterated weights have not been validated above 32k tokens.
+      The official 0731 release supersedes the preview and substantially improves agentic benchmarks. This extension sets ds4-server's <code>--ctx</code> to 100,000 tokens &mdash;
+      the upper bound the <em>engine is willing to accept</em>, not a guarantee that every workload is most stable at that length.
     </p>
 
     <p lang="zh-TW">
       antirez 的 <a href="https://github.com/antirez/ds4">ds4</a> 用純 C 撰寫了一個本機 inference engine
       （和 Redis 同一個傳統），把這顆模型壓進 Apple Silicon。
       本擴充使用 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 分支的 <code>main</code>，
-      目前釘在 audreyt 的 CyberNeurova abliterated aligned-imatrix GGUF 與
-      <code>dir-steering/out/uncertainty_ablit_imatrix.f32</code> 引導向量上。
-      Metal/NAX 等後端工作已經進入上游或 PR；本分支保留的重點是這顆權重、下載對應、可重現 seed/tool-id 路徑，以及工具友善的 final-answer uncertainty steering。
+      目前釘在合併後的 DwarfStar runtime 與官方首選 Headroom128 GGUF 上。
+      歷史性的 CyberNeurova 方向向量仍保留為研究用 opt-in；managed path 預設關閉 steering。
     </p>
     <p lang="en-GB">
       antirez's <a href="https://github.com/antirez/ds4">ds4</a> is a local inference engine written in pure C
       (the same tradition as Redis), squeezing this model onto Apple Silicon.
       This extension uses the <code>main</code> branch of the <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> fork,
-      currently pinned around Audrey's CyberNeurova abliterated aligned-imatrix GGUF and the
-      <code>dir-steering/out/uncertainty_ablit_imatrix.f32</code> steering vector.
-      Metal/NAX backend work now lives upstream or in PRs; what this fork preserves is the weight choice,
-      download mapping, reproducible seed/tool-ID path, and tool-safe final-answer uncertainty steering.
+      currently pinned to the merged DwarfStar runtime and the official preferred Headroom128 GGUFs.
+      The historical CyberNeurova direction vector remains available as a research opt-in; the managed path leaves steering off by default.
     </p>
 
-    <h3>3.2<span lang="zh-TW">　什麼是 abliteration</span><span lang="en-GB">　What abliteration is</span></h3>
+    <h3>3.2<span lang="zh-TW">　什麼是 abliteration（歷史背景）</span><span lang="en-GB">　What abliteration is (historical background)</span></h3>
+
 
     <p lang="zh-TW">
-      <a href="https://huggingface.co/audreyt/CyberNeurova-DeepSeek-V4-Flash-abliterated-GGUF">cyberneurova 的 abliterated GGUF</a>
+      <a href="https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128">Headroom128 abliterated GGUF</a>
       是經過「abliteration」手術的權重檔。Abliteration 是一種以低秩活化編輯為基礎的技術：
       找出模型在面對某些訓練好的「拒絕」提示時內部出現的特定方向，然後把那個方向從前向計算中移除。
     </p>
     <p lang="en-GB">
-      <a href="https://huggingface.co/audreyt/CyberNeurova-DeepSeek-V4-Flash-abliterated-GGUF">cyberneurova's abliterated GGUF</a>
+      <a href="https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128">Headroom128 abliterated GGUF</a>
       is a weights file that has undergone &ldquo;abliteration&rdquo; surgery. Abliteration is a technique grounded in low-rank activation editing:
       identify the specific direction that emerges internally when the model meets certain trained &ldquo;refusal&rdquo; prompts, then remove that direction from the forward pass.
     </p>
@@ -2667,23 +2671,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <h3>3.3<span lang="zh-TW">　IQ2XXS-w2Q2K imatrix 配方</span><span lang="en-GB">　The IQ2XXS-w2Q2K imatrix recipe</span></h3>
 
     <p lang="zh-TW">
-      本分支的 <code>download_model.sh</code> 會依偵測到的 RAM 選擇兩個 cyberneurova GGUF 之一：
-      <strong>純 IQ2XXS-w2Q2K aligned-imatrix（~87 GB）</strong>，routed expert 用更省的 IQ2XXS、
-      attention/output/embedding 保留 Q8_0，加上 chat-v2 imatrix 校準並以 4096-byte 對齊封裝；
-      或在 128 GB 以上 RAM 自動切到 <strong>mixed Q4_K 接片版（~91 GB）</strong>——
-      layers 37–42 的 routed expert 改用 Q4_K，其餘維持 IQ2XXS-w2Q2K imatrix，多花 ~4 GB 磁碟但輸出在這六層更貼近完整 Q4 build。兩個檔案都跟 antirez/ds4 自己散佈的「ds4flash.gguf」
-      （同樣 IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 imatrix 配方，只是未經 abliteration）共用同一量化結構家族，
+      本分支的 <code>download_model.sh</code> 會下載首選 Headroom128 GGUF：<strong>DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf（~81 GiB / ~87 GB）</strong>，來自 <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>。這是 abliterated 0731 的 DS4 headroom 配方：routed expert 以 IQ2_XXS/Q2_K 為主、dense 路徑較受保護，並為 128 GB 級機器留下 runtime headroom。同 repo 另有可選的 matching DSpark support GGUF家族，
       在 96 GB Mac 上配合本指南的 sysctl 步驟也跑得動，128 GB 以上 RAM 則裝得最寬鬆；也是 ds4 引擎本身最熟的格式。
     </p>
     <p lang="en-GB">
-      This fork&rsquo;s <code>download_model.sh</code> picks one of two cyberneurova GGUFs by detected RAM:
-      the <strong>plain IQ2XXS-w2Q2K aligned-imatrix file (~87 GB)</strong> &mdash; routed experts use the tighter IQ2XXS quant,
-      attention/output/embedding stay at Q8_0, with the chat-v2 imatrix calibration packaged at 4096-byte alignment &mdash;
-      or, on 128 GB+ RAM, its auto-selected <strong>mixed Q4_K-spliced sibling (~91 GB)</strong>, where layers 37&ndash;42&rsquo;s
-      routed experts are Q4_K and the rest stay IQ2XXS-w2Q2K imatrix, trading ~4 GB of disk for output that tracks the full Q4 build
-      more closely on the six spliced layers. Both files share the quantisation family antirez/ds4 itself distributes as &ldquo;ds4flash.gguf&rdquo;
-      (the only difference here is that this one was abliterated first), so the ds4 engine treats them as its native format;
-      they run on a 96 GB Mac with the sysctl step from §1.1 and leave the most headroom on a 128 GB+ Mac.
+      This fork&rsquo;s <code>download_model.sh</code> fetches the preferred Headroom128 GGUF:
+      the <strong>preferred Headroom128 file (~81 GiB / ~87 GB)</strong> from <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>.
     </p>
 
     <p lang="zh-TW">
@@ -2696,12 +2689,7 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
       Worth noting: V4 Flash <em>has no</em> uniform intermediate quantisation tiers like Q4_K_M / Q5_K_M / Q6_K in GGUF form &mdash;
       cyberneurova's model card states explicitly that this is not a release-strategy choice, but an architectural limit between V4-Flash's native FP8 expert layout
       and the quantisation schemes that antirez's converter currently supports. So the &ldquo;just run the whole model at Q4&rdquo; path is closed for this model &mdash;
-      the mixed build auto-selected on 128 GB+ RAM is not a whole-model Q4: it splices Q4_K only into the routed experts of layers 37&ndash;42 while the other 37 layers and the attention/output/embedding stay on the IQ2XXS-w2Q2K imatrix recipe.
-    </p>
-
-    <p lang="zh-TW">
-      antirez 的引擎在 <code>audreyt/ds4</code> 的 main 分支裡可以直接讀
-      cyberneurova 的 aligned IQ2XXS imatrix GGUF，不需要任何 harmonization 步驟，
+      the preferred Headroom128 build is itself a mixed-precision low-bit profile rather than a whole-model Q4; dense paths stay better protected while routed experts are aggressively compressed. UF，不需要任何 harmonization 步驟，
       也不需要 Python venv。這是本分支跟上游 <code>mitsuhiko/pi-ds4</code> 的兩個主要差別之一。
     </p>
     <p lang="en-GB">
@@ -2816,12 +2804,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <ul lang="zh-TW">
       <li><strong>引導 + system prompt 是一組</strong>：純引導沒有提示時，
         模型只會「猶豫」；純 hedge 提示沒有引導時，模型會被訓練封鎖壓回去。兩者合用才產生效果。</li>
-      <li><strong><code>ffn=-0.75, attn=0</code> 是預設點</strong>：在 cyberneurova-abliterated aligned-imatrix 上，以 seed 42、穩定工具 ID、50k+ token Codex harness prompt 實測能保留「利害關係人框架」的微調，同時不干擾 DSML／tool-call grammar。若還看到工具怪異，可退回 <code>ffn=-0.5, attn=0</code>；舊的 <code>ffn=-2, attn=-0.5</code> 壓力測試設定只適合隔離評估，容易重複塌陷或跨語言亂碼。</li>
+      <li><strong><code>ffn=-0.75, attn=0</code> 是預設點</strong>：在 Headroom128 上，以 seed 42、穩定工具 ID、50k+ token Codex harness prompt 實測能保留「利害關係人框架」的微調，同時不干擾 DSML／tool-call grammar。若還看到工具怪異，可退回 <code>ffn=-0.5, attn=0</code>；舊的 <code>ffn=-2, attn=-0.5</code> 壓力測試設定只適合隔離評估，容易重複塌陷或跨語言亂碼。</li>
     </ul>
     <ul lang="en-GB">
       <li><strong>Steering + system prompt go together</strong>: with steering alone and no prompt,
         the model just &ldquo;hesitates&rdquo;; with a hedge prompt and no steering, the trained lock pushes it back. Only together do they take effect.</li>
-      <li><strong><code>ffn=-0.75, attn=0</code> is the default point</strong>: empirically, on the cyberneurova-abliterated aligned-imatrix build, this preserves the stakeholder-framing nudge on the seed-42 stable-tool-ID path while keeping 50k+ token Codex harness prompts and DSML/tool-call grammar intact. If tool weirdness returns, fall back to <code>ffn=-0.5, attn=0</code>; the older <code>ffn=-2, attn=-0.5</code> acid-test setting is for isolated evaluation and can collapse into repetition or cross-lingual gibberish.</li>
+      <li><strong><code>ffn=-0.75, attn=0</code> is the default point</strong>: empirically, on the Headroom128 build, this preserves the stakeholder-framing nudge on the seed-42 stable-tool-ID path while keeping 50k+ token Codex harness prompts and DSML/tool-call grammar intact. If tool weirdness returns, fall back to <code>ffn=-0.5, attn=0</code>; the older <code>ffn=-2, attn=-0.5</code> acid-test setting is for isolated evaluation and can collapse into repetition or cross-lingual gibberish.</li>
     </ul>
 
     <h3>4.5<span lang="zh-TW">　搭配的 system prompt（範例，非預設）</span><span lang="en-GB">　A paired system prompt (example, not the default)</span></h3>
@@ -2907,12 +2895,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <div class="callout callout-teal">
       <div class="callout-label"><span lang="zh-TW">引導向量的來源</span><span lang="en-GB">Where the steering vector comes from</span></div>
       <p lang="zh-TW">
-        <code>uncertainty_ablit_imatrix.f32</code> 是用 120 個英／繁中均衡的「有爭議」提示建出的低秩方向，這批例子刻意不含台灣與香港；目前版本用同一批 prompt 對比「公平呈現所有利害關係人」與「直接給單一確定答案」兩種 framing，校準的對象正是本擴充下載的 cyberneurova abliterated aligned-imatrix GGUF，
+        <code>uncertainty_ablit_imatrix.f32</code> 是用 120 個英／繁中均衡的「有爭議」提示建出的低秩方向，這批例子刻意不含台灣與香港；目前版本用同一批 prompt 對比「公平呈現所有利害關係人」與「直接給單一確定答案」兩種 framing，校準的對象正是本擴充下載的 Headroom128 GGUF，
         打包在 <code>audreyt/ds4</code> 的 <code>dir-steering/out/</code> 底下。
         完整方法請見 <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>。
       </p>
       <p lang="en-GB">
-        <code>uncertainty_ablit_imatrix.f32</code> is a low-rank direction built from 120 balanced English / Traditional Chinese contested prompts, intentionally excluding Taiwan and Hong Kong examples. The current build contrasts fair stakeholder framing with direct single-answer framing on the same prompt set, calibrated against the very same cyberneurova abliterated aligned-imatrix GGUF this extension downloads,
+        <code>uncertainty_ablit_imatrix.f32</code> is a low-rank direction built from 120 balanced English / Traditional Chinese contested prompts, intentionally excluding Taiwan and Hong Kong examples. The current build contrasts fair stakeholder framing with direct single-answer framing on the same prompt set, calibrated against the very same Headroom128 GGUF this extension downloads,
         packaged under <code>dir-steering/out/</code> in <code>audreyt/ds4</code>.
         For the full method, see the <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>.
       </p>
@@ -2964,18 +2952,18 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
         <dt>DS4_DOWNLOAD_SCRIPT<span class="default"><span lang="zh-TW">預設 · 隨擴充內附</span><span lang="en-GB">default &middot; bundled with this extension</span></span></dt>
         <dd>
           <p lang="zh-TW">模型下載腳本的絕對路徑。預設使用本擴充內附的 <code>download_model.sh</code>
-            （下載 cyberneurova abliterated GGUF）。如果你要換成 antirez 上游的 stock-recipe，指到他的腳本即可。</p>
+            （下載 preferred Headroom128 GGUF）。如果你要換成 antirez 上游的 stock-recipe，指到他的腳本即可。</p>
           <p lang="en-GB">Absolute path to the model-download script. Defaults to the <code>download_model.sh</code> bundled with this extension
-            (which downloads the cyberneurova abliterated GGUF). To swap in antirez's upstream stock-recipe, point this at his script.</p>
+            (which downloads the preferred Headroom128 GGUF). To swap in antirez's upstream stock-recipe, point this at his script.</p>
         </dd>
       </div>
       <div class="dl-row">
         <dt>DS4_MODEL_QUANT<span class="default"><span lang="zh-TW">預設 · <code>q2</code>（硬編碼）</span><span lang="en-GB">default &middot; <code>q2</code> (hard-coded)</span></span></dt>
         <dd>
-          <p lang="zh-TW">本擴充只支援 <code>q2</code>（cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix GGUF，依 RAM 二選一：96–127 GB 抓 ~87 GB 純版、128 GB 以上抓 ~91 GB 的 Q4_K spliced 版）。<code>index.ts</code> 的 <code>selectedModelQuant()</code>
+          <p lang="zh-TW">本擴充只支援 <code>q2</code>（歷史 selector，對應首選 Headroom128 GGUF：<code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>）。<code>index.ts</code> 的 <code>selectedModelQuant()</code>
             硬編碼了這個值；把 <code>DS4_MODEL_QUANT</code> 設為其他值會直接拋錯退出。
             V4 Flash 在 GGUF 上沒有 Q4／Q5／Q6 中間量化等級（見 <a href="#model">3.3 節</a>架構說明），ds4 的 <code>main</code> 載入路徑只認這套 IQ2XXS-w2Q2K imatrix 配方家族（mixed 版只是把其中 6 層 routed expert 換成 Q4_K，仍屬同一 family）。</p>
-          <p lang="en-GB">Only <code>q2</code> is supported (the cyberneurova abliterated IQ2XXS-w2Q2K aligned-imatrix GGUF, RAM-tiered: 96&ndash;127 GB fetches the ~87 GB plain build, 128 GB+ fetches the ~91 GB Q4_K-spliced build). <code>selectedModelQuant()</code> in <code>index.ts</code>
+          <p lang="en-GB">Only <code>q2</code> is supported (historic selector for the preferred Headroom128 GGUF from <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code>). <code>selectedModelQuant()</code> in <code>index.ts</code>
             hard-codes this value; setting <code>DS4_MODEL_QUANT</code> to anything else throws and exits.
             V4 Flash has no intermediate GGUF quantisation tiers like Q4 / Q5 / Q6 (see the architecture note in <a href="#model">&sect;3.3</a>), and ds4&rsquo;s <code>main</code> loader path only knows this IQ2XXS-w2Q2K imatrix recipe family (the mixed build just swaps 6 routed-expert layers to Q4_K; it is still the same family).</p>
         </dd>
@@ -4088,7 +4076,7 @@ resp = client.responses.create(
         <strong>（C）完全沒裝過 pi：</strong>直接從 <code>audreyt/ds4</code> 與 <code>audreyt/pi-ds4</code>
         bootstrap——不需要 pi、不需要 <code>~/.pi/ds4/</code>。需要兩個 repo 的原因：
         <code>ds4</code> 內附的 <code>download_model.sh</code> 抓的是 antirez 上游 stock-recipe；
-        要拿 cyberneurova abliterated GGUF（本指南的權重），得用 <code>pi-ds4</code> 內附的同名腳本。
+        要拿 preferred Headroom128 GGUF（本指南的權重），得用 <code>pi-ds4</code> 內附的同名腳本。
         <div class="codeblock">
           <div class="codeblock-bar">
             <span class="codeblock-label">完全跳過 pi 的 bootstrap</span>
@@ -4099,11 +4087,11 @@ git clone https://github.com/audreyt/ds4
 <span class="k">cd</span> ds4
 make ds4-server         <span class="c"># Mac: Metal; Linux: CUDA（見 8.7）</span>
 
-<span class="c"># 2. 用 pi-ds4 內附的 cyberneurova 下載腳本（不是 ds4 自帶的 stock-recipe 那支）</span>
-curl -fL -o download_cyberneurova.sh \
+<span class="c"># 2. 用 pi-ds4 內附的 Headroom128 下載腳本（不是 ds4 自帶的 stock-recipe 那支）</span>
+curl -fL -o download_model.sh \
   https://raw.githubusercontent.com/audreyt/pi-ds4/main/download_model.sh
-chmod +x download_cyberneurova.sh
-./download_cyberneurova.sh q2   <span class="c"># 取得 ~87 GB GGUF，並 symlink 為 ds4flash.gguf</span>
+chmod +x download_model.sh
+./download_model.sh q2   <span class="c"># 取得 ~87 GB GGUF，並 symlink 為 ds4flash.gguf</span>
 
 <span class="c"># 3. 起 server</span>
 ./ds4-server \
@@ -4149,7 +4137,7 @@ chmod +x download_cyberneurova.sh
         <strong>(C) Never installed pi at all:</strong> bootstrap directly from <code>audreyt/ds4</code> and <code>audreyt/pi-ds4</code>
         &mdash; no pi, no <code>~/.pi/ds4/</code> needed. Why both repos: the
         <code>download_model.sh</code> bundled with <code>ds4</code> fetches the antirez upstream stock-recipe;
-        to get the cyberneurova abliterated GGUF (the weights this guide uses) you need the same-named script from <code>pi-ds4</code>.
+        to get the preferred Headroom128 GGUF (the weights this guide uses) you need the same-named script from <code>pi-ds4</code>.
         <div class="codeblock">
           <div class="codeblock-bar">
             <span class="codeblock-label">Bootstrap that skips pi entirely</span>
@@ -4160,11 +4148,11 @@ git clone https://github.com/audreyt/ds4
 <span class="k">cd</span> ds4
 make ds4-server         <span class="c"># Mac: Metal; Linux: CUDA (see 8.7)</span>
 
-<span class="c"># 2. Use the cyberneurova download script bundled with pi-ds4 (not ds4's own stock-recipe one)</span>
-curl -fL -o download_cyberneurova.sh \
+<span class="c"># 2. Use the Headroom128 download script bundled with pi-ds4 (not ds4's own stock-recipe one)</span>
+curl -fL -o download_model.sh \
   https://raw.githubusercontent.com/audreyt/pi-ds4/main/download_model.sh
-chmod +x download_cyberneurova.sh
-./download_cyberneurova.sh q2   <span class="c"># Fetches the ~87 GB GGUF and symlinks it as ds4flash.gguf</span>
+chmod +x download_model.sh
+./download_model.sh q2   <span class="c"># Fetches the ~87 GB GGUF and symlinks it as ds4flash.gguf</span>
 
 <span class="c"># 3. Start the server</span>
 ./ds4-server \
@@ -4204,7 +4192,7 @@ chmod +x download_cyberneurova.sh
       上跑的不是某個 llama.cpp 旁路，而是<em>同一隻 engine、同一份 server、
       同一組 <code>--dir-steering-*</code> flag</em>。Spark 上直接
       <code>pi install https://github.com/audreyt/pi-ds4</code> 即可——clone、<code>make ds4-server</code>（自動走 nvcc + CUDA）、
-      下載 cyberneurova aligned-imatrix GGUF、起 server，
+      下載 preferred Headroom128 GGUF、起 server，
       整套流程與 Mac 上相同，只是編譯時自動走 Linux／CUDA 路徑。
     </p>
     <p lang="en-GB">
@@ -4215,7 +4203,7 @@ chmod +x download_cyberneurova.sh
       what runs is not some llama.cpp sidecar but the <em>same engine, the same server,
       the same <code>--dir-steering-*</code> flags</em>. On the Spark just run
       <code>pi install https://github.com/audreyt/pi-ds4</code>: it clones, runs <code>make ds4-server</code>
-      (which auto-selects nvcc + CUDA), downloads the cyberneurova aligned-imatrix GGUF,
+      (which auto-selects nvcc + CUDA), downloads the preferred Headroom128 GGUF,
       and spawns the server &mdash; the same flow as on a Mac.
     </p>
 
@@ -4929,7 +4917,7 @@ STATE=~/.pi/ds4/server.json
               <td>模型卡 / HF repo 的 LICENSE（DeepSeek 版權人）</td>
             </tr>
             <tr>
-              <td><a href="https://huggingface.co/audreyt/CyberNeurova-DeepSeek-V4-Flash-abliterated-GGUF">cyberneurova abliterated GGUF</a><br><span class="meta">本指南實際下載的權重</span></td>
+              <td><a href="https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128">preferred Headroom128 GGUF</a><br><span class="meta">本指南目前首選下載的權重</span></td>
               <td>MIT（inherits）</td>
               <td>該 HF repo 的 LICENSE + 一筆「derivative of DeepSeek-V4-Flash」標示</td>
             </tr>
@@ -4961,7 +4949,7 @@ STATE=~/.pi/ds4/server.json
               <td>the model card / HF repo's LICENSE (DeepSeek as copyright holder)</td>
             </tr>
             <tr>
-              <td><a href="https://huggingface.co/audreyt/CyberNeurova-DeepSeek-V4-Flash-abliterated-GGUF">cyberneurova abliterated GGUF</a><br><span class="meta">The weights this guide actually downloads</span></td>
+              <td><a href="https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128">preferred Headroom128 GGUF</a><br><span class="meta">The preferred weights this guide downloads</span></td>
               <td>MIT (inherits)</td>
               <td>that HF repo's LICENSE plus a &ldquo;derivative of DeepSeek-V4-Flash&rdquo; notice</td>
             </tr>

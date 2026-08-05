@@ -39,11 +39,10 @@ const LOG_FILE = join(DS4_DIR, "log");
 const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
 
 // audreyt/pi-ds4 fork: pull the audreyt/ds4 main branch by default. That
-// branch carries ivanfioravanti's PR #15 extended into Metal 4 M5 MPP +
+// branch carries the merged DwarfStar/upstream runtime, Metal 4 M5 MPP +
 // Tensor matmul fast paths, deterministic tool-call ID derivation from
 // seeded requests (what makes the seed=42 traces stable end-to-end), and
-// the cyberneurova-specific dir-steering vector calibrated on the
-// aligned-imatrix GGUF this extension downloads. Override with
+// optional directional steering for contested-question framing. Override with
 // DS4_SUPPORT_REPO / DS4_SUPPORT_BRANCH if you want a different ds4 build.
 //
 // SUPPORT_PIN is the exact audreyt/ds4 commit this version of pi-ds4 was
@@ -56,7 +55,7 @@ const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
 // disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
-const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "c1f4aa22358a859f623b58b409c597e7f4547efd").trim();
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "e204c6eda9e0728aaffbe8863617f77aea00e9b3").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)
@@ -130,22 +129,19 @@ function defaultKvDiskSpaceMb(): string {
 }
 
 const KV_DISK_SPACE_MB = process.env.DS4_KV_DISK_SPACE_MB?.trim() || defaultKvDiskSpaceMb();
-// Directional steering: a negative scale amplifies the fair stakeholder-framing
-// direction stored in the .f32 file. audreyt/ds4 ships
-// `dir-steering/out/uncertainty_ablit_imatrix.f32`, calibrated on the exact
-// cyberneurova abliterated IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 aligned-imatrix
-// GGUF this extension downloads. The path is resolved relative to the
-// ds4-server cwd (SUPPORT_DIR), so any audreyt/ds4 checkout that has the
-// direction file works out of the box. Override DS4_DIR_STEERING_FILE to point
-// at a different direction, or set both steering scales to 0 to disable.
+// Directional steering is opt-in for Headroom128 and other non-calibrated
+// weights. The legacy cyberneurova-calibrated uncertainty vector remains
+// available in the ds4 checkout, but it is weight-specific: leave FFN/ATTN at
+// 0 until a Headroom128 direction is validated. Set DS4_DIR_STEERING_FFN (and
+// optionally ATTN) to enable, or point DS4_DIR_STEERING_FILE at a different
+// .f32.
 //
-// Magnitude: keep the default FFN-only for tool-enabled agent runs. Seeded
+// When enabled, keep FFN-only for tool-enabled agent runs. Seeded
 // OpenClaw/Codex-harness replays showed ffn=-2, attn=-0.5 can over-amplify the
 // direction into DSML/tool-call leakage on long 50k+ tool prompts. ffn=-0.75,
-// attn=0 keeps the stakeholder-framing nudge while leaving the tool grammar
-// stable; ffn=-0.5 is an even gentler fallback.
+// attn=0 is the historical guarded magnitude on the cyberneurova vector.
 const STEERING_FILE = process.env.DS4_DIR_STEERING_FILE ?? "dir-steering/out/uncertainty_ablit_imatrix.f32";
-const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "-0.75";
+const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "0";
 const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "0";
 const STEERING_POLICY = process.env.DS4_DIR_STEERING_POLICY ?? "final-answer";
 const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
@@ -183,14 +179,11 @@ const WATCHDOG_POLL_MS = 2_000;
 const PROGRESS_NOTIFY_MS = 750;
 const PROGRESS_MAX_CHARS = 160;
 
-// pi-ds4 ships two audreyt-republished cyberneurova abliterated GGUFs and
-// auto-selects between them by detected RAM: the mixed-quant build (layers
-// 37-42 spliced in at Q4_K, everything else IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8
-// aligned-imatrix; ~91 GB weight payload) on 128 GB+ Macs, or the plain
-// IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8 aligned-imatrix GGUF (~87 GB) on 96-127 GB
-// Macs, where the mixed build's larger weight payload does not fit. The
-// bundled download_model.sh refuses any other quant. The historic "q2" label
-// is kept for on-disk lease/state compatibility with older installs.
+// pi-ds4 prefers the single Headroom128 GGUF from
+// apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128
+// (~81 GiB / ~87 GB). The bundled download_model.sh refuses any other quant.
+// The historic "q2" label is kept for on-disk lease/state compatibility with
+// older installs.
 type ModelQuant = "q2";
 
 type ServerState = {
@@ -350,21 +343,21 @@ function selectedModelQuant(): ModelQuant {
 	const forced = process.env.DS4_MODEL_QUANT?.toLowerCase();
 	if (forced && forced !== "q2") {
 		throw new Error(
-			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates the cyberneurova abliterated aligned-imatrix variants (mixed Q4-layers-37-42 on 128 GB+, plain IQ2XXS on 96-127 GB, both auto-selected by RAM). Unset DS4_MODEL_QUANT or set it to q2. (To experiment with cyberneurova plain Q2_K, the full Q4KExperts build, or Q8_0, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
+			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates the preferred Headroom128 GGUF (apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128, historic selector q2). Unset DS4_MODEL_QUANT or set it to q2. (To experiment with another GGUF, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
 		);
 	}
 
 	const ramGb = totalmem() / 1_000_000_000;
 	if (ramGb < 96) {
 		throw new Error(
-			`DeepSeek V4 Flash aligned-imatrix needs at least 96 GB RAM; detected ${ramGb.toFixed(1)} GB`,
+			`DeepSeek V4 Flash Headroom128 needs at least 96 GB RAM; detected ${ramGb.toFixed(1)} GB`,
 		);
 	}
 	if (ramGb < 128) {
 		const wiredLimitMb = readIogpuWiredLimitMb();
 		if (wiredLimitMb < 87_000) {
 			throw new Error(
-				`Detected ${ramGb.toFixed(1)} GB RAM. On Macs below 128 GB the Metal wired-memory ceiling must be raised first so the 87 GB plain IQ2XXS GGUF fits (128 GB+ Macs use the larger ~91 GB mixed-quant build instead, which needs no wired-limit adjustment). Run:\n\n  sudo sysctl iogpu.wired_limit_mb=92000\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command. 128 GB+ Macs do not need this step and can run more apps alongside ds4-server.`,
+				`Detected ${ramGb.toFixed(1)} GB RAM. On Macs below 128 GB the Metal wired-memory ceiling must be raised first so the ~81 GiB / ~87 GB Headroom128 GGUF fits. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=92000\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command. 128 GB+ Macs do not need this step and can run more apps alongside ds4-server.`,
 			);
 		}
 	}
@@ -1100,12 +1093,10 @@ function buildAgentArgs(initialPrompt: string): string[] {
 
 async function ensureModel(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
 	const quant = selectedModelQuant();
-	onStatus?.(`ensuring ${quant} model (cyberneurova abliterated aligned-imatrix, RAM-tiered)`);
+	onStatus?.(`ensuring ${quant} model (preferred Headroom128 abliterated 0731)`);
 	// audreyt/pi-ds4 fork: shadow the antirez/ds4 download_model.sh with our
-	// own copy that auto-selects and fetches the RAM-appropriate cyberneurova
-	// abliterated aligned-imatrix GGUF directly (mixed Q4-layers-37-42 build on
-	// 128 GB+, plain IQ2XXS build on 96-127 GB; no harmonization needed —
-	// audreyt/ds4 main accepts either file end-to-end on Metal). Idempotent.
+	// own copy that fetches the preferred Headroom128 GGUF from
+	// apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128. Idempotent.
 	await runLogged(DOWNLOAD_SCRIPT, [quant], runtimeDir, `download ${quant} model`, {
 		onStatus,
 		progressPrefix: `downloading ${quant} model`,

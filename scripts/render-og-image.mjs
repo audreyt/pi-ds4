@@ -76,6 +76,9 @@ function renderTo(jpegPath, tmpRoot) {
   const pngPath = join(tmpRoot, "og-pi-ds4.png");
   run(chrome, [
     "--headless=new",
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
     "--disable-gpu",
     "--hide-scrollbars",
     "--force-device-scale-factor=1",

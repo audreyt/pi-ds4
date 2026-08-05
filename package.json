@@ -1,7 +1,7 @@
 {
   "name": "pi-ds4",
-  "version": "0.4.1",
-  "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4 Flash inference (audreyt fork: cyberneurova abliterated aligned-imatrix GGUF + audreyt/ds4 main).",
+  "version": "0.5.0",
+  "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4 Flash 0731 inference (audreyt/ds4 main + preferred apetersson Headroom128 abliterated GGUF).",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -14,7 +14,9 @@
     "pi-extension",
     "ds4",
     "deepseek",
-    "cyberneurova",
+    "deepseek-v4-flash",
+    "0731",
+    "headroom128",
     "abliterated",
     "m5"
   ],

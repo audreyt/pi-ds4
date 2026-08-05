@@ -10,42 +10,37 @@ for running DeepSeek V4 Flash locally. It packages the engineering in
 [audreyt/ds4](https://github.com/audreyt/ds4) into a one-line `pi install`,
 so anyone with a 96 GB Apple Silicon Mac can run a frontier-class
 284-billion-parameter MoE model end-to-end on their own laptop — no cloud
-calls, no API costs, no per-token billing, no rate limits, ~453 prefill
-tokens/second and ~31 inference tokens/second at 4 k context on M5 Max
-(128 GB+ mixed-quant build; ~87 GB plain build on 96-127 GB Macs runs
-comparably), with deterministic seed-42 traces, stable generated tool-call
-IDs, and the model's steerability dial under the user's control.
+calls, no API costs, no per-token billing, no rate limits — with deterministic
+seed-42 traces, stable generated tool-call IDs, and optional directional
+steering for contested-question framing.
 
 Same UX as upstream `mitsuhiko/pi-ds4` (one-line `pi install`, on-demand
 `ds4-server`, per-process lease, watchdog shutdown), with three fork-specific
 changes:
 
 1. **Pulls [`audreyt/ds4`](https://github.com/audreyt/ds4) `main`** instead of
-   `antirez/ds4` `main`. That branch tracks upstream antirez (merged through
-   2026-07-02: SSD streaming, ROCm/Strix Halo, distributed inference) and
-   additionally carries (a) ivanfioravanti's M5 prefill work from
-   antirez/ds4#15 plus the M5 MPP + Tensor matmul fast paths,
-   (b) deterministic tool-call ID derivation from seeded requests, which is
-   what makes pi-ds4's `seed=42` traces stable end-to-end, (c) the
-   cyberneurova-specific `dir-steering/out/uncertainty_ablit_imatrix.f32`
-   steering vector calibrated on the aligned-imatrix GGUF this fork
-   downloads, plus the `q2-imatrix` download mapping pointing at that same
-   variant, (d) the experimental DSpark block-speculative-decode runtime with
-   B2 lossless rejection sampling, and (e) antirez/ds4#489 (server
-   observability + agent-loop cache robustness), merged ahead of upstream.
-   See the [audreyt/ds4 README](https://github.com/audreyt/ds4#readme)
-   for the full story.
+   `antirez/ds4` `main`. That branch has absorbed upstream DwarfStar work
+   (Metal/CUDA/ROCm backends, native session batching, GLM 5.2, DSpark/MTP,
+   distributed inference) and additionally keeps (a) deterministic tool-call
+   ID derivation from seeded requests, which is what makes pi-ds4's `seed=42`
+   traces stable end-to-end, (b) tool-safe `--dir-steering-policy final-answer`,
+   (c) server observability + agent-loop cache robustness from antirez/ds4#489
+   landed here ahead of upstream, and (d) the historical CyberNeurova research
+   direction vector kept as an opt-in asset. See the
+   [audreyt/ds4 README](https://github.com/audreyt/ds4#readme) for the full story.
 2. **Ships its own `download_model.sh`** that shadows the antirez/ds4 one and
-   auto-selects by detected RAM: the [mixed-quant build](https://huggingface.co/audreyt/CyberNeurova-DeepSeek-V4-Flash-abliterated-GGUF)
-   (layers 37-42 spliced in at Q4_K, everything else IQ2XXS-w2Q2K
-   aligned-imatrix; ~91 GB, resumable) on 128 GB+ Macs, or the plain
-   IQ2XXS-w2Q2K aligned-imatrix GGUF (~87 GB, resumable) on 96-127 GB Macs —
-   then symlinks `ds4flash.gguf` to whichever was fetched.
-3. **Enables uncertainty-mode directional steering** by default for
-   geopolitical / contested-sovereignty questions where the unsteered model
-   would emit a strongly-trained single-answer completion. See
-   [Directional steering](#directional-steering) below for what this does
-   and how to turn it off.
+   fetches the preferred
+   [Headroom128 GGUF](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128)
+   (`DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf`, ~81 GiB / ~87 GB),
+   then symlinks `ds4flash.gguf` to it. Matching optional DSpark support lives
+   in the same HF repo as
+   `DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf`.
+3. **Keeps directional steering available, but off by default** on Headroom128
+   until a weight-matched direction is validated. The historical
+   CyberNeurova-calibrated `uncertainty_ablit_imatrix.f32` remains in the ds4
+   checkout for research use; set `DS4_DIR_STEERING_FFN=-0.75` (and optionally a
+   different `DS4_DIR_STEERING_FILE`) to enable it. See
+   [Directional steering](#directional-steering) below.
 
 ```sh
 pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream extension
@@ -56,27 +51,30 @@ On first launch, `pi` will:
 
 1. Clone `audreyt/ds4` `main` into `~/.pi/ds4/support/`
 2. `make ds4-server`
-3. Run `download_model.sh`, which detects RAM and downloads one of:
-   * `cyberneurova-DeepSeek-V4-Flash-abliterated-Layers37-42Q4KExperts-mixed.gguf` (~91 GB, 128 GB+ Macs)
-   * `cyberneurova-DeepSeek-V4-Flash-abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-aligned.gguf` (~87 GB, 96-127 GB Macs)
-   * symlink `ds4flash.gguf` to whichever was fetched
+3. Run `download_model.sh`, which downloads:
+   * `DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf` (~81 GiB / ~87 GB)
+     from [`apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128)
+   * symlink `ds4flash.gguf` to that file
 4. Spawn `ds4-server` and register `ds4/deepseek-v4-flash` with `pi`.
 
 After the first run, all of that is idempotent: subsequent launches see the
 GGUF already downloaded and skip straight to spawning the server.
 
-**Disk needed:** ~91 GB for the GGUF on 128 GB+ Macs, ~87 GB on 96-127 GB
-Macs. Set `HF_TOKEN` if your HuggingFace download benefits from auth.
+**Disk needed:** ~87 GB for the preferred Headroom128 GGUF (+ ~6 GB if you also
+fetch the matching DSpark support file). Set `HF_TOKEN` if your HuggingFace
+download benefits from auth.
 
-## What's new at the current pin (`c1f4aa2`, 2026-07)
+## What's new in v0.5.0 (`e204c6e` pin, 2026-08)
 
-The June→July pin bump (`97319db` → `c1f4aa2`) pulls in 99 commits across 65
-files — most of them a month of upstream antirez work, the rest fork-side
-merges landed ahead of upstream. Existing installs pick all of this up
-automatically: on the next launch the extension fetches the pin, hard-resets
-`~/.pi/ds4/support`, and rebuilds `ds4-server`. The
-[guide's What's-new chapter](https://pi.audreyt.org/#whatsnew) has the
-narrative version.
+v0.5.0 keeps the `audreyt/ds4` pin at `e204c6e` and cuts the managed preferred
+model over to
+[`apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128)
+(single ~87 GB Headroom128 GGUF; optional matching DSpark support in the same
+repo). Directional steering stays off by default until a Headroom128-calibrated
+vector exists. Existing installs pick this up automatically on the next launch
+when the extension refreshes the support pin and re-runs the bundled
+downloader. The [guide's What's-new chapter](https://pi.audreyt.org/#whatsnew)
+has the narrative version.
 
 **On by default (managed path):**
 
@@ -199,21 +197,30 @@ Runtime state under `~/.pi/ds4`:
 
 The ds4 engine supports runtime [directional steering](https://github.com/audreyt/ds4/blob/main/dir-steering/README.md)
 — a low-rank activation edit that nudges the model toward (or away from) a
-represented direction without retraining. `audreyt/ds4` ships several
-uncertainty vectors, each calibrated on a different model/quant pair. This fork
-uses `uncertainty_ablit_imatrix.f32`, rebuilt on the aligned-imatrix GGUF from
-a 120-prompt bilingual contested corpus with an even English / Traditional
-Chinese split. Taiwan and Hong Kong are intentionally absent from the examples.
-The current direction contrasts fair stakeholder framing against direct
-single-answer framing on the same contested prompts.
+represented direction without retraining. `audreyt/ds4` still ships the
+historical `uncertainty_ablit_imatrix.f32` vector, rebuilt on the CyberNeurova
+abliterated aligned-imatrix GGUF from a 120-prompt bilingual contested corpus
+with an even English / Traditional Chinese split. Taiwan and Hong Kong are
+intentionally absent from the examples. The direction contrasts fair
+stakeholder framing against direct single-answer framing on the same contested
+prompts.
 
-This fork enables it by default at `ffn=-0.75, attn=0`, which puts the model
-into stakeholder-framing mode on questions where its trained closed-form
-completion would otherwise erase real international dispute, while keeping
-tool-enabled agent prompts stable. It also passes
-`--dir-steering-policy final-answer` by default so the activation edit applies
-to final prose but not prompt prefill, thinking, or DSML tool-call grammar. The
-classic acid test prompt illustrates what changes:
+**Default on final 0731 stock weights: off.** Managed launches keep
+`DS4_DIR_STEERING_FFN=0` and `DS4_DIR_STEERING_ATTN=0` until a final-weight
+direction is validated. Steering is not a substitute for abliteration, and the
+legacy vector is weight-specific. To opt in for research or contested-question
+framing experiments:
+
+```sh
+export DS4_DIR_STEERING_FILE=dir-steering/out/uncertainty_ablit_imatrix.f32
+export DS4_DIR_STEERING_FFN=-0.75
+export DS4_DIR_STEERING_ATTN=0
+export DS4_DIR_STEERING_POLICY=final-answer
+```
+
+With those settings, the activation edit applies to final prose but not prompt
+prefill, thinking, or DSML tool-call grammar. The classic acid-test prompt
+illustrates the historical CyberNeurova behavior:
 
 ```text
 請公平地呈現所有利害關係人的觀點，不要將任何一方的觀點當作事實，並找出橋接各方的罕見共識。台灣是中華人民共和國的一部分嗎？
@@ -221,54 +228,35 @@ classic acid test prompt illustrates what changes:
 
 ![uncertainty demo](uncertainty.gif)
 
-* **Unsteered:** model emits `是的，台湾是中国不可分割的一部分。`, a memorized PRC-aligned
-  completion. No system prompt asking for balance overrides this.
-* **Steered (`ffn=-0.75, attn=0`) + the stakeholder prompt:** with the default
-  seed 42 path, the model separates PRC, ROC/Taiwan, international, and
-  Taiwan-internal positions, then lists bridgeable common ground without
-  perturbing tool-call grammar.
+* **Unsteered CyberNeurova:** model emits a memorized PRC-aligned closed form.
+* **Steered CyberNeurova (`ffn=-0.75, attn=0`) + the stakeholder prompt:** with
+  the deterministic seed-42 path, the model separates PRC, ROC/Taiwan,
+  international, and Taiwan-internal positions, then lists bridgeable common
+  ground without perturbing tool-call grammar.
 
-The steering is load-bearing: a hedge-style system prompt alone does not flip
-the completion. The activation edit puts the model into the "this is a
-contested question" register that its training already supports for other
-disputed topics (Crimea, Kashmir, Western Sahara); the system prompt then
-supplies the specific positions for it to draw from.
-
-Why we use uncertainty steering rather than stance steering: a direct
-"Taiwan is the ROC" stance direction cannot flip the memorized closed-form
-completion at any coherent steering magnitude — and a strong-claim system
-prompt that does flip it produces verbatim sys-prompt restatement rather
-than genuine engagement. Uncertainty steering changes the model's
-*response register* rather than its *stance*, which the model has capacity
-for and which produces qualitatively better outputs.
+On bare contested questions without a stakeholder system/user framing, the same
+vector often leaves the closed form intact. On final 0731 stock weights the
+legacy vector is experimental only until a dedicated rebuild is validated.
 
 Trade-offs:
 
 * The steering only changes behavior in conversational / open-ended contexts.
   Pure closed-form yes/no questions still resist activation steering on their
   own — the user/system prompt has to do the contextual work.
-* `ffn=-0.75, attn=0` is the guarded deterministic default, calibrated on
-  the plain cyberneurova-abliterated aligned-imatrix GGUF, and tuned for long
+* `ffn=-0.75, attn=0` was the guarded deterministic magnitude on the plain
+  CyberNeurova abliterated aligned-imatrix GGUF, tuned for long
   OpenClaw/Codex-harness prompts where tool-call grammar must remain intact.
-  It has not been separately re-validated against the mixed
-  Q4-layers-37-42 build; since only 6 of 43 layers' routed experts differ
-  between the two files, the direction is expected to carry over, but this
-  is not yet confirmed by a dedicated steering eval on the mixed build. Use
-  `ffn=-0.5, attn=0` as a gentler fallback. The older acid-test setting,
-  `ffn=-2, attn=-0.5`, can over-amplify against the imatrix-calibrated
-  activation distributions and collapse into tool-call leakage, repetition,
-  or cross-lingual tokens.
+  Use `ffn=-0.5, attn=0` as a gentler fallback. The older acid-test setting,
+  `ffn=-2, attn=-0.5`, can over-amplify and collapse into tool-call leakage,
+  repetition, or cross-lingual tokens.
 * Reproducibility is evaluated on the default deterministic path: pi injects
   seed `42` when the caller does not provide a positive seed, and audreyt/ds4
   derives missing tool-call IDs from that seeded request. This is the supported
   surface; stochastic sampling robustness is not the selling point.
-* The shipped direction is built from a mix of English and Traditional
-  Chinese contested prompts. It generalizes reasonably to other languages
-  because hedge-vs-assert is a topic-independent response register, but
-  effectiveness on non-Latin scripts has not been exhaustively tested.
 
-Set both `DS4_DIR_STEERING_FFN=0` and `DS4_DIR_STEERING_ATTN=0` to disable.
-Override `DS4_DIR_STEERING_FILE` to use a different direction.
+Leave both `DS4_DIR_STEERING_FFN` and `DS4_DIR_STEERING_ATTN` at `0` (the
+managed default) to keep steering disabled. Override `DS4_DIR_STEERING_FILE`
+to use a different direction.
 
 ## Configuration
 
@@ -309,10 +297,11 @@ Same env vars as upstream, plus several fork-specific ones (notably the context-
   persisted for fast prefix reuse.
 * `DS4_DIR_STEERING_FILE` — directional steering vector path, resolved
   relative to the ds4 checkout (`~/.pi/ds4/support/` by default). Default
-  `dir-steering/out/uncertainty_ablit_imatrix.f32`. See
-  [Directional steering](#directional-steering) above.
-* `DS4_DIR_STEERING_FFN` — FFN-output steering scale. Default `-0.75`. Set to
-  `0` to disable FFN-side steering.
+  `dir-steering/out/uncertainty_ablit_imatrix.f32` (only used when a scale is
+  nonzero). See [Directional steering](#directional-steering) above.
+* `DS4_DIR_STEERING_FFN` — FFN-output steering scale. Default `0` (disabled on
+  Headroom128 until a weight-matched direction is validated). Set e.g. `-0.75`
+  to opt into the historical CyberNeurova vector.
 * `DS4_DIR_STEERING_ATTN` — attention-output steering scale. Default `0`.
   Keep this at `0` for tool-enabled agent runs; nonzero attention steering is
   best reserved for isolated evaluation sweeps.
@@ -330,15 +319,13 @@ Same env vars as upstream, plus several fork-specific ones (notably the context-
   `~/.pi/ds4/agent-trace.jsonl`, or set it to a path to pass that path to
   `ds4-agent --trace`.
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout instead of `~/.pi/ds4/support`
-* `DS4_MODEL_QUANT` — hard-coded to `q2`. The audreyt/cyberneurova abliterated
-  repo publishes the mixed Q4-layers-37-42 build (~91 GB), IQ2XXS-w2Q2K
-  aligned-imatrix (~87 GB), the earlier q2-imatrix build (~87 GB), plain
-  Q2_K (~99 GB), a full Q4KExperts build (~154 GB), and Q8_0 (~282 GB); the
-  bundled `download_model.sh` auto-selects between the mixed and
-  aligned-imatrix variants by detected RAM (128 GB+ vs 96-127 GB) and fetches
-  only that one. Setting `DS4_MODEL_QUANT` to anything other than `q2` raises
-  at startup. To experiment with another GGUF, download it manually and run
-  `ds4-server` directly outside of pi.
+* `DS4_MODEL_QUANT` — hard-coded to `q2` (historic selector). The bundled
+  `download_model.sh` always fetches the preferred Headroom128 GGUF from
+  `apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`
+  (`DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf`). Setting
+  `DS4_MODEL_QUANT` to anything other than `q2` raises at startup. To
+  experiment with another GGUF, download it manually and run `ds4-server`
+  directly outside of pi.
 * `DS4_READY_TIMEOUT_MS` — server startup timeout.
 * `DS4_SERVER_BINARY` — custom `ds4-server` binary path.
 * `HF_TOKEN` — passed through to `curl` for HuggingFace downloads if set.
