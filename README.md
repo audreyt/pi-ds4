@@ -64,6 +64,15 @@ GGUF already downloaded and skip straight to spawning the server.
 fetch the matching DSpark support file). Set `HF_TOKEN` if your HuggingFace
 download benefits from auth.
 
+## What's new in v0.5.3 (`e4812d8` pin, 2026-08)
+
+v0.5.3 advances the `audreyt/ds4` pin to `e4812d8` (PR #755 Metal decode
+optimizations for pre-M5/M5 Q2 + MXFP4, long-context inverse-RoPE/top-k fix,
+truncated DSML tool-call recovery inside unclosed thinking, and OpenAI
+tool-schema JSON spelling). Preferred Headroom128 and the conservative 100 k
+default context are unchanged. Re-benched on Apple M5 Max with Headroom128:
+about 622 t/s prefill and 42 t/s generation at 2k context.
+
 ## What's new in v0.5.2 (`a768f37` pin, 2026-08)
 
 v0.5.2 advances the `audreyt/ds4` pin to `a768f37` (merge of origin/main into

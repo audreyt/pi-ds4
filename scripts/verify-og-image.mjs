@@ -104,10 +104,10 @@ if (!existsSync(ogHtmlPath)) fail("og-image.html source page is missing");
 
 const ogHtml = readUtf8(ogHtmlPath);
 const ogText = textContent(ogHtml);
-for (const required of ["pi-ds4 Guide", "v 0.5.2", "96+ GB", "~87", "Headroom128", "638 t/s", "37 t/s", "239 commits", "Jun–Aug 2026"]) {
+for (const required of ["pi-ds4 Guide", "v 0.5.3", "96+ GB", "~87", "Headroom128", "622 t/s", "42 t/s", "265 commits", "Jun–Aug 2026"]) {
   if (!ogText.includes(required)) fail(`og-image.html is missing current fact: ${required}`);
 }
-for (const stale of ["Q2_K", "~99 GB", "87/91", "87/98", "1M", "360 tok/s", "33 tok/s", "xhigh", "99 commits", "152 commits", "545 t/s", "35 t/s", "v 0.5.1", "2026-07"]) {
+for (const stale of ["Q2_K", "~99 GB", "87/91", "87/98", "1M", "360 tok/s", "33 tok/s", "xhigh", "99 commits", "152 commits", "239 commits", "545 t/s", "35 t/s", "638 t/s", "37 t/s", "v 0.5.1", "v 0.5.2", "2026-07"]) {
   if (ogText.includes(stale)) fail(`og-image.html still contains stale OG text: ${stale}`);
 }
 
@@ -124,10 +124,10 @@ if (!indexHtml.includes('property="og:image:height" content="630"')) fail("index
 const alt = indexHtml.match(/<meta property="og:image:alt" content="([^"]+)"/);
 if (!alt) fail("index.html is missing og:image:alt");
 const decodedAlt = decodeEntities(alt[1]);
-for (const required of ["~87 GB", "Headroom128", "638 t/s", "37 t/s"]) {
+for (const required of ["~87 GB", "Headroom128", "622 t/s", "42 t/s"]) {
   if (!decodedAlt.includes(required)) fail(`og:image:alt is missing current fact: ${required}`);
 }
-for (const stale of ["Q2_K", "~99 GB", "87/91", "87/98", "1M", "360 tok/s", "33 tok/s", "xhigh", "545 t/s", "35 t/s"]) {
+for (const stale of ["Q2_K", "~99 GB", "87/91", "87/98", "1M", "360 tok/s", "33 tok/s", "xhigh", "545 t/s", "35 t/s", "638 t/s", "37 t/s"]) {
   if (decodedAlt.includes(stale)) fail(`og:image:alt still contains stale OG text: ${stale}`);
 }
 
