@@ -54,15 +54,32 @@ On first launch, `pi` will:
 3. Run `download_model.sh`, which downloads:
    * `DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf` (~81 GiB / ~87 GB)
      from [`apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128)
-   * symlink `ds4flash.gguf` to that file
-4. Spawn `ds4-server` and register `ds4/deepseek-v4-flash` with `pi`.
+   * optionally `DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf`
+     (~5.6 GiB) when `DS4_DSPARK` is unset/on; failure is non-fatal
+   * symlink `ds4flash.gguf` to the main GGUF
+4. Spawn `ds4-server` (with `--dspark --mtp` when the support GGUF is present)
+   and register `ds4/deepseek-v4-flash` with `pi`.
 
 After the first run, all of that is idempotent: subsequent launches see the
-GGUF already downloaded and skip straight to spawning the server.
+GGUFs already downloaded and skip straight to spawning the server.
 
-**Disk needed:** ~87 GB for the preferred Headroom128 GGUF (+ ~6 GB if you also
-fetch the matching DSpark support file). Set `HF_TOKEN` if your HuggingFace
-download benefits from auth.
+**Disk needed:** ~93 GB total on the default managed path (~87 GB Headroom128
+main GGUF + ~6 GB DSpark support). Set `DS4_DSPARK=0` before install to skip
+the support file, or `HF_TOKEN` if your HuggingFace download benefits from auth.
+
+## What's new in v0.6.0 (`057f62f` pin, 2026-08)
+
+v0.6.0 turns on **DSpark block-speculative decode by default** for the managed
+Headroom128 path. The extension now downloads the matching
+`DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf`
+(~5.6 GiB) alongside the main Headroom128 GGUF, and starts `ds4-server` with
+`--dspark --mtp gguf/.../DSpark-support.gguf` whenever the support file is
+present. On M5 Max the acceptance fixture shows generation lifting from about
+45 t/s to 50 t/s (≈+12 %) with draft accept rates up to 95 % on code-shaped
+prompts. Set `DS4_DSPARK=0` to disable speculative decode and keep one-token
+generation. The pin advances to `057f62f` (merge of `antirez/ds4` main —
+DSpark ROCm enablement, Metal DFlash verification, and client-disconnect
+cancellation — into this fork).
 
 ## What's new in v0.5.3 (`e4812d8` pin, 2026-08)
 
@@ -351,6 +368,13 @@ Same env vars as upstream, plus several fork-specific ones (notably the context-
   directly outside of pi.
 * `DS4_READY_TIMEOUT_MS` — server startup timeout.
 * `DS4_SERVER_BINARY` — custom `ds4-server` binary path.
+* `DS4_DSPARK` — DSpark block-speculative decode on the managed Headroom128
+  path. Default `1`: the bundled downloader fetches the matching
+  `...-DSpark-support.gguf` (~5.6 GiB) and the server starts with
+  `--dspark --mtp gguf/<support>` whenever that file is present. Set to `0`
+  to skip the support download and run plain one-token decode; useful when you
+  need byte-exact greedy output against a non-DSpark reference or want to save
+  the support download.
 * `HF_TOKEN` — passed through to `curl` for HuggingFace downloads if set.
 
 ## Acknowledgements

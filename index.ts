@@ -1,7 +1,7 @@
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { execSync, spawn, spawnSync } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
-import { closeSync, constants, openSync, writeSync } from "node:fs";
+import { closeSync, constants, existsSync, openSync, statSync, writeSync } from "node:fs";
 import {
 	access,
 	appendFile,
@@ -55,7 +55,7 @@ const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
 // disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
-const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "e4812d8e024c054b8f2f2cac5cc9e233a80c95bd").trim();
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "057f62fb796978db8f97244456bfad7aa44a5521").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)
@@ -160,6 +160,22 @@ const AGENT_STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Numb
 	]
 	: [];
 const SERVER_ARGS = ["--ctx", CTX_SIZE, "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", KV_DISK_SPACE_MB, ...STEERING_ARGS];
+
+// DSpark block-speculative decode. Default ON when the Headroom128 support
+// GGUF is present in the support checkout (bundled download_model.sh fetches
+// it, non-fatally). Set DS4_DSPARK=0 to disable.
+const DSPARK_SUPPORT_FILE = "DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf";
+function dsparkEnabledArgs(runtimeDir: string): string[] {
+	if (process.env.DS4_DSPARK === "0") return [];
+	const support = join(runtimeDir, "gguf", DSPARK_SUPPORT_FILE);
+	try {
+		if (!existsSync(support) || !statSync(support).size) return [];
+	} catch {
+		return [];
+	}
+	return ["--dspark", "--mtp", join("gguf", DSPARK_SUPPORT_FILE)];
+}
+
 const REPRODUCIBLE = envFlagEnabled(process.env.DS4_REPRODUCIBLE, true);
 const REPRODUCIBLE_SEED = REPRODUCIBLE ? parseReproducibleSeed(process.env.DS4_REPRODUCIBLE_SEED) : 42;
 const AGENT_TOKENS = process.env.DS4_AGENT_TOKENS?.trim() || "50000";
@@ -1444,11 +1460,12 @@ async function startServerLocked(runtimeDir: string): Promise<void> {
 		throw new Error(`Cannot execute ds4-server at ${binary}`);
 	}
 
-	await appendLog(`\n[${new Date().toISOString()}] start ds4-server\n$ ${[binary, ...SERVER_ARGS].map(shellQuote).join(" ")}\n`);
+	const serverArgs = [...SERVER_ARGS, ...dsparkEnabledArgs(runtimeDir)];
+	await appendLog(`\n[${new Date().toISOString()}] start ds4-server\n$ ${[binary, ...serverArgs].map(shellQuote).join(" ")}\n`);
 	const logFd = openSync(LOG_FILE, "a");
 	let childPid: number | undefined;
 	try {
-		const child = spawn(binary, SERVER_ARGS, {
+		const child = spawn(binary, serverArgs, {
 			cwd: runtimeDir,
 			detached: true,
 			stdio: ["ignore", logFd, logFd],
@@ -1469,7 +1486,7 @@ async function startServerLocked(runtimeDir: string): Promise<void> {
 		baseUrl: API_BASE_URL,
 		cwd: runtimeDir,
 		binary,
-		args: SERVER_ARGS,
+		args: serverArgs,
 		startedAt: now,
 		startedAtIso: new Date(now).toISOString(),
 	};
