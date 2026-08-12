@@ -55,7 +55,7 @@ const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
 // disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
-const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "057f62fb796978db8f97244456bfad7aa44a5521").trim();
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "67acbd8103034ff44c588a3893c6dd438f5cf6b0").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)

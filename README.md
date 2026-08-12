@@ -67,7 +67,7 @@ GGUFs already downloaded and skip straight to spawning the server.
 main GGUF + ~6 GB DSpark support). Set `DS4_DSPARK=0` before install to skip
 the support file, or `HF_TOKEN` if your HuggingFace download benefits from auth.
 
-## What's new in v0.6.0 (`057f62f` pin, 2026-08)
+## What's new in v0.6.0 (`67acbd8` pin, 2026-08)
 
 v0.6.0 turns on **DSpark block-speculative decode by default** for the managed
 Headroom128 path. The extension now downloads the matching
@@ -77,9 +77,10 @@ Headroom128 path. The extension now downloads the matching
 present. On M5 Max the acceptance fixture shows generation lifting from about
 45 t/s to 50 t/s (≈+12 %) with draft accept rates up to 95 % on code-shaped
 prompts. Set `DS4_DSPARK=0` to disable speculative decode and keep one-token
-generation. The pin advances to `057f62f` (merge of `antirez/ds4` main —
-DSpark ROCm enablement, Metal DFlash verification, and client-disconnect
-cancellation — into this fork).
+generation. The pin advances to `67acbd8` (fixing a `client_main`
+request-enqueue self-deadlock while incorporating antirez PR #755 Metal decode
+optimizations, long-context inverse-RoPE/top-k fix, and truncated DSML
+tool-call recovery under large schemas).
 
 ## What's new in v0.5.3 (`e4812d8` pin, 2026-08)
 
