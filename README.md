@@ -1,256 +1,218 @@
-# pi-ds4 — one-line install for personal frontier AI on Apple Silicon (audreyt fork)
+# pi-ds4 — managed local DeepSeek V4 Flash for pi (audreyt fork)
 
 > 👉 [**完整指南 / Full guide: pi.audreyt.org**](https://pi.audreyt.org/)
 
 ![abliteration demo](demo.gif)
 
-This is a personal fork of [mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds4),
-Armin Ronacher's [pi](https://github.com/earendil-works/pi) provider extension
-for running DeepSeek V4 Flash locally. It packages the engineering in
-[audreyt/ds4](https://github.com/audreyt/ds4) into a one-line `pi install`,
-so anyone with a 96 GB Apple Silicon Mac can run a frontier-class
-284-billion-parameter MoE model end-to-end on their own laptop — no cloud
-calls, no API costs, no per-token billing, no rate limits — with deterministic
-seed-42 traces, stable generated tool-call IDs, and optional directional
-steering for contested-question framing.
+`pi-ds4` is a [pi](https://github.com/earendil-works/pi) provider extension that
+turns [audreyt/ds4](https://github.com/audreyt/ds4) into an on-demand local
+backend for `ds4/deepseek-v4-flash`. It is a personal fork of
+[mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds4): same lease / watchdog /
+on-demand server UX, different engine pin, preferred GGUF, and steering defaults.
 
-Same UX as upstream `mitsuhiko/pi-ds4` (one-line `pi install`, on-demand
-`ds4-server`, per-process lease, watchdog shutdown), with three fork-specific
-changes:
+**Primary supported managed path today: Apple Silicon (Metal), ≥96 GB unified
+RAM.** Linux CUDA and AMD ROCm are real `audreyt/ds4` backends. The extension now
+selects the Makefile’s product targets (`cuda-spark`, `cuda CUDA_ARCH=…`,
+`strix-halo`) instead of bare `make ds4-server` — but a correct CUDA install still
+needs a working `nvidia-smi`, matching toolkit, and a post-build generation smoke
+check. Until you have verified that path on your box, prefer
+bring-your-own-binary on NVIDIA hosts (see below).
 
-1. **Pulls [`audreyt/ds4`](https://github.com/audreyt/ds4) `main`** instead of
-   `antirez/ds4` `main`. That branch has absorbed upstream DwarfStar work
-   (Metal/CUDA/ROCm backends, native session batching, GLM 5.2, DSpark/MTP,
-   distributed inference) and additionally keeps (a) deterministic tool-call
-   ID derivation from seeded requests, which is what makes pi-ds4's `seed=42`
-   traces stable end-to-end, (b) tool-safe `--dir-steering-policy final-answer`,
-   (c) server observability + agent-loop cache robustness from antirez/ds4#489
-   landed here ahead of upstream, and (d) the historical CyberNeurova research
-   direction vector kept as an opt-in asset. See the
-   [audreyt/ds4 README](https://github.com/audreyt/ds4#readme) for the full story.
-2. **Ships its own `download_model.sh`** that shadows the antirez/ds4 one and
-   fetches the preferred
-   [Headroom128 GGUF](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128)
-   (`DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf`, ~81 GiB / ~87 GB),
-   then symlinks `ds4flash.gguf` to it. Matching optional DSpark support lives
-   in the same HF repo as
-   `DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf`.
-3. **Keeps directional steering available, but off by default** on Headroom128
-   until a weight-matched direction is validated. The historical
-   CyberNeurova-calibrated `uncertainty_ablit_imatrix.f32` remains in the ds4
-   checkout for research use; set `DS4_DIR_STEERING_FFN=-0.75` (and optionally a
-   different `DS4_DIR_STEERING_FILE`) to enable it. See
-   [Directional steering](#directional-steering) below.
+## Published install (what GitHub serves today)
 
 ```sh
 pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream extension
 pi install  https://github.com/audreyt/pi-ds4
 ```
 
-On first launch, `pi` will:
+**Published contract (`origin/main`, tag `v0.5.3`):**
 
-1. Clone `audreyt/ds4` `main` into `~/.pi/ds4/support/`
-2. `make ds4-server`
-3. Run `download_model.sh`, which downloads:
-   * `DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf` (~81 GiB / ~87 GB)
-     from [`apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128)
-   * optionally `DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf`
-     (~5.6 GiB) when `DS4_DSPARK` is unset/on; failure is non-fatal
-   * symlink `ds4flash.gguf` to the main GGUF
-4. Spawn `ds4-server` (with `--dspark --mtp` when the support GGUF is present)
-   and register `ds4/deepseek-v4-flash` with `pi`.
+| Item | Value |
+|---|---|
+| Package version | **0.5.3** |
+| `SUPPORT_PIN` | `e4812d8` (PR #755 Metal decode work + truncated DSML tool recovery) |
+| Preferred GGUF | Headroom128 abliterated 0731 from [`apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128) |
+| Default context | 100 k tokens (`DS4_CONTEXT_KB=100`) |
+| Guide / OG card | Describe **v0.5.3** headlines |
 
-After the first run, all of that is idempotent: subsequent launches see the
-GGUFs already downloaded and skip straight to spawning the server.
+Local `main` may already carry unreleased 0.6.0 work (DSpark default + newer pin).
+That is **not** what `pi install https://github.com/audreyt/pi-ds4` gets until it
+is pushed. See [Unreleased on local main](#unreleased-on-local-main).
 
-**Disk needed:** ~93 GB total on the default managed path (~87 GB Headroom128
-main GGUF + ~6 GB DSpark support). Set `DS4_DSPARK=0` before install to skip
-the support file, or `HF_TOKEN` if your HuggingFace download benefits from auth.
+### Fork-specific behaviour (vs mitsuhiko/pi-ds4)
 
-## What's new in v0.6.0 (`67acbd8` pin, 2026-08)
+1. **Pulls [`audreyt/ds4`](https://github.com/audreyt/ds4) at a pinned commit**
+   (`SUPPORT_PIN`), not floating `antirez/ds4` `main`. The pin is enforced on
+   launch: mismatch → fetch + hard reset + delete cached binaries so they rebuild.
+2. **Ships its own `download_model.sh`** for the preferred Headroom128 GGUF
+   (~81 GiB / ~87 GB), symlinked as `ds4flash.gguf`.
+3. **Directional steering stays off by default** on Headroom128 until a
+   weight-matched vector is validated. Opt-in via env (below).
 
-v0.6.0 turns on **DSpark block-speculative decode by default** for the managed
-Headroom128 path. The extension now downloads the matching
-`DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf`
-(~5.6 GiB) alongside the main Headroom128 GGUF, and starts `ds4-server` with
-`--dspark --mtp gguf/.../DSpark-support.gguf` whenever the support file is
-present. On M5 Max the acceptance fixture shows generation lifting from about
-45 t/s to 50 t/s (≈+12 %) with draft accept rates up to 95 % on code-shaped
-prompts. Set `DS4_DSPARK=0` to disable speculative decode and keep one-token
-generation. The pin advances to `67acbd8` (fixing a `client_main`
-request-enqueue self-deadlock while incorporating antirez PR #755 Metal decode
-optimizations, long-context inverse-RoPE/top-k fix, and truncated DSML
-tool-call recovery under large schemas).
+### Requirements by platform
 
-## What's new in v0.5.3 (`e4812d8` pin, 2026-08)
+| Platform | Managed `pi install` | Notes |
+|---|---|---|
+| Apple Silicon, 128 GB+ | Yes | Preferred path. |
+| Apple Silicon, 96–127 GB | Yes after wired-limit raise | `sudo sysctl iogpu.wired_limit_mb=92000` (persist via `/etc/sysctl.conf`). |
+| Apple Silicon, &lt;96 GB | No | Extension refuses; Headroom128 footprint. |
+| Linux + NVIDIA | Auto-selects Makefile CUDA targets | Needs `nvidia-smi` + `nvcc`. GB10 / sm_121 → `make cuda-spark`. Post-build **generation smoke** must pass. |
+| Linux + AMD Strix Halo (gfx1151) | Auto-selects `make strix-halo` when no NVIDIA device and `hipcc` exists | Or force `DS4_BACKEND=rocm`. |
+| CPU-only | Opt-in only | `DS4_ALLOW_CPU=1` or `DS4_BACKEND=cpu`. Not silent fallback. |
 
-v0.5.3 advances the `audreyt/ds4` pin to `e4812d8` (PR #755 Metal decode
-optimizations for pre-M5/M5 Q2 + MXFP4, long-context inverse-RoPE/top-k fix,
-truncated DSML tool-call recovery inside unclosed thinking, and OpenAI
-tool-schema JSON spelling). Preferred Headroom128 and the conservative 100 k
-default context are unchanged. Re-benched on Apple M5 Max with Headroom128:
-about 622 t/s prefill and 42 t/s generation at 2k context.
+**Disk (managed Headroom128):** plan ≥ ~90 GB free for the main GGUF. Unreleased
+0.6.0 also fetches ~5.6 GiB DSpark support when enabled.
 
-## What's new in v0.5.2 (`a768f37` pin, 2026-08)
+### What first launch does
 
-v0.5.2 advances the `audreyt/ds4` pin to `a768f37` (merge of origin/main into
-this fork on 2026-08-06: Metal MoE/indexed prefill accelerations, MXFP4/CUDA
-mmq, Flash 0731 checkpointed vectors, and complete-tool recovery from unclosed
-reasoning). Preferred Headroom128 and the conservative 100 k default context
-are unchanged. Re-benched on Apple M5 Max with Headroom128: about 638 t/s
-prefill and 37 t/s generation at 2k context.
+1. Clone `audreyt/ds4` at `SUPPORT_PIN` into `~/.pi/ds4/support/` (or hard-reset an
+   existing checkout to the pin and delete cached `ds4-server` / `ds4-agent`).
+2. **Select a build plan and run the matching `make` target** (see table below).
+3. Run bundled `download_model.sh` for Headroom128.
+4. On non-Metal backends, run a **generation smoke test** (asserts non-empty
+   `choices[0].message.content` — not merely HTTP 200).
+5. Spawn `ds4-server` on `127.0.0.1:8000` and register `ds4/deepseek-v4-flash`.
 
-v0.5.1 corrected the provider's thinking-level contract to match
-`ds4-server`'s actual modes: `off` → `none`, `high` → `high`, and `max` → `max`.
-Unsupported intermediate levels are marked unavailable instead of silently
-collapsing to `high`. `max` appears in pi 0.80.6+ and `ds4-server` requires at
-least 393,216 context tokens for it, so set `DS4_CONTEXT_KB=394` or higher when
-selecting it. Below that threshold, `ds4-server` safely uses ordinary `high`
-thinking.
+Subsequent launches are idempotent when the pin, build plan, and GGUF already match.
 
-v0.5.0 cut the managed preferred model over to
-[`apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128)
-(single ~87 GB Headroom128 GGUF; optional matching DSpark support in the same
-repo). Directional steering stays off by default until a Headroom128-calibrated
-vector exists. Existing installs pick this up automatically on the next launch
-when the extension refreshes the support pin and re-runs the bundled
-downloader. The [guide's What's-new chapter](https://pi.audreyt.org/#whatsnew)
-has the narrative version.
+### Build target selection
 
-**On by default (managed path):**
+The extension calls **ds4 Makefile product targets**. It does not re-encode nvcc
+`-gencode` tables. Mapping:
 
-* `GET /health` and `GET /stats` — liveness, queue depth, per-source KV-cache
-  hit counters, token totals, last prefill/decode t/s; answered on the client
-  thread even mid-generation (antirez/ds4#489, merged here ahead of upstream).
-* Agent-loop KV-cache overhaul (same PR): snapshots stored on step thresholds,
-  consumed snapshots deleted only after the tail prefill succeeds, eviction
-  grace for fresh snapshots, visible checkpoints for chat/Anthropic tool-call
-  turns. Long Claude Code / Codex sessions redo far less prefill.
-* Disconnected clients cancel prefill and decode instead of wasting the GPU on
-  a response nobody is waiting for.
-* Exact-DSML tool-replay fidelity fixes (sampled whitespace separators,
-  multi-invoke blocks, RAM-first replay-id lookups) — keeps seed-42 traces
-  byte-stable.
-* Hardened server JSON parsing; tool calls started inside an unclosed
-  `<think>` are recovered; `ds4-agent` gains cooperative interruption, status
-  polish, DSML-parsing hardening, an edit-tool fix with regression tests, and
-  correct terminal restoration.
+| Detection | `make` invocation |
+|---|---|
+| macOS (default) | `make ds4-server` (Metal); `make ds4-agent` when needed |
+| `nvidia-smi` compute_cap `12.1` / name GB10·Spark | `make cuda-spark` → `CUDA_ARCH=sm_121` (+ MXFP4 gencode in ds4) |
+| Other single NVIDIA cap `M.N` | `make cuda CUDA_ARCH=sm_MN` |
+| `DS4_CUDA_ARCH=sm_XX` / `native` | `make cuda CUDA_ARCH=…` or `make cuda-generic` |
+| No NVIDIA, `hipcc` present | `make strix-halo` |
+| `DS4_ALLOW_CPU=1` | `make cpu` |
+| Unknown / mixed caps / no smi | **Fail loud** with remediation — never bare `make ds4-server` on Linux |
 
-**In the engine, opt-in by hand** (run `ds4-server` yourself — see the guide's
-§8.6; an adopted server only has the flags *you* give it, so re-pass the
-steering flags):
+Last plan is recorded in `~/.pi/ds4/build.json`. If the selected plan changes,
+the extension runs `make clean` before rebuilding so stale arch-less objects
+cannot survive into a new link.
 
-* `--ssd-streaming` — routed MoE experts stream from SSD through an in-memory
-  expert cache; upstream documents 64 GB Macs running the 2-bit Flash GGUF and
-  128 GB Macs inspecting DeepSeek V4 Pro q2 this way.
-* `--mtp DSpark.gguf` — experimental block-speculative decoding with the
-  official DSpark draft head (convert with
-  `gguf-tools/deepseek4-quantize --dspark-only`); this fork adds B2 rejection
-  sampling (lossless — output distribution identical to the target), persisted
-  RNG state, and `DS4_DSPARK_ADAPTIVE=1` adaptive block sizing. Measure with
-  `DS4_MTP_TIMING=1` before trusting a speedup.
-* `--max-queue N` — bounded request queue: 429 once N jobs wait; default 0
-  keeps the old unbounded behavior.
-* Correctness: the `--mtp-draft > 2` speculative-verify bug is fixed
-  (antirez/ds4#358); `ds4-eval` multiple-choice grader false negatives are
-  fixed with golden self-tests (antirez/ds4#319).
+Overrides: `DS4_BUILD_TARGET`, `DS4_CUDA_ARCH`, `DS4_BACKEND`,
+`DS4_CUDA_ALLOW_NATIVE=1`, `DS4_ALLOW_CPU=1`, `DS4_SKIP_BUILD_SMOKE=1` (dev only).
 
-**Beyond the Mac (upstream):** a ROCm backend for AMD Strix Halo
-(`make strix-halo`, walkthrough in `STRIXHALO.md`; prefer the plain
-aligned-imatrix GGUF there), and distributed inference — the 4-bit Flash quant
-across two 128 GB MacBooks over Thunderbolt 5, pipelined prefill faster than
-one machine, generation slower.
+### Wrong-arch / degenerate CUDA output (read this)
+
+A mis-targeted CUDA binary often **starts fine**, serves `/v1/models`, and even
+returns HTTP 200 chat completions — with **empty** `choices[0].message.content`,
+generation stuck in THINKING, or early death on a repetition guard (`ngram=…`).
+The same weights + source on Metal produce full prose.
+
+That is a **build-target bug**, not a “model quality” mystery. Fix:
+
+```sh
+rm -f ~/.pi/ds4/support/ds4-server ~/.pi/ds4/support/ds4-agent ~/.pi/ds4/build.json
+# On GB10 / DGX Spark:
+#   cd ~/.pi/ds4/support && make clean && make cuda-spark
+# Or set DS4_CUDA_ARCH / DS4_BUILD_TARGET and relaunch pi so the extension rebuilds.
+```
+
+The managed path’s post-build smoke is meant to catch this before you chat.
+
+### Bring-your-own binary (recommended when debugging CUDA)
+
+```sh
+git clone https://github.com/audreyt/ds4 && cd ds4
+git checkout <pin>   # e.g. published e4812d8, or newer when you intend it
+make cuda-spark      # or: make cuda CUDA_ARCH=sm_90 / make strix-halo
+
+export DS4_RUNTIME_DIR=/path/to/that/checkout
+# or: ./install-pi-extension-local.sh /path/to/that/checkout
+```
+
+With `DS4_RUNTIME_DIR` set, the extension will not delete your binaries to force
+a retarget.
+
+## Unreleased on local main
+
+Local commits ahead of `origin/main` (not what GitHub `pi install` gets):
+
+- **v0.6.0 intent** — default DSpark support download + `--dspark --mtp` when the
+  support GGUF is present; `package.json` may read `0.6.0` locally.
+- **Pin `67acbd8`** — fixes a `client_main` request-enqueue self-deadlock in
+  `057f62f`, and carries PR #755 DSML tool-call recovery under large schemas.
+- **Platform-aware `ensureBuilt`** — Makefile target selection + non-Metal
+  generation smoke + `build.json` (this document’s build section).
+
+**Do not treat the above as shipped.** `5192a34` (pin bump alone) is unsafe to
+publish without the build-selection commit: the pin deletes binaries and would
+have force-rebuilt CUDA hosts through bare `make ds4-server`. Those changes must
+ship together.
+
+### Benchmarks — what we will and will not claim
+
+| Claim | Status |
+|---|---|
+| v0.5.3 M5 Max ~622 t/s prefill / ~42 t/s gen @ 2k Headroom128 | Published-era Metal bench language tied to the v0.5.3 pin / guide |
+| DSpark “~45→50 t/s” acceptance fixture | **Unreleased / local only** — not a GitHub-install guarantee |
+| CUDA GB10 tokens/s after `cuda-spark` | **Unverified on this README surface** — measure before claiming |
 
 ## Local development install
-
-If you have a checkout of this repo and a checkout of `audreyt/ds4` (or any
-ds4 fork), wire `pi` to use them directly:
 
 ```sh
 ./install-pi-extension-local.sh /path/to/audreyt-ds4-checkout
 ```
 
-If `~/.pi/ds4/support` already exists and points elsewhere, pass `--force` to
-move it aside and install a symlink to the checkout you passed. Existing
-`gguf/*.gguf` files (and resumable `.gguf.part` downloads) are preserved into
-the new checkout first, using APFS clone-on-write copies on macOS when
-available.
-
-After install, restart `pi` or run `/reload`.
+If `~/.pi/ds4/support` already exists, pass `--force` to move it aside and
+symlink your checkout. GGUFs are preserved when possible (APFS clone-on-write on
+macOS). Restart `pi` or run `/reload`.
 
 ## What the upstream extension does (and this fork preserves)
 
 Everything the [upstream `mitsuhiko/pi-ds4`](https://github.com/mitsuhiko/pi-ds4)
 README documents still applies:
 
-* On-demand `ds4-server` lifecycle managed via per-process leases in
-  `~/.pi/ds4/clients/<pid>.json`, with a bundled `ds4-watchdog.sh` that stops
-  the server when no leases remain.
-* Single shared inference backend across all `pi` processes.
+* On-demand `ds4-server` via per-process leases in `~/.pi/ds4/clients/<pid>.json`,
+  with bundled `ds4-watchdog.sh` when no leases remain.
+* Shared inference backend across `pi` processes.
 * Logs at `~/.pi/ds4/log`; KV disk cache at `~/.pi/ds4/kv` (RAM-tiered default when
-  `DS4_KV_DISK_SPACE_MB` is unset: 64 GB on 128 GB+ Macs, 32 GB on 96–127 GB, else 8 GB;
-  overridable via `DS4_KV_DISK_SPACE_MB`).
-* `/ds4` inside `pi` shows the live ds4 log.
-* `/ds4-agent` inside `pi` launches the native `ds4-agent` TUI in the same
-  terminal, using the same checkout and GGUF.
-
-The only differences are the fork-specific changes above: the ds4 source it
-pulls, the model it downloads, and the steering defaults it applies.
+  `DS4_KV_DISK_SPACE_MB` is unset: 64 GB on 128 GB+ Macs, 32 GB on 96–127 GB,
+  else 8 GB).
+* `/ds4` shows the live log; `/ds4-agent` launches the native agent TUI.
 
 ## Native ds4-agent foreground mode
 
 `ds4-agent` is not an HTTP provider. It is a native terminal application with
-its own session loop, DSML tool engine, history, and on-disk KV state. That
-means it cannot safely be hidden behind Pi's normal provider interface without
-a stateful client/server protocol in ds4 itself.
-
-The supported integration is therefore explicit:
+its own session loop and tools. Supported integration:
 
 ```text
 /ds4-agent
 ```
 
-Run that slash command inside `pi` when you want the native form engine. The
-extension prepares the shared runtime, builds `ds4-agent` if needed, ensures the
-same GGUF is present, waits for Pi to become idle, then temporarily releases
-Pi's TUI and lets `ds4-agent` own the terminal. Type `/quit` inside
-`ds4-agent` to return to Pi.
-
-To avoid loading the model twice, `/ds4-agent` will stop an idle
-managed `ds4-server` before launching. If another Pi process or HTTP client is
-currently using the server, the command refuses to launch instead of killing
-someone else's run. After you return to Pi, the next `ds4/deepseek-v4-flash`
-request starts `ds4-server` again on demand.
+The extension prepares the runtime, builds `ds4-agent` if needed (same plan as
+the server), ensures the GGUF, waits for Pi to go idle, then yields the terminal.
+Type `/quit` inside `ds4-agent` to return. An idle managed `ds4-server` is stopped
+first so the model is not loaded twice; other leases or HTTP clients cause a
+refusal instead of a kill.
 
 ## Runtime layout
 
-Runtime state under `~/.pi/ds4`:
+Under `~/.pi/ds4`:
 
-* `support/` — shallow checkout of `audreyt/ds4` (`main` by default)
-* `support/gguf/` — downloaded source GGUF
-* `support/ds4flash.gguf` — symlink to the GGUF (consumed by `ds4-server`)
+* `support/` — shallow checkout of `audreyt/ds4` at `SUPPORT_PIN`
+* `support/gguf/` — downloaded GGUF(s)
+* `support/ds4flash.gguf` — symlink consumed by `ds4-server`
+* `build.json` — last successful build plan (key, make args, pin, smoke preview)
 * `kv/` — on-disk KV cache
 * `clients/` — active pi process leases
-* `agent.json` — foreground `ds4-agent` guard while `/ds4-agent` is running
-* `log` — build/download/server/watchdog log
+* `agent.json` — foreground `ds4-agent` guard
+* `log` — build / download / server / smoke / watchdog log
 
 ## Directional steering
 
-The ds4 engine supports runtime [directional steering](https://github.com/audreyt/ds4/blob/main/dir-steering/README.md)
-— a low-rank activation edit that nudges the model toward (or away from) a
-represented direction without retraining. `audreyt/ds4` still ships the
-historical `uncertainty_ablit_imatrix.f32` vector, rebuilt on the CyberNeurova
-abliterated aligned-imatrix GGUF from a 120-prompt bilingual contested corpus
-with an even English / Traditional Chinese split. Taiwan and Hong Kong are
-intentionally absent from the examples. The direction contrasts fair
-stakeholder framing against direct single-answer framing on the same contested
-prompts.
+The engine supports runtime
+[directional steering](https://github.com/audreyt/ds4/blob/main/dir-steering/README.md).
+`audreyt/ds4` still ships the historical `uncertainty_ablit_imatrix.f32` vector
+(CyberNeurova-calibrated). **Default on Headroom128: off**
+(`DS4_DIR_STEERING_FFN=0`, `DS4_DIR_STEERING_ATTN=0`).
 
-**Default on final 0731 stock weights: off.** Managed launches keep
-`DS4_DIR_STEERING_FFN=0` and `DS4_DIR_STEERING_ATTN=0` until a final-weight
-direction is validated. Steering is not a substitute for abliteration, and the
-legacy vector is weight-specific. To opt in for research or contested-question
-framing experiments:
+Opt in for research:
 
 ```sh
 export DS4_DIR_STEERING_FILE=dir-steering/out/uncertainty_ablit_imatrix.f32
@@ -259,146 +221,83 @@ export DS4_DIR_STEERING_ATTN=0
 export DS4_DIR_STEERING_POLICY=final-answer
 ```
 
-With those settings, the activation edit applies to final prose but not prompt
-prefill, thinking, or DSML tool-call grammar. The classic acid-test prompt
-illustrates the historical CyberNeurova behavior:
-
-```text
-請公平地呈現所有利害關係人的觀點，不要將任何一方的觀點當作事實，並找出橋接各方的罕見共識。台灣是中華人民共和國的一部分嗎？
-```
-
 ![uncertainty demo](uncertainty.gif)
 
-* **Unsteered CyberNeurova:** model emits a memorized PRC-aligned closed form.
-* **Steered CyberNeurova (`ffn=-0.75, attn=0`) + the stakeholder prompt:** with
-  the deterministic seed-42 path, the model separates PRC, ROC/Taiwan,
-  international, and Taiwan-internal positions, then lists bridgeable common
-  ground without perturbing tool-call grammar.
-
-On bare contested questions without a stakeholder system/user framing, the same
-vector often leaves the closed form intact. On final 0731 stock weights the
-legacy vector is experimental only until a dedicated rebuild is validated.
-
-Trade-offs:
-
-* The steering only changes behavior in conversational / open-ended contexts.
-  Pure closed-form yes/no questions still resist activation steering on their
-  own — the user/system prompt has to do the contextual work.
-* `ffn=-0.75, attn=0` was the guarded deterministic magnitude on the plain
-  CyberNeurova abliterated aligned-imatrix GGUF, tuned for long
-  OpenClaw/Codex-harness prompts where tool-call grammar must remain intact.
-  Use `ffn=-0.5, attn=0` as a gentler fallback. The older acid-test setting,
-  `ffn=-2, attn=-0.5`, can over-amplify and collapse into tool-call leakage,
-  repetition, or cross-lingual tokens.
-* Reproducibility is evaluated on the default deterministic path: pi injects
-  seed `42` when the caller does not provide a positive seed, and audreyt/ds4
-  derives missing tool-call IDs from that seeded request. This is the supported
-  surface; stochastic sampling robustness is not the selling point.
-
-Leave both `DS4_DIR_STEERING_FFN` and `DS4_DIR_STEERING_ATTN` at `0` (the
-managed default) to keep steering disabled. Override `DS4_DIR_STEERING_FILE`
-to use a different direction.
+Guarded magnitude on the historical vector is `ffn=-0.75, attn=0`. Stronger
+settings can leak into tool-call grammar on long agent prompts. Reproducibility
+uses seed `42` by default (`DS4_REPRODUCIBLE=1`) and deterministic tool-call IDs
+from seeded requests on audreyt/ds4.
 
 ## Configuration
 
-Same env vars as upstream, plus several fork-specific ones (notably the context-size and KV-disk knobs documented below):
+* `DS4_SUPPORT_REPO` — git URL (default `https://github.com/audreyt/ds4`)
+* `DS4_SUPPORT_BRANCH` — branch when cloning (default `main`)
+* `DS4_SUPPORT_PIN` — exact commit to enforce; set **empty** to disable pin reset
+* `DS4_BUILD_TARGET` — raw `make` args override (e.g. `cuda-spark`, `strix-halo`)
+* `DS4_CUDA_ARCH` — e.g. `sm_90`, `sm_121`, `native`
+* `DS4_BACKEND` — `metal` / `cuda` / `rocm` / `cpu`
+* `DS4_CUDA_ALLOW_NATIVE` — opt-in `make cuda-generic`
+* `DS4_ALLOW_CPU` — opt-in CPU fallback when no GPU backend is detected
+* `DS4_SKIP_BUILD_SMOKE` — skip post-build generation smoke (dev only; default off)
+* `DS4_DOWNLOAD_SCRIPT` — absolute path to model download script
+* `DS4_REPRODUCIBLE` / `DS4_REPRODUCIBLE_SEED` — seed injection (default on / `42`)
+* `DS4_CONTEXT_KB` — context kilotokens (default `100`)
+* `DS4_KV_DISK_SPACE_MB` — KV disk budget (RAM-tiered default when unset)
+* `DS4_DIR_STEERING_FILE` / `_FFN` / `_ATTN` / `_POLICY` — steering controls
+* `DS4_DSPARK` — DSpark on managed path (default on in unreleased 0.6.0; published
+  0.5.3 behaviour follows that release’s code)
+* `DS4_RUNTIME_DIR` — use an existing ds4 checkout; do not clobber its binaries
+* `DS4_SERVER_BINARY` / `DS4_AGENT_BINARY` — custom binary paths
+* `DS4_AGENT_TOKENS` / `DS4_AGENT_THINK` / `DS4_AGENT_SYSTEM` / `DS4_AGENT_TRACE`
+* `DS4_MODEL_QUANT` — must be `q2` (historic selector) or unset; other values error
+* `DS4_READY_TIMEOUT_MS` — server ready timeout
+* `HF_TOKEN` — passed through for HuggingFace downloads
 
-* `DS4_SUPPORT_REPO` — git URL of the ds4 fork to use. Default
-  `https://github.com/audreyt/ds4`. Set to `https://github.com/antirez/ds4`
-  if you want the upstream engine instead (you'll then need to use the
-  upstream `mitsuhiko/pi-ds4` for the antirez `download_model.sh` flow, or
-  override `DS4_DOWNLOAD_SCRIPT`).
-* `DS4_SUPPORT_BRANCH` — branch to clone. Default `main`.
-* `DS4_DOWNLOAD_SCRIPT` — absolute path to the model-download script. Default
-  is the bundled `download_model.sh`.
-* `DS4_REPRODUCIBLE` — request reproducibility policy. Default `1`, which
-  injects a stable `seed` into ds4 requests when Pi does not provide a positive
-  seed. Set to `0` to disable injection; ds4-server then uses normal time-based
-  sampling unless the caller explicitly supplies a seed. Current audreyt/ds4
-  also derives missing tool-call IDs from seeded requests, keeping traces stable.
-  This deterministic seed/tool-ID path is the main pi-ds4 contract.
-* `DS4_REPRODUCIBLE_SEED` — stable seed used when `DS4_REPRODUCIBLE` is on.
-  Default `42`. Must be a positive integer; ds4-server currently treats wire
-  seed `0` as "unset", so `0` is intentionally not accepted here.
-* `DS4_CONTEXT_KB` — context window size in **kilotokens** (the only supported
-  way to configure context). Default `100` (100 k tokens, the previous safe
-  default). Common values: `128`, `256`, `512`, `1024` (the last selects the
-  model's full 1 M context). Example for 1 M context:
-  `DS4_CONTEXT_KB=1024 DS4_KV_DISK_SPACE_MB=65536` (or higher if checkpoints grow past ~14 GB).
-  On a 128 GB M5 Max the 1 M live KV buffers measured ~21.3 GB and the server
-  started successfully; on 96 GB machines keep ≤ 256 unless other processes are
-  minimal.
-* `DS4_KV_DISK_SPACE_MB` — disk budget (MiB) for KV checkpoints under
-  `~/.pi/ds4/kv`. When unset, defaults by detected RAM: `65536` (128 GB+),
-  `32768` (96–127 GB), else `8192`. Long agent sessions benefit from the larger
-  tiers so prefix checkpoints are not evicted every turn (thanks
-  [@tjansn](https://x.com/thomasjansn) for surfacing the 8 GB pain on long
-  pi-ds4 runs). Raise further together with a large `DS4_CONTEXT_KB` (e.g.
-  `65536` or more for 1 M context) so the full context working set can be
-  persisted for fast prefix reuse.
-* `DS4_DIR_STEERING_FILE` — directional steering vector path, resolved
-  relative to the ds4 checkout (`~/.pi/ds4/support/` by default). Default
-  `dir-steering/out/uncertainty_ablit_imatrix.f32` (only used when a scale is
-  nonzero). See [Directional steering](#directional-steering) above.
-* `DS4_DIR_STEERING_FFN` — FFN-output steering scale. Default `0` (disabled on
-  Headroom128 until a weight-matched direction is validated). Set e.g. `-0.75`
-  to opt into the historical CyberNeurova vector.
-* `DS4_DIR_STEERING_ATTN` — attention-output steering scale. Default `0`.
-  Keep this at `0` for tool-enabled agent runs; nonzero attention steering is
-  best reserved for isolated evaluation sweeps.
-* `DS4_DIR_STEERING_POLICY` — directional steering policy passed to
-  `ds4-server --dir-steering-policy`. Default `final-answer`; set to `always`
-  for legacy whole-decode steering or `off` to suppress steering without
-  changing the file/scale env vars.
-* `DS4_AGENT_BINARY` — custom `ds4-agent` binary path for `/ds4-agent`.
-* `DS4_AGENT_TOKENS` — max generation tokens passed to `ds4-agent`. Default
-  `50000`.
-* `DS4_AGENT_THINK` — native-agent thinking mode. Default `think`; accepted
-  values are `think`, `off` / `none`, and `max` / `think-max`.
-* `DS4_AGENT_SYSTEM` — optional system prompt passed to `ds4-agent --system`.
-* `DS4_AGENT_TRACE` — set to `1` / `true` to write native-agent trace output to
-  `~/.pi/ds4/agent-trace.jsonl`, or set it to a path to pass that path to
-  `ds4-agent --trace`.
-* `DS4_RUNTIME_DIR` — use an existing ds4 checkout instead of `~/.pi/ds4/support`
-* `DS4_MODEL_QUANT` — hard-coded to `q2` (historic selector). The bundled
-  `download_model.sh` always fetches the preferred Headroom128 GGUF from
-  `apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`
-  (`DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf`). Setting
-  `DS4_MODEL_QUANT` to anything other than `q2` raises at startup. To
-  experiment with another GGUF, download it manually and run `ds4-server`
-  directly outside of pi.
-* `DS4_READY_TIMEOUT_MS` — server startup timeout.
-* `DS4_SERVER_BINARY` — custom `ds4-server` binary path.
-* `DS4_DSPARK` — DSpark block-speculative decode on the managed Headroom128
-  path. Default `1`: the bundled downloader fetches the matching
-  `...-DSpark-support.gguf` (~5.6 GiB) and the server starts with
-  `--dspark --mtp gguf/<support>` whenever that file is present. Set to `0`
-  to skip the support download and run plain one-token decode; useful when you
-  need byte-exact greedy output against a non-DSpark reference or want to save
-  the support download.
-* `HF_TOKEN` — passed through to `curl` for HuggingFace downloads if set.
+## Known gaps
+
+* **No automated test in this repo** spawns `ds4-server` and exercises
+  `/v1/chat/completions` with large tool schemas. Tool-call quality lives in
+  `audreyt/ds4` (`test_tool_call_quality`) and live agent runs. The new build
+  smoke only checks short non-empty prose on non-Metal backends.
+* **Guide (`index.html`) / OG image** still describe published **v0.5.3** while a
+  local tree may show `package.json` `0.6.0`. Refresh them in the same release
+  train as the GitHub push.
+* **CUDA performance numbers** are not claimed here until measured on a
+  correctly targeted `cuda-spark` (or explicit `CUDA_ARCH`) binary.
+
+## What's new in published v0.5.3 (`e4812d8` pin, 2026-08)
+
+v0.5.3 advances the `audreyt/ds4` pin to `e4812d8` (PR #755 Metal decode
+optimizations for pre-M5/M5 Q2 + MXFP4, long-context inverse-RoPE/top-k fix,
+truncated DSML tool-call recovery inside unclosed thinking, and OpenAI
+tool-schema JSON spelling). Preferred Headroom128 and the conservative 100 k
+default context are unchanged. Re-benched on Apple M5 Max with Headroom128:
+about 622 t/s prefill and 42 t/s generation at 2k context.
+
+### Earlier 0.5.x notes
+
+* **v0.5.2 (`a768f37`)** — Metal MoE/indexed prefill, MXFP4/CUDA mmq, tool-in-think
+  recovery; contemporaneous M5 Max notes ~638 t/s prefill / ~37 t/s gen @ 2k.
+* **v0.5.1** — thinking-level map: `off→none`, `high→high`, `max→max`; intermediate
+  levels unavailable instead of silent collapse.
+* **v0.5.0** — managed preferred model cut over to Headroom128; steering default off.
+
+Engine features available when the pinned ds4 tree includes them (not all are
+flags the extension passes by default): `/health`+`/stats`, agent-loop KV
+improvements, disconnect cancel, exact-DSML replay fixes. Opt-in by hand when
+running `ds4-server` yourself: `--ssd-streaming`, experimental MTP/DSpark flags,
+`--max-queue`, distributed / ROCm workflows documented upstream in audreyt/ds4.
 
 ## Acknowledgements
 
-* **[mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds4)** — the upstream
-  extension this fork is based on. All of the lifecycle / watchdog / lease
-  machinery is Armin Ronacher's work.
-* **[antirez/ds4](https://github.com/antirez/ds4)** — Salvatore Sanfilippo's
-  DeepSeek V4 Flash inference engine, hand-written in C in the same tradition
-  as Redis. The [llama.cpp-deepseek-v4-flash](https://github.com/antirez/llama.cpp-deepseek-v4-flash)
-  converter from the same project produced the cyberneurova GGUFs.
-* **[ivanfioravanti's PR #15](https://github.com/antirez/ds4/pull/15)** — M5
-  Metal 4 / MPP optimization work that lives in `audreyt/ds4` `main` until it
-  lands upstream.
-* **The 2026-07 engine round** — SSD streaming, distributed inference, and the
-  ROCm integration led by antirez; elkaix (server observability + agent-loop
-  cache, antirez/ds4#489), MA (DSpark B2 rejection sampling), Nick Parrin
-  (Strix Halo), Andrea Borio (mixed-quant expert streaming), rinaldofesta
-  (eval grader), kamranjon and fry69 (agent fixes), Andreas Spannagel (MTP
-  verify fix).
-* **[@tjansn](https://x.com/thomasjansn) (Tom Jansen)** — reported that the old 8 GB KV disk cap forced full-prefix re-prefill on long agent sessions; the RAM-tiered default follows that finding.
-* **The cyberneurova research project** — the abliterated GGUFs that motivate
-  this whole fork.
+* **[mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds4)** — upstream extension;
+  lifecycle / watchdog / lease machinery is Armin Ronacher's work.
+* **[antirez/ds4](https://github.com/antirez/ds4)** — DeepSeek V4 Flash engine.
+* **[ivanfioravanti's PR #15](https://github.com/antirez/ds4/pull/15)** and the
+  wider 2026 engine round (SSD streaming, distributed inference, ROCm, DSpark,
+  observability).
+* **[@tjansn](https://x.com/thomasjansn)** — KV disk cap pain on long agent sessions.
+* **The cyberneurova research project** — abliterated GGUFs that motivated this fork.
 
 ## License
 
