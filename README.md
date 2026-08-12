@@ -25,19 +25,17 @@ pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream exte
 pi install  https://github.com/audreyt/pi-ds4
 ```
 
-### What GitHub serves today (tag `v0.5.3`)
+### What GitHub serves today (tag `v0.5.4`)
 
 | Item | Value |
 |---|---|
-| Package version | **0.5.3** |
-| `SUPPORT_PIN` | `e4812d8` (PR #755 Metal decode work + truncated DSML tool recovery) |
+| Package version | **0.5.4** |
+| `SUPPORT_PIN` | `67acbd8` (fix `client_main` self-deadlock in `057f62f`; carries PR #755 Metal decode work + truncated DSML tool recovery) |
 | Preferred GGUF | Headroom128 abliterated 0731 from [`apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128) |
 | Default context | 100 k tokens (`DS4_CONTEXT_KB=100`) |
-| Guide / OG card | **v0.5.3** headlines |
+| Guide / OG card | **v0.5.4** headlines · `275 commits` `97319db → 67acbd8` (2026-06-01 → 2026-08-12) |
 
-`pi install https://github.com/audreyt/pi-ds4` tracks the remote. Local `main`
-may already be ahead as **unreleased 0.5.4** (see below); that is not what the
-public install gets until it is pushed and tagged.
+`pi install https://github.com/audreyt/pi-ds4` installs exactly this tag.
 
 ### Fork-specific behaviour (vs mitsuhiko/pi-ds4)
 
@@ -60,17 +58,14 @@ public install gets until it is pushed and tagged.
 | Linux + AMD Strix Halo (gfx1151) | Auto-selects `make strix-halo` when no NVIDIA device and `hipcc` exists | Or force `DS4_BACKEND=rocm`. |
 | CPU-only | Opt-in only | `DS4_ALLOW_CPU=1` or `DS4_BACKEND=cpu`. Not silent fallback. |
 
-**Disk (managed Headroom128):** plan ≥ ~90 GB free for the main GGUF. Local
-0.5.4 also attempts a ~5.6 GiB DSpark support download when `DS4_DSPARK` is not
-`0` (best-effort; failure is non-fatal).
+**Disk (managed Headroom128):** plan ≥ ~90 GB free for the main GGUF, plus an optional ~5.6 GiB DSpark support file when `DS4_DSPARK` is not `0` (best-effort; failure is non-fatal).
 
 ### What first launch does
 
 1. Clone `audreyt/ds4` at `SUPPORT_PIN` into `~/.pi/ds4/support/` (or hard-reset an
    existing checkout to the pin and delete cached `ds4-server` / `ds4-agent`).
 2. **Select a build plan and run the matching `make` target** (see table below).
-3. Run bundled `download_model.sh` for Headroom128 (and, on local 0.5.4, optional
-   DSpark support when enabled).
+3. Run bundled `download_model.sh` for Headroom128 (+ optional DSpark support when enabled).
 4. On non-Metal backends, run a **generation smoke test** (asserts non-empty
    `choices[0].message.content` — not merely HTTP 200).
 5. Spawn `ds4-server` on `127.0.0.1:8000` and register `ds4/deepseek-v4-flash`.
@@ -121,7 +116,7 @@ The managed path’s post-build smoke is meant to catch this before you chat.
 
 ```sh
 git clone https://github.com/audreyt/ds4 && cd ds4
-git checkout <pin>   # e.g. published e4812d8, or newer when you intend it
+git checkout <pin>   # e.g. published 67acbd8
 make cuda-spark      # or: make cuda CUDA_ARCH=sm_90 / make strix-halo
 
 export DS4_RUNTIME_DIR=/path/to/that/checkout
@@ -131,51 +126,17 @@ export DS4_RUNTIME_DIR=/path/to/that/checkout
 With `DS4_RUNTIME_DIR` set, the extension will not delete your binaries to force
 a retarget.
 
-## Unreleased 0.5.4 (local `main`, not on GitHub yet)
+### What landed in v0.5.4 (patch, 2026-08)
 
-Local `package.json` is **0.5.4**. This is the next **patch** on the 0.5.x line
-(same preferred Headroom128 product as 0.5.0–0.5.3), not a quarantined minor.
-
-Intended contents when published together:
-
-| Change | Role |
-|---|---|
-| `SUPPORT_PIN` → `67acbd8` | Bug fix: `client_main` self-deadlock in `057f62f`; pin still carries PR #755 tool-call recovery |
-| Platform-aware `ensureBuilt` | Bug fix: call `cuda-spark` / `cuda CUDA_ARCH=…` / `strix-halo` / Metal; fail loud on unknown GPU; non-Metal generation smoke; `build.json` |
-| Managed DSpark support fetch + default-on flags when the support GGUF is present | Feature (opt out with `DS4_DSPARK=0`) |
-| README / docs | This document |
-
-**Coupling / publish gate:** the pin commit must not ship without the build-selection
-commit — the pin deletes binaries and would otherwise rebuild CUDA hosts through
-the old bare `make ds4-server` path. The version commit joins that set. Push the
-train together or not at all.
-
-**Guide / OG:** `index.html`, `og-image.html`, and `scripts/verify-og-image.mjs`
-still describe published **v0.5.3**. Refresh them in the same release train as
-the GitHub push/tag for 0.5.4 — not as a partial update.
-
-### DSpark on the managed path (factual; no perf claim)
-
-On local 0.5.4 code:
-
-* `download_model.sh` attempts the matching Headroom128 DSpark support GGUF
-  (~5.6 GiB) unless `DS4_DSPARK=0`. Failure is non-fatal.
-* When that file is present and non-empty, managed `ds4-server` starts with
-  `--dspark --mtp gguf/<support>`.
-* Set `DS4_DSPARK=0` for plain one-token decode and to skip the support download.
-
-**No throughput or memory benefit is claimed here.** Prior tok/s figures that
-appeared to credit the drafter were taken on an **arch-less CUDA binary** and are
-void. Correct `cuda-spark` (`sm_121a` + `DS4_CUDA_HAVE_MXF4`) measurements with
-and without the drafter are being re-run; treat default-on as a behaviour flag,
-not a benchmark result. If those measurements reverse the premise, the default
-may need its own follow-up — larger than a version string.
+* **Engine pin `67acbd8`** — fixes the `client_main` self-deadlock introduced in `057f62f` (double-lock of `j.mu` stalled every HTTP request); still carries PR #755 Metal decode fusions + truncated DSML tool recovery.
+* **Platform-aware build + generation smoke:** `Darwin → make ds4-server`; `GB10/sm_121 → make cuda-spark`; other single caps `→ make cuda CUDA_ARCH=…`; no NVIDIA + `hipcc → make strix-halo`; unknown/mixed → fail loud (no arch-less binary). After weights land, non-Metal builds run a generation smoke requiring non-empty `choices[0].message.content`.
+* **Managed DSpark on by default when present:** `download_model.sh` best-effort fetches the matching Headroom128 DSpark support GGUF (~5.6 GiB, same `apetersson/Headroom128` repo); `ds4-server` starts with `--dspark --mtp gguf/…` when the file is present. Set `DS4_DSPARK=0` to skip the fetch and run plain decode. **No performance claim** — re-measure on a correct `cuda-spark`/Metal binary.
 
 ### Benchmarks — what we will and will not claim
 
 | Claim | Status |
 |---|---|
-| v0.5.3 M5 Max ~622 t/s prefill / ~42 t/s gen @ 2k Headroom128 | Published-era Metal bench language tied to the v0.5.3 pin / guide |
+| v0.5.4 M5 Max ~622 t/s prefill / ~42 t/s gen @ 2k Headroom128 | Published Metal bench on `67acbd8` (same fusions as `e4812d8`) |
 | Any DSpark drafter tok/s or “+N%” figure | **Not claimed** — prior numbers void; re-measure on a correct build |
 | CUDA GB10 tokens/s after `cuda-spark` | **Unverified on this README surface** — measure before claiming |
 
@@ -271,8 +232,7 @@ from seeded requests on audreyt/ds4.
 * `DS4_KV_DISK_SPACE_MB` — KV disk budget (RAM-tiered default when unset)
 * `DS4_DIR_STEERING_FILE` / `_FFN` / `_ATTN` / `_POLICY` — steering controls
 * `DS4_DSPARK` — managed DSpark support download + `--dspark --mtp` when the
-  support GGUF is present. Local 0.5.4 default is on (`1`); set `0` to skip.
-  Published 0.5.3 does not enable this managed path.
+  support GGUF is present. Default is on (`1`); set `0` to skip.
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout; do not clobber its binaries
 * `DS4_SERVER_BINARY` / `DS4_AGENT_BINARY` — custom binary paths
 * `DS4_AGENT_TOKENS` / `DS4_AGENT_THINK` / `DS4_AGENT_SYSTEM` / `DS4_AGENT_TRACE`
@@ -286,30 +246,27 @@ from seeded requests on audreyt/ds4.
   `/v1/chat/completions` with large tool schemas. Tool-call quality lives in
   `audreyt/ds4` (`test_tool_call_quality`) and live agent runs. The build smoke
   only checks short non-empty prose on non-Metal backends.
-* **Guide (`index.html`) / OG image** still describe published **v0.5.3** while
-  local `package.json` is **0.5.4**. Refresh them only at publish time, together.
 * **CUDA and DSpark performance** are not claimed here until measured on a
-  correctly targeted binary.
+  correctly targeted binary (both require `make cuda-spark` / correct arch).
 
 ## What's new
 
+### Published v0.5.4 (`67acbd8` pin, 2026-08)
+
+v0.5.4 advances the `audreyt/ds4` pin to `67acbd8` — fixing the `client_main`
+self-deadlock introduced in `057f62f` — while retaining PR #755 Metal decode
+optimizations (pre-M5/M5 Q2 + MXFP4), long-context inverse-RoPE/top-k fix,
+truncated DSML tool-call recovery inside unclosed thinking, and OpenAI
+tool-schema JSON spelling. Platform-aware Makefile targets and the managed DSpark
+support fetch (default-on when present; `DS4_DSPARK=0` disables) also land here
+but carry no perf claim until re-measured on a correct `cuda-spark` binary.
+Preferred Headroom128 and the conservative 100 k default context are unchanged.
+M5 Max re-validated at about 622 t/s prefill and 42 t/s generation at 2k context.
+
 ### Published v0.5.3 (`e4812d8` pin, 2026-08)
 
-v0.5.3 advances the `audreyt/ds4` pin to `e4812d8` (PR #755 Metal decode
-optimizations for pre-M5/M5 Q2 + MXFP4, long-context inverse-RoPE/top-k fix,
-truncated DSML tool-call recovery inside unclosed thinking, and OpenAI
-tool-schema JSON spelling). Preferred Headroom128 and the conservative 100 k
-default context are unchanged. Re-benched on Apple M5 Max with Headroom128:
-about 622 t/s prefill and 42 t/s generation at 2k context.
-
-### Unreleased v0.5.4 (local)
-
-* Engine pin `67acbd8` — fixes `client_main` self-deadlock; keeps PR #755 recovery.
-* Managed build selects ds4 Makefile product targets; fail-loud on unknown GPU;
-  non-Metal generation smoke; `~/.pi/ds4/build.json`.
-* Managed DSpark support file fetch + default-on server flags when present
-  (`DS4_DSPARK=0` disables). **No performance claim** until re-measured on a
-  correct `cuda-spark` (or Metal) binary.
+v0.5.3 advanced the pin to `e4812d8` (PR #755 merge) with the same 622/42 M5 Max
+headlines.
 
 ### Earlier 0.5.x
 

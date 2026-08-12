@@ -10,14 +10,14 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=c5b925cfeb63">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=5cd4846eb851">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Atmospheric grayscale pi-ds4 Guide card with an ocean horizon and current local inference readout: ~87 GB Headroom128 GGUF weights, 622 t/s prefill, and 42 t/s inference on M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=c5b925cfeb63">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=5cd4846eb851">
 <meta name="theme-color" content="#ebe7e4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -1772,7 +1772,7 @@ document.documentElement.classList.add('js');
     <div class="crumbs">
       <span class="header-credit"><span lang="zh-TW">唐鳳製作</span><span lang="en-GB">by Audrey Tang</span></span>
       <span class="cjk-tag"><span lang="zh-TW">指南</span><span lang="en-GB">Guide</span></span>
-      <span>v 0.5.3</span>
+      <span>v 0.5.4</span>
     </div>
   </header>
 
@@ -1838,8 +1838,8 @@ document.documentElement.classList.add('js');
         <div class="label"><span lang="zh-TW">預設可重現：seed 與工具呼叫 ID 都穩定</span><span lang="en-GB">Reproducible by default: stable seed and tool-call IDs</span></div>
       </div>
       <div class="ledger-item">
-        <div class="num">265<small>commits</small></div>
-        <div class="label"><span lang="zh-TW">2026-06→08 引擎 pin：SSD 串流、DSpark 推測解碼、<code>/stats</code>——見<a href="#whatsnew">更新誌</a></span><span lang="en-GB">Jun&ndash;Aug 2026 engine pin: SSD streaming, DSpark speculative decode, <code>/stats</code> &mdash; see <a href="#whatsnew">What&rsquo;s new</a></span></div>
+        <div class="num">275<small>commits</small></div>
+        <div class="label"><span lang="zh-TW">2026-06→08 引擎 pin：SSD 串流、DSpark、精確 Metal decode——見<a href="#whatsnew">更新誌</a></span><span lang="en-GB">Jun&ndash;Aug 2026 engine pin: SSD streaming, DSpark, exact Metal decode &mdash; see <a href="#whatsnew">What&rsquo;s new</a></span></div>
       </div>
     </div>
   </section>
@@ -2050,24 +2050,24 @@ document.documentElement.classList.add('js');
       把 pi 的思考層級對齊 <code>ds4-server</code> 真正的 <code>none</code>、<code>high</code>
       與 <code>max</code>；v 0.5.2 推進到 <code>a768f37</code>；v 0.5.3 再把
       <code>SUPPORT_PIN</code> 推進到 <code>e4812d8</code>（PR #755 Metal decode 優化與
-      截斷 DSML tool recovery）。既有安裝在下一次啟動時會自動更新；
-      保守的 100 k context 預設不變。底層引擎也保留下列從六月到八月、共 265 個 commit 的 pin 升級。
+      截斷 DSML tool recovery）；v 0.5.4 修 <code>client_main</code> 自我死鎖並選對 Makefile 目標、預設加掛 DSpark。既有安裝在下一次啟動時會自動更新；
+      保守的 100 k context 預設不變。底層引擎是下列從六月到八月、共 275 個 commit 的 pin。
     </p>
     <p class="lede" lang="en-GB">
       v 0.5 refreshes the managed path for August: the bundled downloader fetches Headroom128;
       v 0.5.1 aligns pi&rsquo;s thinking-level map with <code>ds4-server</code>&rsquo;s real
       <code>none</code>, <code>high</code>, and <code>max</code> modes; v 0.5.2 advances to
       <code>a768f37</code>; v 0.5.3 then advances <code>SUPPORT_PIN</code> to
-      <code>e4812d8</code> (PR #755 Metal decode optimisations and truncated DSML tool recovery).
+      <code>e4812d8</code> (PR #755 Metal decode optimisations and truncated DSML tool recovery);
+      v 0.5.4 fixes the <code>client_main</code> self-deadlock, selects the right Makefile target, and wires DSpark by default.
       Existing installs update on their next launch; the conservative 100 k context default is
-      unchanged. Underneath, the engine retains the 265-commit June-to-August pin upgrade
-      summarised below.
+      unchanged. Underneath, the engine is the 275-commit June-to-August pin summarised below.
     </p>
 
     <div class="ledger">
       <div class="ledger-item">
-        <div class="num">265<small>commits</small></div>
-        <div class="label"><span lang="zh-TW"><code>97319db → e4812d8</code>，2026-06-01 至 2026-08-09</span><span lang="en-GB"><code>97319db → e4812d8</code>, 2026-06-01 through 2026-08-09</span></div>
+        <div class="num">275<small>commits</small></div>
+        <div class="label"><span lang="zh-TW"><code>97319db → 67acbd8</code>，2026-06-01 至 2026-08-12</span><span lang="en-GB"><code>97319db → 67acbd8</code>, 2026-06-01 through 2026-08-12</span></div>
       </div>
       <div class="ledger-item">
         <div class="num">3<small>backends</small></div>
@@ -2129,10 +2129,23 @@ document.documentElement.classList.add('js');
     </ul>
 
 
-    <h3><span lang="zh-TW">v 0.5.3 補丁（擴充套件）</span><span lang="en-GB">v 0.5.3 patch (extension)</span></h3>
+    <h3><span lang="zh-TW">v 0.5.4 補丁（擴充套件）</span><span lang="en-GB">v 0.5.4 patch (extension)</span></h3>
 
-    <p lang="zh-TW">目前指南標示 <strong>v 0.5.3</strong>（與 <code>package.json</code> 一致）。</p>
-    <p lang="en-GB">This guide is labelled <strong>v 0.5.3</strong> (matching <code>package.json</code>).</p>
+    <p lang="zh-TW">目前指南標示 <strong>v 0.5.4</strong>（與 <code>package.json</code> 一致）。</p>
+    <p lang="en-GB">This guide is labelled <strong>v 0.5.4</strong> (matching <code>package.json</code>).</p>
+
+    <ul lang="zh-TW">
+      <li><strong>引擎 pin 推進到 <code>67acbd8</code>：</strong>修復 <code>057f62f</code> 引入的 <code>client_main</code> 自我死鎖（<code>j.mu</code> 重複上鎖導致每個 HTTP 請求卡死），保留 PR #755 的 Metal decode 融合與 tool recovery；解鎖後重新驗證 M5 Max 622 t/s 預填／42 t/s 推論（2k context）不變。</li>
+      <li><strong>依平台選 Makefile 目標並做生成冒煙測試：</strong>Darwin 走 <code>make ds4-server</code>；GB10/sm_121 走 <code>make cuda-spark</code>；其餘單一 compute_cap 走 <code>make cuda CUDA_ARCH=…</code>；無 NVIDIA 且有 <code>hipcc</code> 走 <code>make strix-halo</code>；未知／混合架構直接報錯（不再以空 <code>CUDA_ARCH</code> 產出可執行但空輸出的 binary）。非 Metal 建置在下載完成後跑生成 smoke——必須拿到非空 <code>choices[0].message.content</code> 而非僅 HTTP 200。</li>
+      <li><strong>預設加掛 DSpark：</strong>managed 下載改為一併嘗試 Headroom128 專用的 DSpark support GGUF（~5.6 GiB，同 <code>apetersson/Headroom128</code> repo，失敗不致命）；存在時以 <code>--dspark --mtp gguf/…DSpark-support.gguf</code> 啟動。設 <code>DS4_DSPARK=0</code> 可關閉並跳過下載。<strong>不附帶效能宣稱</strong>——需在正確的 <code>cuda-spark</code>／Metal binary 上重測後再說。</li>
+    </ul>
+    <ul lang="en-GB">
+      <li><strong>Engine pin advanced to <code>67acbd8</code>:</strong> fixes the <code>client_main</code> self-deadlock introduced in <code>057f62f</code> (double-lock of <code>j.mu</code> stalled every HTTP request), keeping PR #755&rsquo;s Metal decode fusions and tool recovery; M5 Max 622 t/s prefill / 42 t/s generation (2k context) re-validated unchanged.</li>
+      <li><strong>Platform-aware build + generation smoke:</strong> Darwin → <code>make ds4-server</code>; GB10/sm_121 → <code>make cuda-spark</code>; other single compute_cap → <code>make cuda CUDA_ARCH=…</code>; no NVIDIA + <code>hipcc</code> → <code>make strix-halo</code>; unknown/mixed caps fail loud (no arch-less binary that runs but returns empty). After weights land, non-Metal builds run a generation smoke that requires non-empty <code>choices[0].message.content</code>, not merely HTTP 200.</li>
+      <li><strong>DSpark on by default when present:</strong> managed download now best-effort fetches the matching Headroom128 DSpark support GGUF (~5.6 GiB from the same <code>apetersson/Headroom128</code> repo; failure is non-fatal) and passes <code>--dspark --mtp gguf/…DSpark-support.gguf</code> when the file is present. Set <code>DS4_DSPARK=0</code> to disable and skip the fetch. <strong>No performance claim</strong> — re-measure on a correct <code>cuda-spark</code> / Metal binary.</li>
+    </ul>
+
+    <h3><span lang="zh-TW">v 0.5.3 補丁（擴充套件）</span><span lang="en-GB">v 0.5.3 patch (extension)</span></h3>
 
     <ul lang="zh-TW">
       <li><strong>引擎 pin 推進到 <code>e4812d8</code>：</strong>合併 antirez/ds4 PR #755 後的 Metal decode 優化（pre-M5／M5 Q2 與 MXFP4）、長 context inverse-RoPE／top-k 修正、未閉合 <code>&lt;think&gt;</code> 內截斷 DSML tool call 復原，以及 OpenAI tool-schema JSON 拼字正規化。Headroom128 首選與 100 k context 預設不變。M5 Max 重測約 622 t/s 預填／42 t/s 推論（2k context）。</li>
