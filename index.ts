@@ -37,6 +37,8 @@ const STATE_FILE = join(DS4_DIR, "server.json");
 const AGENT_FILE = join(DS4_DIR, "agent.json");
 const LOG_FILE = join(DS4_DIR, "log");
 const LEASE_FILE = join(CLIENT_DIR, `${process.pid}.json`);
+const BUILD_RECORD_FILE = join(DS4_DIR, "build.json");
+
 
 // audreyt/pi-ds4 fork: pull the audreyt/ds4 main branch by default. That
 // branch carries the merged DwarfStar/upstream runtime, Metal 4 M5 MPP +
@@ -1049,33 +1051,646 @@ async function resolveRuntimeDirLocked(onStatus?: StatusCallback): Promise<strin
 	return resolvedRuntimeDir;
 }
 
-async function ensureBuilt(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
-	try {
-		await access(join(runtimeDir, "ds4-server"), constants.X_OK);
-		return;
-	} catch {}
+type BuildPlan = {
+	/** Stable key recorded in build.json so a later different plan forces clean. */
+	key: string;
+	/** make argv after the program name, e.g. ["ds4-server"] or ["cuda-spark"]. */
+	makeArgs: string[];
+	/** Human label for status/log lines. */
+	label: string;
+	/** Backend family for smoke policy. */
+	backend: "metal" | "cuda" | "rocm" | "cpu";
+	/** True when the Makefile target builds the whole binary suite (server+agent+...). */
+	buildsSuite: boolean;
+	/** Optional diagnostic detail (compute cap, override source). */
+	detail?: string;
+};
 
-	onStatus?.("building ds4-server");
-	await runLogged("make", ["ds4-server"], runtimeDir, "build ds4-server", {
+type BuildRecord = {
+	key: string;
+	makeArgs: string[];
+	label: string;
+	backend: string;
+	platform: string;
+	pin: string;
+	builtAt: string;
+	detail?: string;
+	smoke?: {
+		passedAt: string;
+		contentPreview: string;
+	};
+};
+
+function normalizeCudaArchToken(raw: string): string {
+	const t = raw.trim().toLowerCase().replace(/^sm_/, "").replace(/\./g, "");
+	if (!t) return "";
+	if (/^\d+a?$/.test(t)) return `sm_${t}`;
+	return raw.trim();
+}
+
+function computeCapToSm(cap: string): string | undefined {
+	const m = cap.trim().match(/^(\d+)\.(\d+)(a)?$/i);
+	if (!m) return undefined;
+	return `sm_${m[1]}${m[2]}${m[3] ? "a" : ""}`;
+}
+
+function commandExists(bin: string): boolean {
+	try {
+		const result = spawnSync("sh", ["-c", `command -v ${shellQuote(bin)} >/dev/null 2>&1`], {
+			stdio: "ignore",
+		});
+		return result.status === 0;
+	} catch {
+		return false;
+	}
+}
+
+async function detectNvidiaComputeCaps(): Promise<{ caps: string[]; names: string[]; error?: string }> {
+	const capOut = await execCapture(
+		"nvidia-smi",
+		["--query-gpu=compute_cap", "--format=csv,noheader"],
+		5_000,
+	);
+	const nameOut = await execCapture(
+		"nvidia-smi",
+		["--query-gpu=name", "--format=csv,noheader"],
+		5_000,
+	);
+	if (capOut === undefined && nameOut === undefined) {
+		return { caps: [], names: [], error: "nvidia-smi not available or failed" };
+	}
+	const caps = (capOut ?? "")
+		.split(/\r?\n/)
+		.map((l) => l.trim())
+		.filter(Boolean);
+	const names = (nameOut ?? "")
+		.split(/\r?\n/)
+		.map((l) => l.trim())
+		.filter(Boolean);
+	return { caps, names };
+}
+
+function isSparkFamily(cap: string | undefined, name: string | undefined): boolean {
+	const sm = cap ? computeCapToSm(cap) : undefined;
+	if (sm === "sm_121" || sm === "sm_121a") return true;
+	if (name && /gb10|dgx\s*spark|spark/i.test(name)) return true;
+	return false;
+}
+
+async function resolveBuildPlan(): Promise<BuildPlan> {
+	const overrideTarget = process.env.DS4_BUILD_TARGET?.trim();
+	if (overrideTarget) {
+		const parts = overrideTarget.split(/\s+/).filter(Boolean);
+		const backend: BuildPlan["backend"] =
+			/strix|rocm/i.test(overrideTarget) ? "rocm"
+			: /cpu/i.test(overrideTarget) ? "cpu"
+			: process.platform === "darwin" ? "metal"
+			: "cuda";
+		return {
+			key: `override:${parts.join(" ")}`,
+			makeArgs: parts,
+			label: `override ${parts.join(" ")}`,
+			backend,
+			buildsSuite: !["ds4-server", "ds4-agent", "ds4", "ds4-bench", "ds4-eval"].includes(parts[0] ?? ""),
+			detail: "DS4_BUILD_TARGET",
+		};
+	}
+
+	const backendForce = process.env.DS4_BACKEND?.trim().toLowerCase();
+	if (backendForce === "metal") {
+		if (process.platform !== "darwin") {
+			throw new Error("DS4_BACKEND=metal requires macOS (Darwin)");
+		}
+		return {
+			key: "metal:ds4-server",
+			makeArgs: ["ds4-server"],
+			label: "Metal ds4-server",
+			backend: "metal",
+			buildsSuite: false,
+		};
+	}
+	if (backendForce === "cpu") {
+		return {
+			key: "cpu",
+			makeArgs: ["cpu"],
+			label: "CPU-only suite",
+			backend: "cpu",
+			buildsSuite: true,
+			detail: "DS4_BACKEND=cpu",
+		};
+	}
+	if (backendForce === "rocm" || backendForce === "strix-halo") {
+		return {
+			key: "rocm:strix-halo",
+			makeArgs: ["strix-halo"],
+			label: "ROCm strix-halo",
+			backend: "rocm",
+			buildsSuite: true,
+			detail: "DS4_BACKEND",
+		};
+	}
+
+	if (process.platform === "darwin") {
+		// Default Darwin path is Metal. Explicit non-metal backends already handled above (cpu)
+		// or rejected here.
+		if (backendForce && backendForce !== "metal") {
+			throw new Error(`DS4_BACKEND=${backendForce} is not supported on macOS; use metal (default) or cpu`);
+		}
+		return {
+			key: "metal:ds4-server",
+			makeArgs: ["ds4-server"],
+			label: "Metal ds4-server",
+			backend: "metal",
+			buildsSuite: false,
+		};
+	}
+
+	// Non-Darwin (and explicit cuda backend).
+	if (backendForce === "cuda" || !backendForce) {
+		const archOverride = process.env.DS4_CUDA_ARCH?.trim();
+		if (archOverride) {
+			const arch = normalizeCudaArchToken(archOverride);
+			if (arch === "sm_121" || arch === "sm_121a") {
+				return {
+					key: "cuda:cuda-spark",
+					makeArgs: ["cuda-spark"],
+					label: "CUDA cuda-spark (sm_121)",
+					backend: "cuda",
+					buildsSuite: true,
+					detail: `DS4_CUDA_ARCH=${archOverride}`,
+				};
+			}
+			if (arch === "native") {
+				return {
+					key: "cuda:cuda-generic",
+					makeArgs: ["cuda-generic"],
+					label: "CUDA cuda-generic (native)",
+					backend: "cuda",
+					buildsSuite: true,
+					detail: `DS4_CUDA_ARCH=${archOverride}`,
+				};
+			}
+			return {
+				key: `cuda:cuda:${arch}`,
+				makeArgs: ["cuda", `CUDA_ARCH=${arch}`],
+				label: `CUDA cuda CUDA_ARCH=${arch}`,
+				backend: "cuda",
+				buildsSuite: true,
+				detail: `DS4_CUDA_ARCH=${archOverride}`,
+			};
+		}
+
+		const { caps, names, error } = await detectNvidiaComputeCaps();
+		if (error || caps.length === 0) {
+			// ROCm fallback only when no NVIDIA device is visible and hipcc exists.
+			if (!backendForce && commandExists("hipcc")) {
+				return {
+					key: "rocm:strix-halo",
+					makeArgs: ["strix-halo"],
+					label: "ROCm strix-halo",
+					backend: "rocm",
+					buildsSuite: true,
+					detail: "no NVIDIA GPU; hipcc present",
+				};
+			}
+			if (envFlagEnabled(process.env.DS4_ALLOW_CPU, false)) {
+				return {
+					key: "cpu",
+					makeArgs: ["cpu"],
+					label: "CPU-only suite",
+					backend: "cpu",
+					buildsSuite: true,
+					detail: "DS4_ALLOW_CPU=1 (no NVIDIA GPU detected)",
+				};
+			}
+			throw new Error(
+				`Cannot select a CUDA build target: ${error ?? "no compute_cap from nvidia-smi"}. ` +
+					`Refusing bare make ds4-server on Linux (that path omits CUDA_ARCH and can produce a runnable binary with empty/degenerate generations). ` +
+					`Fix: install/driver so nvidia-smi works, or set DS4_CUDA_ARCH=sm_XX, or DS4_BUILD_TARGET=cuda-spark|cuda-generic|strix-halo, or DS4_ALLOW_CPU=1. ` +
+					`Available ds4 Makefile targets: make cuda-spark (GB10/sm_121), make cuda CUDA_ARCH=sm_N, make cuda-generic, make strix-halo, make cpu.`,
+			);
+		}
+
+		const uniqueCaps = [...new Set(caps)];
+		if (uniqueCaps.length > 1) {
+			throw new Error(
+				`Multiple distinct NVIDIA compute capabilities detected (${uniqueCaps.join(", ")}). ` +
+					`Set DS4_CUDA_ARCH=sm_XX (or CUDA_VISIBLE_DEVICES to a single GPU) so the build target is unambiguous. ` +
+					`Refusing a generic build.`,
+			);
+		}
+
+		const cap = uniqueCaps[0]!;
+		const name = names[0];
+		const sm = computeCapToSm(cap);
+		if (isSparkFamily(cap, name)) {
+			return {
+				key: "cuda:cuda-spark",
+				makeArgs: ["cuda-spark"],
+				label: "CUDA cuda-spark (sm_121)",
+				backend: "cuda",
+				buildsSuite: true,
+				detail: `compute_cap=${cap}${name ? ` name=${name}` : ""}`,
+			};
+		}
+		if (!sm) {
+			throw new Error(
+				`Unrecognized NVIDIA compute capability "${cap}"${name ? ` (${name})` : ""}. ` +
+					`Set DS4_CUDA_ARCH explicitly (e.g. sm_90) or DS4_BUILD_TARGET=cuda-generic if you accept nvcc -arch=native. ` +
+					`Refusing bare make ds4-server.`,
+			);
+		}
+
+		// Known cap → explicit Makefile cuda target. Prefer product aliases when they exist.
+		if (sm === "sm_121" || sm === "sm_121a") {
+			return {
+				key: "cuda:cuda-spark",
+				makeArgs: ["cuda-spark"],
+				label: "CUDA cuda-spark (sm_121)",
+				backend: "cuda",
+				buildsSuite: true,
+				detail: `compute_cap=${cap}`,
+			};
+		}
+
+		// cuda-generic (native) only when explicitly allowed — never the silent default.
+		if (envFlagEnabled(process.env.DS4_CUDA_ALLOW_NATIVE, false)) {
+			return {
+				key: "cuda:cuda-generic",
+				makeArgs: ["cuda-generic"],
+				label: "CUDA cuda-generic (native)",
+				backend: "cuda",
+				buildsSuite: true,
+				detail: `DS4_CUDA_ALLOW_NATIVE=1; detected compute_cap=${cap}`,
+			};
+		}
+
+		return {
+			key: `cuda:cuda:${sm}`,
+			makeArgs: ["cuda", `CUDA_ARCH=${sm}`],
+			label: `CUDA cuda CUDA_ARCH=${sm}`,
+			backend: "cuda",
+			buildsSuite: true,
+			detail: `compute_cap=${cap}${name ? ` name=${name}` : ""}`,
+		};
+	}
+
+	throw new Error(
+		`Unsupported DS4_BACKEND=${backendForce}. Expected metal, cuda, rocm, strix-halo, or cpu.`,
+	);
+}
+
+async function readBuildRecord(): Promise<BuildRecord | undefined> {
+	return readJson<BuildRecord>(BUILD_RECORD_FILE);
+}
+
+async function writeBuildRecord(record: BuildRecord): Promise<void> {
+	await writeJsonAtomic(BUILD_RECORD_FILE, record);
+}
+
+async function binaryIsExecutable(dir: string, name: string): Promise<boolean> {
+	try {
+		await access(join(dir, name), constants.X_OK);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+/**
+ * Post-build generation smoke for non-Darwin backends.
+ * Asserts on actual choice message text — not HTTP 200, exit status, or finish_reason.
+ * Catches the arch-less CUDA failure mode: server starts, returns a choice, content empty /
+ * stuck in thinking / repetition-guard death.
+ */
+async function smokeTestBuiltServer(runtimeDir: string, onStatus?: StatusCallback): Promise<{ contentPreview: string }> {
+	if (envFlagEnabled(process.env.DS4_SKIP_BUILD_SMOKE, false)) {
+		await appendLog(`[${new Date().toISOString()}] build smoke skipped (DS4_SKIP_BUILD_SMOKE)\n`);
+		return { contentPreview: "(skipped)" };
+	}
+
+	const binary = join(runtimeDir, "ds4-server");
+	const modelPath = join(runtimeDir, "ds4flash.gguf");
+	try {
+		await access(modelPath, constants.F_OK);
+	} catch {
+		throw new Error(`build smoke requires ${modelPath}; model missing`);
+	}
+
+	// High ephemeral port so we never collide with the managed :8000 server.
+	const port = 18000 + (process.pid % 1000);
+	const base = `http://127.0.0.1:${port}`;
+	const args = [
+		"--host", "127.0.0.1",
+		"--port", String(port),
+		"--ctx", "2048",
+		"--tokens", "32",
+		"--nothink",
+		"-m", modelPath,
+	];
+
+	onStatus?.("smoke-testing built ds4-server (generation quality)");
+	await appendLog(
+		`\n[${new Date().toISOString()}] build smoke\n$ ${[binary, ...args].map(shellQuote).join(" ")}\n`,
+	);
+
+	const logFd = openSync(LOG_FILE, "a");
+	let child: ChildProcess;
+	try {
+		child = spawn(binary, args, {
+			cwd: runtimeDir,
+			detached: process.platform !== "win32",
+			stdio: ["ignore", "pipe", "pipe"],
+			env: process.env,
+		});
+	} catch (error) {
+		closeSync(logFd);
+		throw error;
+	}
+
+	const writeChunk = (chunk: Buffer) => {
+		try {
+			writeSync(logFd, chunk);
+		} catch {}
+	};
+	child.stdout?.on("data", writeChunk);
+	child.stderr?.on("data", writeChunk);
+
+	const killSmoke = async () => {
+		if (!child.pid) return;
+		try {
+			process.kill(process.platform === "win32" ? child.pid : -child.pid, "SIGTERM");
+		} catch {}
+		const deadline = Date.now() + 8_000;
+		while (Date.now() < deadline) {
+			if (child.exitCode !== null || !isPidAlive(child.pid)) break;
+			await sleep(200);
+		}
+		if (child.pid && isPidAlive(child.pid)) {
+			try {
+				process.kill(process.platform === "win32" ? child.pid : -child.pid, "SIGKILL");
+			} catch {}
+		}
+		try {
+			closeSync(logFd);
+		} catch {}
+	};
+
+	try {
+		// Wait until /v1/models answers.
+		const readyDeadline = Date.now() + 180_000;
+		let ready = false;
+		while (Date.now() < readyDeadline) {
+			if (child.exitCode !== null) {
+				throw new Error(`smoke ds4-server exited early code=${child.exitCode}; see ${LOG_FILE}`);
+			}
+			try {
+				const controller = new AbortController();
+				const t = setTimeout(() => controller.abort(), 2_000);
+				const res = await fetch(`${base}/v1/models`, { signal: controller.signal });
+				clearTimeout(t);
+				if (res.ok) {
+					ready = true;
+					break;
+				}
+			} catch {
+				// not ready yet
+			}
+			await sleep(1_000);
+		}
+		if (!ready) {
+			throw new Error(`smoke ds4-server did not become ready on ${base}; see ${LOG_FILE}`);
+		}
+
+		const controller = new AbortController();
+		const t = setTimeout(() => controller.abort(), 120_000);
+		let body: unknown;
+		try {
+			const res = await fetch(`${base}/v1/chat/completions`, {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				signal: controller.signal,
+				body: JSON.stringify({
+					// deepseek-chat selects non-thinking mode so final text lands in message.content
+					// (thinking mode can leave content empty while only reasoning fills — which is
+					// exactly the failure signature we must not mistake for a good build).
+					model: "deepseek-chat",
+					messages: [
+						{
+							role: "user",
+							content: "Reply with exactly these two words and nothing else: smoke ok",
+						},
+					],
+					max_tokens: 32,
+					temperature: 0,
+					seed: 42,
+					think: false,
+				}),
+			});
+			if (!res.ok) {
+				const text = await res.text().catch(() => "");
+				throw new Error(`smoke chat/completions HTTP ${res.status}: ${text.slice(0, 400)}`);
+			}
+			body = await res.json();
+		} finally {
+			clearTimeout(t);
+		}
+
+		const content = extractChoiceContent(body);
+		const finish = extractChoiceFinishReason(body);
+
+		// Assertions on ACTUAL generated text — the failure mode that burned a night
+		// returned HTTP-success choices with empty content / stuck thinking.
+		if (!content) {
+			throw new Error(
+				`build smoke FAILED: empty choices[0].message.content (finish_reason=${finish}). ` +
+					`This is the classic wrong-CUDA-arch failure mode: the binary starts and answers HTTP, ` +
+					`but generation is degenerate. Rebuild with make cuda-spark (GB10/sm_121) or ` +
+					`make cuda CUDA_ARCH=sm_XX matching nvidia-smi compute_cap. See ${LOG_FILE}`,
+			);
+		}
+		if (content.length < 2) {
+			throw new Error(
+				`build smoke FAILED: content too short (${JSON.stringify(content)}). See ${LOG_FILE}`,
+			);
+		}
+		// Detect pure-repetition sludge (ngram death) with no alphabetic substance.
+		const alpha = content.replace(/[^\p{L}\p{N}]+/gu, "");
+		if (alpha.length < 2) {
+			throw new Error(
+				`build smoke FAILED: content has no letters/digits (${JSON.stringify(content.slice(0, 80))}). See ${LOG_FILE}`,
+			);
+		}
+
+		await appendLog(
+			`[${new Date().toISOString()}] build smoke PASS content=${JSON.stringify(content.slice(0, 120))}\n`,
+		);
+		return { contentPreview: content.slice(0, 120) };
+	} finally {
+		await killSmoke();
+	}
+}
+
+function extractChoiceContent(body: unknown): string {
+	if (!body || typeof body !== "object") return "";
+	if (!("choices" in body) || !Array.isArray(body.choices) || body.choices.length === 0) return "";
+	const choice0 = body.choices[0];
+	if (!choice0 || typeof choice0 !== "object") return "";
+	if (!("message" in choice0) || !choice0.message || typeof choice0.message !== "object") return "";
+	const message = choice0.message;
+	if (!("content" in message)) return "";
+	return typeof message.content === "string" ? message.content.trim() : "";
+}
+
+function extractChoiceFinishReason(body: unknown): string {
+	if (!body || typeof body !== "object") return "n/a";
+	if (!("choices" in body) || !Array.isArray(body.choices) || body.choices.length === 0) return "n/a";
+	const choice0 = body.choices[0];
+	if (!choice0 || typeof choice0 !== "object") return "n/a";
+	if (!("finish_reason" in choice0)) return "n/a";
+	return choice0.finish_reason == null ? "n/a" : String(choice0.finish_reason);
+}
+
+async function ensureBinariesBuilt(runtimeDir: string, wantAgent: boolean, onStatus?: StatusCallback): Promise<void> {
+	const plan = await resolveBuildPlan();
+	const record = await readBuildRecord();
+	const serverOk = await binaryIsExecutable(runtimeDir, "ds4-server");
+	const agentOk = !wantAgent || (await binaryIsExecutable(runtimeDir, "ds4-agent"));
+	const pin = SUPPORT_PIN || "(unpinned)";
+	const planMatches = record?.key === plan.key && record?.pin === pin;
+
+	// Bring-your-own checkout: never clobber a user-supplied binary tree.
+	if (process.env.DS4_RUNTIME_DIR) {
+		if (serverOk && agentOk) return;
+		// Fall through to build only the missing pieces with the selected plan.
+	}
+
+	// Existing Metal installs predate build.json — adopt without rebuild.
+	if (serverOk && agentOk && plan.backend === "metal" && !record) {
+		await writeBuildRecord({
+			key: plan.key,
+			makeArgs: plan.makeArgs,
+			label: plan.label,
+			backend: plan.backend,
+			platform: process.platform,
+			pin,
+			builtAt: new Date().toISOString(),
+			detail: "adopted pre-existing Metal binary",
+		});
+		return;
+	}
+
+	if (serverOk && agentOk && planMatches) {
+		return;
+	}
+
+	// Metal: only agent missing, server already matches plan.
+	if (
+		serverOk &&
+		planMatches &&
+		wantAgent &&
+		plan.backend === "metal" &&
+		!(await binaryIsExecutable(runtimeDir, "ds4-agent"))
+	) {
+		onStatus?.("building Metal ds4-agent");
+		await runLogged("make", ["ds4-agent"], runtimeDir, "build Metal ds4-agent", {
+			onStatus,
+			progressPrefix: "building Metal ds4-agent",
+		});
+		if (!(await binaryIsExecutable(runtimeDir, "ds4-agent"))) {
+			throw new Error(`build finished but ${join(runtimeDir, "ds4-agent")} is missing or not executable`);
+		}
+		return;
+	}
+
+	// Force clean when retargeting or when a non-Metal binary has no trusted record
+	// (legacy bare `make ds4-server` CUDA installs).
+	const needsClean =
+		Boolean(record && record.key !== plan.key) ||
+		Boolean(record && record.pin !== pin) ||
+		(serverOk && !record && plan.backend !== "metal") ||
+		(serverOk && record && !planMatches);
+
+	if (needsClean) {
+		onStatus?.(`make clean (build plan changed: ${record?.key ?? "unknown/generic"} → ${plan.key})`);
+		await runLogged("make", ["clean"], runtimeDir, "make clean before retarget", { onStatus });
+		await Promise.all([
+			rm(join(runtimeDir, "ds4-server"), { force: true }),
+			rm(join(runtimeDir, "ds4-agent"), { force: true }),
+		]);
+	}
+
+	const detail = plan.detail ? ` (${plan.detail})` : "";
+	onStatus?.(`building ${plan.label}${detail}`);
+	await runLogged("make", plan.makeArgs, runtimeDir, `build ${plan.label}`, {
 		onStatus,
-		progressPrefix: "building ds4-server",
+		progressPrefix: `building ${plan.label}`,
 	});
-	await access(join(runtimeDir, "ds4-server"), constants.X_OK);
+
+	// Suite targets already build agent; single-target metal path may need a second invoke.
+	if (wantAgent && plan.backend === "metal" && !(await binaryIsExecutable(runtimeDir, "ds4-agent"))) {
+		onStatus?.("building Metal ds4-agent");
+		await runLogged("make", ["ds4-agent"], runtimeDir, "build Metal ds4-agent", {
+			onStatus,
+			progressPrefix: "building Metal ds4-agent",
+		});
+	}
+
+	if (!(await binaryIsExecutable(runtimeDir, "ds4-server"))) {
+		throw new Error(`build finished but ${join(runtimeDir, "ds4-server")} is missing or not executable`);
+	}
+	if (wantAgent && !(await binaryIsExecutable(runtimeDir, "ds4-agent"))) {
+		throw new Error(`build finished but ${join(runtimeDir, "ds4-agent")} is missing or not executable`);
+	}
+
+	// Smoke requires weights; ensureModel runs after ensureBuilt. Defer non-metal smoke to
+	// ensureRuntimeReady once the GGUF is present (see ensureBuildSmokeAfterModel).
+	await writeBuildRecord({
+		key: plan.key,
+		makeArgs: plan.makeArgs,
+		label: plan.label,
+		backend: plan.backend,
+		platform: process.platform,
+		pin,
+		builtAt: new Date().toISOString(),
+		detail: plan.detail,
+	});
+}
+
+async function ensureBuilt(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
+	await ensureBinariesBuilt(runtimeDir, false, onStatus);
 }
 
 async function ensureAgentBuilt(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
-	try {
-		await access(join(runtimeDir, "ds4-agent"), constants.X_OK);
-		return;
-	} catch {}
-
-	onStatus?.("building ds4-agent");
-	await runLogged("make", ["ds4-agent"], runtimeDir, "build ds4-agent", {
-		onStatus,
-		progressPrefix: "building ds4-agent",
-	});
-	await access(join(runtimeDir, "ds4-agent"), constants.X_OK);
+	await ensureBinariesBuilt(runtimeDir, true, onStatus);
 }
+
+/** Run generation smoke once weights exist; required for cuda/rocm/cpu new builds. */
+async function ensureBuildSmokeAfterModel(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
+	const record = await readBuildRecord();
+	if (!record) return;
+	if (record.backend === "metal") return; // Metal path is the long-validated primary; skip heavy reload.
+	if (record.smoke?.passedAt && record.pin === (SUPPORT_PIN || "(unpinned)") && record.key) {
+		// Already smoked this plan+pin.
+		if (await binaryIsExecutable(runtimeDir, "ds4-server")) return;
+	}
+	try {
+		const { contentPreview } = await smokeTestBuiltServer(runtimeDir, onStatus);
+		await writeBuildRecord({
+			...record,
+			smoke: { passedAt: new Date().toISOString(), contentPreview },
+		});
+	} catch (error) {
+		// Bad binary must not remain cached for the next launch to treat as success.
+		await Promise.all([
+			rm(join(runtimeDir, "ds4-server"), { force: true }),
+			rm(join(runtimeDir, "ds4-agent"), { force: true }),
+		]);
+		await removeFile(BUILD_RECORD_FILE);
+		throw error;
+	}
+}
+
 
 function selectedAgentThinkingArgs(): string[] {
 	const raw = process.env.DS4_AGENT_THINK?.trim().toLowerCase();
@@ -1125,6 +1740,8 @@ async function ensureRuntimeReadyLocked(onStatus?: StatusCallback): Promise<stri
 	await ensureBuilt(runtimeDir, onStatus);
 	if (runtimeDisposed || shuttingDown) return runtimeDir;
 	await ensureModel(runtimeDir, onStatus);
+	if (runtimeDisposed || shuttingDown) return runtimeDir;
+	await ensureBuildSmokeAfterModel(runtimeDir, onStatus);
 	return runtimeDir;
 }
 
@@ -1135,6 +1752,8 @@ async function ensureAgentRuntimeReady(onStatus?: StatusCallback): Promise<strin
 		if (!process.env.DS4_AGENT_BINARY) await ensureAgentBuilt(runtimeDir, onStatus);
 		if (runtimeDisposed || shuttingDown) return runtimeDir;
 		await ensureModel(runtimeDir, onStatus);
+		if (runtimeDisposed || shuttingDown) return runtimeDir;
+		await ensureBuildSmokeAfterModel(runtimeDir, onStatus);
 		return runtimeDir;
 	}, STARTUP_LOCK_TIMEOUT_MS, true);
 }
