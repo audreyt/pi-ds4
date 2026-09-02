@@ -1,7 +1,7 @@
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { execSync, spawn, spawnSync } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
-import { closeSync, constants, existsSync, openSync, statSync, writeSync } from "node:fs";
+import { closeSync, constants, openSync, writeSync } from "node:fs";
 import {
 	access,
 	appendFile,
@@ -57,7 +57,7 @@ const BUILD_RECORD_FILE = join(DS4_DIR, "build.json");
 // disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
-const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "67acbd8103034ff44c588a3893c6dd438f5cf6b0").trim();
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "d0c2b431a64a58c9507ac67a717bb3f1fb97d502").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)
@@ -131,10 +131,10 @@ function defaultKvDiskSpaceMb(): string {
 }
 
 const KV_DISK_SPACE_MB = process.env.DS4_KV_DISK_SPACE_MB?.trim() || defaultKvDiskSpaceMb();
-// Directional steering is opt-in for Headroom128 and other non-calibrated
+// Directional steering is opt-in for Vision-Exp and other non-calibrated
 // weights. The legacy cyberneurova-calibrated uncertainty vector remains
 // available in the ds4 checkout, but it is weight-specific: leave FFN/ATTN at
-// 0 until a Headroom128 direction is validated. Set DS4_DIR_STEERING_FFN (and
+// 0 until a Vision-Exp direction is validated. Set DS4_DIR_STEERING_FFN (and
 // optionally ATTN) to enable, or point DS4_DIR_STEERING_FILE at a different
 // .f32.
 //
@@ -161,22 +161,9 @@ const AGENT_STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Numb
 		"--dir-steering-attn", STEERING_ATTN,
 	]
 	: [];
-const SERVER_ARGS = ["--ctx", CTX_SIZE, "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", KV_DISK_SPACE_MB, ...STEERING_ARGS];
+const VISION_ENCODER_REL = "gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf";
+const SERVER_ARGS = ["--ctx", CTX_SIZE, "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", KV_DISK_SPACE_MB, "--vision", VISION_ENCODER_REL, ...STEERING_ARGS];
 
-// DSpark block-speculative decode. Default ON when the Headroom128 support
-// GGUF is present in the support checkout (bundled download_model.sh fetches
-// it, non-fatally). Set DS4_DSPARK=0 to disable.
-const DSPARK_SUPPORT_FILE = "DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf";
-function dsparkEnabledArgs(runtimeDir: string): string[] {
-	if (process.env.DS4_DSPARK === "0") return [];
-	const support = join(runtimeDir, "gguf", DSPARK_SUPPORT_FILE);
-	try {
-		if (!existsSync(support) || !statSync(support).size) return [];
-	} catch {
-		return [];
-	}
-	return ["--dspark", "--mtp", join("gguf", DSPARK_SUPPORT_FILE)];
-}
 
 const REPRODUCIBLE = envFlagEnabled(process.env.DS4_REPRODUCIBLE, true);
 const REPRODUCIBLE_SEED = REPRODUCIBLE ? parseReproducibleSeed(process.env.DS4_REPRODUCIBLE_SEED) : 42;
@@ -197,11 +184,10 @@ const WATCHDOG_POLL_MS = 2_000;
 const PROGRESS_NOTIFY_MS = 750;
 const PROGRESS_MAX_CHARS = 160;
 
-// pi-ds4 prefers the single Headroom128 GGUF from
-// apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128
-// (~81 GiB / ~87 GB). The bundled download_model.sh refuses any other quant.
-// The historic "q2" label is kept for on-disk lease/state compatibility with
-// older installs.
+// pi-ds4 prefers the official-recipe Vision-Exp IQ2 language GGUF with the
+// published rank-1 wo_b graft (33 Q8_0 attn_output_b tensors), from
+// audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF (~80.76 GiB), plus the
+// unmodified 316-tensor encoder. Historic "q2" selector kept for lease/state.
 type ModelQuant = "q2";
 
 type ServerState = {
@@ -361,21 +347,21 @@ function selectedModelQuant(): ModelQuant {
 	const forced = process.env.DS4_MODEL_QUANT?.toLowerCase();
 	if (forced && forced !== "q2") {
 		throw new Error(
-			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates the preferred Headroom128 GGUF (apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128, historic selector q2). Unset DS4_MODEL_QUANT or set it to q2. (To experiment with another GGUF, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
+			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates the preferred Vision-Exp abliterated IQ2 GGUF (audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF, historic selector q2) plus the Vision encoder. Unset DS4_MODEL_QUANT or set it to q2. (To experiment with another GGUF, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
 		);
 	}
 
 	const ramGb = totalmem() / 1_000_000_000;
 	if (ramGb < 96) {
 		throw new Error(
-			`DeepSeek V4 Flash Headroom128 needs at least 96 GB RAM; detected ${ramGb.toFixed(1)} GB`,
+			`DeepSeek V4 Flash Vision-Exp IQ2 needs at least 96 GB RAM; detected ${ramGb.toFixed(1)} GB`,
 		);
 	}
 	if (ramGb < 128) {
 		const wiredLimitMb = readIogpuWiredLimitMb();
 		if (wiredLimitMb < 87_000) {
 			throw new Error(
-				`Detected ${ramGb.toFixed(1)} GB RAM. On Macs below 128 GB the Metal wired-memory ceiling must be raised first so the ~81 GiB / ~87 GB Headroom128 GGUF fits. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=92000\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command. 128 GB+ Macs do not need this step and can run more apps alongside ds4-server.`,
+				`Detected ${ramGb.toFixed(1)} GB RAM. On Macs below 128 GB the Metal wired-memory ceiling must be raised first so the ~80.76 GiB Vision-Exp language GGUF fits. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=92000\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command. 128 GB+ Macs do not need this step and can run more apps alongside ds4-server.`,
 			);
 		}
 	}
@@ -1387,6 +1373,7 @@ async function smokeTestBuiltServer(runtimeDir: string, onStatus?: StatusCallbac
 		"--tokens", "32",
 		"--nothink",
 		"-m", modelPath,
+		"--vision", join(runtimeDir, VISION_ENCODER_REL),
 	];
 
 	onStatus?.("smoke-testing built ds4-server (generation quality)");
@@ -1711,6 +1698,7 @@ function buildAgentArgs(initialPrompt: string): string[] {
 	const args = [
 		"--ctx", CTX_SIZE,
 		"--tokens", AGENT_TOKENS,
+		"--vision", VISION_ENCODER_REL,
 		...selectedAgentThinkingArgs(),
 		...AGENT_STEERING_ARGS,
 	];
@@ -1724,10 +1712,11 @@ function buildAgentArgs(initialPrompt: string): string[] {
 
 async function ensureModel(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
 	const quant = selectedModelQuant();
-	onStatus?.(`ensuring ${quant} model (preferred Headroom128 abliterated 0731)`);
+	onStatus?.(`ensuring ${quant} model (preferred Vision-Exp abliterated IQ2 + encoder)`);
 	// audreyt/pi-ds4 fork: shadow the antirez/ds4 download_model.sh with our
-	// own copy that fetches the preferred Headroom128 GGUF from
-	// apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128. Idempotent.
+	// own copy that fetches the preferred Vision-Exp language GGUF from
+	// audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF and the encoder
+	// from antirez/deepseek-v4-gguf. Idempotent. No 0731 DSpark attach.
 	await runLogged(DOWNLOAD_SCRIPT, [quant], runtimeDir, `download ${quant} model`, {
 		onStatus,
 		progressPrefix: `downloading ${quant} model`,
@@ -2079,7 +2068,7 @@ async function startServerLocked(runtimeDir: string): Promise<void> {
 		throw new Error(`Cannot execute ds4-server at ${binary}`);
 	}
 
-	const serverArgs = [...SERVER_ARGS, ...dsparkEnabledArgs(runtimeDir)];
+	const serverArgs = [...SERVER_ARGS];
 	await appendLog(`\n[${new Date().toISOString()}] start ds4-server\n$ ${[binary, ...serverArgs].map(shellQuote).join(" ")}\n`);
 	const logFd = openSync(LOG_FILE, "a");
 	let childPid: number | undefined;

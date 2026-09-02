@@ -25,15 +25,15 @@ pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream exte
 pi install  https://github.com/audreyt/pi-ds4
 ```
 
-### What GitHub serves today (tag `v0.5.4`)
+### What GitHub serves today (tag `v0.6.0`)
 
 | Item | Value |
 |---|---|
-| Package version | **0.5.4** |
-| `SUPPORT_PIN` | `67acbd8` (fix `client_main` self-deadlock in `057f62f`; carries PR #755 Metal decode work + truncated DSML tool recovery) |
-| Preferred GGUF | Headroom128 abliterated 0731 from [`apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128`](https://huggingface.co/apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128) |
+| Package version | **0.6.0** |
+| `SUPPORT_PIN` | `d0c2b43` (`audreyt/ds4` main: origin/main Vision-Exp engine + Headroom128 *filename* pin; `--vision` works) |
+| Preferred GGUF | Vision-Exp abliterated IQ2 from [`audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF) plus the unmodified encoder from [`antirez/deepseek-v4-gguf`](https://huggingface.co/antirez/deepseek-v4-gguf) |
 | Default context | 100 k tokens (`DS4_CONTEXT_KB=100`) |
-| Guide / OG card | **v0.5.4** headlines · `275 commits` `97319db → 67acbd8` (2026-06-01 → 2026-08-12) |
+| Guide / OG card | **v0.5.4** headlines still on the OG image (Headroom128 622/42); managed path is Vision-Exp as of v0.6.0 |
 
 `pi install https://github.com/audreyt/pi-ds4` installs exactly this tag.
 
@@ -42,10 +42,12 @@ pi install  https://github.com/audreyt/pi-ds4
 1. **Pulls [`audreyt/ds4`](https://github.com/audreyt/ds4) at a pinned commit**
    (`SUPPORT_PIN`), not floating `antirez/ds4` `main`. The pin is enforced on
    launch: mismatch → fetch + hard reset + delete cached binaries so they rebuild.
-2. **Ships its own `download_model.sh`** for the preferred Headroom128 GGUF
-   (~81 GiB / ~87 GB), symlinked as `ds4flash.gguf`.
-3. **Directional steering stays off by default** on Headroom128 until a
-   weight-matched vector is validated. Opt-in via env (below).
+2. **Ships its own `download_model.sh`** for the preferred Vision-Exp language
+   GGUF (~80.76 GiB) plus the 889 MiB encoder, language file symlinked as
+   `ds4flash.gguf`. `ds4-server` / `ds4-agent` are started with `--vision`.
+3. **No 0731 DSpark attach.** That support GGUF is a different Flash checkpoint.
+   Directional steering stays off by default until a Vision-Exp-matched vector
+   is validated. Opt-in via env (below).
 
 ### Requirements by platform
 
@@ -53,22 +55,23 @@ pi install  https://github.com/audreyt/pi-ds4
 |---|---|---|
 | Apple Silicon, 128 GB+ | Yes | Preferred path. |
 | Apple Silicon, 96–127 GB | Yes after wired-limit raise | `sudo sysctl iogpu.wired_limit_mb=92000` (persist via `/etc/sysctl.conf`). |
-| Apple Silicon, &lt;96 GB | No | Extension refuses; Headroom128 footprint. |
+| Apple Silicon, &lt;96 GB | No | Extension refuses; Vision-Exp IQ2 footprint. |
 | Linux + NVIDIA | Auto-selects Makefile CUDA targets | Needs `nvidia-smi` + `nvcc`. GB10 / sm_121 → `make cuda-spark`. Post-build **generation smoke** must pass. |
 | Linux + AMD Strix Halo (gfx1151) | Auto-selects `make strix-halo` when no NVIDIA device and `hipcc` exists | Or force `DS4_BACKEND=rocm`. |
 | CPU-only | Opt-in only | `DS4_ALLOW_CPU=1` or `DS4_BACKEND=cpu`. Not silent fallback. |
 
-**Disk (managed Headroom128):** plan ≥ ~90 GB free for the main GGUF, plus an optional ~5.6 GiB DSpark support file when `DS4_DSPARK` is not `0` (best-effort; failure is non-fatal).
+**Disk (managed Vision-Exp):** plan ≥ ~82 GB free for the language GGUF plus ~889 MiB for the encoder.
 
 ### What first launch does
 
 1. Clone `audreyt/ds4` at `SUPPORT_PIN` into `~/.pi/ds4/support/` (or hard-reset an
    existing checkout to the pin and delete cached `ds4-server` / `ds4-agent`).
 2. **Select a build plan and run the matching `make` target** (see table below).
-3. Run bundled `download_model.sh` for Headroom128 (+ optional DSpark support when enabled).
+3. Run bundled `download_model.sh` for the Vision-Exp language GGUF + encoder.
 4. On non-Metal backends, run a **generation smoke test** (asserts non-empty
-   `choices[0].message.content` — not merely HTTP 200).
-5. Spawn `ds4-server` on `127.0.0.1:8000` and register `ds4/deepseek-v4-flash`.
+   `choices[0].message.content` — not merely HTTP 200) with `--vision`.
+5. Spawn `ds4-server --vision gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf` on
+   `127.0.0.1:8000` and register `ds4/deepseek-v4-flash`.
 
 Subsequent launches are idempotent when the pin, build plan, and GGUF already match.
 
@@ -116,7 +119,7 @@ The managed path’s post-build smoke is meant to catch this before you chat.
 
 ```sh
 git clone https://github.com/audreyt/ds4 && cd ds4
-git checkout <pin>   # e.g. published 67acbd8
+git checkout <pin>   # e.g. published d0c2b43
 make cuda-spark      # or: make cuda CUDA_ARCH=sm_90 / make strix-halo
 
 export DS4_RUNTIME_DIR=/path/to/that/checkout
@@ -196,7 +199,7 @@ Under `~/.pi/ds4`:
 The engine supports runtime
 [directional steering](https://github.com/audreyt/ds4/blob/main/dir-steering/README.md).
 `audreyt/ds4` still ships the historical `uncertainty_ablit_imatrix.f32` vector
-(CyberNeurova-calibrated). **Default on Headroom128: off**
+(CyberNeurova-calibrated). **Default on Vision-Exp: off**
 (`DS4_DIR_STEERING_FFN=0`, `DS4_DIR_STEERING_ATTN=0`).
 
 Opt in for research:
@@ -231,8 +234,8 @@ from seeded requests on audreyt/ds4.
 * `DS4_CONTEXT_KB` — context kilotokens (default `100`)
 * `DS4_KV_DISK_SPACE_MB` — KV disk budget (RAM-tiered default when unset)
 * `DS4_DIR_STEERING_FILE` / `_FFN` / `_ATTN` / `_POLICY` — steering controls
-* `DS4_DSPARK` — managed DSpark support download + `--dspark --mtp` when the
-  support GGUF is present. Default is on (`1`); set `0` to skip.
+* `DS4_DSPARK` — ignored on the managed Vision-Exp path. The 0731 Headroom128
+  DSpark support GGUF must not be attached to this checkpoint.
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout; do not clobber its binaries
 * `DS4_SERVER_BINARY` / `DS4_AGENT_BINARY` — custom binary paths
 * `DS4_AGENT_TOKENS` / `DS4_AGENT_THINK` / `DS4_AGENT_SYSTEM` / `DS4_AGENT_TRACE`
@@ -250,6 +253,15 @@ from seeded requests on audreyt/ds4.
   correctly targeted binary (both require `make cuda-spark` / correct arch).
 
 ## What's new
+
+### Published v0.6.0 (`d0c2b43` pin, 2026-09)
+
+Managed preferred model cuts over from Headroom128 0731 Flash to **Vision-Exp
+abliterated IQ2** (`audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF`,
+official 80.76 GiB recipe with 33 grafted `attn_output_b` Q8_0 payloads) plus
+the unmodified 316-tensor encoder. Engine pin `d0c2b43` (Vision-Exp `--vision`).
+`ds4-server` and `ds4-agent` start with `--vision`. No 0731 DSpark attach.
+M5 Max smoke on the grafted sibling: `/read` earth.jpg 285.75 prefill / 44.94 gen t/s.
 
 ### Published v0.5.4 (`67acbd8` pin, 2026-08)
 
