@@ -2171,7 +2171,7 @@ document.documentElement.classList.add('js');
       <li><strong>引擎 pin 推進到 <code>e4812d8</code>：</strong>合併 antirez/ds4 PR #755 後的 Metal decode 優化（pre-M5／M5 Q2 與 MXFP4）、長 context inverse-RoPE／top-k 修正、未閉合 <code>&lt;think&gt;</code> 內截斷 DSML tool call 復原，以及 OpenAI tool-schema JSON 拼字正規化。Headroom128 首選與 100 k context 預設不變。M5 Max 重測約 622 t/s 預填／42 t/s 推論（2k context）。</li>
     </ul>
     <ul lang="en-GB">
-      <li><strong>Engine pin advanced to <code>e4812d8</code>:</strong> after merging antirez/ds4 PR #755, Metal decode optimisations (pre-M5/M5 Q2 and MXFP4), long-context inverse-RoPE/top-k fix, recovery of truncated DSML tool calls from unclosed <code>&lt;think&gt;</code>, and OpenAI tool-schema JSON spelling. Preferred Vision-Exp and the 100 k context default are unchanged. Re-benched on M5 Max at about 622 t/s prefill / 42 t/s generation (2k context).</li>
+      <li><strong>Engine pin advanced to <code>e4812d8</code>:</strong> after merging antirez/ds4 PR #755, Metal decode optimisations (pre-M5/M5 Q2 and MXFP4), long-context inverse-RoPE/top-k fix, recovery of truncated DSML tool calls from unclosed <code>&lt;think&gt;</code>, and OpenAI tool-schema JSON spelling. Preferred Headroom128 and the 100 k context default are unchanged. Re-benched on M5 Max at about 622 t/s prefill / 42 t/s generation (2k context).</li>
     </ul>
 
     <h3><span lang="zh-TW">v 0.5.2 補丁（擴充套件）</span><span lang="en-GB">v 0.5.2 patch (extension)</span></h3>
@@ -2180,7 +2180,7 @@ document.documentElement.classList.add('js');
       <li><strong>引擎 pin 推進到 <code>a768f37</code>：</strong>合併 origin/main 後的 Metal MoE／indexed 預填加速、MXFP4／CUDA mmq、Flash 0731 checkpointed vectors，以及未閉合 <code>&lt;think&gt;</code> 內完整 tool call 復原。Headroom128 首選與 100 k context 預設不變。M5 Max 當時重測約 638 t/s 預填／37 t/s 推論（2k context）。</li>
     </ul>
     <ul lang="en-GB">
-      <li><strong>Engine pin advanced to <code>a768f37</code>:</strong> after merging origin/main, Metal MoE/indexed prefill accelerations, MXFP4/CUDA mmq, Flash 0731 checkpointed vectors, and recovery of complete tool calls from unclosed <code>&lt;think&gt;</code>. Preferred Vision-Exp and the 100 k context default are unchanged. Then re-benched on M5 Max at about 638 t/s prefill / 37 t/s generation (2k context).</li>
+      <li><strong>Engine pin advanced to <code>a768f37</code>:</strong> after merging origin/main, Metal MoE/indexed prefill accelerations, MXFP4/CUDA mmq, Flash 0731 checkpointed vectors, and recovery of complete tool calls from unclosed <code>&lt;think&gt;</code>. Preferred Headroom128 and the 100 k context default are unchanged. Then re-benched on M5 Max at about 638 t/s prefill / 37 t/s generation (2k context).</li>
     </ul>
 
     <h3><span lang="zh-TW">v 0.5.1 補丁（擴充套件）</span><span lang="en-GB">v 0.5.1 patch (extension)</span></h3>
@@ -2193,10 +2193,10 @@ document.documentElement.classList.add('js');
     </ul>
 
     <ul lang="zh-TW">
-      <li><strong>首選模型切到 Headroom128：</strong>managed path 改抓 <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code> 的單一 ~87 GB GGUF（可選同 repo 的 DSpark support）；不再預設 CyberNeurova dual-tier 或 antirez mixed/plain。</li>
+      <li><strong>v 0.5.0 首選模型切到 Headroom128：</strong>當時 managed path 改抓 <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code> 的單一 ~87 GB GGUF（可選同 repo 的 DSpark support）；不再預設 CyberNeurova dual-tier 或 antirez mixed/plain。v 0.6.0 已改抓 Vision-Exp。</li>
     </ul>
     <ul lang="en-GB">
-      <li><strong>Preferred model cutover to Headroom128:</strong> the managed path now fetches the single ~87 GB GGUF from <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code> (optional matching DSpark support in the same repo); it no longer defaults to CyberNeurova dual-tier or antirez mixed/plain.</li>
+      <li><strong>v 0.5.0 preferred model cutover to Headroom128:</strong> the managed path then fetched the single ~87 GB GGUF from <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code> (optional matching DSpark support in the same repo); it no longer defaulted to CyberNeurova dual-tier or antirez mixed/plain. v 0.6.0 switches that fetch to Vision-Exp.</li>
     </ul>
 
     <ul lang="zh-TW">
@@ -2568,9 +2568,10 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
           <code class="seq-args">ds4-server \
   --ctx <span class="gold">100000</span> \
   --kv-disk-dir   ~/.pi/ds4/kv \
-  --kv-disk-space-mb <span class="gold">65536</span> <span class="teal"># 128 GB+ auto; 32768 on 96–127 GB</span> \
+  --kv-disk-space-mb <span class="gold">65536</span> \
   --vision gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf
-  <span class="c"># steering off by default on Vision-Exp; opt in with:
+  <span class="c"># 128 GB+ auto KV disk; 32768 on 96–127 GB
+  # steering off by default on Vision-Exp; opt in with:
   # --dir-steering-file dir-steering/out/uncertainty_ablit_imatrix.f32
   # --dir-steering-ffn -0.75 --dir-steering-attn 0 --dir-steering-policy final-answer</span></code>
         </div>
@@ -2882,12 +2883,12 @@ ln -sfn gguf/...gguf <span class="gold">ds4flash.gguf</span></code>
     <ul lang="zh-TW">
       <li><strong>引導 + system prompt 是一組</strong>：純引導沒有提示時，
         模型只會「猶豫」；純 hedge 提示沒有引導時，模型會被訓練封鎖壓回去。兩者合用才產生效果。</li>
-      <li><strong><code>ffn=-0.75, attn=0</code> 是預設點</strong>：在 Headroom128 上，以 seed 42、穩定工具 ID、50k+ token Codex harness prompt 實測能保留「利害關係人框架」的微調，同時不干擾 DSML／tool-call grammar。若還看到工具怪異，可退回 <code>ffn=-0.5, attn=0</code>；舊的 <code>ffn=-2, attn=-0.5</code> 壓力測試設定只適合隔離評估，容易重複塌陷或跨語言亂碼。</li>
+      <li><strong><code>ffn=-0.75, attn=0</code> 是歷史 opt-in 量級，不是 managed 預設</strong>：managed path 預設關閉 steering。該量級是在 Headroom128 上、以 seed 42、穩定工具 ID、50k+ token Codex harness prompt 實測能保留「利害關係人框架」微調、同時不干擾 DSML／tool-call grammar。Vision-Exp 尚未重校準；若還看到工具怪異，可退回 <code>ffn=-0.5, attn=0</code>；舊的 <code>ffn=-2, attn=-0.5</code> 壓力測試設定只適合隔離評估，容易重複塌陷或跨語言亂碼。</li>
     </ul>
     <ul lang="en-GB">
       <li><strong>Steering + system prompt go together</strong>: with steering alone and no prompt,
         the model just &ldquo;hesitates&rdquo;; with a hedge prompt and no steering, the trained lock pushes it back. Only together do they take effect.</li>
-      <li><strong><code>ffn=-0.75, attn=0</code> is the default point</strong>: empirically, on the Headroom128 build, this preserves the stakeholder-framing nudge on the seed-42 stable-tool-ID path while keeping 50k+ token Codex harness prompts and DSML/tool-call grammar intact. If tool weirdness returns, fall back to <code>ffn=-0.5, attn=0</code>; the older <code>ffn=-2, attn=-0.5</code> acid-test setting is for isolated evaluation and can collapse into repetition or cross-lingual gibberish.</li>
+      <li><strong><code>ffn=-0.75, attn=0</code> is a historical opt-in magnitude, not the managed default</strong>: the managed path leaves steering off. That magnitude was measured on Headroom128 (seed 42, stable tool IDs, 50k+ token Codex harness prompts) as a stakeholder-framing nudge that kept DSML/tool-call grammar intact. It is not re-calibrated for Vision-Exp. If tool weirdness returns, fall back to <code>ffn=-0.5, attn=0</code>; the older <code>ffn=-2, attn=-0.5</code> acid-test setting is for isolated evaluation and can collapse into repetition or cross-lingual gibberish.</li>
     </ul>
 
     <h3>4.5<span lang="zh-TW">　搭配的 system prompt（範例，非預設）</span><span lang="en-GB">　A paired system prompt (example, not the default)</span></h3>
@@ -5084,13 +5085,13 @@ STATE=~/.pi/ds4/server.json
       </div>
       <div>
         <dt>quantization<span class="cjk-aside">量化</span></dt>
-        <dd lang="zh-TW">把權重從原生高精度壓縮到更少位元。Vision-Exp IQ2 不是單一 bit-width：routed expert 以 IQ2_XXS／Q2_K 為主，attention／shared-expert／output 保留 Q8_0，部分 indexer 與 control tensor 保留 F16／F32／I32，整體把主模型壓到約 87 GB。</dd>
-        <dd lang="en-GB">Compressing weights from native high precision into fewer bits. Vision-Exp IQ2 is not a single bit-width: routed experts are mostly IQ2_XXS/Q2_K, attention/shared-expert/output paths stay at Q8_0, and selected indexer/control tensors remain F16/F32/I32, bringing the main model to about 87 GB overall.</dd>
+        <dd lang="zh-TW">把權重從原生高精度壓縮到更少位元。Vision-Exp IQ2 不是單一 bit-width：routed expert 以 IQ2_XXS／Q2_K 為主，attention／shared-expert／output 保留 Q8_0，部分 indexer 與 control tensor 保留 F16／F32／I32，語言檔 86720111776 B（另加 889 MiB 編碼器）。</dd>
+        <dd lang="en-GB">Compressing weights from native high precision into fewer bits. Vision-Exp IQ2 is not a single bit-width: routed experts are mostly IQ2_XXS/Q2_K, attention/shared-expert/output paths stay at Q8_0, and selected indexer/control tensors remain F16/F32/I32, bringing the language GGUF to 86720111776 B (plus an 889 MiB encoder).</dd>
       </div>
       <div>
         <dt>GGUF<span class="cjk-aside">模型檔格式</span></dt>
-        <dd lang="zh-TW">llama.cpp 系列引擎使用的單檔模型格式（檔名 <code>.gguf</code>），把權重、結構、tokenizer 全部打包在一個檔案裡。本指南的 GGUF 約 87 GB。</dd>
-        <dd lang="en-GB">The single-file model format used by llama.cpp-family engines (extension <code>.gguf</code>), which packages weights, architecture, and tokenizer into one file. The GGUF in this guide is around 87 GB.</dd>
+        <dd lang="zh-TW">llama.cpp 系列引擎使用的單檔模型格式（檔名 <code>.gguf</code>），把權重、結構、tokenizer 全部打包在一個檔案裡。本指南語言 GGUF 為 86720111776 B。</dd>
+        <dd lang="en-GB">The single-file model format used by llama.cpp-family engines (extension <code>.gguf</code>), which packages weights, architecture, and tokenizer into one file. The language GGUF in this guide is 86720111776 B.</dd>
       </div>
       <div>
         <dt>abliteration<span class="cjk-aside">拒絕方向消除</span></dt>
