@@ -1371,7 +1371,6 @@ async function smokeTestBuiltServer(runtimeDir: string, onStatus?: StatusCallbac
 		"--port", String(port),
 		"--ctx", "2048",
 		"--tokens", "32",
-		"--nothink",
 		"-m", modelPath,
 		"--vision", join(runtimeDir, VISION_ENCODER_REL),
 	];
@@ -2324,7 +2323,7 @@ function registerDs4Provider(pi: ExtensionAPI): void {
 					xhigh: null,
 					max: "max",
 				},
-				input: ["text"],
+				input: ["text", "image"],
 				contextWindow: Number(CTX_SIZE) || 100000,
 				maxTokens: 384000,
 				cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },

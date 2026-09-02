@@ -29,5 +29,6 @@ assert.deepEqual(model.thinkingLevelMap, {
   max: "max",
 });
 assert.equal(model.contextWindow, 100_000, "the conservative default context changed");
+assert.deepEqual(model.input, ["text", "image"], "Vision-Exp managed path must advertise image input");
 
-console.log("Provider verified: off=none, high=high, max=max; default context=100000");
+console.log("Provider verified: off=none, high=high, max=max; default context=100000; input=text+image");
