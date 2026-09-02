@@ -39,9 +39,11 @@ if [ "$QUANT" != "q2" ]; then
 fi
 
 LANG_REPO="audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF"
+LANG_REV="367a1fefb91ba1f76eb151abc15c68172e1f1cb7"
 LANG_FILE="DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf"
 LANG_BYTES=86720111776
 ENC_REPO="antirez/deepseek-v4-gguf"
+ENC_REV="f71f23d552d664e523b422157b2befbf74040380"
 ENC_FILE="DeepSeek-V4-Flash-Vision-Encoder.gguf"
 ENC_BYTES=932857760
 
@@ -74,7 +76,7 @@ else
         rm -f "$SRC_PATH"
     fi
     echo "ds4 download: fetching Vision-Exp language GGUF $LANG_FILE (~80.76 GiB, one-time, resumable)..."
-    URL="https://huggingface.co/$LANG_REPO/resolve/main/$LANG_FILE"
+    URL="https://huggingface.co/$LANG_REPO/resolve/$LANG_REV/$LANG_FILE"
     curl_hf "$SRC_PATH.part" "$URL"
     mv "$SRC_PATH.part" "$SRC_PATH"
     if [ "$(file_size "$SRC_PATH")" != "$LANG_BYTES" ]; then
@@ -93,7 +95,7 @@ else
         rm -f "$ENC_PATH"
     fi
     echo "ds4 download: fetching Vision-Exp encoder $ENC_FILE (~889 MiB, one-time, resumable)..."
-    URL="https://huggingface.co/$ENC_REPO/resolve/main/$ENC_FILE"
+    URL="https://huggingface.co/$ENC_REPO/resolve/$ENC_REV/$ENC_FILE"
     curl_hf "$ENC_PATH.part" "$URL"
     mv "$ENC_PATH.part" "$ENC_PATH"
     if [ "$(file_size "$ENC_PATH")" != "$ENC_BYTES" ]; then

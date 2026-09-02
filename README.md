@@ -60,7 +60,7 @@ pi install  https://github.com/audreyt/pi-ds4
 | Linux + AMD Strix Halo (gfx1151) | Auto-selects `make strix-halo` when no NVIDIA device and `hipcc` exists | Or force `DS4_BACKEND=rocm`. |
 | CPU-only | Opt-in only | `DS4_ALLOW_CPU=1` or `DS4_BACKEND=cpu`. Not silent fallback. |
 
-**Disk (managed Vision-Exp):** language 86720111776 B + encoder 932857760 B = 87654969536 B (~81.65 GiB / ~87.65 GB). Fresh install: plan ≥ ~88 GB plus KV. A v0.5.x upgrade keeps the old Headroom128 language GGUF (~87 GB) and optional 0731 DSpark (5989114272 B, ~5.6 GiB / ~5.99 GB) until the new pair passes size checks and *then* `ds4flash.gguf` is switched. Peak occupancy: ~175 GB without DSpark, ~181 GB with DSpark. After the switch, `download_model.sh` deletes those obsolete files. To free space *before* the fetch (this destroys the working 0731 model):
+**Disk (managed Vision-Exp):** language 86720111776 B + encoder 932857760 B = 87652969536 B (~81.63 GiB / 87.653 GB). Fresh install: plan ≥ ~88 GB plus KV. A v0.5.x upgrade keeps the old Headroom128 language GGUF (~87 GB) and optional 0731 DSpark (5989114272 B, ~5.6 GiB / ~5.99 GB) until the new pair passes size checks and *then* `ds4flash.gguf` is switched. Peak occupancy: ~175 GB without DSpark, ~181 GB with DSpark. After the switch, `download_model.sh` deletes those obsolete files. To free space *before* the fetch (this destroys the working 0731 model):
 
 ```sh
 rm -f ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf \
