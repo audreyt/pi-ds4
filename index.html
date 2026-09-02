@@ -1830,6 +1830,13 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         </dd>
       </div>
       <div>
+        <dt>DS4_SUPPORT_PIN<span class="default"><span lang="en-GB">default: d0c2b431a64a58c9507ac67a717bb3f1fb97d502</span><span lang="zh-TW">預設：d0c2b431a64a58c9507ac67a717bb3f1fb97d502</span></span></dt>
+        <dd>
+          <p lang="en-GB">The exact <code>audreyt/ds4</code> commit this extension enforces on every launch. A mismatch fetches that commit, hard-resets the checkout, and deletes cached <code>ds4-server</code> / <code>ds4-agent</code> so they rebuild. Set it to an empty string to freeze the local checkout where it is. v 0.6.0 pins the Vision-Exp engine at <code>d0c2b43</code>.</p>
+          <p lang="zh-TW">每次啟動強制的 <code>audreyt/ds4</code> commit。不符就 fetch、hard reset，並刪掉快取的 <code>ds4-server</code>／<code>ds4-agent</code> 再重編。設成空字串則凍結本機 checkout、不再釘選。v 0.6.0 把 Vision-Exp 引擎釘在 <code>d0c2b43</code>。</p>
+        </dd>
+      </div>
+      <div>
         <dt>DS4_DOWNLOAD_SCRIPT<span class="default"><span lang="en-GB">default: bundled with this extension</span><span lang="zh-TW">預設：隨擴充套件內附</span></span></dt>
         <dd>
           <p lang="en-GB">Absolute path to the model-download script. The bundled <code>download_model.sh</code> fetches the Vision-Exp language GGUF and the encoder. To use antirez’s upstream stock recipe instead, point this at his script.</p>
@@ -1855,6 +1862,13 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <dd>
           <p lang="en-GB">A custom location for the <code>ds4-server</code> binary. Mostly useful when you have patched the engine yourself.</p>
           <p lang="zh-TW">自訂 <code>ds4-server</code> 二進位的位置。多半在你自己改過引擎時才用得到。</p>
+        </dd>
+      </div>
+      <div>
+        <dt>DS4_DSPARK<span class="default"><span lang="en-GB">ignored on the managed Vision-Exp path</span><span lang="zh-TW">代管 Vision-Exp 路徑上無作用</span></span></dt>
+        <dd>
+          <p lang="en-GB">Read and ignored. The 0731 Headroom128 DSpark support GGUF must not be attached to this checkpoint. On v 0.5.x it gated a best-effort fetch; that fetch is gone.</p>
+          <p lang="zh-TW">讀了也沒用。0731 Headroom128 的 DSpark 支援檔不可掛上這組權重。v 0.5.x 用它控制一次盡力下載；那次下載已經拿掉。</p>
         </dd>
       </div>
       <div>
