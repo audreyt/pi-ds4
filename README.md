@@ -33,7 +33,7 @@ pi install  https://github.com/audreyt/pi-ds4
 | `SUPPORT_PIN` | `d0c2b43` (`audreyt/ds4` main: origin/main Vision-Exp engine + Headroom128 *filename* pin; `--vision` works) |
 | Preferred GGUF | Vision-Exp abliterated IQ2 from [`audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF) plus the unmodified encoder from [`antirez/deepseek-v4-gguf`](https://huggingface.co/antirez/deepseek-v4-gguf) |
 | Default context | 100 k tokens (`DS4_CONTEXT_KB=100`) |
-| Guide / OG card | **v0.5.4** headlines still on the OG image (Headroom128 622/42); managed path is Vision-Exp as of v0.6.0 |
+| Guide / OG card | **v0.6.0** Vision-Exp (~81 GiB IQ2 + encoder; 286/45 t/s is a 207-token `/read` smoke, not a 2k prefill bench) |
 
 `pi install https://github.com/audreyt/pi-ds4` installs exactly this tag.
 
@@ -264,11 +264,17 @@ from seeded requests on audreyt/ds4.
 ### Published v0.6.0 (`d0c2b43` pin, 2026-09)
 
 Managed preferred model cuts over from Headroom128 0731 Flash to **Vision-Exp
-abliterated IQ2** (`audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF`,
-official 80.76 GiB recipe with 33 grafted `attn_output_b` Q8_0 payloads) plus
-the unmodified 316-tensor encoder. Engine pin `d0c2b43` (Vision-Exp `--vision`).
-`ds4-server` and `ds4-agent` start with `--vision`. No 0731 DSpark attach.
-M5 Max smoke on the grafted sibling: `/read earth.jpg` (207 input tokens, `--ctx 2048`) 285.75 prefill / 44.94 gen t/s — not a 2k-token prefill bench.
+abliterated IQ2** (`audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF` @
+`367a1fef`, official 80.76 GiB recipe with 33 grafted `attn_output_b` Q8_0
+payloads) plus the unmodified 316-tensor encoder (`antirez/deepseek-v4-gguf` @
+`f71f23d`). Pair sum 87652969536 B (~81.63 GiB / 87.653 GB). Engine pin
+`d0c2b43` (Vision-Exp `--vision`). `ds4-server` and `ds4-agent` start with
+`--vision` and advertise `input: text+image`. No 0731 DSpark attach.
+`download_model.sh` pins both HF URLs to those commits (not `/resolve/main/`),
+and switches `ds4flash.gguf` / deletes the four 0731 Headroom128/DSpark names
+only after both size checks. M5 Max smoke on the grafted sibling: `/read
+earth.jpg` (207 input tokens, `--ctx 2048`) 285.75 prefill / 44.94 gen t/s —
+not a 2k-token prefill bench.
 
 ### Published v0.5.4 (`67acbd8` pin, 2026-08)
 
