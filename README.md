@@ -60,7 +60,7 @@ pi install  https://github.com/audreyt/pi-ds4
 | Linux + AMD Strix Halo (gfx1151) | Auto-selects `make strix-halo` when no NVIDIA device and `hipcc` exists | Or force `DS4_BACKEND=rocm`. |
 | CPU-only | Opt-in only | `DS4_ALLOW_CPU=1` or `DS4_BACKEND=cpu`. Not silent fallback. |
 
-**Disk (managed Vision-Exp):** plan ≥ ~82 GB free for the language GGUF plus ~889 MiB for the encoder.
+**Disk (managed Vision-Exp):** language 86720111776 B + encoder 932857760 B = 87654969536 B (~81.65 GiB / ~87.65 GB). Fresh install: plan ≥ ~88 GB plus KV. A v0.5.x upgrade keeps the old Headroom128 (~87 GB) and 0731 DSpark (~5.6 GB) until the new pair passes size checks and `ds4flash.gguf` is switched; that peak is ~175 GB. After that, `download_model.sh` deletes those obsolete files. To free space *before* the fetch: `rm -f gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf` (only if you accept losing the working 0731 model).
 
 ### What first launch does
 

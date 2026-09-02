@@ -18,6 +18,9 @@
 #
 # The historic "q2" selector is kept so the one-line install and on-disk lease
 # state stay compatible with older installs.
+# After the Vision-Exp language+encoder pair passes size checks and
+# ./ds4flash.gguf is switched, known v0.5 Headroom128/DSpark files are removed.
+# They are not deleted before that, so a failed fetch keeps the working 0731 model.
 #
 # Idempotent: if the target files are already present at the expected sizes,
 # just refreshes the symlink. Run from the ds4 support checkout
@@ -80,8 +83,7 @@ else
     fi
 fi
 
-ln -sfn "gguf/$LANG_FILE" "$LINK_PATH"
-echo "ds4 download: ./ds4flash.gguf -> gguf/$LANG_FILE"
+
 
 if [ -s "$ENC_PATH" ] && [ "$(file_size "$ENC_PATH")" = "$ENC_BYTES" ]; then
     echo "ds4 download: encoder already present ($ENC_PATH)"
@@ -101,3 +103,23 @@ else
 fi
 
 echo "ds4 download: encoder ready (server must run with --vision gguf/$ENC_FILE)"
+
+ln -sfn "gguf/$LANG_FILE" "$LINK_PATH"
+echo "ds4 download: ./ds4flash.gguf -> gguf/$LANG_FILE"
+
+# Only after language+encoder size checks and the ds4flash symlink switch.
+# Deleting first would leave a failed download with no working model.
+if [ -s "$SRC_PATH" ] && [ "$(file_size "$SRC_PATH")" = "$LANG_BYTES" ] \
+    && [ -s "$ENC_PATH" ] && [ "$(file_size "$ENC_PATH")" = "$ENC_BYTES" ]; then
+    for obsolete in \
+        "$OUT_DIR/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf" \
+        "$OUT_DIR/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf.part" \
+        "$OUT_DIR/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf" \
+        "$OUT_DIR/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf.part"
+    do
+        if [ -e "$obsolete" ]; then
+            echo "ds4 download: removing obsolete v0.5 artifact $obsolete"
+            rm -f "$obsolete"
+        fi
+    done
+fi

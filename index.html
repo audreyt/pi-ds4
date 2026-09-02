@@ -10,14 +10,14 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=5cd4846eb851">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=4b253c89e067">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Atmospheric grayscale pi-ds4 Guide card with an ocean horizon and current local inference readout: ~81 GiB Vision-Exp IQ2 weights plus encoder, 286 t/s prefill, and 45 t/s inference on M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=5cd4846eb851">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=4b253c89e067">
 <meta name="theme-color" content="#ebe7e4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -2362,14 +2362,14 @@ document.documentElement.classList.add('js');
 
     <ul lang="zh-TW">
       <li><strong>RAM：</strong>至少 96 GB。低於這個數字，本擴充會直接拋出錯誤——managed path 以 Vision-Exp IQ2 語言檔（~81 GiB）加編碼器為準；96–127 GB Mac 需先依下方 callout 把 Metal wired memory 拉高，128 GB 以上通常可直接安裝。
-        96&ndash;127 GB 的 Mac 需先依下方 callout 把 Metal wired memory 拉高；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。
+        96&ndash;127 GB 的 Mac 需先依下方 callout 把 Metal wired memory 拉高；128 GB 以上可直接安裝，並保有同時開更多其他應用的餘裕。</li>
       <li><strong>磁碟：</strong>約 81 GiB 給首選 Vision-Exp 語言權重、約 889 MiB 給編碼器，另外保留 KV disk cache（未設 <code>DS4_KV_DISK_SPACE_MB</code> 時依 RAM 自動：128 GB+ 約 64 GB、96–127 GB 約 32 GB）、ds4 source、log。建議至少留 120 GB 空間；1M context 實驗需要更大的 KV 磁碟預算。</li>
       <li><strong>晶片：</strong>任何 Apple Silicon 都可以；Linux／CUDA 機器也可走同一份 ds4 engine。後端行為以 audreyt/ds4 目前繼承的上游 runtime 為準。</li>
       <li><strong>網路：</strong>首次下載約 81 GiB 語言 GGUF 加編碼器需要良好頻寬。若你的 HuggingFace 下載受惠於授權，請設定 <code>HF_TOKEN</code>。</li>
     </ul>
     <ul lang="en-GB">
       <li><strong>RAM:</strong> at least 96 GB. Below that, the extension errors out at startup &mdash; the managed path assumes the Vision-Exp IQ2 language file (~81 GiB) plus encoder; 96&ndash;127 GB Macs need the Metal wired-memory raise below, while 128 GB+ machines usually install directly.
-        Macs in the 96&ndash;127 GB range need to raise Metal wired memory per the callout below; 128 GB+ machines install directly and have headroom to run more apps alongside ds4-server.
+        Macs in the 96&ndash;127 GB range need to raise Metal wired memory per the callout below; 128 GB+ machines install directly and have headroom to run more apps alongside ds4-server.</li>
       <li><strong>Disk:</strong> ~81 GiB for the preferred Vision-Exp language weights, ~889 MiB for the encoder, plus KV disk cache (when <code>DS4_KV_DISK_SPACE_MB</code> is unset: ~64 GB on 128 GB+, ~32 GB on 96&ndash;127 GB), the ds4 source tree and logs. Plan on ≥ 120 GB free; 1M-context experiments need a larger KV disk budget.</li>
       <li><strong>Chip:</strong> any Apple Silicon works; Linux / CUDA machines can use the same ds4 engine. Backend behaviour follows the current upstream runtime inherited by audreyt/ds4.</li>
       <li><strong>Network:</strong> the first ~81 GiB language GGUF plus encoder download benefits from good bandwidth. If your HuggingFace download benefits from auth, set <code>HF_TOKEN</code>.</li>
