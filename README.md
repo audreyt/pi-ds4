@@ -60,7 +60,14 @@ pi install  https://github.com/audreyt/pi-ds4
 | Linux + AMD Strix Halo (gfx1151) | Auto-selects `make strix-halo` when no NVIDIA device and `hipcc` exists | Or force `DS4_BACKEND=rocm`. |
 | CPU-only | Opt-in only | `DS4_ALLOW_CPU=1` or `DS4_BACKEND=cpu`. Not silent fallback. |
 
-**Disk (managed Vision-Exp):** language 86720111776 B + encoder 932857760 B = 87654969536 B (~81.65 GiB / ~87.65 GB). Fresh install: plan ≥ ~88 GB plus KV. A v0.5.x upgrade keeps the old Headroom128 (~87 GB) and 0731 DSpark (~5.6 GB) until the new pair passes size checks and `ds4flash.gguf` is switched; that peak is ~175 GB. After that, `download_model.sh` deletes those obsolete files. To free space *before* the fetch: `rm -f gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf` (only if you accept losing the working 0731 model).
+**Disk (managed Vision-Exp):** language 86720111776 B + encoder 932857760 B = 87654969536 B (~81.65 GiB / ~87.65 GB). Fresh install: plan ≥ ~88 GB plus KV. A v0.5.x upgrade keeps the old Headroom128 language GGUF (~87 GB) and optional 0731 DSpark (5989114272 B, ~5.6 GiB / ~5.99 GB) until the new pair passes size checks and *then* `ds4flash.gguf` is switched. Peak occupancy: ~175 GB without DSpark, ~181 GB with DSpark. After the switch, `download_model.sh` deletes those obsolete files. To free space *before* the fetch (this destroys the working 0731 model):
+
+```sh
+rm -f ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf \
+      ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf.part \
+      ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf \
+      ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf.part
+```
 
 ### What first launch does
 
@@ -261,7 +268,7 @@ abliterated IQ2** (`audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF`,
 official 80.76 GiB recipe with 33 grafted `attn_output_b` Q8_0 payloads) plus
 the unmodified 316-tensor encoder. Engine pin `d0c2b43` (Vision-Exp `--vision`).
 `ds4-server` and `ds4-agent` start with `--vision`. No 0731 DSpark attach.
-M5 Max smoke on the grafted sibling: `/read` earth.jpg 285.75 prefill / 44.94 gen t/s.
+M5 Max smoke on the grafted sibling: `/read earth.jpg` (207 input tokens, `--ctx 2048`) 285.75 prefill / 44.94 gen t/s — not a 2k-token prefill bench.
 
 ### Published v0.5.4 (`67acbd8` pin, 2026-08)
 
