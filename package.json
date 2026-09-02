@@ -1,6 +1,6 @@
 {
   "name": "pi-ds4",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4 Flash Vision-Exp inference (audreyt/ds4 main + preferred Vision-Exp abliterated IQ2 GGUF + encoder).",
   "type": "module",
   "license": "MIT",

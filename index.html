@@ -10,14 +10,14 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=27a613503c05">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=8b39f14045f8">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="pi-ds4 guide card: an ocean horizon with the current local inference readout — ~81 GiB of Vision-Exp IQ2 weights plus the encoder, 286 t/s on a 207-token /read image turn, 45 t/s generation on an M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=27a613503c05">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=8b39f14045f8">
 <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -1132,6 +1132,15 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       <li><strong>數字照標籤讀。</strong>286／45 t/s 是嫁接檔在 M5 Max 上跑 <code>/read earth.jpg</code>（207 個輸入 token，<code>--ctx 2048</code>）的結果：prefill 285.75、生成 44.94。</li>
     </ul>
 
+    <h3><span class="no">0.6.1</span><span lang="en-GB">Patch: `preferred` alias</span><span lang="zh-TW">修補：`preferred` 別名</span></h3>
+
+    <ul lang="en-GB">
+      <li><strong>No weight or engine change.</strong> `download_model.sh` and `DS4_MODEL_QUANT` now accept `preferred` (also `vision-abliterated` / `ds4f-vision-abliterated`) as an alias to the historic `q2` selector — both fetch the same Vision-Exp abliterated IQ2 + encoder pair. `audreyt/ds4` `preferred` now also fetches that pair, so `pi` and bare `ds4` agree. `d0c2b43` engine and `367a1fef`/`f71f23d` GGUFs unchanged; `7855b7a` is the `preferred`-alias commit on that engine.</li>
+    </ul>
+    <ul lang="zh-TW">
+      <li><strong>沒有權重或引擎變動。</strong>`download_model.sh` 與 `DS4_MODEL_QUANT` 現在接受 `preferred`（亦接受 `vision-abliterated`／`ds4f-vision-abliterated`）作為歷史選項 `q2` 的別名──兩者抓的是同一對 Vision-Exp abliterated IQ2 + encoder。`audreyt/ds4` 的 `preferred` 現在也會抓這一對，所以 `pi` 和單獨跑 `ds4` 會一致；`d0c2b43` 引擎與 `367a1fef`／`f71f23d` 檔案不變，`7855b7a` 是在該引擎上加 `preferred` 別名的 commit。</li>
+    </ul>
+
     <h3><span class="no">§</span><span lang="en-GB">Already working in your next launch</span><span lang="zh-TW">下次啟動就已經生效</span></h3>
 
     <p lang="en-GB">None of these need a new flag. They are the parts of the engine that make a long agent session feel less like wading, and a stuck server less like a black box.</p>
@@ -1830,10 +1839,10 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         </dd>
       </div>
       <div>
-        <dt>DS4_SUPPORT_PIN<span class="default"><span lang="en-GB">default: d0c2b431a64a58c9507ac67a717bb3f1fb97d502</span><span lang="zh-TW">預設：d0c2b431a64a58c9507ac67a717bb3f1fb97d502</span></span></dt>
+        <dt>DS4_SUPPORT_PIN<span class="default"><span lang="en-GB">default: 7855b7a45196b328c6266be157d60160e9442a88</span><span lang="zh-TW">預設：7855b7a45196b328c6266be157d60160e9442a88</span></span></dt>
         <dd>
-          <p lang="en-GB">The exact <code>audreyt/ds4</code> commit this extension enforces on every launch. A mismatch fetches that commit, hard-resets the checkout, and deletes cached <code>ds4-server</code> / <code>ds4-agent</code> so they rebuild. Set it to an empty string to freeze the local checkout where it is. v 0.6.0 pins the Vision-Exp engine at <code>d0c2b43</code>.</p>
-          <p lang="zh-TW">每次啟動強制的 <code>audreyt/ds4</code> commit。不符就 fetch、hard reset，並刪掉快取的 <code>ds4-server</code>／<code>ds4-agent</code> 再重編。設成空字串則凍結本機 checkout、不再釘選。v 0.6.0 把 Vision-Exp 引擎釘在 <code>d0c2b43</code>。</p>
+          <p lang="en-GB">The exact <code>audreyt/ds4</code> commit this extension enforces on every launch. A mismatch fetches that commit, hard-resets the checkout, and deletes cached <code>ds4-server</code> / <code>ds4-agent</code> so they rebuild. Set it to an empty string to freeze the local checkout where it is. v 0.6.1 pins <code>7855b7a</code> (preferred alias) on the <code>d0c2b43</code> Vision-Exp engine.</p>
+          <p lang="zh-TW">每次啟動強制的 <code>audreyt/ds4</code> commit。不符就 fetch、hard reset，並刪掉快取的 <code>ds4-server</code>／<code>ds4-agent</code> 再重編。設成空字串則凍結本機 checkout、不再釘選。v 0.6.1 釘在 <code>7855b7a</code>（在 <code>d0c2b43</code> Vision-Exp 引擎上加 <code>preferred</code> 別名）。</p>
         </dd>
       </div>
       <div>
@@ -3345,7 +3354,7 @@ STATE=~/.pi/ds4/server.json
     <div class="signoff">
       <div class="hand">
         <span lang="en-GB">With care,<br>Audrey Tang</span><span lang="zh-TW">敬祝 自由<br>唐鳳</span>
-        <small><span lang="en-GB">1 September 2026 · pi-ds4 v 0.6.0</span><span lang="zh-TW">2026 年 9 月 1 日 · pi-ds4 v 0.6.0</span></small>
+        <small><span lang="en-GB">2 September 2026 · pi-ds4 v 0.6.1</span><span lang="zh-TW">2026 年 9 月 2 日 · pi-ds4 v 0.6.1</span></small>
       </div>
       <div class="seal" aria-label="Seal: 唐鳳" role="img">唐鳳</div>
     </div>

@@ -57,7 +57,7 @@ const BUILD_RECORD_FILE = join(DS4_DIR, "build.json");
 // disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
-const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "d0c2b431a64a58c9507ac67a717bb3f1fb97d502").trim();
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "7855b7a45196b328c6266be157d60160e9442a88").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)

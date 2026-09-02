@@ -25,15 +25,15 @@ pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream exte
 pi install  https://github.com/audreyt/pi-ds4
 ```
 
-### What GitHub serves today (tag `v0.6.0`)
+### What GitHub serves today (tag `v0.6.1`)
 
 | Item | Value |
 |---|---|
-| Package version | **0.6.0** |
-| `SUPPORT_PIN` | `d0c2b43` (`audreyt/ds4` main: origin/main Vision-Exp engine + Headroom128 *filename* pin; `--vision` works) |
-| Preferred GGUF | Vision-Exp abliterated IQ2 from [`audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF) plus the unmodified encoder from [`antirez/deepseek-v4-gguf`](https://huggingface.co/antirez/deepseek-v4-gguf) |
+| Package version | **0.6.1** |
+| `SUPPORT_PIN` | `7855b7a` (`audreyt/ds4` main: Vision-Exp engine + `preferred` alias; `--vision` works) |
+| Preferred GGUF | Vision-Exp abliterated IQ2 from [`audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF) plus the unmodified encoder from [`antirez/deepseek-v4-gguf`](https://huggingface.co/antirez/deepseek-v4-gguf) — `preferred` alias now accepted (`q2`/`preferred`) |
 | Default context | 100 k tokens (`DS4_CONTEXT_KB=100`) |
-| Guide / OG card | **v0.6.0** Vision-Exp (~81 GiB IQ2 + encoder; 286/45 t/s is a 207-token `/read` smoke, not a 2k prefill bench) |
+| Guide / OG card | **v0.6.1** Vision-Exp (~81 GiB IQ2 + encoder; 286/45 t/s is a 207-token `/read` smoke, not a 2k prefill bench) |
 
 `pi install https://github.com/audreyt/pi-ds4` installs exactly this tag.
 
@@ -261,7 +261,11 @@ from seeded requests on audreyt/ds4.
 
 ## What's new
 
-### Published v0.6.0 (`d0c2b43` pin, 2026-09)
+### Published v0.6.1 (`d0c2b43` pin + `7855b7a` ds4, 2026-09-02)
+
+Patch: `download_model.sh` and `DS4_MODEL_QUANT` now accept `preferred` as an alias to the historic `q2` selector — both map to the same Vision-Exp abliterated IQ2 + encoder pair. `audreyt/ds4` `preferred` default now also fetches that pair (so `pi` and bare `ds4` agree). No engine or weight change; `d0c2b43` engine + `367a1fef`/`f71f23d` GGUFs unchanged.
+
+### Published v0.6.0 (`d0c2b43` pin, 2026-09-01)
 
 Managed preferred model cuts over from Headroom128 0731 Flash to **Vision-Exp
 abliterated IQ2** (`audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF` @
