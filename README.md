@@ -230,6 +230,7 @@ from seeded requests on audreyt/ds4.
 * `DS4_SUPPORT_REPO` — git URL (default `https://github.com/audreyt/ds4`)
 * `DS4_SUPPORT_BRANCH` — branch when cloning (default `main`)
 * `DS4_SUPPORT_PIN` — exact commit to enforce; set **empty** to disable pin reset
+* `DS4_PROTOCOL` — `openai` (default), `openai-responses`, or `anthropic`
 * `DS4_BUILD_TARGET` — raw `make` args override (e.g. `cuda-spark`, `strix-halo`)
 * `DS4_CUDA_ARCH` — e.g. `sm_90`, `sm_121`, `native`
 * `DS4_BACKEND` — `metal` / `cuda` / `rocm` / `cpu`
@@ -241,13 +242,12 @@ from seeded requests on audreyt/ds4.
 * `DS4_CONTEXT_KB` — context kilotokens (default `100`)
 * `DS4_KV_DISK_SPACE_MB` — KV disk budget (RAM-tiered default when unset)
 * `DS4_DIR_STEERING_FILE` / `_FFN` / `_ATTN` / `_POLICY` — steering controls
-* `DS4_DSPARK` — ignored on the managed Vision-Exp path. The 0731 Headroom128
-  DSpark support GGUF must not be attached to this checkpoint.
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout; do not clobber its binaries
 * `DS4_SERVER_BINARY` / `DS4_AGENT_BINARY` — custom binary paths
 * `DS4_AGENT_TOKENS` / `DS4_AGENT_THINK` / `DS4_AGENT_SYSTEM` / `DS4_AGENT_TRACE`
 * `DS4_MODEL_QUANT` — must be `q2` (historic selector) or unset; other values error
 * `DS4_READY_TIMEOUT_MS` — server ready timeout
+* `DS4_WATCHDOG_SCRIPT` — absolute path to the watchdog; default bundled `ds4-watchdog.sh`
 * `HF_TOKEN` — passed through for HuggingFace downloads
 
 ## Known gaps

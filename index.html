@@ -1899,10 +1899,10 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     <h3 id="5.3"><span class="no">5.3</span><span lang="en-GB">Startup</span><span lang="zh-TW">啟動</span></h3>
 
     <p lang="en-GB">
-      pi-ds4 keeps no backend-profile switch in the wrapper. The managed launch passes only context, KV-cache and steering arguments; Metal, CUDA and ROCm belong to the pinned ds4 build itself. To test backend flags of your own, run <code>ds4-server</code> by hand (<a href="#shells">§8.6</a>).
+      The managed <code>ds4-server</code> command line still carries only context, the KV-cache path, <code>--vision</code>, and steering if you opt in. It does not pass Metal, CUDA or ROCm flags through. Which <em>binary</em> you get is a separate decision: the wrapper picks a Makefile target, and the variables below override that pick. Extra server flags of your own still mean running <code>ds4-server</code> by hand (<a href="#shells">§8.6</a>).
     </p>
     <p lang="zh-TW">
-      pi-ds4 不在包裝層保留後端設定檔的開關。代管啟動只傳 context、KV cache 與引導參數；Metal、CUDA、ROCm 都屬於釘住的 ds4 建置本身。要測試自己的後端旗標，請手動執行 <code>ds4-server</code>（<a href="#shells">§8.6</a>）。
+      代管的 <code>ds4-server</code> 命令列仍然只帶 context、KV cache 路徑、<code>--vision</code>，以及你選擇開啟時的引導。它不會把 Metal、CUDA、ROCm 的旗標傳進去。你拿到的<em>二進位</em>是另一件事：包裝層會選一個 Makefile 目標，下面這些變數可以覆寫那個選擇。要給伺服器額外的旗標，仍請手動跑 <code>ds4-server</code>（<a href="#shells">§8.6</a>）。
     </p>
 
     <dl class="vars">
@@ -1911,6 +1911,62 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <dd>
           <p lang="en-GB">How long to wait for <code>ds4-server</code> to become ready. Loading the model and warming the first KV cache usually takes a few seconds from an internal SSD; ten minutes is a generous safety margin, not an expectation. Raise it only if the GGUF lives on an unusually slow or external drive.</p>
           <p lang="zh-TW">等 <code>ds4-server</code> 就緒的最長時間。從內建 SSD 載入模型並預熱第一份 KV cache 通常只要幾秒；十分鐘是寬鬆的安全邊界，不是預期值。只有 GGUF 放在特別慢或外接的磁碟時才需要調高。</p>
+        </dd>
+      </div>
+      <div>
+        <dt>DS4_WATCHDOG_SCRIPT<span class="default"><span lang="en-GB">default: bundled ds4-watchdog.sh</span><span lang="zh-TW">預設：內附 ds4-watchdog.sh</span></span></dt>
+        <dd>
+          <p lang="en-GB">Absolute path to the lease watchdog. Unset, the extension runs the copy shipped next to <code>index.ts</code>.</p>
+          <p lang="zh-TW">租約看門狗的絕對路徑。未設時，擴充套件跑 <code>index.ts</code> 旁邊那一份。</p>
+        </dd>
+      </div>
+      <div>
+        <dt>DS4_PROTOCOL<span class="default"><span lang="en-GB">default: openai</span><span lang="zh-TW">預設：openai</span></span></dt>
+        <dd>
+          <p lang="en-GB">Which wire format pi registers. <code>openai</code> (also <code>openai-completions</code>, <code>chat</code>) is Chat Completions; <code>openai-responses</code> / <code>responses</code> is the Responses endpoint; <code>anthropic</code> / <code>anthropic-messages</code> / <code>messages</code> is Anthropic Messages. Anything else throws.</p>
+          <p lang="zh-TW">pi 註冊的線路格式。<code>openai</code>（以及 <code>openai-completions</code>、<code>chat</code>）是 Chat Completions；<code>openai-responses</code>／<code>responses</code> 是 Responses 端點；<code>anthropic</code>／<code>anthropic-messages</code>／<code>messages</code> 是 Anthropic Messages。其他值會拋錯。</p>
+        </dd>
+      </div>
+      <div>
+        <dt>DS4_BUILD_TARGET<span class="default"><span lang="en-GB">default: unset (auto)</span><span lang="zh-TW">預設：未設（自動）</span></span></dt>
+        <dd>
+          <p lang="en-GB">Raw <code>make</code> arguments, overriding autodetection. Examples: <code>ds4-server</code>, <code>cuda-spark</code>, <code>strix-halo</code>, <code>cpu</code>. Recorded in <code>~/.pi/ds4/build.json</code>; a change of plan runs <code>make clean</code> first.</p>
+          <p lang="zh-TW">覆寫自動偵測的原始 <code>make</code> 參數。例如 <code>ds4-server</code>、<code>cuda-spark</code>、<code>strix-halo</code>、<code>cpu</code>。寫進 <code>~/.pi/ds4/build.json</code>；計畫一變會先 <code>make clean</code>。</p>
+        </dd>
+      </div>
+      <div>
+        <dt>DS4_BACKEND<span class="default"><span lang="en-GB">default: unset (auto)</span><span lang="zh-TW">預設：未設（自動）</span></span></dt>
+        <dd>
+          <p lang="en-GB"><code>metal</code> (macOS only), <code>cuda</code>, <code>rocm</code>, or <code>cpu</code>. Unset, Darwin builds Metal; Linux looks for NVIDIA then <code>hipcc</code>.</p>
+          <p lang="zh-TW"><code>metal</code>（僅 macOS）、<code>cuda</code>、<code>rocm</code> 或 <code>cpu</code>。未設時，Darwin 編 Metal；Linux 先找 NVIDIA，再找 <code>hipcc</code>。</p>
+        </dd>
+      </div>
+      <div>
+        <dt>DS4_CUDA_ARCH<span class="default"><span lang="en-GB">default: unset</span><span lang="zh-TW">預設：未設</span></span></dt>
+        <dd>
+          <p lang="en-GB">CUDA gencode, e.g. <code>sm_90</code>, <code>sm_121</code>, <code>native</code>. <code>sm_121</code> selects <code>make cuda-spark</code>.</p>
+          <p lang="zh-TW">CUDA gencode，例如 <code>sm_90</code>、<code>sm_121</code>、<code>native</code>。<code>sm_121</code> 會選 <code>make cuda-spark</code>。</p>
+        </dd>
+      </div>
+      <div>
+        <dt>DS4_CUDA_ALLOW_NATIVE<span class="default"><span lang="en-GB">default: off</span><span lang="zh-TW">預設：關</span></span></dt>
+        <dd>
+          <p lang="en-GB">Opt-in to <code>make cuda-generic</code> (native arch). Never the silent fallback; without this, an unknown NVIDIA cap fails loud.</p>
+          <p lang="zh-TW">選擇開啟 <code>make cuda-generic</code>（native 架構）。絕不是默默的後備；沒設時，認不得的 NVIDIA 運算能力會直接報錯。</p>
+        </dd>
+      </div>
+      <div>
+        <dt>DS4_ALLOW_CPU<span class="default"><span lang="en-GB">default: off</span><span lang="zh-TW">預設：關</span></span></dt>
+        <dd>
+          <p lang="en-GB">Opt-in CPU-only <code>make cpu</code> when no GPU backend is detected. Without it, that case fails loud rather than compiling a slow surprise.</p>
+          <p lang="zh-TW">偵測不到 GPU 後端時，選擇開啟僅 CPU 的 <code>make cpu</code>。沒設時這情況會直接報錯，而不是編出一個慢得嚇人的 binary。</p>
+        </dd>
+      </div>
+      <div>
+        <dt>DS4_SKIP_BUILD_SMOKE<span class="default"><span lang="en-GB">default: off</span><span lang="zh-TW">預設：關</span></span></dt>
+        <dd>
+          <p lang="en-GB">Skip the post-build generation smoke on non-Metal backends (dev only). The smoke requires non-empty <code>choices[0].message.content</code>, not merely HTTP 200.</p>
+          <p lang="zh-TW">跳過非 Metal 後端建置後的生成冒煙測試（僅開發用）。冒煙要求 <code>choices[0].message.content</code> 非空，不只是 HTTP 200。</p>
         </dd>
       </div>
     </dl>
