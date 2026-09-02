@@ -245,7 +245,7 @@ from seeded requests on audreyt/ds4.
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout; do not clobber its binaries
 * `DS4_SERVER_BINARY` / `DS4_AGENT_BINARY` — custom binary paths
 * `DS4_AGENT_TOKENS` / `DS4_AGENT_THINK` / `DS4_AGENT_SYSTEM` / `DS4_AGENT_TRACE`
-* `DS4_MODEL_QUANT` — must be `q2` (historic selector) or unset; other values error
+* `DS4_MODEL_QUANT` — must be `q2` (historic selector) or `preferred` (alias) or unset; other values error — both select the abliterated Vision-Exp IQ2 + encoder
 * `DS4_READY_TIMEOUT_MS` — server ready timeout
 * `DS4_WATCHDOG_SCRIPT` — absolute path to the watchdog; default bundled `ds4-watchdog.sh`
 * `HF_TOKEN` — passed through for HuggingFace downloads

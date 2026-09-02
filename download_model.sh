@@ -26,13 +26,19 @@
 # just refreshes the symlink. Run from the ds4 support checkout
 # (cwd = ~/.pi/ds4/support).
 #
-# Usage: download_model.sh <quant>
+# Usage: download_model.sh [q2|preferred]
+#   q2         historic selector, preferred Vision-Exp abliterated IQ2 (default)
+#   preferred  alias for q2 — DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf + DeepSeek-V4-Flash-Vision-Encoder.gguf
 set -eu
 
 QUANT="${1:-q2}"
+# Normalize preferred alias to q2 for backward compat with ds4's ./download_model.sh preferred
+if [ "$QUANT" = "preferred" ] || [ "$QUANT" = "vision-abliterated" ] || [ "$QUANT" = "ds4f-vision-abliterated" ]; then
+    QUANT="q2"
+fi
 
 if [ "$QUANT" != "q2" ]; then
-    echo "audreyt/pi-ds4 only automates the preferred Vision-Exp abliterated IQ2 GGUF (historic quant selector: q2)." >&2
+    echo "audreyt/pi-ds4 only automates the preferred Vision-Exp abliterated IQ2 GGUF (historic quant selector: q2, alias: preferred)." >&2
     echo "To use another quant or research-modified checkpoint, run ds4-server manually (see README)." >&2
     echo "Requested quant: $QUANT" >&2
     exit 1

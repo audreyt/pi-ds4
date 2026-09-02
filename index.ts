@@ -344,10 +344,11 @@ function truncateText(value: string, width: number, ellipsis = "", pad = false):
 }
 
 function selectedModelQuant(): ModelQuant {
-	const forced = process.env.DS4_MODEL_QUANT?.toLowerCase();
+	const forcedRaw = process.env.DS4_MODEL_QUANT?.toLowerCase();
+	const forced = forcedRaw === "preferred" || forcedRaw === "vision-abliterated" || forcedRaw === "ds4f-vision-abliterated" ? "q2" : forcedRaw;
 	if (forced && forced !== "q2") {
 		throw new Error(
-			`DS4_MODEL_QUANT=${forced} not supported; this extension only automates the preferred Vision-Exp abliterated IQ2 GGUF (audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF, historic selector q2) plus the Vision encoder. Unset DS4_MODEL_QUANT or set it to q2. (To experiment with another GGUF, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
+			`DS4_MODEL_QUANT=${forcedRaw} not supported; this extension only automates the preferred Vision-Exp abliterated IQ2 GGUF (audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF, historic selector q2 / preferred) plus the Vision encoder. Unset DS4_MODEL_QUANT or set it to q2 or preferred. (To experiment with another GGUF, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
 		);
 	}
 

@@ -950,7 +950,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
 
   <dl class="meta" aria-label="Letter header">
     <dt><span lang="en-GB">Date</span><span lang="zh-TW">日期</span></dt>
-    <dd><span lang="en-GB">1 September 2026 (v 0.6.0)</span><span lang="zh-TW">2026 年 9 月 1 日（v 0.6.0）</span></dd>
+    <dd><span lang="en-GB">2 September 2026 (v 0.6.1)</span><span lang="zh-TW">2026 年 9 月 2 日（v 0.6.1）</span></dd>
     <dt><span lang="en-GB">From</span><span lang="zh-TW">寄件人</span></dt>
     <dd><span lang="en-GB">Audrey Tang <span class="zh">唐鳳</span></span><span lang="zh-TW">唐鳳 Audrey Tang</span></dd>
     <dt><span lang="en-GB">To</span><span lang="zh-TW">收件人</span></dt>
@@ -1100,7 +1100,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
   <div class="sep" aria-hidden="true"><svg><use href="#plurality"/></svg></div>
   <section class="chapter" id="whatsnew">
     <span class="chapter-no"><span lang="en-GB">What’s new, September 2026</span><span lang="zh-TW">更新誌　二〇二六年九月</span></span>
-    <h2 class="chapter-title"><span lang="en-GB">v 0.6.0: the model learns to see. The 0.5 series stays on the record.</span><span lang="zh-TW">v 0.6.0：模型學會看圖；0.5 系列留在紀錄裡</span></h2>
+    <h2 class="chapter-title"><span lang="en-GB">v 0.6: the model learns to see. The 0.5 series stays on the record.</span><span lang="zh-TW">v 0.6：模型學會看圖；0.5 系列留在紀錄裡</span></h2>
 
     <p class="lead" lang="en-GB">
       Version 0.6.0 moves the managed download from the Headroom128 0731 Flash weights to the <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated IQ2</a> pair: an 86 720 111 776-byte language file plus a 932 857 760-byte vision encoder, 87 652 969 536 bytes in all (about 81.63 GiB, or 87.653 GB as your disk counts it). The engine pin advances to <code>d0c2b43</code>; <code>ds4-server</code> and <code>ds4-agent</code> now start with <code>--vision</code> and advertise <code>input: text+image</code>. The reason is simple: a model that can read the screenshot, the chart, or the scanned page in front of you is repairable in more situations than one that cannot.
@@ -1479,8 +1479,8 @@ git clone --depth 1 --single-branch \
         <span class="n" aria-hidden="true">4</span>
         <div>
           <h4><span lang="en-GB">Make sure the model is present</span><span lang="zh-TW">確認模型在</span></h4>
-          <p lang="en-GB">The bundled <code>download_model.sh q2</code> runs:</p>
-          <p lang="zh-TW">執行內附的 <code>download_model.sh q2</code>：</p>
+          <p lang="en-GB">The bundled <code>download_model.sh q2</code> (alias <code>preferred</code>) runs:</p>
+          <p lang="zh-TW">執行內附的 <code>download_model.sh q2</code>（別名 <code>preferred</code>）：</p>
           <code class="args"><span class="c"># <span lang="zh-TW">curl -C - 續傳；網址釘在 Hugging Face 的 commit 上。各檔 fetch → mv → size check，兩檔都過才切 ds4flash</span><span lang="en-GB">curl -C - resumes; URLs are pinned to Hugging Face commits. Each file: fetch → mv → size check; ds4flash switches only after both pass</span></span>
 curl -fL --progress-meter -C - \
   -o gguf/DeepSeek-V4-Flash-Vision-Exp-Abliterated-….<span class="hi">gguf.part</span> \
@@ -1844,10 +1844,10 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         </dd>
       </div>
       <div>
-        <dt>DS4_MODEL_QUANT<span class="default"><span lang="en-GB">default: q2 (hard-coded)</span><span lang="zh-TW">預設：q2（寫死）</span></span></dt>
+        <dt>DS4_MODEL_QUANT<span class="default"><span lang="en-GB">default: q2 (hard-coded, alias: preferred)</span><span lang="zh-TW">預設：q2（寫死，別名 preferred）</span></span></dt>
         <dd>
-          <p lang="en-GB">Only <code>q2</code> is accepted. It is a historical selector kept for lease and state compatibility, not a second quantisation family or a memory tier: on 96 GB and 128 GB machines alike, the bundled downloader maps it to the same file, <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</code>. <code>selectedModelQuant()</code> in <code>index.ts</code> hard-codes that value; anything else throws and exits. To run a different GGUF, start <code>ds4-server</code> by hand outside the managed path.</p>
-          <p lang="zh-TW">只接受 <code>q2</code>。這是為了租約與狀態相容而保留的歷史選項，不代表第二個量化家族或記憶體等級：不論 96 GB 或 128 GB 的機器，內附的下載腳本都把它對應到同一個檔案，<code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</code>。<code>index.ts</code> 的 <code>selectedModelQuant()</code> 把這個值寫死；設成別的會直接拋錯退出。要跑別的 GGUF，就在代管路徑之外手動啟動 <code>ds4-server</code>。</p>
+          <p lang="en-GB"><code>q2</code> and <code>preferred</code> (also <code>vision-abliterated</code> / <code>ds4f-vision-abliterated</code>) are accepted and map to the same file, <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</code> plus <code>DeepSeek-V4-Flash-Vision-Encoder.gguf</code>. <code>q2</code> is the historical selector kept for lease and state compatibility — it does not denote a second quant family or memory tier. <code>selectedModelQuant()</code> in <code>index.ts</code> normalises <code>preferred</code> to <code>q2</code>; anything else throws and exits. To run a different GGUF, start <code>ds4-server</code> by hand outside the managed path.</p>
+          <p lang="zh-TW"><code>q2</code> 與 <code>preferred</code>（亦接受 <code>vision-abliterated</code>／<code>ds4f-vision-abliterated</code>）都會對應到同一個檔案，<code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</code> 加上 <code>DeepSeek-V4-Flash-Vision-Encoder.gguf</code>。<code>q2</code> 是為租約與狀態相容保留的歷史選項，不代表第二個量化家族或記憶體等級。<code>index.ts</code> 的 <code>selectedModelQuant()</code> 會把 <code>preferred</code> 正規化為 <code>q2</code>；設成別的會直接拋錯退出。要跑別的 GGUF，就在代管路徑之外手動啟動 <code>ds4-server</code>。</p>
         </dd>
       </div>
       <div>
