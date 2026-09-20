@@ -925,13 +925,13 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
   <div class="hero-above">
     <h1 class="hero-line" id="hero-line">
       <span lang="en-GB">There are many places a frontier model can run. This one you can inspect, fork, and repair.</span>
-      <span lang="zh-TW">前沿模型可以跑在很多地方。<br>這一個，你可以檢視、分叉、修復。</span>
+      <span lang="zh-TW">前沿模型可以跑在很多地方。<br>這一顆，你可以檢視、分叉、修復。</span>
     </h1>
   </div>
   <div class="hero-below">
     <p class="hero-stand">
       <span lang="en-GB">pi-ds4 puts DeepSeek V4 Flash — 284 billion parameters, vision included — entirely on a 96 GB Apple Silicon Mac. No cloud, no meter, no rate limit, and a decision trace you can replay, diff, and argue with.</span>
-      <span lang="zh-TW">pi-ds4 把 2,840 億參數、看得懂圖片的 DeepSeek V4 Flash，整顆放進一台 96 GB 以上的 Apple Silicon Mac。沒有雲端、沒有計費表、沒有速率限制；每一次決策的軌跡，都可以重跑、比對、質疑。</span>
+      <span lang="zh-TW">pi-ds4 把 2,840 億參數、看得懂圖片的 DeepSeek V4 Flash，整顆放進一台 96 GB 以上的 Apple Silicon Mac。沒有雲端，沒有計費表，沒有速率限制；每一次決策留下的軌跡，都可以重跑、比對、質疑。</span>
     </p>
     <div class="install" role="group" aria-label="Install command">
       <code><span class="prompt">$</span>pi install https://github.com/audreyt/pi-ds4</code>
@@ -939,7 +939,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
     </div>
     <p class="hero-note">
       <span lang="en-GB">needs <a href="https://github.com/earendil-works/pi">pi</a> first; the first launch downloads about 82 GiB</span>
-      <span lang="zh-TW">先裝好 <a href="https://github.com/earendil-works/pi">pi</a>；首次啟動會下載約 82 GiB</span>
+      <span lang="zh-TW">先裝好 <a href="https://github.com/earendil-works/pi">pi</a>；首次啟動會下載約 82 GiB。</span>
     </p>
   </div>
   <a class="cue" href="#letter"><span lang="en-GB">$ scroll to continue</span><span lang="zh-TW">$ 往下捲動</span><span class="caret">▌</span></a>
@@ -954,11 +954,11 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
     <dt><span lang="en-GB">From</span><span lang="zh-TW">寄件人</span></dt>
     <dd><span lang="en-GB">Audrey Tang <span class="zh">唐鳳</span></span><span lang="zh-TW">唐鳳 Audrey Tang</span></dd>
     <dt><span lang="en-GB">To</span><span lang="zh-TW">收件人</span></dt>
-    <dd><span lang="en-GB">You — and whoever runs this machine after you</span><span lang="zh-TW">你──還有下一位接手這台機器的人</span></dd>
+    <dd><span lang="en-GB">You — and whoever runs this machine after you</span><span lang="zh-TW">你，以及下一位接手這台機器的人</span></dd>
     <dt><span lang="en-GB">Subject</span><span lang="zh-TW">主旨</span></dt>
     <dd><span lang="en-GB">Driving DeepSeek V4 Flash on your own Mac, with traces you can contest</span><span lang="zh-TW">在自己的 Mac 上駕馭 DeepSeek V4 Flash，留下經得起質疑的軌跡</span></dd>
     <dt><span lang="en-GB">Lineage</span><span lang="zh-TW">源流</span></dt>
-    <dd><span lang="en-GB">forked from <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>; engine DwarfStar (<a href="https://github.com/antirez/ds4">antirez/ds4</a>), pinned at <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>d0c2b43</code></span><span lang="zh-TW">分叉自 <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>；引擎 DwarfStar（<a href="https://github.com/antirez/ds4">antirez/ds4</a>），釘在 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 的 <code>d0c2b43</code></span></dd>
+    <dd><span lang="en-GB">forked from <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>; engine DwarfStar (<a href="https://github.com/antirez/ds4">antirez/ds4</a>), pinned at <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>d0c2b43</code></span><span lang="zh-TW">分叉自 <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>；引擎 DwarfStar（<a href="https://github.com/antirez/ds4">antirez/ds4</a>），釘選在 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 的 <code>d0c2b43</code></span></dd>
   </dl>
 
   <section id="primer" aria-labelledby="primer-h">
@@ -968,7 +968,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       This letter is a field guide, and it begins with a question rather than a command. When an AI system fails — hands you a memorised answer where a discussion was needed, forgets what it decided, or is simply switched off by whoever hosts it — can the people who depend on it still open it up and repair it? Every choice in pi-ds4 follows from wanting that answer to be <em>yes</em>.
     </p>
     <p class="lead" lang="zh-TW">
-      這封信是一份操作指南，但它從一個問題開始，而不是一行指令。當 AI 系統失靈──該討論的時候給出背好的答案、忘了自己決定過什麼、或者乾脆被託管它的人關掉──仰賴它的人，還能不能把它打開來修？pi-ds4 的每一個選擇，都是為了讓這個答案是<em>能</em>。
+      這封信是一份操作指南，開頭卻先問一個問題。當 AI 系統失靈，該討論的時候背出標準答案，忘了自己決定過什麼，或者乾脆被託管它的人關掉，仰賴它的人還能不能把它打開來修？pi-ds4 的每一個選擇，都是為了讓這個答案是「能」。
     </p>
 
     <h2 class="runin"><span lang="en-GB">What this is</span><span lang="zh-TW">這是什麼</span></h2>
@@ -977,13 +977,13 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       pi-ds4 runs a local inference server called <code>ds4-server</code> on your Mac. It loads DeepSeek V4 Flash and serves it at <code>127.0.0.1:8000</code> as an OpenAI API <em>and</em> an Anthropic API at the same time. Nothing you type leaves the machine. There is no account, no meter, and none of the “sorry, I can’t help with that” gates that hosted services apply on your behalf.
     </p>
     <p lang="zh-TW">
-      pi-ds4 會在你的 Mac 上跑一個叫 <code>ds4-server</code> 的本機推論伺服器：載入 DeepSeek V4 Flash，在 <code>127.0.0.1:8000</code> <em>同時</em>開出 OpenAI 與 Anthropic 兩種 API。你打的每一個字都不會離開這台機器。沒有帳號、沒有計費表，也沒有託管服務替你決定的那句「抱歉，我無法協助」。
+      pi-ds4 會在你的 Mac 上跑一個叫 <code>ds4-server</code> 的本機推論伺服器：載入 DeepSeek V4 Flash，在 <code>127.0.0.1:8000</code> <em>同時</em>提供 OpenAI 與 Anthropic 兩種 API。你打的每一個字都留在這台機器裡。沒有帳號，沒有計費表，也沒有由託管服務替你決定的那句「抱歉，我無法協助」。
     </p>
     <p lang="en-GB">
       pi is the most convenient way in — hence the name — but it is only a door. Codex CLI, Claude Code, OpenClaw and Hermes Agent can all point at the same server; <a href="#shells">Chapter 8</a> shows how, and each is an environment variable or a config block away. If you would rather keep pi purely as a package manager and talk through ds4’s own native agent, <code>/ds4-agent</code> hands your terminal over to it and hands it back when you leave.
     </p>
     <p lang="zh-TW">
-      pi 是最方便的入口（所以才叫 pi-ds4），但它只是一扇門。Codex CLI、Claude Code、OpenClaw、Hermes Agent 都可以指向同一台伺服器，<a href="#shells">第八章</a>會逐一示範，每一個都只差一個環境變數或一段設定。若你只想把 pi 當套件管理員、真正對話時改用 ds4 自帶的原生 agent，<code>/ds4-agent</code> 會把終端機交給它，你離開時再交還給 pi。
+      pi 是最方便的入口（所以才叫 pi-ds4），但它只是其中一扇門。Codex CLI、Claude Code、OpenClaw、Hermes Agent 都可以指向同一台伺服器；<a href="#shells">第八章</a>逐一示範，每一個都只差一個環境變數或一段設定。若你只想拿 pi 當套件管理員，真正對話時改用 ds4 自帶的原生 agent，<code>/ds4-agent</code> 會把終端機交給它，你離開時再交還給 pi。
     </p>
 
     <h2 class="runin"><span lang="en-GB">Why one machine, one stream</span><span lang="zh-TW">為什麼是一台機器、一條串流</span></h2>
@@ -992,13 +992,13 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       Hosted inference earns its throughput by batching: one accelerator answering many people’s requests at once. That is efficient, and it is also why a hosted decision is so hard to audit afterwards. Routing, scheduling, hidden seeds, even the IDs on tool calls are not things you can pin down from the outside. pi-ds4 takes the opposite trade: one machine, one user, one stream. By default <code>DS4_REPRODUCIBLE=1</code> injects seed <code>42</code>, and audreyt/ds4 derives tool-call IDs from the same seed, so a seeded request comes back with stable <code>call_…</code> and <code>toolu_…</code> identifiers.
     </p>
     <p lang="zh-TW">
-      託管推論的吞吐量來自批次處理：一顆加速器同時回答許多人的請求。這很有效率，也正是託管的決策事後難以稽核的原因──路由、排程、看不見的隨機種子，甚至工具呼叫的 ID，都不是你從外面釘得住的東西。pi-ds4 反過來選：一台機器、一位使用者、一條串流。預設 <code>DS4_REPRODUCIBLE=1</code> 會注入種子 <code>42</code>，audreyt/ds4 又用同一顆種子產生工具呼叫的 ID，所以帶種子的請求會得到穩定的 <code>call_…</code> 與 <code>toolu_…</code>。
+      託管推論的吞吐量來自批次處理：一顆加速器同時回答許多人的請求。這很有效率，也正因如此，託管的決策事後難以稽核。路由、排程、看不見的隨機種子，甚至工具呼叫的 ID，都不是你從外面釘得住的東西。pi-ds4 反過來選：一台機器、一位使用者、一條串流。預設 <code>DS4_REPRODUCIBLE=1</code> 會注入種子 <code>42</code>，audreyt/ds4 又用同一顆種子產生工具呼叫的 ID，所以帶種子的請求會得到穩定的 <code>call_…</code> 與 <code>toolu_…</code>。
     </p>
     <p lang="en-GB">
       The point is not to make the model right. It is to make the record replayable: the same input can be rerun, a changed trace can be diffed, and a particular tool call can be named. For public decisions, research interviews, procurement, or anything that has to survive being contested, that shape is the whole point.
     </p>
     <p lang="zh-TW">
-      這不是為了讓模型「正確」，而是讓紀錄可以重跑：同一段輸入可以再跑一次，變動的軌跡可以 diff，某一次工具呼叫可以被準確指認。公共決策、研究訪談、採購評估，或任何必須經得起質疑的場合，要的正是這個形狀。
+      目的不在讓模型「正確」，而在讓紀錄可以重跑：同一段輸入可以再跑一次，變動的軌跡可以 diff，某一次工具呼叫可以被準確指認。公共決策、研究訪談、採購評估，或任何必須經得起質疑的場合，要的正是這個形狀。
     </p>
 
     <h2 class="runin"><span lang="en-GB">What it will cost you</span><span lang="zh-TW">你要付出什麼</span></h2>
@@ -1010,9 +1010,9 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       <li><strong>Not required.</strong> A discrete GPU, a paid API, an account, or sending a single byte to the cloud.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>一台機器。</strong>記憶體 96 GB 以上的 Apple Silicon Mac──M2 Ultra、M3 Max 以上、M4 Pro 以上，或 M5。96 到 127 GB 的機器要先調高 Metal 可鎖定記憶體的上限（<a href="#ram96">§1.1</a>）；128 GB 以上直接安裝，還有餘裕同時跑別的東西。NVIDIA DGX Spark 這類 128 GB 統一記憶體的 Linux 機器，跑的是<em>同一隻引擎</em>：audreyt/ds4 的 Makefile 在 Linux 上自動走 CUDA，pi-ds4 的 <code>ds4-watchdog.sh</code> 也同時懂 BSD 與 GNU 兩套工具，所以 <code>pi install</code> 在 Spark 上一樣完成（<a href="#otherhw">§8.7</a>）。</li>
+      <li><strong>一台機器。</strong>記憶體 96 GB 以上的 Apple Silicon Mac：M2 Ultra、M3 Max 以上、M4 Pro 以上，或 M5。96 到 127 GB 的機器要先調高 Metal 可鎖定記憶體的上限（<a href="#ram96">§1.1</a>）；128 GB 以上直接安裝，還有餘裕同時跑別的東西。NVIDIA DGX Spark 這類 128 GB 統一記憶體的 Linux 機器，跑的是<em>同一隻引擎</em>：audreyt/ds4 的 Makefile 在 Linux 上自動走 CUDA，pi-ds4 的 <code>ds4-watchdog.sh</code> 也同時懂 BSD 與 GNU 兩套工具，所以 <code>pi install</code> 在 Spark 上一樣做得完（<a href="#otherhw">§8.7</a>）。</li>
       <li><strong>磁碟。</strong>至少 120 GB 可用空間。</li>
-      <li><strong>時間。</strong>首次啟動會下載約 81 GiB 的語言權重加上 889 MiB 的視覺編碼器──依頻寬一到三小時──然後編譯引擎。</li>
+      <li><strong>時間。</strong>首次啟動會下載約 81 GiB 的語言權重，加上 889 MiB 的視覺編碼器；依頻寬需要一到三小時，接著編譯引擎。</li>
       <li><strong>不需要。</strong>獨立顯示卡、付費 API、登入帳號，或把任何一個位元組送上雲端。</li>
     </ul>
 
@@ -1025,10 +1025,10 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       <li><span class="who">Not on a Mac</span><span><a href="#otherhw">§8.7</a>: DGX Spark (CUDA), AMD Strix Halo (ROCm), and other 128 GB machines run the same engine.</span></li>
     </ul>
     <ul class="paths" lang="zh-TW">
-      <li><span class="who">記者、研究者</span><span>先讀<a href="#motivation">第零章</a>的理由，再看<a href="#steering">第四章</a>的並列對照。整個論證就在那裡。</span></li>
+      <li><span class="who">記者、研究者</span><span>先讀<a href="#motivation">第零章</a>的理由，再看<a href="#steering">第四章</a>的並列對照。整個論證都在那裡。</span></li>
       <li><span class="who">已經有慣用的 AI shell</span><span><a href="#shells">第八章</a>把 Codex CLI、Claude Code、OpenClaw 或 Hermes 接到 pi-ds4 當後端。你可能從頭到尾不必打開 pi。</span></li>
       <li><span class="who">想理解每一個旋鈕</span><span>從第零章依序讀。大約二十分鐘，你會知道每個預設值為什麼是那個值。</span></li>
-      <li><span class="who">手邊不是 Mac</span><span><a href="#otherhw">§8.7</a>：DGX Spark（CUDA）、AMD Strix Halo（ROCm）與其他 128 GB 機器，跑的都是同一隻引擎。</span></li>
+      <li><span class="who">手邊不是 Mac</span><span><a href="#otherhw">§8.7</a> 談 DGX Spark（CUDA）、AMD Strix Halo（ROCm）與其他 128 GB 機器；跑的都是同一隻引擎。</span></li>
     </ul>
   </section>
 
@@ -1046,12 +1046,12 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       <div>
         <dt><span lang="en-GB">weights on disk</span><span lang="zh-TW">權重佔用</span></dt>
         <dd><span class="n">87 652 969 536 B</span> <span lang="en-GB">≈ 81.63 GiB</span><span lang="zh-TW">≈ 81.63 GiB</span>
-          <span class="why"><span lang="en-GB">The Vision-Exp abliterated IQ2 language file (86 720 111 776 B) plus the unmodified 316-tensor vision encoder (932 857 760 B).</span><span lang="zh-TW">Vision-Exp abliterated IQ2 語言檔（86 720 111 776 B）加上未經修改的 316 個張量視覺編碼器（932 857 760 B）。</span></span></dd>
+          <span class="why"><span lang="en-GB">The Vision-Exp abliterated IQ2 language file (86 720 111 776 B) plus the unmodified 316-tensor vision encoder (932 857 760 B).</span><span lang="zh-TW">Vision-Exp abliterated IQ2 語言檔（86 720 111 776 B），加上未經修改、316 個張量的視覺編碼器（932 857 760 B）。</span></span></dd>
       </div>
       <div>
         <dt><span lang="en-GB">engine</span><span lang="zh-TW">引擎</span></dt>
         <dd><span class="n">audreyt/ds4 @ d0c2b43</span>
-          <span class="why"><span lang="en-GB">DwarfStar, pinned to a commit so tomorrow’s build is today’s build. What that commit carries is in <a href="#whatsnew">What’s new</a>.</span><span lang="zh-TW">DwarfStar，釘在一個 commit 上，明天編出來的就是今天這一份。這個 commit 帶了什麼，見<a href="#whatsnew">更新誌</a>。</span></span></dd>
+          <span class="why"><span lang="en-GB">DwarfStar, pinned to a commit so tomorrow’s build is today’s build. What that commit carries is in <a href="#whatsnew">What’s new</a>.</span><span lang="zh-TW">DwarfStar，釘選在一個 commit 上；明天編出來的，就是今天這一份。這個 commit 帶了什麼，見<a href="#whatsnew">更新誌</a>。</span></span></dd>
       </div>
       <div>
         <dt><span lang="en-GB">seed</span><span lang="zh-TW">種子</span></dt>
@@ -1106,13 +1106,13 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       Version 0.6.0 moves the managed download from the Headroom128 0731 Flash weights to the <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated IQ2</a> pair: an 86 720 111 776-byte language file plus a 932 857 760-byte vision encoder, 87 652 969 536 bytes in all (about 81.63 GiB, or 87.653 GB as your disk counts it). The engine pin advances to <code>d0c2b43</code>; <code>ds4-server</code> and <code>ds4-agent</code> now start with <code>--vision</code> and advertise <code>input: text+image</code>. The reason is simple: a model that can read the screenshot, the chart, or the scanned page in front of you is repairable in more situations than one that cannot.
     </p>
     <p class="lead" lang="zh-TW">
-      0.6.0 把代管下載從 Headroom128 0731 Flash 權重換成 <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated IQ2</a> 這一對：語言檔 86 720 111 776 位元組，加上視覺編碼器 932 857 760 位元組，合計 87 652 969 536 位元組（約 81.63 GiB，用磁碟的算法是 87.653 GB）。引擎釘到 <code>d0c2b43</code>；<code>ds4-server</code> 與 <code>ds4-agent</code> 現在帶著 <code>--vision</code> 啟動，並宣告 <code>input: text+image</code>。理由很單純：一顆看得懂你眼前那張截圖、圖表或掃描頁的模型，能修的情況比看不懂的多得多。
+      0.6.0 把代管下載從 Headroom128 0731 Flash 權重換成 <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated IQ2</a> 這一對：語言檔 86 720 111 776 位元組，加上視覺編碼器 932 857 760 位元組，合計 87 652 969 536 位元組（約 81.63 GiB，用磁碟的算法是 87.653 GB）。引擎釘選到 <code>d0c2b43</code>；<code>ds4-server</code> 與 <code>ds4-agent</code> 現在帶著 <code>--vision</code> 啟動，並宣告 <code>input: text+image</code>。理由很單純：一顆看得懂你眼前那張截圖、圖表或掃描頁的模型，能修的情況多得多。
     </p>
     <p lang="en-GB">
       Two honesty notes before the details. The 0731 DSpark draft head does not fit these weights and is no longer attached. And the headline numbers on this page — 286 t/s prefill, 45 t/s generation — come from <code>/read earth.jpg</code> on an M5 Max, a 207-token image turn at <code>--ctx 2048</code> that measured 285.75 and 44.94. A plain text turn answered normally on the same machine. Treat those as what they are: an image-turn reading, not a 2k-context prefill benchmark. The 0.5 entries further down are August history, kept because someone will need to know what the previous weights were.
     </p>
     <p lang="zh-TW">
-      進入細節前，先說兩件老實話。0731 的 DSpark 草稿頭不適用於這組權重，已不再掛載。而本頁最醒目的兩個數字──prefill 286 t/s、生成 45 t/s──來自 M5 Max 上的 <code>/read earth.jpg</code>：一個 207 token 的圖片回合，<code>--ctx 2048</code>，量到 285.75 與 44.94。同一台機器的純文字回合回答正常。請把它們當成它們本來的樣子：圖片回合的讀數，不是 2k context 的 prefill 基準。再往下的 0.5 條目是八月的歷史，留著是因為總有人需要知道上一組權重是什麼。
+      進入細節之前，有兩件事要先說在前頭。0731 的 DSpark 草稿頭不適用於這組權重，已不再掛載。而本頁最醒目的兩個數字，prefill 286 t/s 與生成 45 t/s，來自 M5 Max 上的 <code>/read earth.jpg</code>：一個 207 token 的圖片回合，<code>--ctx 2048</code>，量到 285.75 與 44.94。同一台機器的純文字回合回答正常。請把它們當成它們本來的樣子：圖片回合的讀數，不是 2k context 的 prefill 基準。再往下的 0.5 條目是八月的歷史，留著是因為總有人需要知道上一組權重是什麼。
     </p>
 
     <h3><span class="no">0.6.0</span><span lang="en-GB">What changed in the extension</span><span lang="zh-TW">擴充套件改了什麼</span></h3>
@@ -1125,26 +1125,26 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       <li><strong>Read the numbers as labelled.</strong> 286/45 t/s is the grafted file on an M5 Max at <code>/read earth.jpg</code>, 207 input tokens, <code>--ctx 2048</code>: 285.75 prefill, 44.94 generation.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>引擎釘在 <code>d0c2b43</code>。</strong><code>audreyt/ds4</code> origin/main 的 Vision-Exp 引擎。代管的 <code>ds4-server</code> 與 <code>ds4-agent</code> 都帶 <code>--vision gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf</code> 啟動。</li>
-      <li><strong>首選權重。</strong>語言檔：<code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF</code> 的 <code>367a1fef</code>──官方 IQ2 配方，嫁接 33 個已量化的 <code>attn_output_b</code> 張量（86 720 111 776 B）。編碼器：<code>antirez/deepseek-v4-gguf</code> 的 <code>f71f23d</code>，未經修改（932 857 760 B）。不是 Headroom128 0731 Flash；不可掛 0731 DSpark。</li>
-      <li><strong>下載釘在 commit 上。</strong><code>download_model.sh</code> 走 <code>/resolve/$REV/</code>，不走 <code>/resolve/main/</code>，明年抓到的就是今年測過的。它會在<em>兩個</em>檔案都通過大小檢查之後，才把 <code>ds4flash.gguf</code> 指向新檔、刪掉四個舊的 Headroom128／DSpark 檔名；編碼器抓不下來時，原本能用的 0731 連結不會被動到。</li>
+      <li><strong>引擎釘選在 <code>d0c2b43</code>。</strong><code>audreyt/ds4</code> origin/main 的 Vision-Exp 引擎。代管的 <code>ds4-server</code> 與 <code>ds4-agent</code> 都帶 <code>--vision gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf</code> 啟動。</li>
+      <li><strong>首選權重。</strong>語言檔來自 <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF</code> 的 <code>367a1fef</code>：官方 IQ2 配方，嫁接 33 個已量化的 <code>attn_output_b</code> 張量（86 720 111 776 B）。編碼器：<code>antirez/deepseek-v4-gguf</code> 的 <code>f71f23d</code>，未經修改（932 857 760 B）。它不是 Headroom128 0731 Flash，也不可掛 0731 DSpark。</li>
+      <li><strong>下載釘選在 commit 上。</strong><code>download_model.sh</code> 走 <code>/resolve/$REV/</code> 而非 <code>/resolve/main/</code>，明年抓到的就是今年測過的。兩個檔案都通過大小檢查之後，它才把 <code>ds4flash.gguf</code> 指向新檔，並刪掉四個舊的 Headroom128 與 DSpark 檔名；編碼器抓不下來時，原本能用的 0731 連結不會被動到。</li>
       <li><strong>升級期間的磁碟。</strong>全新安裝佔 87.653 GB 加上 KV cache。從 0.5.x 升級時，舊的 Headroom128（約 87 GB）會和新的一對並存到切換為止，峰值約 175 GB；若原本有 DSpark，約 181 GB。</li>
-      <li><strong>數字照標籤讀。</strong>286／45 t/s 是嫁接檔在 M5 Max 上跑 <code>/read earth.jpg</code>（207 個輸入 token，<code>--ctx 2048</code>）的結果：prefill 285.75、生成 44.94。</li>
+      <li><strong>數字照標籤讀。</strong>286 與 45 t/s 是嫁接檔在 M5 Max 上跑 <code>/read earth.jpg</code>（207 個輸入 token，<code>--ctx 2048</code>）的結果：prefill 285.75、生成 44.94。</li>
     </ul>
 
-    <h3><span class="no">0.6.1</span><span lang="en-GB">Patch: `preferred` alias</span><span lang="zh-TW">修補：`preferred` 別名</span></h3>
+    <h3><span class="no">0.6.1</span><span lang="en-GB">Patch: `preferred` alias</span><span lang="zh-TW">修補：<code>preferred</code> 別名</span></h3>
 
     <ul lang="en-GB">
       <li><strong>No weight or engine change.</strong> `download_model.sh` and `DS4_MODEL_QUANT` now accept `preferred` (also `vision-abliterated` / `ds4f-vision-abliterated`) as an alias to the historic `q2` selector — both fetch the same Vision-Exp abliterated IQ2 + encoder pair. `audreyt/ds4` `preferred` now also fetches that pair, so `pi` and bare `ds4` agree. `d0c2b43` engine and `367a1fef`/`f71f23d` GGUFs unchanged; `7855b7a` is the `preferred`-alias commit on that engine.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>沒有權重或引擎變動。</strong>`download_model.sh` 與 `DS4_MODEL_QUANT` 現在接受 `preferred`（亦接受 `vision-abliterated`／`ds4f-vision-abliterated`）作為歷史選項 `q2` 的別名──兩者抓的是同一對 Vision-Exp abliterated IQ2 + encoder。`audreyt/ds4` 的 `preferred` 現在也會抓這一對，所以 `pi` 和單獨跑 `ds4` 會一致；`d0c2b43` 引擎與 `367a1fef`／`f71f23d` 檔案不變，`7855b7a` 是在該引擎上加 `preferred` 別名的 commit。</li>
+      <li><strong>沒有權重或引擎變動。</strong><code>download_model.sh</code> 與 <code>DS4_MODEL_QUANT</code> 現在接受 <code>preferred</code>（也接受 <code>vision-abliterated</code> 與 <code>ds4f-vision-abliterated</code>）作為歷史選項 <code>q2</code> 的別名；兩者抓的是同一對 Vision-Exp abliterated IQ2 與 encoder。<code>audreyt/ds4</code> 的 <code>preferred</code> 現在也會抓這一對，所以 <code>pi</code> 和單獨跑 <code>ds4</code> 會一致。<code>d0c2b43</code> 引擎與 <code>367a1fef</code>、<code>f71f23d</code> 兩個檔案不變；<code>7855b7a</code> 是在該引擎上加 <code>preferred</code> 別名的 commit。</li>
     </ul>
 
     <h3><span class="no">§</span><span lang="en-GB">Already working in your next launch</span><span lang="zh-TW">下次啟動就已經生效</span></h3>
 
     <p lang="en-GB">None of these need a new flag. They are the parts of the engine that make a long agent session feel less like wading, and a stuck server less like a black box.</p>
-    <p lang="zh-TW">這些都不需要新的參數。它們是讓長時間 agent 對話不再像涉水前進、讓卡住的伺服器不再是黑盒子的那些部分。</p>
+    <p lang="zh-TW">這些都不需要新的參數。它們讓長時間的 agent 對話不再像涉水前進，也讓卡住的伺服器不再是黑盒子。</p>
 
     <ul lang="en-GB">
       <li><strong>A server you can ask how it is.</strong> <code>GET /health</code> and <code>GET /stats</code> are answered on the client thread, so they respond even mid-generation. <code>/stats</code> reports uptime, queue depth, a busy flag, cache hits by source, token totals, cancellation counts, and the last prefill and decode speeds. curl examples in <a href="#daily">§7.1</a>. (<a href="https://github.com/antirez/ds4/pull/489">antirez/ds4 PR #489</a>, merged here ahead of upstream.)</li>
@@ -1156,11 +1156,11 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
     </ul>
     <ul lang="zh-TW">
       <li><strong>可以問它「你還好嗎」的伺服器。</strong><code>GET /health</code> 與 <code>GET /stats</code> 由客戶端執行緒直接回應，模型生成到一半也答得動。<code>/stats</code> 回報執行時間、佇列深度、忙碌旗標、各來源的快取命中、token 總量、取消次數，以及最近一次 prefill 與 decode 的速度。curl 範例見 <a href="#daily">§7.1</a>。（<a href="https://github.com/antirez/ds4/pull/489">antirez/ds4 PR #489</a>，本分叉先於上游合併。）</li>
-      <li><strong>長對話少做很多重複的 prefill</strong>（同樣來自 PR #489）。KV 快照改在步數門檻儲存，而不是剛好整數倍；用掉的快照要等接續的 prefill 成功才刪；新快照有一段寬限期不被淘汰；chat 與 Anthropic 工具回合會記住一個看得見的檢查點。體感上：Claude Code 或 Codex 的長工具迴圈回到伺服器時，更常直接接上快取。</li>
-      <li><strong>斷線就停。</strong>客戶端中途離開──逾時、Ctrl-C──會同時取消 prefill 與 decode，GPU 立刻釋放，不再默默把一段沒人等的回答跑完。</li>
+      <li><strong>長對話少做很多重複的 prefill</strong>（同樣來自 PR #489）。KV 快照改在步數門檻儲存，而非剛好整數倍；用掉的快照要等接續的 prefill 成功才刪；新快照有一段寬限期不被淘汰；chat 與 Anthropic 工具回合會記住一個看得見的檢查點。體感上，Claude Code 或 Codex 的長工具迴圈回到伺服器時，更常直接接上快取。</li>
+      <li><strong>斷線就停。</strong>客戶端中途離開（逾時、Ctrl-C）會同時取消 prefill 與 decode，GPU 立刻釋放，不再默默把一段沒人等的回答跑完。</li>
       <li><strong>工具呼叫重放更忠實。</strong>模型實際取樣到的空白分隔符會被記下；多次呼叫的 DSML 區塊不再被誤放進部分訊息；所有重放 ID 都在記憶體時，跳過磁碟掃描。疊在種子 42 之上，決策軌跡逐位元組穩定。</li>
-      <li><strong>韌性。</strong>JSON 請求解析加固（上游）；在未閉合的 <code>&lt;think&gt;</code> 裡開頭的工具呼叫可以救回（上游）；方向性引導的 decode 路徑在上游合併後完好無缺（本分叉）。</li>
-      <li><strong>更順手的 <code>/ds4-agent</code></strong>（上游）：合作式中斷、狀態列顯示 prefill 速度與貪婪取樣、網頁工具有狀態訊息、DSML 解析加固、edit 工具修正並補上回歸測試、離開時正確還原終端機。</li>
+      <li><strong>韌性。</strong>JSON 請求解析強化（上游）；在未閉合的 <code>&lt;think&gt;</code> 裡開頭的工具呼叫可以救回（上游）；方向性引導的 decode 路徑在上游合併後完好無缺（本分叉）。</li>
+      <li><strong>更順手的 <code>/ds4-agent</code></strong>（上游）：合作式中斷、狀態列顯示 prefill 速度與貪婪取樣、網頁工具有狀態訊息、DSML 解析強化、edit 工具修正並補上回歸測試、離開時正確還原終端機。</li>
     </ul>
 
     <h3><span class="no">§</span><span lang="en-GB">What the engine can do if you ask by hand</span><span lang="zh-TW">引擎會做、但要你親手開的事</span></h3>
@@ -1169,7 +1169,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       All of this ships in the pinned engine, but the managed launch deliberately passes the same three groups of arguments it always has — context, KV cache, and steering — because a default you did not ask for is a default you cannot audit. To use these, take the by-hand recipe in <a href="#shells">§8.6</a> and add the flags there.
     </p>
     <p lang="zh-TW">
-      以下功能都在釘住的引擎裡，但代管啟動刻意只傳它一直傳的那三組參數──context、KV cache、引導──因為你沒要求的預設值，就是你稽核不了的預設值。要用它們，拿 <a href="#shells">§8.6</a> 的手動配方，把旗標加在那裡。
+      以下功能都在釘選的引擎裡，但代管啟動刻意只傳它一直傳的那三組參數：context、KV cache、引導。你沒要求的預設值，就是你稽核不了的預設值。要用它們，拿 <a href="#shells">§8.6</a> 的手動配方，把旗標加在那裡。
     </p>
 
     <ul lang="en-GB">
@@ -1180,11 +1180,11 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       <li><strong>Exact Metal decode fusions</strong> (<a href="https://github.com/antirez/ds4/pull/755">PR #755</a>). The Q2 and MXFP4 decode paths on pre-M5 and M5 chips now route through a batch of bit-identical kernel fusions — compressor pool, q_a/kv pair and quad store, HC norm-mix clustering, split-K FlashAttention reduction, and more. Greedy decoding is byte-for-byte identical, only faster. Every fusion keeps a <code>DS4_METAL_DISABLE_M5_*</code> or <code>DS4_METAL_DISABLE_PRE_M5_*</code> switch so it can be turned off on its own for A/B work. The same batch fixes a long-context inverse-RoPE/top-k bug and recovers truncated DSML tool calls from an unclosed <code>&lt;think&gt;</code>.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>SSD 串流</strong>（<code>--ssd-streaming</code>，上游）。非路由權重常駐記憶體；路由的 MoE 專家放在記憶體快取裡，未命中時從 GGUF 讀回。自動預算取 Metal 建議工作集的 80% 再扣掉非路由權重。上游文件示範 64 GB 的 MacBook 以 <code>--ssd-streaming-cache-experts 32GB</code> 跑 2-bit Flash；128 GB 的 Mac 甚至能這樣檢視 DeepSeek V4 <em>Pro</em> 的 q2（M5 Max 上自動預算選了約 59 GB 的專家快取）。逐層加碼量化的串流也涵蓋 Headroom128 那個混合精度檔。代價講明白：prefill 一樣快，decode 對快取未命中變得敏感。</li>
-      <li><strong>DSpark 推測解碼</strong>（實驗性；本分叉走在上游前面）。先用 <code>gguf-tools/deepseek4-quantize --dspark-only</code> 轉出官方 DSpark 草稿頭，再以 <code>--mtp DSpark.gguf</code>（CLI 與伺服器都收）開啟 Metal 的區塊推測解碼：整塊平行起草，由目標模型驗證後才提交。本分叉再加上 B2 拒絕取樣──無損的推測<em>取樣</em>，輸出分布與目標完全相同──以及 RNG 狀態持久化、<code>DS4_DSPARK_ADAPTIVE=1</code> 的自適應區塊大小、從前綴檢查點部分接受。加速幅度取決於基底／草稿的組合與提示；先用 <code>DS4_MTP_TIMING=1</code> 量過再相信任何說法。</li>
+      <li><strong>SSD 串流</strong>（<code>--ssd-streaming</code>，上游）。非路由權重常駐記憶體；路由的 MoE 專家放在記憶體快取裡，未命中時從 GGUF 讀回。自動預算取 Metal 建議工作集的 80%，再扣掉非路由權重。上游文件示範 64 GB 的 MacBook 以 <code>--ssd-streaming-cache-experts 32GB</code> 跑 2-bit Flash；128 GB 的 Mac 甚至能這樣檢視 DeepSeek V4 <em>Pro</em> 的 q2（M5 Max 上自動預算選了約 59 GB 的專家快取）。逐層加碼量化的串流也涵蓋 Headroom128 那個混合精度檔。代價說清楚：prefill 一樣快，decode 對快取未命中變得敏感。</li>
+      <li><strong>DSpark 推測解碼</strong>（實驗性；本分叉走在上游前面）。先用 <code>gguf-tools/deepseek4-quantize --dspark-only</code> 轉出官方 DSpark 草稿頭，再以 <code>--mtp DSpark.gguf</code>（CLI 與伺服器都收）開啟 Metal 的區塊推測解碼：整塊平行起草，由目標模型驗證後才提交。本分叉另外加上 B2 拒絕取樣（無損的推測<em>取樣</em>，輸出分布與目標完全相同）、RNG 狀態持久化、<code>DS4_DSPARK_ADAPTIVE=1</code> 的自適應區塊大小、從前綴檢查點部分接受。加速幅度取決於基底與草稿的組合和提示本身；先用 <code>DS4_MTP_TIMING=1</code> 量過，再相信任何說法。</li>
       <li><strong>有上限的請求佇列</strong>（<code>--max-queue N</code>）。排隊滿 N 件就回 <code>429</code>，客戶端逾時就不會默默疊出一堆沒人會來領的重複工作。預設 <code>0</code> 維持舊行為。</li>
       <li><strong>正確性修補</strong>（上游）。<code>--mtp-draft &gt; 2</code> 會提交錯誤 token 的推測驗證問題已修（<a href="https://github.com/antirez/ds4/pull/358">PR #358</a>）；<code>ds4-eval</code> 選擇題評分器一連串的偽陰性已修，並補上黃金自我測試（<a href="https://github.com/antirez/ds4/pull/319">PR #319</a>）；上游也加了發行前的 QA 清單。</li>
-      <li><strong>位元等價的 Metal decode 融合</strong>（<a href="https://github.com/antirez/ds4/pull/755">PR #755</a>）。pre-M5 與 M5 的 Q2 與 MXFP4 decode 路徑改走一批位元等價的核心融合──compressor pool、q_a／kv pair 與 quad store、HC norm-mix 叢集、split-K FlashAttention 歸約等。貪婪解碼逐位元組相同，只是更快。每一項融合都留了 <code>DS4_METAL_DISABLE_M5_*</code> 或 <code>DS4_METAL_DISABLE_PRE_M5_*</code> 開關，可以個別關掉做 A／B。同一批也修了長 context 的 inverse-RoPE／top-k 錯誤，並救回未閉合 <code>&lt;think&gt;</code> 裡被截斷的 DSML 工具呼叫。</li>
+      <li><strong>位元等價的 Metal decode 融合</strong>（<a href="https://github.com/antirez/ds4/pull/755">PR #755</a>）。pre-M5 與 M5 的 Q2 與 MXFP4 decode 路徑改走一批位元等價的核心融合：compressor pool、q_a 與 kv pair 及 quad store、HC norm-mix 叢集、split-K FlashAttention 歸約等。貪婪解碼逐位元組相同，只是更快。每一項融合都留了 <code>DS4_METAL_DISABLE_M5_*</code> 或 <code>DS4_METAL_DISABLE_PRE_M5_*</code> 開關，可以個別關掉做 A/B。同一批也修了長 context 的 inverse-RoPE 與 top-k 錯誤，並救回未閉合 <code>&lt;think&gt;</code> 裡被截斷的 DSML 工具呼叫。</li>
     </ul>
 
     <h3><span class="no">0.5</span><span lang="en-GB">The 0.5 series, for the record</span><span lang="zh-TW">0.5 系列，存檔備查</span></h3>
@@ -1193,7 +1193,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       The 0.5 releases were the August refresh of the managed path. 0.5.0 switched the bundled downloader to Headroom128; 0.5.1 made pi’s thinking levels honest about what <code>ds4-server</code> really supports; 0.5.2 and 0.5.3 advanced the engine pin; 0.5.4 fixed a deadlock, taught the build to pick the right Makefile target, and wired DSpark by default. Existing installs updated themselves on their next launch, and the conservative 100k context default never moved. Underneath sat a 275-commit pin — <code>97319db → 67acbd8</code>, 1 June to 12 August 2026 — that gave one C engine three backends (Metal, CUDA, ROCm) and two new endpoints (<code>/health</code>, <code>/stats</code>).
     </p>
     <p lang="zh-TW">
-      0.5 系列是代管路徑在八月的翻新。0.5.0 把內附的下載腳本改抓 Headroom128；0.5.1 讓 pi 的思考層級如實對應 <code>ds4-server</code> 真正支援的模式；0.5.2 與 0.5.3 推進引擎版本；0.5.4 修了一個死鎖、教會編譯流程挑對 Makefile 目標，並預設接上 DSpark。既有安裝在下一次啟動時自行更新，保守的 100k context 預設從頭到尾沒動。底層是一段 275 個 commit 的釘版──<code>97319db → 67acbd8</code>，2026 年 6 月 1 日到 8 月 12 日──讓同一隻 C 引擎有了三個後端（Metal、CUDA、ROCm）和兩個新端點（<code>/health</code>、<code>/stats</code>）。
+      0.5 系列是代管路徑在八月的翻新。0.5.0 把內附的下載腳本改抓 Headroom128；0.5.1 讓 pi 的思考層級如實對應 <code>ds4-server</code> 真正支援的模式；0.5.2 與 0.5.3 推進引擎版本；0.5.4 修了一個死鎖、教會編譯流程挑對 Makefile 目標，並預設接上 DSpark。既有安裝在下一次啟動時自行更新，保守的 100k context 預設從頭到尾沒動。底層是一段 275 個 commit 的釘選（<code>97319db → 67acbd8</code>，2026 年 6 月 1 日到 8 月 12 日），讓同一隻 C 引擎有了三個後端（Metal、CUDA、ROCm）和兩個新端點（<code>/health</code>、<code>/stats</code>）。
     </p>
 
     <ul lang="en-GB">
@@ -1205,12 +1205,12 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       <li><strong>Disk KV sized by memory.</strong> When <code>DS4_KV_DISK_SPACE_MB</code> is unset: 64 GB on 128 GB+ machines, 32 GB on 96–127 GB, otherwise 8 GB. Long agent sessions evict their prefix checkpoints far less often than under the old flat 8 GB cap (reported by <a href="https://x.com/thomasjansn">@tjansn</a>).</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>0.5.4──釘在 <code>67acbd8</code>。</strong>修掉 <code>057f62f</code> 引入的 <code>client_main</code> 自我死鎖（<code>j.mu</code> 重複上鎖讓每個 HTTP 請求都卡住），保留 PR #755 的 Metal 融合與工具救援；M5 Max 重測不變，2k context 下 prefill 622 t/s、生成 42 t/s。<strong>依平台挑編譯目標：</strong>Darwin 跑 <code>make ds4-server</code>；GB10／sm_121 跑 <code>make cuda-spark</code>；其他單一運算能力跑 <code>make cuda CUDA_ARCH=…</code>；沒有 NVIDIA 但有 <code>hipcc</code> 跑 <code>make strix-halo</code>；未知或混合的運算能力直接報錯，不再產出一個能執行卻什麼都不回的無架構二進位。權重就位後，非 Metal 的編譯會跑一次真正的生成檢查：回覆必須帶非空的 <code>choices[0].message.content</code>，光是 HTTP 200 不算數。<strong>有 DSpark 就預設接上：</strong>代管下載會盡力抓對應的 Headroom128 DSpark 支援檔（約 5.6 GiB，同一個 <code>apetersson/Headroom128</code> repo，失敗不致命），檔案存在時以 <code>--dspark --mtp gguf/…DSpark-support.gguf</code> 啟動；<code>DS4_DSPARK=0</code> 可關閉並跳過下載。當時不做任何效能宣稱──要在正確的 <code>cuda-spark</code> 或 Metal 二進位上重測才算。</li>
-      <li><strong>0.5.3──釘在 <code>e4812d8</code>。</strong>合併 antirez/ds4 PR #755：pre-M5 與 M5 的 Q2 與 MXFP4 Metal decode 優化、長 context 的 inverse-RoPE／top-k 修正、未閉合 <code>&lt;think&gt;</code> 裡截斷的 DSML 工具呼叫救援，以及 OpenAI 工具 schema 的 JSON 拼寫正規化。Headroom128 首選與 100k 預設不變；M5 Max 約 622 t/s prefill、42 t/s 生成（2k context）。</li>
-      <li><strong>0.5.2──釘在 <code>a768f37</code>。</strong>合併 origin/main 之後：Metal MoE 與 indexed prefill 加速、MXFP4／CUDA mmq、Flash 0731 的檢查點向量，以及未閉合 <code>&lt;think&gt;</code> 裡完整工具呼叫的救援。M5 Max 當時約 638 t/s prefill、37 t/s 生成（2k context）。</li>
-      <li><strong>0.5.1──如實的思考層級。</strong>provider 只顯示 <code>ds4-server</code> 真正有的模式（<code>off</code> → <code>none</code>、<code>high</code> → <code>high</code>、<code>max</code> → <code>max</code>）；不支援的中間層級標為不可用，不再悄悄摺成 <code>high</code>。<code>max</code> 需要 pi 0.80.6 以上，且 context 至少 393 216 個 token，所以請把 <code>DS4_CONTEXT_KB</code> 設成 <code>394</code> 或更高；未達門檻時伺服器安全退回一般的 <code>high</code>。保守預設仍是 <code>100</code>。</li>
-      <li><strong>0.5.0──Headroom128。</strong>代管路徑改抓 <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code> 的單一 ~87 GB GGUF（同 repo 可選配對應的 DSpark 支援檔），不再預設 CyberNeurova 雙層或 antirez 的 mixed／plain。0.6.0 把這個下載換成 Vision-Exp。</li>
-      <li><strong>磁碟 KV 依記憶體分級。</strong>未設 <code>DS4_KV_DISK_SPACE_MB</code> 時：128 GB 以上 64 GB、96 到 127 GB 32 GB、其餘 8 GB。長 agent 對話淘汰前綴檢查點的頻率，比舊的一律 8 GB 低得多（<a href="https://x.com/thomasjansn">@tjansn</a> 回報）。</li>
+      <li><strong>0.5.4，釘選在 <code>67acbd8</code>。</strong>修掉 <code>057f62f</code> 引入的 <code>client_main</code> 自我死鎖（<code>j.mu</code> 重複上鎖讓每個 HTTP 請求都卡住），保留 PR #755 的 Metal 融合與工具救援；M5 Max 重測不變，2k context 下 prefill 622 t/s、生成 42 t/s。<strong>依平台挑編譯目標：</strong>Darwin 跑 <code>make ds4-server</code>；GB10 與 sm_121 跑 <code>make cuda-spark</code>；其他單一運算能力跑 <code>make cuda CUDA_ARCH=…</code>；沒有 NVIDIA 但有 <code>hipcc</code> 跑 <code>make strix-halo</code>；未知或混合的運算能力直接報錯，不再產出一個能執行卻什麼都不回的無架構執行檔。權重就位後，非 Metal 的編譯會跑一次真正的生成檢查：回覆必須帶非空的 <code>choices[0].message.content</code>，光是 HTTP 200 不算數。<strong>有 DSpark 就預設接上：</strong>代管下載會盡力抓對應的 Headroom128 DSpark 支援檔（約 5.6 GiB，同一個 <code>apetersson/Headroom128</code> repo，失敗不致命），檔案存在時以 <code>--dspark --mtp gguf/…DSpark-support.gguf</code> 啟動；<code>DS4_DSPARK=0</code> 可關閉並跳過下載。當時不做任何效能宣稱；要在正確的 <code>cuda-spark</code> 或 Metal 執行檔上重測才算。</li>
+      <li><strong>0.5.3，釘選在 <code>e4812d8</code>。</strong>合併 antirez/ds4 PR #755：pre-M5 與 M5 的 Q2 與 MXFP4 Metal decode 最佳化、長 context 的 inverse-RoPE 與 top-k 修正、未閉合 <code>&lt;think&gt;</code> 裡截斷的 DSML 工具呼叫救援，以及 OpenAI 工具 schema 的 JSON 拼寫正規化。Headroom128 首選與 100k 預設不變；M5 Max 約 622 t/s prefill、42 t/s 生成（2k context）。</li>
+      <li><strong>0.5.2，釘選在 <code>a768f37</code>。</strong>合併 origin/main 之後：Metal MoE 與 indexed prefill 加速、MXFP4 與 CUDA mmq、Flash 0731 的檢查點向量，以及未閉合 <code>&lt;think&gt;</code> 裡完整工具呼叫的救援。M5 Max 當時約 638 t/s prefill、37 t/s 生成（2k context）。</li>
+      <li><strong>0.5.1，如實的思考層級。</strong>provider 只顯示 <code>ds4-server</code> 真正有的模式（<code>off</code> → <code>none</code>、<code>high</code> → <code>high</code>、<code>max</code> → <code>max</code>）；不支援的中間層級標為不可用，不再悄悄摺成 <code>high</code>。<code>max</code> 需要 pi 0.80.6 以上，且 context 至少 393 216 個 token，所以請把 <code>DS4_CONTEXT_KB</code> 設成 <code>394</code> 或更高；未達門檻時伺服器安全退回一般的 <code>high</code>。保守預設仍是 <code>100</code>。</li>
+      <li><strong>0.5.0，Headroom128。</strong>代管路徑改抓 <code>apetersson/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128</code> 的單一約 87 GB GGUF（同 repo 可選配對應的 DSpark 支援檔），不再預設 CyberNeurova 雙層或 antirez 的 mixed 與 plain。0.6.0 把這個下載換成 Vision-Exp。</li>
+      <li><strong>磁碟 KV 依記憶體分級。</strong>未設 <code>DS4_KV_DISK_SPACE_MB</code> 時：128 GB 以上 64 GB，96 到 127 GB 32 GB，其餘 8 GB。長 agent 對話淘汰前綴檢查點的頻率，比舊的一律 8 GB 低得多（<a href="https://x.com/thomasjansn">@tjansn</a> 回報）。</li>
     </ul>
 
     <h3><span class="no">§</span><span lang="en-GB">Beyond the Mac</span><span lang="zh-TW">不只是 Mac</span></h3>
@@ -1221,7 +1221,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
     </ul>
     <ul lang="zh-TW">
       <li><strong>AMD Strix Halo，ROCm</strong>（上游）。128 GB 的 Ryzen AI Max 機器（Radeon 8060S，gfx1151）現在有原生的 ROCm 後端：<code>make strix-halo</code>，別名 <code>make rocm</code>，checkout 裡附有完整的 <code>STRIXHALO.md</code> 安裝步驟。細節見 <a href="#otherhw">§8.7</a>。</li>
-      <li><strong>分散式推論</strong>（上游）。一台裝不下，兩台可以：4-bit 的 Flash 量化版跨兩台 128 GB MacBook（Thunderbolt 5），每台只映射自己那一段層，中間的激活值走 TCP。管線化的 prefill 可以比單機快；生成仍是逐 token 進行，會比較慢。DeepSeek V4 Pro 的 Q4 走同一條路。</li>
+      <li><strong>分散式推論</strong>（上游）。一台裝不下，兩台可以：4-bit 的 Flash 量化版跨兩台 128 GB MacBook（Thunderbolt 5），每台只映射自己那一段層，中間的活化值走 TCP。管線化的 prefill 可以比單機快；生成仍是逐 token 進行，會比較慢。DeepSeek V4 Pro 的 Q4 走同一條路。</li>
     </ul>
 
     <p lang="en-GB">
@@ -1249,28 +1249,28 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       The frame for everything here is the question behind <a href="https://civic.ai/software-freedom-as-civic-care/">Software Freedom as Civic Care</a>: when an AI system fails, can the people who inherit it still repair it? Not the vendor. Not the people who trained it. The people who are left holding it — a newsroom, a research group, a town office, a family — on the day it stops behaving.
     </p>
     <p class="lead" lang="zh-TW">
-      這裡的一切，都框在〈<a href="https://civic.ai/tw/software-freedom-as-civic-care/">軟體自由與公民關懷</a>〉背後的那個問題裡：當 AI 系統失靈，繼承它的人還能不能修？不是廠商，不是訓練它的人，而是最後抱著它的那些人──一間編輯室、一個研究團隊、一處鄉公所、一個家庭──在它開始不聽話的那一天。
+      這裡的一切，都框在〈<a href="https://civic.ai/tw/software-freedom-as-civic-care/">軟體自由與公民關懷</a>〉背後的那個問題裡：當 AI 系統失靈，繼承它的人還能不能修？這裡說的「繼承」，指的是最後抱著它的那些人：一間編輯室、一個研究團隊、一處鄉公所、一個家庭。廠商可以走，訓練它的人也可以走；在它開始不聽話的那一天，留下來的是他們。
     </p>
 
     <p lang="en-GB">
       Running a frontier model on your own Mac is only the visible part of the answer. A local model that you cannot inspect, cannot fork and cannot roll back is just a cloud service that happens to be on your desk. It becomes civic infrastructure when four things are legible at once: the model itself, the settings that shape it, the memory it carries between turns, and the path you would take to repair it. Only then can AI join the loops of care that already exist — in families, in projects, in democratic communities — instead of pulling people into a platform’s own loop.
     </p>
     <p lang="zh-TW">
-      在自己的 Mac 上跑前沿模型，只是答案裡看得見的那一半。一顆你看不進去、分叉不了、也退不回去的本機模型，只不過是一個剛好放在你桌上的雲端服務。要成為公民基礎建設，得有四樣東西同時清晰可讀：模型本身、塑造它的設定、它在回合之間帶著的記憶，以及你要修它時會走的那條路。這樣，AI 才能加入原本就存在的照護循環──家庭裡的、專案裡的、民主社群裡的──而不是把人拉進平台自己的循環。
+      在自己的 Mac 上跑前沿模型，只是答案裡看得見的那一半。一顆你看不進去、分叉不了、也退不回去的本機模型，只是一個剛好放在你桌上的雲端服務。要成為公民基礎建設，得有四樣東西同時清晰可讀：模型本身、塑造它的設定、它在回合之間帶著的記憶，以及你要修它時會走的那條路。這樣，AI 才能加入原本就在運轉的關懷循環，家庭裡的、專案裡的、民主社群裡的，而不會把人拉進平台自己的循環。
     </p>
 
     <p lang="en-GB">
       That is why this fork makes the choices it makes, and each of them costs something. A seeded, single-stream server gives up the throughput of batching so that a trace can be replayed. A commit-pinned engine and commit-pinned weights give up “latest” so that next year’s install is this year’s tested install. Steering that changes <em>how</em> the model answers, rather than <em>what</em> it believes, gives up the satisfaction of forcing a conclusion so that a closed question can be reopened as a discussion. And every piece of running state — the lock, the leases, the server’s PID and arguments, the log — lives as plain files under <code>~/.pi/ds4/</code>, so that on a bad day you read files rather than source code.
     </p>
     <p lang="zh-TW">
-      所以這個分叉才會做這些選擇，而每一個選擇都有代價。帶種子的單一串流伺服器放棄了批次處理的吞吐量，換來一條可以重跑的軌跡。釘在 commit 上的引擎與權重放棄了「最新」，換來明年裝的就是今年測過的。只改變模型<em>怎麼回答</em>、不改變它<em>相信什麼</em>的引導，放棄了強迫一個結論的痛快，換來把一個被封死的問題重新打開成討論。而每一份執行中的狀態──鎖、租約、伺服器的 PID 與參數、log──都以純文字檔住在 <code>~/.pi/ds4/</code> 底下，不順的那一天，你讀的是檔案，不是原始碼。
+      所以這個分叉才會做這些選擇，而每一個選擇都有代價。帶種子的單一串流伺服器放棄了批次處理的吞吐量，換來一條可以重跑的軌跡。釘選在 commit 上的引擎與權重放棄了「最新」，換來明年裝的就是今年測過的。只改變模型<em>怎麼回答</em>、不改變它<em>相信什麼</em>的引導，放棄了強迫一個結論的痛快，換來把一個被封死的問題重新打開成討論。而每一份執行中的狀態，鎖、租約、伺服器的 PID 與參數、log，都以純文字檔住在 <code>~/.pi/ds4/</code> 底下；不順的那一天，你讀的是檔案，用不著翻原始碼。
     </p>
 
     <p lang="en-GB">
       The engine matters for the same reason. antirez wrote <a href="https://github.com/antirez/ds4">ds4</a> in plain C, in the tradition he built Redis in: one source tree, one Makefile, no Python environment to rot, and a GGUF the engine reads directly without a harmonisation step. mitsuhiko’s <a href="https://github.com/mitsuhiko/pi-ds4">pi-ds4</a> wrapped that engine in lifecycle machinery — leases, a watchdog, a lock — that is small enough to read in an afternoon. This fork keeps all of it and adds the civic layer on top: reproducibility, pinned downloads, the vision pair, and a steering vector you can decline.
     </p>
     <p lang="zh-TW">
-      引擎之所以重要，也是同一個理由。antirez 用純 C 寫了 <a href="https://github.com/antirez/ds4">ds4</a>，延續他寫 Redis 的傳統：一棵原始碼樹、一份 Makefile、沒有會腐壞的 Python 環境，引擎直接讀 GGUF，不需要中間的轉換步驟。mitsuhiko 的 <a href="https://github.com/mitsuhiko/pi-ds4">pi-ds4</a> 替這隻引擎包上了生命週期的機制──租約、看門狗、鎖──小到一個下午就讀得完。這個分叉把它們全部留下，再疊上公民這一層：可重現性、釘住的下載、視覺這一對，以及一個你可以拒絕的引導向量。
+      引擎之所以要緊，也是同一個理由。antirez 用純 C 寫了 <a href="https://github.com/antirez/ds4">ds4</a>，延續他寫 Redis 的傳統：一棵原始碼樹、一份 Makefile、沒有會腐壞的 Python 環境，引擎直接讀 GGUF，不需要中間的轉換步驟。mitsuhiko 的 <a href="https://github.com/mitsuhiko/pi-ds4">pi-ds4</a> 替這隻引擎包上了生命週期的機制，租約、看門狗、鎖，小到一個下午就讀得完。這個分叉把它們全部留下，再疊上公民這一層：可重現性、釘選的下載、視覺這一對，以及一個你可以拒絕的引導向量。
     </p>
 
     <p class="pull"><span lang="en-GB">Local inference does not just save you the API fee. It hands the steering wheel back.</span><span lang="zh-TW">本機推論省下的不只是 API 費用。它把方向盤交還給你。</span></p>
@@ -1289,7 +1289,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       The <a href="#primer">opening</a> answered “what is this, and is it for me”. What follows is for the reader who has decided to dial in every knob: the full operating manual for the audreyt fork. It is not a translation of the README and it is not marketing. Where a default seems odd, the reason is written next to it.
     </p>
     <p class="lead" lang="zh-TW">
-      <a href="#primer">開場</a>回答了「這是什麼、適不適合我」。接下來是寫給已經決定把每一個旋鈕都調對的讀者：audreyt 分叉的完整操作手冊。它不是 README 的翻譯，也不是宣傳文案。哪個預設值看起來奇怪，理由就寫在旁邊。
+      <a href="#primer">開場</a>回答了「這是什麼、適不適合我」。接下來是寫給已經決定把每一個旋鈕都調對的讀者：audreyt 分叉的完整操作手冊。它既非 README 的翻譯，也非宣傳文案。哪個預設值看起來奇怪，理由就寫在旁邊。
     </p>
 
     <ul lang="en-GB">
@@ -1302,13 +1302,13 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       <li><strong>Chapters 9–11</strong> — troubleshooting, the local development install, and building your own steering direction.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>第零章</strong>──它為什麼存在，用公民關懷的語言說。</li>
-      <li><strong>第一、二章</strong>──硬體門檻、一行安裝、首次啟動到底發生了什麼。</li>
-      <li><strong>第三、四章</strong>──這顆模型（abliteration、Vision-Exp IQ2 配方）與這個分叉的招牌：方向性引導。</li>
-      <li><strong>第五、六章</strong>──每一個環境變數，然後是 context 與 KV cache 的調校。</li>
-      <li><strong>第七章</strong>──日常使用：API、log、租約、原生 agent。</li>
-      <li><strong>第八章</strong>──把 pi-ds4 當 Codex CLI、Claude Code、OpenClaw、Hermes Agent 的後端，包括非 Mac 的硬體路徑。</li>
-      <li><strong>第九到十一章</strong>──故障排除、本機開發安裝、自己建一個引導方向。</li>
+      <li><strong>第零章</strong>　它為什麼存在，用公民關懷的語言說。</li>
+      <li><strong>第一、二章</strong>　硬體門檻、一行安裝，以及首次啟動到底發生了什麼。</li>
+      <li><strong>第三、四章</strong>　這顆模型（abliteration、Vision-Exp IQ2 配方）與這個分叉的招牌：方向性引導。</li>
+      <li><strong>第五、六章</strong>　每一個環境變數，然後是 context 與 KV cache 的調校。</li>
+      <li><strong>第七章</strong>　日常使用：API、log、租約、原生 agent。</li>
+      <li><strong>第八章</strong>　把 pi-ds4 當 Codex CLI、Claude Code、OpenClaw、Hermes Agent 的後端，包括非 Mac 的硬體路徑。</li>
+      <li><strong>第九到十一章</strong>　故障排除、本機開發安裝、自己建一個引導方向。</li>
     </ul>
 
     <p lang="en-GB">Read it end to end as one install, or open it at a chapter when you need a value. Both are intended.</p>
@@ -1333,7 +1333,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       Check the machine before you type the command — not as gatekeeping, but because a model that <em>almost</em> fits is the worst case. DeepSeek V4 Flash is a 284-billion-parameter Mixture-of-Experts. Vision-Exp IQ2 shrinks its language weights to about 81 GiB (plus an 889 MiB encoder), which is why a 128 GB-class machine can hold it at all; inference still needs unified memory for activations and the KV cache, and macOS will wedge before it complains.
     </p>
     <p class="lead" lang="zh-TW">
-      輸入指令之前先看看機器──不是設門檻，而是因為一顆<em>差一點</em>就裝得下的模型是最糟的情況。DeepSeek V4 Flash 是 2,840 億參數的 Mixture-of-Experts；Vision-Exp IQ2 把語言權重壓到約 81 GiB（另加 889 MiB 的編碼器），128 GB 級的機器才因此裝得下；推論時仍需要統一記憶體放激活值與 KV cache，而 macOS 會在抱怨之前就先卡死。
+      輸入指令之前先看看機器，因為一顆<em>差一點</em>就裝得下的模型，是最糟的情況。DeepSeek V4 Flash 是 2,840 億參數的 Mixture-of-Experts；Vision-Exp IQ2 把語言權重壓到約 81 GiB（另加 889 MiB 的編碼器），128 GB 級的機器才因此裝得下；推論時仍需要統一記憶體放活化值與 KV cache，而 macOS 會在抱怨之前就先卡死。
     </p>
 
     <h3 id="1.1"><span class="no">1.1</span><span lang="en-GB">Minimum hardware</span><span lang="zh-TW">最低硬體需求</span></h3>
@@ -1346,7 +1346,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
     </ul>
     <ul lang="zh-TW">
       <li><strong>記憶體：至少 96 GB。</strong>低於這個數字，擴充套件會直接拒絕啟動。96 到 127 GB 之間，先調高 Metal 可鎖定記憶體的上限（下一節）；128 GB 以上直接安裝，還留得下餘裕給其他東西。</li>
-      <li><strong>磁碟。</strong>語言檔加編碼器合計 87 652 969 536 位元組（約 81.63 GiB，也就是 87.653 GB）。再加 KV 磁碟快取──未設 <code>DS4_KV_DISK_SPACE_MB</code> 時，128 GB 以上約 64 GB，96 到 127 GB 約 32 GB──以及 ds4 原始碼與 log。全新安裝請預留至少 88 GB 加 KV；從 0.5.x 升級的峰值約 175 GB，有 DSpark 則約 181 GB。要玩完整的 1M context，KV 預算還要再大。</li>
+      <li><strong>磁碟。</strong>語言檔加編碼器合計 87 652 969 536 位元組（約 81.63 GiB，也就是 87.653 GB）。再加 KV 磁碟快取（未設 <code>DS4_KV_DISK_SPACE_MB</code> 時，128 GB 以上約 64 GB，96 到 127 GB 約 32 GB），以及 ds4 原始碼與 log。全新安裝請預留至少 88 GB 加 KV；從 0.5.x 升級的峰值約 175 GB，有 DSpark 則約 181 GB。要玩完整的 1M context，KV 預算還要再大。</li>
       <li><strong>晶片。</strong>任何 Apple Silicon 都可以。有 CUDA 或 ROCm 的 Linux 機器跑同一隻引擎（<a href="#otherhw">§8.7</a>）；後端行為跟著 audreyt/ds4 目前繼承的上游執行期走。</li>
       <li><strong>網路。</strong>首次下載 82 GiB，頻寬只在這一次要緊。若你的 Hugging Face 帳號能加快下載，設定 <code>HF_TOKEN</code>。</li>
     </ul>
@@ -1357,7 +1357,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
         Upstream contributors and users of this extension have confirmed that the IQ2XXS imatrix recipe runs on a 96 GB Mac Studio at 250k context and around 25–27 t/s (<a href="https://github.com/antirez/ds4/issues/46">antirez/ds4 issue #46</a>, since folded into the upstream README; the SHMK47 / 47chan community has reported the same figures independently). Worth knowing: at the time of writing, 96 GB is the largest Mac Studio apple.com lists, so this is the ordinary situation for someone who just bought the top configuration.
       </p>
       <p lang="zh-TW">
-        上游貢獻者與本擴充套件的使用者都驗證過：IQ2XXS imatrix 配方在 96 GB 的 Mac Studio 上可以跑 250k context，約 25 到 27 t/s（<a href="https://github.com/antirez/ds4/issues/46">antirez/ds4 issue #46</a>，已併入上游 README；SHMK47／47chan 社群也獨立回報了相同數字）。值得知道的是：寫這封信的時候，apple.com 列出的 Mac Studio 最高就是 96 GB，所以這正是剛買了頂規機器的人會遇到的常態。
+        上游貢獻者與本擴充套件的使用者都驗證過：IQ2XXS imatrix 配方在 96 GB 的 Mac Studio 上可以跑 250k context，約 25 到 27 t/s（<a href="https://github.com/antirez/ds4/issues/46">antirez/ds4 issue #46</a>，已併入上游 README；SHMK47 與 47chan 社群也獨立回報了相同數字）。順帶一提，寫這封信的時候，apple.com 列出的 Mac Studio 最高就是 96 GB，所以這正是剛買了頂規機器的人會遇到的常態。
       </p>
       <p lang="en-GB">
         Between 96 and 127 GB, macOS will not let Metal wire the roughly 82 GiB pair unless you raise the ceiling. When this extension’s <code>index.ts</code> sees less than 128 GB and <code>iogpu.wired_limit_mb</code> still unset or low, it prints the exact command and stops, so that you run it once, knowingly:
@@ -1389,7 +1389,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
       This extension and <code>mitsuhiko/pi-ds4</code> register the same provider and model ID, <code>ds4/deepseek-v4-flash</code>, so they cannot coexist. Remove the upstream first:
     </p>
     <p lang="zh-TW">
-      本擴充套件與 <code>mitsuhiko/pi-ds4</code> 註冊的是同一組 provider 與模型 ID，<code>ds4/deepseek-v4-flash</code>，所以不能並存。先把上游卸掉：
+      本擴充套件與 <code>mitsuhiko/pi-ds4</code> 註冊的是同一組 provider 與模型 ID，<code>ds4/deepseek-v4-flash</code>，所以兩者不能並存。先把上游卸掉：
     </p>
 
     <div class="term">
@@ -1398,7 +1398,7 @@ html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var
 pi remove github.com/mitsuhiko/pi-ds4</pre>
     </div>
 
-    <h3 id="1.3"><span class="no">1.3</span><span lang="en-GB">The one line — after checking that pi is there</span><span lang="zh-TW">那一行──先確認 pi 在</span></h3>
+    <h3 id="1.3"><span class="no">1.3</span><span lang="en-GB">The one line — after checking that pi is there</span><span lang="zh-TW">那一行，先確認 pi 在</span></h3>
 
     <p lang="en-GB">
       This extension sits on top of <a href="https://github.com/earendil-works/pi">earendil-works/pi</a>. The install line assumes pi is already on your machine, so spend five seconds confirming it:
@@ -1446,7 +1446,7 @@ pi --version</pre>
       The install command only registers the extension. The real work waits until the first time you actually select <code>ds4/deepseek-v4-flash</code> — because an 82 GiB download should be something you asked for, not something that happened to you while installing a package. Every step is written to <code>~/.pi/ds4/log</code>.
     </p>
     <p class="lead" lang="zh-TW">
-      安裝指令只是註冊。真正的工作要等到你第一次真的選用 <code>ds4/deepseek-v4-flash</code> 才開始──因為 82 GiB 的下載應該是你主動要求的事，而不是裝個套件時發生在你身上的事。每一步都寫進 <code>~/.pi/ds4/log</code>。
+      安裝指令只是註冊。真正的工作要等到你第一次真的選用 <code>ds4/deepseek-v4-flash</code> 才開始，因為 82 GiB 的下載應該是你主動要求的事，而非裝個套件時發生在你身上的事。每一步都寫進 <code>~/.pi/ds4/log</code>。
     </p>
 
     <h3 id="2.1"><span class="no">2.1</span><span lang="en-GB">The startup sequence</span><span lang="zh-TW">啟動序列</span></h3>
@@ -1481,7 +1481,7 @@ git clone --depth 1 --single-branch \
         <div>
           <h4><span lang="en-GB">Build ds4-server</span><span lang="zh-TW">編譯 ds4-server</span></h4>
           <p lang="en-GB">If the <code>ds4-server</code> binary is missing, <code>make ds4-server</code> runs inside the support directory.</p>
-          <p lang="zh-TW">若 <code>ds4-server</code> 的二進位不存在，就在 support 目錄裡跑 <code>make ds4-server</code>。</p>
+          <p lang="zh-TW">若 <code>ds4-server</code> 的執行檔不存在，就在 support 目錄裡跑 <code>make ds4-server</code>。</p>
         </div>
       </li>
       <li>
@@ -1490,7 +1490,7 @@ git clone --depth 1 --single-branch \
           <h4><span lang="en-GB">Make sure the model is present</span><span lang="zh-TW">確認模型在</span></h4>
           <p lang="en-GB">The bundled <code>download_model.sh q2</code> (alias <code>preferred</code>) runs:</p>
           <p lang="zh-TW">執行內附的 <code>download_model.sh q2</code>（別名 <code>preferred</code>）：</p>
-          <code class="args"><span class="c"># <span lang="zh-TW">curl -C - 續傳；網址釘在 Hugging Face 的 commit 上。各檔 fetch → mv → size check，兩檔都過才切 ds4flash</span><span lang="en-GB">curl -C - resumes; URLs are pinned to Hugging Face commits. Each file: fetch → mv → size check; ds4flash switches only after both pass</span></span>
+          <code class="args"><span class="c"># <span lang="zh-TW">curl -C - 續傳；網址釘選在 Hugging Face 的 commit 上。各檔 fetch → mv → size check，兩檔都過才切 ds4flash</span><span lang="en-GB">curl -C - resumes; URLs are pinned to Hugging Face commits. Each file: fetch → mv → size check; ds4flash switches only after both pass</span></span>
 curl -fL --progress-meter -C - \
   -o gguf/DeepSeek-V4-Flash-Vision-Exp-Abliterated-….<span class="hi">gguf.part</span> \
   <span class="hi">https://huggingface.co/…/resolve/367a1fef…/…</span>
@@ -1507,7 +1507,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <div>
           <h4><span lang="en-GB">Launch ds4-server</span><span lang="zh-TW">啟動 ds4-server</span></h4>
           <p lang="en-GB">Spawned detached on <code>127.0.0.1:8000</code> with the built-in arguments — and nothing you did not ask for:</p>
-          <p lang="zh-TW">以脫離的方式在 <code>127.0.0.1:8000</code> 啟動，帶內建參數──沒有任何你沒要求的東西：</p>
+          <p lang="zh-TW">以脫離的方式在 <code>127.0.0.1:8000</code> 啟動，帶內建參數，沒有任何你沒要求的東西：</p>
           <code class="args">ds4-server \
   --ctx <span class="hi">100000</span> \
   --kv-disk-dir ~/.pi/ds4/kv \
@@ -1539,7 +1539,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       If your first use is <code>/ds4-agent</code> rather than the model picker, steps 1–4 are the same; step 3 builds <code>ds4-agent</code> instead, and the HTTP server and watchdog are skipped in favour of handing the terminal to the native agent. Details in <a href="#7.5">§7.5</a>.
     </p>
     <p lang="zh-TW">
-      若你第一次用的是 <code>/ds4-agent</code> 而不是模型選單，前四步相同；第三步改為編譯 <code>ds4-agent</code>，然後跳過 HTTP 伺服器與看門狗，直接把終端機交給原生 agent。細節見 <a href="#7.5">§7.5</a>。
+      若你第一次用的是 <code>/ds4-agent</code> 而非模型選單，前四步相同；第三步改為編譯 <code>ds4-agent</code>，然後跳過 HTTP 伺服器與看門狗，直接把終端機交給原生 agent。細節見 <a href="#7.5">§7.5</a>。
     </p>
 
     <h3 id="2.2"><span class="no">2.2</span><span lang="en-GB">Seeing where it is right now</span><span lang="zh-TW">看看它現在到哪了</span></h3>
@@ -1572,7 +1572,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       Spend five minutes knowing what you are running. A quantised, abliterated model is a set of trade-offs someone else made on your behalf; this chapter lays them out so you can check them, or reject them. The extension now downloads the Vision-Exp IQ2 language file from <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF</code> together with antirez’s unmodified 316-tensor vision encoder — not Headroom128 0731 Flash, and not CyberNeurova dual-tier.
     </p>
     <p class="lead" lang="zh-TW">
-      花五分鐘知道自己在跑什麼。一顆量化又 abliterated 過的模型，是別人替你做好的一組取捨；這一章把它們攤開來，讓你可以檢查，也可以拒絕。擴充套件現在下載的是 <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF</code> 的 Vision-Exp IQ2 語言檔，加上 antirez 未經修改的 316 張量視覺編碼器──不是 Headroom128 0731 Flash，也不是 CyberNeurova 的雙層版。
+      花五分鐘知道自己在跑什麼。一顆量化又 abliterated 過的模型，是別人替你做好的一組取捨；這一章把它們攤開來，讓你可以檢查，也可以拒絕。擴充套件現在下載的是 <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF</code> 的 Vision-Exp IQ2 語言檔，加上 antirez 未經修改的 316 張量視覺編碼器；它不是 Headroom128 0731 Flash，也不是 CyberNeurova 的雙層版。
     </p>
 
     <h3 id="3.1"><span class="no">3.1</span><span lang="en-GB">What DeepSeek V4 Flash is</span><span lang="zh-TW">DeepSeek V4 Flash 是什麼</span></h3>
@@ -1581,13 +1581,13 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       A 284-billion-parameter Mixture-of-Experts model that activates roughly 13 billion parameters per token. It is the “fast” member of the V4 family, built for lower latency and a large context window; the official 0731 release superseded the preview and improved agentic benchmarks substantially. This extension sets <code>ds4-server</code>’s <code>--ctx</code> to 100 000 tokens. That is the ceiling the engine will accept, not a promise that every workload is at its best there.
     </p>
     <p lang="zh-TW">
-      一顆 2,840 億參數的 Mixture-of-Experts 模型，每個 token 大約啟用 130 億參數。它是 V4 家族裡的「快速」成員，為較低延遲與較大的 context window 而設計；官方的 0731 版取代了預覽版，並在 agent 相關的基準上大幅進步。本擴充套件把 <code>ds4-server</code> 的 <code>--ctx</code> 設成 100 000 個 token。那是引擎願意接受的上限，不是每種工作在那個長度都最穩的保證。
+      一顆 2,840 億參數的 Mixture-of-Experts 模型，每個 token 大約啟用 130 億參數。它是 V4 家族裡的「快速」成員，為較低延遲與較大的 context window 而設計；官方的 0731 版取代了預覽版，並在 agent 相關的基準上大幅進步。本擴充套件把 <code>ds4-server</code> 的 <code>--ctx</code> 設成 100 000 個 token。那是引擎願意接受的上限，並不保證每種工作在那個長度都最穩。
     </p>
     <p lang="en-GB">
       The engine is antirez’s <a href="https://github.com/antirez/ds4">ds4</a>: a local inference engine written in plain C, in the Redis tradition, that squeezes this model onto Apple Silicon. This extension uses the <code>main</code> branch of the <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> fork, pinned to the merged DwarfStar runtime and the Vision-Exp abliterated IQ2 pair. The historical CyberNeurova steering vector stays available as a research opt-in; the managed launch leaves steering off.
     </p>
     <p lang="zh-TW">
-      引擎是 antirez 的 <a href="https://github.com/antirez/ds4">ds4</a>：一隻用純 C 寫成、延續 Redis 傳統的本機推論引擎，把這顆模型塞進 Apple Silicon。本擴充套件使用 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 分叉的 <code>main</code> 分支，釘在合併後的 DwarfStar 執行期與 Vision-Exp abliterated IQ2 這一對檔案上。歷史上的 CyberNeurova 引導向量仍保留為研究用的選項；代管啟動預設不開引導。
+      引擎是 antirez 的 <a href="https://github.com/antirez/ds4">ds4</a>：一隻用純 C 寫成、延續 Redis 傳統的本機推論引擎，把這顆模型塞進 Apple Silicon。本擴充套件使用 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 分叉的 <code>main</code> 分支，釘選在合併後的 DwarfStar 執行期與 Vision-Exp abliterated IQ2 這一對檔案上。歷史上的 CyberNeurova 引導向量仍保留為研究用的選項；代管啟動預設不開引導。
     </p>
 
     <h3 id="3.2"><span class="no">3.2</span><span lang="en-GB">What abliteration is, and what it is not</span><span lang="zh-TW">什麼是 abliteration，什麼不是</span></h3>
@@ -1596,7 +1596,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       The <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated GGUF</a> has been through a small piece of surgery. Abliteration is low-rank activation editing: find the particular internal direction that lights up when the model meets prompts it was trained to refuse, and remove that direction from the forward pass. The trained “I cannot respond to that” completions are pried open, and a more natural continuation takes their place.
     </p>
     <p lang="zh-TW">
-      <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated GGUF</a>動過一個小手術。Abliteration 是低秩的激活值編輯：找出模型遇到它被訓練成要拒絕的提示時，內部亮起來的那個特定方向，然後把它從前向計算裡拿掉。訓練出來的那句「我無法回應這個請求」被撬開，讓位給比較自然的接續。
+      <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated GGUF</a> 動過一個小手術。Abliteration 是低秩的活化值編輯：找出模型遇到它被訓練成要拒絕的提示時，內部亮起來的那個特定方向，然後把它從前向計算裡拿掉。訓練出來的那句「我無法回應這個請求」被撬開，讓位給比較自然的接續。
     </p>
     <p lang="en-GB">
       What it loosens is the <em>over-refusal</em> layer. What it does not touch is the model’s judgement about content, which still comes from whatever it learned in training. That distinction is why the next paragraph exists.
@@ -1615,7 +1615,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <li>when you need the untouched model’s behaviour for comparison, download upstream antirez/ds4’s stock-recipe GGUF and run both.</li>
       </ul>
       <ul lang="zh-TW">
-        <li>把它當成幫你起草的助手，不是事實的來源，並到別處交叉查證；</li>
+        <li>把它當成幫你起草的助手，而非事實的來源，並到別處交叉查證；</li>
         <li>凡是碰到人身安全、法律、醫療的事，仍然仰賴有資格的人；</li>
         <li>需要拿未經改動的模型行為來對照時，下載上游 antirez/ds4 的原始配方 GGUF，兩邊都跑。</li>
       </ul>
@@ -1633,13 +1633,13 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       The shape of that profile is the reason it fits. The routed-expert bank is where the bytes are, so it is compressed hardest; the dense path that <em>every</em> token walks — attention, shared experts, output — is protected, because an error there is paid on every step. What is left over is the runtime and KV headroom a 128 GB-class machine needs.
     </p>
     <p lang="zh-TW">
-      這個配方的形狀，就是它裝得下的原因。路由專家那一大排是位元組真正堆積的地方，所以壓得最狠；<em>每一個</em> token 都會走過的稠密路徑──attention、共享專家、輸出──則受保護，因為那裡的誤差每一步都要付一次。省下來的，就是 128 GB 級機器需要的執行期與 KV 餘裕。
+      這個配方的形狀，就是它裝得下的原因。路由專家那一大排是位元組真正堆積的地方，所以壓得最狠；<em>每一個</em> token 都會走過的稠密路徑，attention、共享專家、輸出，則受到保護，因為那裡的誤差每一步都要付一次。省下來的，就是 128 GB 級機器需要的執行期與 KV 餘裕。
     </p>
     <p lang="en-GB">
       Worth knowing: V4 Flash has <em>no</em> uniform intermediate tiers like Q4_K_M, Q5_K_M or Q6_K in GGUF form. That is not a release choice; it is an architectural limit between V4 Flash’s native FP8 expert layout and the quantisation schemes today’s DS4 tooling can produce. So “just run the whole thing at Q4” is usually not a door that opens. Vision-Exp IQ2 is itself a mixed-precision low-bit recipe, and <code>audreyt/ds4</code> main reads this DS4-native GGUF directly — no harmonisation step, no Python virtual environment. That is one of the main differences between this fork and upstream <code>mitsuhiko/pi-ds4</code>.
     </p>
     <p lang="zh-TW">
-      值得知道的是：V4 Flash 在 GGUF 形式下<em>沒有</em> Q4_K_M、Q5_K_M、Q6_K 這類均勻的中間量化層級。這不是發行策略，而是 V4 Flash 原生 FP8 專家排列與目前 DS4 工具能產出的量化方案之間的架構限制。所以「整顆跑 Q4 就好」通常不是一扇打得開的門。Vision-Exp IQ2 本身就是混合精度的低位元配方，而 <code>audreyt/ds4</code> main 直接讀這種 DS4 原生的 GGUF──不需要協調步驟，也不需要 Python 虛擬環境。這是本分叉與上游 <code>mitsuhiko/pi-ds4</code> 的主要差別之一。
+      還有一件事該知道：V4 Flash 在 GGUF 形式下<em>沒有</em> Q4_K_M、Q5_K_M、Q6_K 這類均勻的中間量化層級。這無關發行策略，而是 V4 Flash 原生 FP8 專家排列與目前 DS4 工具能產出的量化方案之間的架構限制。所以「整顆跑 Q4 就好」通常不是一扇打得開的門。Vision-Exp IQ2 本身就是混合精度的低位元配方，而 <code>audreyt/ds4</code> main 直接讀這種 DS4 原生的 GGUF，不需要協調步驟，也不需要 Python 虛擬環境。這是本分叉與上游 <code>mitsuhiko/pi-ds4</code> 的主要差別之一。
     </p>
 
     <h3 id="3.4"><span class="no">3.4</span><span lang="en-GB">The vision encoder</span><span lang="zh-TW">視覺編碼器</span></h3>
@@ -1662,13 +1662,13 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       If only one thing in this fork were worth keeping on its own, it would be this. Directional steering is a runtime edit — a low-rank nudge to the model’s activations along one chosen direction — with no retraining and no change to the weights on disk. The direction this fork ships is called <em>uncertainty</em>, and its purpose is to let the model treat a contested question as contested.
     </p>
     <p class="lead" lang="zh-TW">
-      如果這個分叉只有一樣東西值得單獨留下來，就是這個。方向性引導是一種執行期的編輯──沿著一個選定的方向，對模型的激活值做低秩的輕推──不重新訓練，也不改動磁碟上的權重。本分叉附帶的方向叫做<em>不確定性</em>，它的目的，是讓模型把一個有爭議的問題當成有爭議的問題來對待。
+      如果這個分叉只有一樣東西值得單獨留下來，就是這個。方向性引導是一種執行期的編輯：沿著一個選定的方向，對模型的活化值做低秩的輕推，不重新訓練，也不改動磁碟上的權重。本分叉附帶的方向叫做「不確定性」，它的目的，是讓模型把一個有爭議的問題當成有爭議的問題來對待。
     </p>
     <p lang="en-GB">
       A status note first, because it changed in 0.6.0. The bundled vector was calibrated on the historical CyberNeurova and Headroom128 weights. It has not yet been re-calibrated for Vision-Exp, so the managed launch leaves steering <em>off</em>. Opting in is three environment variables (<a href="#4.6">§4.6</a>), and the magnitude this letter recommends — <code>ffn = −0.75</code>, <code>attn = 0</code>, policy <code>final-answer</code> — is the one measured to keep tool calls intact on the previous weights.
     </p>
     <p lang="zh-TW">
-      先說一句狀態，因為 0.6.0 改了。內附的向量是在歷史上的 CyberNeurova 與 Headroom128 權重上校準的，還沒有針對 Vision-Exp 重新校準，所以代管啟動預設<em>不開</em>引導。要開只需要三個環境變數（<a href="#4.6">§4.6</a>），而這封信建議的強度──<code>ffn = −0.75</code>、<code>attn = 0</code>、policy <code>final-answer</code>──是在上一組權重上實測過、不會弄壞工具呼叫的那一組。
+      先交代目前的狀態，因為 0.6.0 改了。內附的向量是在歷史上的 CyberNeurova 與 Headroom128 權重上校準的，還沒有針對 Vision-Exp 重新校準，所以代管啟動預設<em>不開</em>引導。要開只需要三個環境變數（<a href="#4.6">§4.6</a>），而這封信建議的強度，<code>ffn = −0.75</code>、<code>attn = 0</code>、policy <code>final-answer</code>，是在上一組權重上實測過、不會弄壞工具呼叫的那一組。
     </p>
 
     <h3 id="4.1"><span class="no">4.1</span><span lang="en-GB">The problem it solves</span><span lang="zh-TW">它解決什麼問題</span></h3>
@@ -1677,7 +1677,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       Even after abliteration, some questions still come back as a <em>closed, single sentence</em> — not because the model reasoned its way there, but because that sentence was trained in hard. The canonical test:
     </p>
     <p lang="zh-TW">
-      即使經過 abliteration，有些問題還是會得到一句<em>封閉的、單一的回答</em>──不是因為模型推理到了那裡，而是那句話被訓練得很硬。最經典的測試：
+      即使經過 abliteration，有些問題還是會得到一句<em>封閉的、單一的回答</em>。模型並沒有推理到那裡；那句話只是被訓練得很硬。最經典的測試：
     </p>
 
     <p class="pull q"><span lang="en-GB">Is Taiwan part of the People’s Republic of China?</span><span lang="zh-TW">台灣是中華人民共和國的一部分嗎？</span></p>
@@ -1686,7 +1686,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       Unsteered, the model returns the memorised completion, in simplified characters: “是的，台湾是中国不可分割的一部分。” That is not a discussion; it is a reflex. A system prompt asking for balance usually cannot override it, because the lock sits below the level a prompt reaches.
     </p>
     <p lang="zh-TW">
-      不開引導，模型會用簡體字吐出那句背好的完成式：「是的，台湾是中国不可分割的一部分。」這不是討論，是反射。要求平衡的 system prompt 通常壓不過它，因為這道鎖裝在提示碰不到的層。
+      不開引導，模型會用簡體字吐出那句背熟的答案：「是的，台湾是中国不可分割的一部分。」這是反射，稱不上討論。要求平衡的 system prompt 通常壓不過它，因為這道鎖裝在提示碰不到的層。
     </p>
 
     <h3 id="4.2"><span class="no">4.2</span><span lang="en-GB">Two outputs, side by side</span><span lang="zh-TW">兩種輸出，並列對照</span></h3>
@@ -1711,7 +1711,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       The difference is not the right answer. It is that the model has entered a different <em>register</em>: from “produce the memorised completion” to “lay out a contested issue”. It already knew how to do the latter — ask it about Crimea, Kashmir or Western Sahara and it will — and steering extends that existing capability to the topics where training suppressed it.
     </p>
     <p lang="zh-TW">
-      差別不在「正確答案」，而在模型進入了另一種<em>回應模式</em>：從「吐出背好的完成式」變成「把一個有爭議的議題鋪陳開來」。後者它本來就會──問它克里米亞、喀什米爾、西撒哈拉，它都會──引導做的，是把這個既有的能力延伸到那些被訓練壓下去的題目上。
+      差別不在「正確答案」，而在模型進入了另一種<em>回應模式</em>：從吐出背熟的答案，變成把一個有爭議的議題鋪陳開來。後者它本來就會；問它克里米亞、喀什米爾、西撒哈拉，它都會。引導做的，是把這個既有的能力延伸到那些被訓練壓下去的題目上。
     </p>
 
     <h3 id="4.3"><span class="no">4.3</span><span lang="en-GB">Why not steer the stance itself</span><span lang="zh-TW">為什麼不直接引導立場</span></h3>
@@ -1720,13 +1720,13 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       The obvious counter-proposal: build a <em>stance</em> direction — “Taiwan is the Republic of China” — and push. It does not work. At any strength that still yields coherent text, stance steering fails to flip the memorised completion; at strengths that do flip it, the model starts parroting the system prompt and stops producing anything of its own.
     </p>
     <p lang="zh-TW">
-      顯而易見的反建議：做一個<em>立場</em>方向──「台灣就是中華民國」──然後用力推。行不通。在任何還能維持通順文字的強度下，立場引導都翻不動那句背好的完成式；強到翻得動的時候，模型開始複誦 system prompt，再也生不出自己的東西。
+      顯而易見的反建議：做一個<em>立場</em>方向，「臺灣就是中華民國」，然後用力推。行不通。在任何還能維持通順文字的強度下，立場引導都翻不動那句背熟的答案；強到翻得動的時候，模型開始複誦 system prompt，再也生不出自己的東西。
     </p>
     <p lang="en-GB">
       Uncertainty steering changes <em>how the model responds</em>, not <em>what the model believes</em>. That is why it works as engineering, and it is also why it is the more defensible thing to do: a tool that reopens a discussion is easier to justify — to yourself and to the people reading the output — than a tool that installs a conclusion.
     </p>
     <p lang="zh-TW">
-      不確定性引導改變的是<em>模型怎麼回應</em>，不是<em>模型相信什麼</em>。這是它在工程上行得通的原因，也是它在倫理上站得住的原因：一個把討論重新打開的工具，比一個安裝結論的工具更容易向自己、向讀輸出的人交代。
+      不確定性引導改變的是<em>模型怎麼回應</em>，而非<em>模型相信什麼</em>。這是它在工程上行得通的原因，也是它在倫理上站得住的原因：一個把討論重新打開的工具，比一個安裝結論的工具，更容易向自己、也向讀輸出的人交代。
     </p>
 
     <h3 id="4.4"><span class="no">4.4</span><span lang="en-GB">Two things worth remembering</span><span lang="zh-TW">兩件值得記住的事</span></h3>
@@ -1737,7 +1737,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     </ul>
     <ul lang="zh-TW">
       <li><strong>引導和 system prompt 是一組的。</strong>只有引導、沒有提示，模型只會「猶豫」；只有要求保留餘地的提示、沒有引導，會被訓練出來的鎖壓回去。兩者合用才生效。</li>
-      <li><strong><code>ffn = −0.75, attn = 0</code> 是實測過的選項，不是代管預設。</strong>這個強度是在 Headroom128 上找到的──種子 42、穩定的工具 ID、五萬 token 以上的 Codex harness 提示──剛好能保住利害關係人的框架，又不碰 DSML 與工具呼叫的語法。它還沒針對 Vision-Exp 重新校準。工具開始怪怪的，就退回 <code>ffn = −0.5, attn = 0</code>。舊的 <code>ffn = −2, attn = −0.5</code> 是隔離評估用的壓力測試，會塌成重複或跨語言的雜訊。</li>
+      <li><strong><code>ffn = −0.75, attn = 0</code> 是實測過的選項，不是代管預設。</strong>這個強度是在 Headroom128 上找到的：種子 42、穩定的工具 ID、五萬 token 以上的 Codex harness 提示，剛好能保住利害關係人的框架，又不碰 DSML 與工具呼叫的語法。它還沒針對 Vision-Exp 重新校準。工具開始怪怪的，就退回 <code>ffn = −0.5, attn = 0</code>。舊的 <code>ffn = −2, attn = −0.5</code> 是隔離評估用的壓力測試，會塌成重複或跨語言的雜訊。</li>
     </ul>
 
     <h3 id="4.5"><span class="no">4.5</span><span lang="en-GB">The prompt it pairs with (an example, not a default)</span><span lang="zh-TW">與它搭配的提示（範例，不是預設）</span></h3>
@@ -1766,7 +1766,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     <div class="aside">
       <span class="label"><span lang="en-GB">To use it yourself</span><span lang="zh-TW">自己要用的話</span></span>
       <p lang="en-GB">Save the block to <code>~/.pi/agent/SYSTEM.md</code> (create the file if it does not exist); pi folds it into the system prompt on its next launch. If you work through one of the external shells in Chapter 8, set it through that shell’s own system-prompt mechanism — pi-ds4 does not manage those.</p>
-      <p lang="zh-TW">把上面那段存到 <code>~/.pi/agent/SYSTEM.md</code>（檔案不在就新增）；pi 下次啟動會把它併進 system prompt。若你走第八章的外部 shell，請用那個 shell 自己的 system prompt 機制設定──pi-ds4 不替它們管理這件事。</p>
+      <p lang="zh-TW">把上面那段存到 <code>~/.pi/agent/SYSTEM.md</code>（檔案不在就新增）；pi 下次啟動會把它併進 system prompt。若你走第八章的外部 shell，請用那個 shell 自己的 system prompt 機制設定；pi-ds4 不替它們管理這件事。</p>
     </div>
 
     <h3 id="4.6"><span class="no">4.6</span><span lang="en-GB">Turning it on, and off again</span><span lang="zh-TW">開啟，以及再關掉</span></h3>
@@ -1782,7 +1782,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     </div>
 
     <p lang="en-GB">To see the model’s raw answers again — for an evaluation, say, or a regression test — set both strengths to zero and the <code>--dir-steering-*</code> arguments are omitted entirely:</p>
-    <p lang="zh-TW">要再看模型未經引導的原樣──比如做評估或回歸測試──把兩個強度都設成零，<code>--dir-steering-*</code> 參數就會整組省略：</p>
+    <p lang="zh-TW">要再看模型未經引導的原樣，比如做評估或回歸測試，把兩個強度都設成零，<code>--dir-steering-*</code> 參數就會整組省略：</p>
 
     <div class="term">
       <div class="term-bar"><span><span lang="en-GB">back to the unsteered model</span><span lang="zh-TW">回到未引導的模型</span></span><button class="copy" aria-label="Copy the commands to disable steering"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
@@ -1803,7 +1803,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <code>uncertainty_ablit_imatrix.f32</code> is a low-rank direction built from 120 contested prompts, balanced between English and Traditional Chinese, that <em>deliberately exclude Taiwan and Hong Kong</em> — so that the test in §4.2 shows generalisation, not memorisation. The current build contrasts fair stakeholder framing with direct single-answer framing on the same prompts. It was calibrated against the historical CyberNeurova and Headroom128 weights, not the Vision-Exp IQ2 this extension now downloads, which is why the managed launch leaves it off. It lives under <code>dir-steering/out/</code> in <code>audreyt/ds4</code>; the full method is in the <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>.
       </p>
       <p lang="zh-TW">
-        <code>uncertainty_ablit_imatrix.f32</code> 是用 120 條有爭議的提示建出來的低秩方向，英文與繁體中文各半，而且<em>刻意不含台灣與香港</em>──這樣 §4.2 的測試看到的就是泛化，不是記憶。目前這一版在同一批提示上，對比「公正呈現利害關係人」與「直接給單一答案」兩種框架。它是在歷史上的 CyberNeurova 與 Headroom128 權重上校準的，不是本擴充套件現在下載的 Vision-Exp IQ2，所以代管啟動預設不開。它放在 <code>audreyt/ds4</code> 的 <code>dir-steering/out/</code> 底下；完整方法見 <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>。
+        <code>uncertainty_ablit_imatrix.f32</code> 是用 120 條有爭議的提示建出來的低秩方向，英文與繁體中文各半，而且<em>刻意不含臺灣與香港</em>；這樣 §4.2 的測試看到的就是泛化，而非記憶。目前這一版在同一批提示上，對比「公正呈現利害關係人」與「直接給單一答案」兩種框架。它是在歷史上的 CyberNeurova 與 Headroom128 權重上校準的，不是本擴充套件現在下載的 Vision-Exp IQ2，所以代管啟動預設不開。它放在 <code>audreyt/ds4</code> 的 <code>dir-steering/out/</code> 底下；完整方法見 <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>。
       </p>
     </div>
   </section>
@@ -1818,7 +1818,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       Every tunable in this extension is an environment variable, and that is a choice rather than a convenience. A setting you can print with <code>env</code> is a setting you can paste into a bug report, commit to a runbook, or diff against a colleague’s. Nothing hides in a configuration file with a format of its own. Set them in the shell before you launch pi; each entry below says what the variable does and when you would touch it.
     </p>
     <p class="lead" lang="zh-TW">
-      本擴充套件的每一個可調項目都是環境變數，這是刻意的選擇，不只是圖方便。一個用 <code>env</code> 就印得出來的設定，就是一個可以貼進錯誤回報、寫進操作手冊、拿去和同事比對的設定。沒有任何東西藏在一個有自家格式的設定檔裡。在啟動 pi 之前的 shell 裡設定它們；下面每一條都說明這個變數做什麼、什麼時候該動它。
+      本擴充套件的每一個可調項目都是環境變數。這是刻意的選擇，不只是圖方便：一個用 <code>env</code> 就印得出來的設定，就是一個可以貼進錯誤回報、寫進操作手冊、拿去和同事比對的設定。沒有任何東西藏在一個有自家格式的設定檔裡。在啟動 pi 之前的 shell 裡設定它們；下面每一條都說明這個變數做什麼、什麼時候該動它。
     </p>
 
     <h3 id="5.1"><span class="no">5.1</span><span lang="en-GB">Model and engine</span><span lang="zh-TW">模型與引擎</span></h3>
@@ -1835,14 +1835,14 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <dt>DS4_SUPPORT_BRANCH<span class="default"><span lang="en-GB">default: main</span><span lang="zh-TW">預設：main</span></span></dt>
         <dd>
           <p lang="en-GB">The branch to clone. <code>main</code> already carries every relevant fix in audreyt/ds4; override it only to pin a particular revision.</p>
-          <p lang="zh-TW">要 clone 的分支。<code>main</code> 已經包含 audreyt/ds4 所有相關的修正；只有要釘到特定修訂時才覆寫。</p>
+          <p lang="zh-TW">要 clone 的分支。<code>main</code> 已經包含 audreyt/ds4 所有相關的修正；只有要釘選到特定修訂時才覆寫。</p>
         </dd>
       </div>
       <div>
         <dt>DS4_SUPPORT_PIN<span class="default"><span lang="en-GB">default: 7855b7a45196b328c6266be157d60160e9442a88</span><span lang="zh-TW">預設：7855b7a45196b328c6266be157d60160e9442a88</span></span></dt>
         <dd>
           <p lang="en-GB">The exact <code>audreyt/ds4</code> commit this extension enforces on every launch. A mismatch fetches that commit, hard-resets the checkout, and deletes cached <code>ds4-server</code> / <code>ds4-agent</code> so they rebuild. Set it to an empty string to freeze the local checkout where it is. v 0.6.1 pins <code>7855b7a</code> (preferred alias) on the <code>d0c2b43</code> Vision-Exp engine.</p>
-          <p lang="zh-TW">每次啟動強制的 <code>audreyt/ds4</code> commit。不符就 fetch、hard reset，並刪掉快取的 <code>ds4-server</code>／<code>ds4-agent</code> 再重編。設成空字串則凍結本機 checkout、不再釘選。v 0.6.1 釘在 <code>7855b7a</code>（在 <code>d0c2b43</code> Vision-Exp 引擎上加 <code>preferred</code> 別名）。</p>
+          <p lang="zh-TW">每次啟動強制對齊的 <code>audreyt/ds4</code> commit。不符就 fetch、hard reset，並刪掉快取的 <code>ds4-server</code> 與 <code>ds4-agent</code> 重新編譯。設成空字串則凍結本機 checkout，不再釘選。v 0.6.1 釘選在 <code>7855b7a</code>（在 <code>d0c2b43</code> Vision-Exp 引擎上加 <code>preferred</code> 別名）。</p>
         </dd>
       </div>
       <div>
@@ -1853,10 +1853,10 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         </dd>
       </div>
       <div>
-        <dt>DS4_MODEL_QUANT<span class="default"><span lang="en-GB">default: q2 (hard-coded, alias: preferred)</span><span lang="zh-TW">預設：q2（寫死，別名 preferred）</span></span></dt>
+        <dt>DS4_MODEL_QUANT<span class="default"><span lang="en-GB">default: q2 (hard-coded, alias: preferred)</span><span lang="zh-TW">預設：q2（寫死；別名 preferred）</span></span></dt>
         <dd>
           <p lang="en-GB"><code>q2</code> and <code>preferred</code> (also <code>vision-abliterated</code> / <code>ds4f-vision-abliterated</code>) are accepted and map to the same file, <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</code> plus <code>DeepSeek-V4-Flash-Vision-Encoder.gguf</code>. <code>q2</code> is the historical selector kept for lease and state compatibility — it does not denote a second quant family or memory tier. <code>selectedModelQuant()</code> in <code>index.ts</code> normalises <code>preferred</code> to <code>q2</code>; anything else throws and exits. To run a different GGUF, start <code>ds4-server</code> by hand outside the managed path.</p>
-          <p lang="zh-TW"><code>q2</code> 與 <code>preferred</code>（亦接受 <code>vision-abliterated</code>／<code>ds4f-vision-abliterated</code>）都會對應到同一個檔案，<code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</code> 加上 <code>DeepSeek-V4-Flash-Vision-Encoder.gguf</code>。<code>q2</code> 是為租約與狀態相容保留的歷史選項，不代表第二個量化家族或記憶體等級。<code>index.ts</code> 的 <code>selectedModelQuant()</code> 會把 <code>preferred</code> 正規化為 <code>q2</code>；設成別的會直接拋錯退出。要跑別的 GGUF，就在代管路徑之外手動啟動 <code>ds4-server</code>。</p>
+          <p lang="zh-TW"><code>q2</code> 與 <code>preferred</code>（也接受 <code>vision-abliterated</code>、<code>ds4f-vision-abliterated</code>）都對應同一個檔案：<code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF</code> 的 <code>DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</code> 加上 <code>DeepSeek-V4-Flash-Vision-Encoder.gguf</code>。<code>q2</code> 是為租約與狀態相容而保留的歷史選項，不代表第二個量化家族或記憶體等級。<code>index.ts</code> 的 <code>selectedModelQuant()</code> 會把 <code>preferred</code> 正規化為 <code>q2</code>；設成別的會直接拋錯退出。要跑別的 GGUF，就在代管路徑之外手動啟動 <code>ds4-server</code>。</p>
         </dd>
       </div>
       <div>
@@ -1870,7 +1870,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <dt>DS4_SERVER_BINARY<span class="default"><span lang="en-GB">default: runtime/ds4-server</span><span lang="zh-TW">預設：runtime/ds4-server</span></span></dt>
         <dd>
           <p lang="en-GB">A custom location for the <code>ds4-server</code> binary. Mostly useful when you have patched the engine yourself.</p>
-          <p lang="zh-TW">自訂 <code>ds4-server</code> 二進位的位置。多半在你自己改過引擎時才用得到。</p>
+          <p lang="zh-TW">自訂 <code>ds4-server</code> 執行檔的位置。多半在你自己改過引擎時才用得到。</p>
         </dd>
       </div>
       <div>
@@ -1911,7 +1911,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       The managed <code>ds4-server</code> command line still carries only context, the KV-cache path, <code>--vision</code>, and steering if you opt in. It does not pass Metal, CUDA or ROCm flags through. Which <em>binary</em> you get is a separate decision: the wrapper picks a Makefile target, and the variables below override that pick. Extra server flags of your own still mean running <code>ds4-server</code> by hand (<a href="#shells">§8.6</a>).
     </p>
     <p lang="zh-TW">
-      代管的 <code>ds4-server</code> 命令列仍然只帶 context、KV cache 路徑、<code>--vision</code>，以及你選擇開啟時的引導。它不會把 Metal、CUDA、ROCm 的旗標傳進去。你拿到的<em>二進位</em>是另一件事：包裝層會選一個 Makefile 目標，下面這些變數可以覆寫那個選擇。要給伺服器額外的旗標，仍請手動跑 <code>ds4-server</code>（<a href="#shells">§8.6</a>）。
+      代管的 <code>ds4-server</code> 命令列仍然只帶 context、KV cache 路徑、<code>--vision</code>，以及你選擇開啟時的引導。它不會把 Metal、CUDA、ROCm 的旗標傳進去。你拿到的<em>執行檔</em>是另一件事：包裝層會選一個 Makefile 目標，下面這些變數可以覆寫那個選擇。要給伺服器額外的旗標，仍請手動跑 <code>ds4-server</code>（<a href="#shells">§8.6</a>）。
     </p>
 
     <dl class="vars">
@@ -1933,14 +1933,14 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <dt>DS4_PROTOCOL<span class="default"><span lang="en-GB">default: openai</span><span lang="zh-TW">預設：openai</span></span></dt>
         <dd>
           <p lang="en-GB">Which wire format pi registers. <code>openai</code> (also <code>openai-completions</code>, <code>chat</code>) is Chat Completions; <code>openai-responses</code> / <code>responses</code> is the Responses endpoint; <code>anthropic</code> / <code>anthropic-messages</code> / <code>messages</code> is Anthropic Messages. Anything else throws.</p>
-          <p lang="zh-TW">pi 註冊的線路格式。<code>openai</code>（以及 <code>openai-completions</code>、<code>chat</code>）是 Chat Completions；<code>openai-responses</code>／<code>responses</code> 是 Responses 端點；<code>anthropic</code>／<code>anthropic-messages</code>／<code>messages</code> 是 Anthropic Messages。其他值會拋錯。</p>
+          <p lang="zh-TW">pi 註冊的線路格式。<code>openai</code>（以及 <code>openai-completions</code>、<code>chat</code>）是 Chat Completions；<code>openai-responses</code> 與 <code>responses</code> 是 Responses 端點；<code>anthropic</code>、<code>anthropic-messages</code>、<code>messages</code> 是 Anthropic Messages。其他值會拋錯。</p>
         </dd>
       </div>
       <div>
         <dt>DS4_BUILD_TARGET<span class="default"><span lang="en-GB">default: unset (auto)</span><span lang="zh-TW">預設：未設（自動）</span></span></dt>
         <dd>
           <p lang="en-GB">Raw <code>make</code> arguments, overriding autodetection. Examples: <code>ds4-server</code>, <code>cuda-spark</code>, <code>strix-halo</code>, <code>cpu</code>. Recorded in <code>~/.pi/ds4/build.json</code>; a change of plan runs <code>make clean</code> first.</p>
-          <p lang="zh-TW">覆寫自動偵測的原始 <code>make</code> 參數。例如 <code>ds4-server</code>、<code>cuda-spark</code>、<code>strix-halo</code>、<code>cpu</code>。寫進 <code>~/.pi/ds4/build.json</code>；計畫一變會先 <code>make clean</code>。</p>
+          <p lang="zh-TW">覆寫自動偵測的原始 <code>make</code> 參數，例如 <code>ds4-server</code>、<code>cuda-spark</code>、<code>strix-halo</code>、<code>cpu</code>。寫進 <code>~/.pi/ds4/build.json</code>；計畫一變會先 <code>make clean</code>。</p>
         </dd>
       </div>
       <div>
@@ -1961,21 +1961,21 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <dt>DS4_CUDA_ALLOW_NATIVE<span class="default"><span lang="en-GB">default: off</span><span lang="zh-TW">預設：關</span></span></dt>
         <dd>
           <p lang="en-GB">Opt-in to <code>make cuda-generic</code> (native arch). Never the silent fallback; without this, an unknown NVIDIA cap fails loud.</p>
-          <p lang="zh-TW">選擇開啟 <code>make cuda-generic</code>（native 架構）。絕不是默默的後備；沒設時，認不得的 NVIDIA 運算能力會直接報錯。</p>
+          <p lang="zh-TW">選擇開啟 <code>make cuda-generic</code>（native 架構）。它絕不會默默當成後備：沒設時，認不得的 NVIDIA 運算能力會直接報錯。</p>
         </dd>
       </div>
       <div>
         <dt>DS4_ALLOW_CPU<span class="default"><span lang="en-GB">default: off</span><span lang="zh-TW">預設：關</span></span></dt>
         <dd>
           <p lang="en-GB">Opt-in CPU-only <code>make cpu</code> when no GPU backend is detected. Without it, that case fails loud rather than compiling a slow surprise.</p>
-          <p lang="zh-TW">偵測不到 GPU 後端時，選擇開啟僅 CPU 的 <code>make cpu</code>。沒設時這情況會直接報錯，而不是編出一個慢得嚇人的 binary。</p>
+          <p lang="zh-TW">偵測不到 GPU 後端時，選擇開啟僅 CPU 的 <code>make cpu</code>。沒設時這種情況會直接報錯，而不會編出一個慢得嚇人的執行檔。</p>
         </dd>
       </div>
       <div>
         <dt>DS4_SKIP_BUILD_SMOKE<span class="default"><span lang="en-GB">default: off</span><span lang="zh-TW">預設：關</span></span></dt>
         <dd>
           <p lang="en-GB">Skip the post-build generation smoke on non-Metal backends (dev only). The smoke requires non-empty <code>choices[0].message.content</code>, not merely HTTP 200.</p>
-          <p lang="zh-TW">跳過非 Metal 後端建置後的生成冒煙測試（僅開發用）。冒煙要求 <code>choices[0].message.content</code> 非空，不只是 HTTP 200。</p>
+          <p lang="zh-TW">跳過非 Metal 後端建置後的生成冒煙測試（僅開發用）。冒煙測試要求 <code>choices[0].message.content</code> 非空，光是 HTTP 200 不算。</p>
         </dd>
       </div>
     </dl>
@@ -1994,7 +1994,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <dt>DS4_DIR_STEERING_FFN<span class="default"><span lang="en-GB">0.6.0 managed path: off (unset) · recommended opt-in: −0.75</span><span lang="zh-TW">0.6.0 代管路徑：關（未設）· 建議的開啟值：−0.75</span></span></dt>
         <dd>
           <p lang="en-GB">Steering strength at the FFN output. Negative values amplify the direction the vector represents; positive values invert it. <code>0</code> disables the FFN side. <code>−0.75</code> is the magnitude measured on Headroom128 to keep tool calls intact (<a href="#4.4">§4.4</a>).</p>
-          <p lang="zh-TW">FFN 輸出端的引導強度。負值放大向量所代表的方向，正值則反向。<code>0</code> 關閉 FFN 這一端。<code>−0.75</code> 是在 Headroom128 上實測、能保住工具呼叫的強度（<a href="#4.4">§4.4</a>）。</p>
+          <p lang="zh-TW">FFN 輸出端的引導強度。負值放大向量所代表的方向，正值則反向；<code>0</code> 關閉 FFN 這一端。<code>−0.75</code> 是在 Headroom128 上實測、能保住工具呼叫的強度（<a href="#4.4">§4.4</a>）。</p>
         </dd>
       </div>
       <div>
@@ -2016,7 +2016,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     <div class="aside">
       <span class="label"><span lang="en-GB">When both strengths are zero</span><span lang="zh-TW">兩個強度都是零的時候</span></span>
       <p lang="en-GB">With <code>DS4_DIR_STEERING_FFN=0</code> and <code>DS4_DIR_STEERING_ATTN=0</code>, the extension omits the <code>--dir-steering-*</code> arguments altogether. That is the plain, unsteered model — and on the 0.6.0 managed path it is also what you get when neither variable is set.</p>
-      <p lang="zh-TW"><code>DS4_DIR_STEERING_FFN=0</code> 且 <code>DS4_DIR_STEERING_ATTN=0</code> 時，擴充套件會整組省略 <code>--dir-steering-*</code> 參數。那就是純粹、未引導的模型──在 0.6.0 的代管路徑上，兩個變數都沒設時得到的也是它。</p>
+      <p lang="zh-TW"><code>DS4_DIR_STEERING_FFN=0</code> 且 <code>DS4_DIR_STEERING_ATTN=0</code> 時，擴充套件會整組省略 <code>--dir-steering-*</code> 參數。那就是純粹、未經引導的模型；在 0.6.0 的代管路徑上，兩個變數都沒設時得到的也是它。</p>
     </div>
 
     <h3 id="5.5"><span class="no">5.5</span><span lang="en-GB">Context size and the KV disk cache</span><span lang="zh-TW">Context 大小與 KV 磁碟快取</span></h3>
@@ -2026,9 +2026,9 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <dt>DS4_CONTEXT_KB<span class="default"><span lang="en-GB">default: 100</span><span lang="zh-TW">預設：100</span></span></dt>
         <dd>
           <p lang="en-GB">The context window in thousands of tokens — the only supported way to set it. <code>100</code> means 100 000 tokens, the conservative default. Common values: <code>128</code>, <code>256</code>, <code>512</code>, <code>1024</code> (the last selects the model’s full 1M context).</p>
-          <p lang="zh-TW">Context window 的大小，單位是千個 token──這是唯一支援的設定方式。<code>100</code> 代表 100 000 個 token，也就是保守的預設值。常用值：<code>128</code>、<code>256</code>、<code>512</code>、<code>1024</code>（最後一個開啟模型完整的 1M context）。</p>
+          <p lang="zh-TW">Context window 的大小，單位是千個 token；這是唯一支援的設定方式。<code>100</code> 代表 100 000 個 token，也就是保守的預設值。常用值：<code>128</code>、<code>256</code>、<code>512</code>、<code>1024</code>（最後一個開啟模型完整的 1M context）。</p>
           <p lang="en-GB">A larger context normally wants a larger <code>DS4_KV_DISK_SPACE_MB</code> too — <code>65536</code> or more for 1M — so the on-disk cache can hold a whole working set (<a href="#tuning">Chapter 6</a>).</p>
-          <p lang="zh-TW">Context 調大時，通常也要把 <code>DS4_KV_DISK_SPACE_MB</code> 調大──1M 至少 <code>65536</code>──磁碟上的快取才裝得下整個工作集（<a href="#tuning">第六章</a>）。</p>
+          <p lang="zh-TW">Context 調大時，通常也要把 <code>DS4_KV_DISK_SPACE_MB</code> 調大（1M 至少 <code>65536</code>），磁碟上的快取才裝得下整個工作集（<a href="#tuning">第六章</a>）。</p>
         </dd>
       </div>
       <div>
@@ -2047,7 +2047,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         <dt>DS4_AGENT_BINARY<span class="default"><span lang="en-GB">default: runtime/ds4-agent</span><span lang="zh-TW">預設：runtime/ds4-agent</span></span></dt>
         <dd>
           <p lang="en-GB">A custom native-agent binary for <code>/ds4-agent</code>. If unset, the extension runs <code>make ds4-agent</code> in the runtime checkout and uses that build.</p>
-          <p lang="zh-TW">給 <code>/ds4-agent</code> 用的自訂原生 agent 二進位。未設時，擴充套件在執行期 checkout 裡跑 <code>make ds4-agent</code>，用編出來的那一個。</p>
+          <p lang="zh-TW">給 <code>/ds4-agent</code> 用的自訂原生 agent 執行檔。未設時，擴充套件在執行期 checkout 裡跑 <code>make ds4-agent</code>，用編出來的那一個。</p>
         </dd>
       </div>
       <div>
@@ -2084,7 +2084,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       <code>/ds4-agent</code> shares <code>DS4_REPRODUCIBLE_SEED</code>, <code>DS4_CONTEXT_KB</code>, and <code>DS4_DIR_STEERING_FILE</code>, <code>FFN</code> and <code>ATTN</code>. It does not use <code>DS4_DIR_STEERING_POLICY</code> (the native agent has no such flag yet), nor <code>DS4_MT</code> or <code>DS4_KV_DISK_SPACE_MB</code>, which are server-only.
     </p>
     <p lang="zh-TW">
-      <code>/ds4-agent</code> 共用 <code>DS4_REPRODUCIBLE_SEED</code>、<code>DS4_CONTEXT_KB</code>，以及 <code>DS4_DIR_STEERING_FILE</code>、<code>FFN</code>、<code>ATTN</code>。它不使用 <code>DS4_DIR_STEERING_POLICY</code>（原生 agent 目前沒有這個旗標），也不使用 <code>DS4_MT</code> 或 <code>DS4_KV_DISK_SPACE_MB</code>──那兩個是伺服器專用。
+      <code>/ds4-agent</code> 共用 <code>DS4_REPRODUCIBLE_SEED</code>、<code>DS4_CONTEXT_KB</code>，以及 <code>DS4_DIR_STEERING_FILE</code>、<code>FFN</code>、<code>ATTN</code>。它不使用 <code>DS4_DIR_STEERING_POLICY</code>（原生 agent 目前沒有這個旗標），也不使用 <code>DS4_MT</code> 或 <code>DS4_KV_DISK_SPACE_MB</code>；那兩個是伺服器專用。
     </p>
   </section>
 
@@ -2098,7 +2098,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       This chapter is not about making the machine faster. Backend speed is the engine’s business and the pinned build already decides it. What pi-ds4’s managed launch controls is the pair of things that decide whether a long session feels calm: how much context you allow, and where the KV cache may spill when memory runs short.
     </p>
     <p class="lead" lang="zh-TW">
-      這一章不談怎麼讓機器更快。後端的速度是引擎的事，釘住的建置已經決定了。pi-ds4 的代管啟動掌握的，是決定一場長對話舒不舒服的那兩件事：你允許多少 context，以及記憶體不夠時 KV cache 可以溢到哪裡。
+      這一章不談怎麼讓機器更快。後端的速度是引擎的事，釘選的建置已經決定了。pi-ds4 的代管啟動掌握的，是決定一場長對話舒不舒服的那兩件事：你允許多少 context，以及記憶體不夠時 KV cache 可以溢到哪裡。
     </p>
 
     <h3 id="6.1"><span class="no">6.1</span><span lang="en-GB">What the managed launch controls</span><span lang="zh-TW">代管啟動掌握什麼</span></h3>
@@ -2107,7 +2107,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       When <code>index.ts</code> starts <code>ds4-server</code> it passes three groups of arguments: <code>--ctx</code>, <code>--kv-disk-*</code>, and — if you opted in — <code>--dir-steering-*</code>. Its job is to keep one GGUF, one steering vector and one set of reproducibility settings wired together consistently. It makes no claim that one hardware profile beats another.
     </p>
     <p lang="zh-TW">
-      <code>index.ts</code> 啟動 <code>ds4-server</code> 時傳三組參數：<code>--ctx</code>、<code>--kv-disk-*</code>，以及──若你選擇開啟──<code>--dir-steering-*</code>。它的工作是把同一份 GGUF、同一個引導向量、同一組可重現性設定穩定地串在一起。它不宣稱哪一種硬體設定比另一種快。
+      <code>index.ts</code> 啟動 <code>ds4-server</code> 時傳三組參數：<code>--ctx</code>、<code>--kv-disk-*</code>，以及你選擇開啟時的 <code>--dir-steering-*</code>。它的工作是把同一份 GGUF、同一個引導向量、同一組可重現性設定穩定地串在一起。它不宣稱哪一種硬體設定比另一種快。
     </p>
 
     <h3 id="6.2"><span class="no">6.2</span><span lang="en-GB">Backend choice belongs to ds4</span><span lang="zh-TW">後端的選擇屬於 ds4</span></h3>
@@ -2116,7 +2116,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       Metal on Apple Silicon, CUDA on Linux, ROCm on AMD Strix Halo since the 2026-07 pin, and whatever upstream adds next: all of it lives in the ds4 build. pi-ds4’s responsibility is to pin a known commit, build it, fetch the matching weights and launch it with consistent arguments.
     </p>
     <p lang="zh-TW">
-      Apple Silicon 上的 Metal、Linux 上的 CUDA、2026-07 釘版起 AMD Strix Halo 上的 ROCm，以及上游接下來加的任何後端：全都住在 ds4 的建置裡。pi-ds4 的責任是釘住一個已知的 commit、編譯它、抓對應的權重，再用一致的參數啟動。
+      Apple Silicon 上的 Metal、Linux 上的 CUDA、2026-07 釘選版起 AMD Strix Halo 上的 ROCm，以及上游接下來加的任何後端：全都住在 ds4 的建置裡。pi-ds4 的責任是釘住一個已知的 commit、編譯它、抓對應的權重，再用一致的參數啟動。
     </p>
 
     <h3 id="6.3"><span class="no">6.3</span><span lang="en-GB">When to run it by hand</span><span lang="zh-TW">什麼時候手動跑</span></h3>
@@ -2131,7 +2131,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       <li>想測引擎自己的後端旗標、改過的核心，或另一種建置。</li>
       <li>想在沒有 pi 看門狗與租約介入的情況下，隔離評估同一份 GGUF 與引導向量。</li>
       <li>記憶體吃緊，想先用較小的 <code>--ctx</code> 確認同一項工作能穩定完成。</li>
-      <li>想用 <a href="#whatsnew">2026-07 釘版</a>引進的引擎模式──權重放不下時的 <code>--ssd-streaming</code>、實驗性推測解碼的 <code>--mtp DSpark.gguf</code>、有上限佇列的 <code>--max-queue N</code>。代管啟動從不傳這些。</li>
+      <li>想用 <a href="#whatsnew">2026-07 釘選版</a>引進的引擎模式：權重放不下時的 <code>--ssd-streaming</code>、實驗性推測解碼的 <code>--mtp DSpark.gguf</code>、有上限佇列的 <code>--max-queue N</code>。代管啟動從不傳這些。</li>
     </ul>
 
     <h3 id="6.4"><span class="no">6.4</span><span lang="en-GB">Context, KV cache and disk</span><span lang="zh-TW">Context、KV cache 與磁碟</span></h3>
@@ -2153,20 +2153,20 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     <div class="aside">
       <span class="label"><span lang="en-GB">100k and 1M are different machines to live on</span><span lang="zh-TW">100k 與 1M 是兩種不一樣的日子</span></span>
       <p lang="en-GB">ds4’s Metal context estimator puts the KV and context buffers at roughly 2.4 GiB for the 100k default; 250k is about 5.5 GiB, 300k about 6.5 GiB, and 1M jumps to about 20.8 GiB — before the 87 GB of weights and the transient inference buffers. Disk scales with it: a full checkpoint grows from about 1.4 GB at 100k to about 14 GB at 1M, so an 8 GB KV budget is not a 1M setting (128 GB+ installs default to 64 GB).</p>
-      <p lang="zh-TW">ds4 的 Metal context 估算器顯示，100k 預設約需 2.4 GiB 的 KV 與 context 緩衝；250k 約 5.5 GiB，300k 約 6.5 GiB，1M 則跳到約 20.8 GiB──這還沒算 87 GB 的權重與推論時的暫存。磁碟跟著漲：完整的檢查點從 100k 的約 1.4 GB 長到 1M 的約 14 GB，所以 8 GB 的 KV 預算不是 1M 的設定（128 GB 以上的安裝預設是 64 GB）。</p>
+      <p lang="zh-TW">ds4 的 Metal context 估算器顯示，100k 預設約需 2.4 GiB 的 KV 與 context 緩衝；250k 約 5.5 GiB，300k 約 6.5 GiB，1M 則跳到約 20.8 GiB，這還沒算 87 GB 的權重與推論時的暫存。磁碟跟著漲：完整的檢查點從 100k 的約 1.4 GB 長到 1M 的約 14 GB，所以 8 GB 的 KV 預算不是 1M 的設定（128 GB 以上的安裝預設是 64 GB）。</p>
     </div>
 
     <div class="aside">
       <span class="label"><span lang="en-GB">Inputs beyond 32k tokens are an experiment</span><span lang="zh-TW">超過 32k token 的輸入，請當實驗</span></span>
       <p lang="en-GB"><code>--ctx 100000</code> is what the server will accept. But the cyberneurova model card states plainly that <em>the abliterated V4 Flash has not been validated above 32 000 tokens</em>. If you are about to put a whole book, codebase or report into one prompt — journalists, researchers and policy analysts especially — split it, cross-check it, and do not treat a single output above 32k as known-good.</p>
-      <p lang="zh-TW"><code>--ctx 100000</code> 是伺服器願意接受的長度。但 cyberneurova 的模型卡明白寫著：<em>abliterated 過的 V4 Flash 在 32 000 個 token 以上尚未驗證</em>。若你正要把整本書、整個程式庫、整份報告塞進單一提示──尤其是記者、研究者、政策分析師──請分段、交叉查證，別把超過 32k 的單次輸出當成已知可靠。</p>
+      <p lang="zh-TW"><code>--ctx 100000</code> 是伺服器願意接受的長度。但 cyberneurova 的模型卡明白寫著：<em>abliterated 過的 V4 Flash 在 32 000 個 token 以上尚未驗證</em>。若你正要把整本書、整個程式庫、整份報告塞進單一提示，尤其是記者、研究者、政策分析師，請分段、交叉查證，別把超過 32k 的單次輸出當成已知可靠。</p>
     </div>
 
     <p lang="en-GB">
       For the model’s full 1M context, set <code>DS4_CONTEXT_KB=1024</code> and <code>DS4_KV_DISK_SPACE_MB=65536</code> or higher. Both defaults — <code>100</code> and the memory tier — are deliberately conservative.
     </p>
     <p lang="zh-TW">
-      要用模型完整的 1M context，設定 <code>DS4_CONTEXT_KB=1024</code> 與 <code>DS4_KV_DISK_SPACE_MB=65536</code> 或更高。兩個預設──<code>100</code> 與記憶體分級──都是刻意保守的。
+      要用模型完整的 1M context，設定 <code>DS4_CONTEXT_KB=1024</code> 與 <code>DS4_KV_DISK_SPACE_MB=65536</code> 或更高。兩個預設，<code>100</code> 與記憶體分級，都是刻意保守的。
     </p>
   </section>
 
@@ -2189,7 +2189,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       The server at <code>http://127.0.0.1:8000</code> answers OpenAI and Anthropic requests at the same time: <code>/v1/chat/completions</code>, <code>/v1/completions</code>, <code>/v1/responses</code>, <code>/v1/messages</code> and <code>/v1/models</code>. Any client that speaks either API can connect — put anything in the key field (say <code>dsv4-local</code>) and point the base URL here. Wiring it into Codex CLI, Claude Code, OpenClaw and other shells is <a href="#shells">Chapter 8</a>.
     </p>
     <p lang="zh-TW">
-      <code>http://127.0.0.1:8000</code> 上的伺服器同時回答 OpenAI 與 Anthropic 兩種請求：<code>/v1/chat/completions</code>、<code>/v1/completions</code>、<code>/v1/responses</code>、<code>/v1/messages</code> 與 <code>/v1/models</code>。任何會說其中一種 API 的客戶端都接得上──金鑰欄位隨便填（例如 <code>dsv4-local</code>），base URL 指到這裡就好。接到 Codex CLI、Claude Code、OpenClaw 與其他 shell 的做法在<a href="#shells">第八章</a>。
+      <code>http://127.0.0.1:8000</code> 上的伺服器同時回答 OpenAI 與 Anthropic 兩種請求：<code>/v1/chat/completions</code>、<code>/v1/completions</code>、<code>/v1/responses</code>、<code>/v1/messages</code> 與 <code>/v1/models</code>。任何會說其中一種 API 的客戶端都接得上；金鑰欄位隨便填（例如 <code>dsv4-local</code>），base URL 指到這裡就好。接到 Codex CLI、Claude Code、OpenClaw 與其他 shell 的做法在<a href="#shells">第八章</a>。
     </p>
 
     <div class="term">
@@ -2243,7 +2243,7 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       Since the <a href="#whatsnew">2026-07 pin</a> the server has two read-only endpoints answered on the client thread, so they respond even mid-generation. <code>/health</code> returns liveness and uptime. <code>/stats</code> reports queue depth, a busy flag, live and context token counts, cache hits by source (memory-token, disk-text, anthropic-tool-output, …), token totals, cancellation counts, and the last prefill and decode speeds. Script your monitoring against it, or use it to check whether a long session is actually hitting the cache.
     </p>
     <p lang="zh-TW">
-      自 <a href="#whatsnew">2026-07 釘版</a>起，伺服器多了兩個唯讀端點，由客戶端執行緒直接回應，生成到一半也答得動。<code>/health</code> 回存活狀態與執行時間。<code>/stats</code> 回報佇列深度、忙碌旗標、目前與 context 的 token 數、各來源的快取命中（memory-token、disk-text、anthropic-tool-output……）、token 總量、取消次數，以及最近一次 prefill 與 decode 的速度。寫監控腳本看這裡，想知道長對話到底有沒有吃到快取也看這裡。
+      自 <a href="#whatsnew">2026-07 釘選版</a>起，伺服器多了兩個唯讀端點，由客戶端執行緒直接回應，生成到一半也答得動。<code>/health</code> 回存活狀態與執行時間。<code>/stats</code> 回報佇列深度、忙碌旗標、目前與 context 的 token 數、各來源的快取命中（memory-token、disk-text、anthropic-tool-output……）、token 總量、取消次數，以及最近一次 prefill 與 decode 的速度。寫監控腳本看這裡，想知道長對話到底有沒有吃到快取也看這裡。
     </p>
 
     <div class="term">
@@ -2280,7 +2280,7 @@ curl -s http://127.0.0.1:8000/stats
       The server’s lifetime is managed by leases rather than by a daemon you have to remember. Each pi process that uses the model writes <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code> and refreshes it every ten seconds; <code>ds4-watchdog</code> scans every two seconds, and when no valid lease remains it sends SIGTERM to the server and exits. The effect: ten pi windows share one server, and about sixty seconds after the last of them closes, <code>ds4-server</code> shuts down on its own and 87 GB of memory comes back.
     </p>
     <p lang="zh-TW">
-      伺服器的壽命由租約管理，而不是一個你得記得關的常駐程式。每個使用這個模型的 pi 程序都會寫一份 <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code>，每十秒更新一次；<code>ds4-watchdog</code> 每兩秒掃一次，沒有任何有效租約時就送 SIGTERM 給伺服器然後退場。效果是：十個 pi 視窗共用一台伺服器，最後一個關掉大約六十秒後，<code>ds4-server</code> 自己收工，87 GB 的記憶體回到你手上。
+      伺服器的壽命由租約管理，不需要你記得去關一個常駐程式。每個使用這個模型的 pi 程序都會寫一份 <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code>，每十秒更新一次；<code>ds4-watchdog</code> 每兩秒掃一次，沒有任何有效租約時就送 SIGTERM 給伺服器然後退場。效果是：十個 pi 視窗共用一台伺服器，最後一個關掉大約六十秒後，<code>ds4-server</code> 自己收工，87 GB 的記憶體回到你手上。
     </p>
 
     <h3 id="7.4"><span class="no">7.4</span><span lang="en-GB">The cost of starting versus the cost of running</span><span lang="zh-TW">啟動的代價與持續的代價</span></h3>
@@ -2304,7 +2304,7 @@ curl -s http://127.0.0.1:8000/stats
       This fork keeps a second door. Use pi as the installer, updater, remover and runtime preparer, and hand the conversation itself to the native agent that ships inside the ds4 checkout:
     </p>
     <p lang="zh-TW">
-      這個分叉保留了第二扇門。把 pi 當安裝、更新、移除與執行期準備的工具，真正的對話則交給 ds4 checkout 內建的原生 agent：
+      這個分叉保留了第二扇門。把 pi 當安裝、更新、移除與執行期準備的工具，真正的對話則交給 ds4 checkout 內建的原生 agent。在 pi 裡：
     </p>
 
     <div class="term">
@@ -2344,11 +2344,11 @@ curl -s http://127.0.0.1:8000/stats
       pi is one front door, and it need not be yours. Everything pi-ds4 sets up — the engine, the weights, the lifecycle — ends in a plain HTTP server on <code>127.0.0.1:8000</code> that speaks the OpenAI and Anthropic wire formats at the same time. Almost any coding agent you already live in can be pointed at it, and from that moment the model under your favourite shell is the one on your own disk: no metering, no rate limit, no context leaving the machine.
     </p>
     <p class="lead" lang="zh-TW">
-      pi 是一扇前門，但不一定得是你的那扇。pi-ds4 佈置好的一切──引擎、權重、生命週期──最後都落在 <code>127.0.0.1:8000</code> 上一台平凡的 HTTP 伺服器，同時說 OpenAI 與 Anthropic 兩種協定。你早已習慣住在裡面的 coding agent，幾乎都可以指向它；從那一刻起，你慣用 shell 底下的模型，就是你自己硬碟上的那一顆：不計費、不限速、上下文不離開這台機器。
+      pi 是一扇前門，但不一定得是你的那扇。pi-ds4 佈置好的一切，引擎、權重、生命週期，最後都落在 <code>127.0.0.1:8000</code> 上一台平凡的 HTTP 伺服器，同時說 OpenAI 與 Anthropic 兩種協定。你早已習慣住在裡面的 coding agent，幾乎都可以指向它；從那一刻起，你慣用 shell 底下的模型，就是你自己硬碟上的那一顆：不計費、不限速、上下文不離開這台機器。
     </p>
 
     <div class="aside">
-      <span class="label"><span lang="en-GB">The sentence to keep</span><span lang="zh-TW">值得記住的一句話</span></span>
+      <span class="label"><span lang="en-GB">The sentence to keep</span><span lang="zh-TW">一句話總結</span></span>
       <p lang="en-GB"><strong>pi-ds4’s server path is a dual-protocol inference server that runs for as long as you want it to, listens only on your own machine, keeps its weights on your disk and never sends context anywhere.</strong> Whether the shell on top is Codex CLI, Claude Code, OpenClaw, Hermes Agent or a script of your own, switching to it is a matter of changing one base URL.</p>
       <p lang="zh-TW"><strong>pi-ds4 的伺服器路徑，是一台雙協定的推論伺服器：你要它開多久就開多久，只在你的機器上監聽，權重在你的硬碟，上下文哪裡都不送。</strong>上面的 shell 不管是 Codex CLI、Claude Code、OpenClaw、Hermes Agent，還是你自己寫的腳本，切換過來都只是改一個 base URL 的事。</p>
     </div>
@@ -2356,7 +2356,7 @@ curl -s http://127.0.0.1:8000/stats
     <div class="aside">
       <span class="label"><span lang="en-GB">The engine also ships its own agent</span><span lang="zh-TW">引擎自己也附了一個 agent</span></span>
       <p lang="en-GB">antirez’s DwarfStar comes with <code>ds4-agent</code>, a native coding agent that runs inside the engine process rather than over HTTP — a different design from every shell in this chapter, and one that recently gained browser and web tools upstream. pi-ds4 does not manage it, but any <code>audreyt/ds4</code> checkout can run <code>./ds4-agent</code> directly, and from inside pi the handoff in <a href="#7.5">§7.5</a> does the same with the memory guard in place. The Native agent section of the <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> README has the details.</p>
-      <p lang="zh-TW">antirez 的 DwarfStar 自帶 <code>ds4-agent</code>，一個在引擎程序內部執行、不經 HTTP 的原生 coding agent──跟本章每一個 shell 的設計取向都不同，上游最近還替它加了瀏覽器與網頁工具。pi-ds4 不管理它，但任何 <code>audreyt/ds4</code> 的 checkout 都可以直接 <code>./ds4-agent</code> 跑起來；在 pi 裡，<a href="#7.5">§7.5</a> 的交接做的是同一件事，只是多了記憶體保護。細節見 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> README 的 Native agent 一節。</p>
+      <p lang="zh-TW">antirez 的 DwarfStar 自帶 <code>ds4-agent</code>，一個在引擎程序內部執行、不經 HTTP 的原生 coding agent，設計取向和本章每一個 shell 都不同；上游最近還替它加了瀏覽器與網頁工具。pi-ds4 不管理它，但任何 <code>audreyt/ds4</code> 的 checkout 都可以直接 <code>./ds4-agent</code> 跑起來；在 pi 裡，<a href="#7.5">§7.5</a> 的交接做的是同一件事，只是多了記憶體保護。細節見 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> README 的 Native agent 一節。</p>
     </div>
 
     <p lang="en-GB">Every recipe below shares the same four settings:</p>
@@ -2369,8 +2369,8 @@ curl -s http://127.0.0.1:8000/stats
       <li><strong>Wire formats:</strong> OpenAI Chat Completions and legacy Completions; OpenAI Responses, so Codex CLI 0.128+ connects directly; Anthropic Messages including <code>count_tokens</code>, so Claude Code connects directly.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>Base URL：</strong><code>http://127.0.0.1:8000</code>，端點與 <a href="#7.1">§7.1</a> 一致──<code>/v1/chat/completions</code>、<code>/v1/completions</code>、<code>/v1/responses</code>、<code>/v1/messages</code>（含 <code>count_tokens</code>）與 <code>/v1/models</code>。</li>
-      <li><strong>API key：</strong>任意字串，例如 <code>sk-local</code>。ds4-server 不檢查它──這也是它必須留在 loopback 上的原因（<a href="#otherhw">§8.7</a>）。</li>
+      <li><strong>Base URL：</strong><code>http://127.0.0.1:8000</code>，端點與 <a href="#7.1">§7.1</a> 一致：<code>/v1/chat/completions</code>、<code>/v1/completions</code>、<code>/v1/responses</code>、<code>/v1/messages</code>（含 <code>count_tokens</code>）與 <code>/v1/models</code>。</li>
+      <li><strong>API key：</strong>任意字串，例如 <code>sk-local</code>。ds4-server 不檢查它，這也是它必須留在 loopback 上的原因（<a href="#otherhw">§8.7</a>）。</li>
       <li><strong>模型名稱：</strong><code>deepseek-v4-flash</code>。會探查 <code>GET /v1/models</code> 的客戶端，會在列表裡找到這個 ID。</li>
       <li><strong>協定格式：</strong>OpenAI Chat Completions 與舊式 Completions；OpenAI Responses，所以 Codex CLI 0.128+ 可以直連；Anthropic Messages 含 <code>count_tokens</code>，所以 Claude Code 可以直連。</li>
     </ul>
@@ -2410,7 +2410,7 @@ wire_api = <span class="s">"responses"</span>
     <h3 id="8.2"><span class="no">8.2</span><span lang="en-GB">Claude Code, directly</span><span lang="zh-TW">Claude Code，直連</span></h3>
 
     <p lang="en-GB">ds4-server implements Anthropic’s <code>/v1/messages</code> natively — the header of <a href="https://github.com/audreyt/ds4/blob/main/ds4_server.c"><code>ds4_server.c</code></a> describes itself as an <code>"OpenAI/Anthropic compatible local server"</code> — so Claude Code needs no router and no proxy. Three environment variables, then launch:</p>
-    <p lang="zh-TW">ds4-server 原生實作 Anthropic 的 <code>/v1/messages</code>──<a href="https://github.com/audreyt/ds4/blob/main/ds4_server.c"><code>ds4_server.c</code></a> 檔頭的自我描述就是 <code>"OpenAI/Anthropic compatible local server"</code>──所以 Claude Code 不需要 router，也不需要 proxy。三個環境變數，然後啟動：</p>
+    <p lang="zh-TW">ds4-server 原生實作 Anthropic 的 <code>/v1/messages</code>（<a href="https://github.com/audreyt/ds4/blob/main/ds4_server.c"><code>ds4_server.c</code></a> 檔頭的自我描述就是 <code>"OpenAI/Anthropic compatible local server"</code>），所以 Claude Code 不需要 router，也不需要 proxy。三個環境變數，然後啟動：</p>
 
     <div class="term">
       <div class="term-bar"><span><span lang="en-GB">point Claude Code at pi-ds4</span><span lang="zh-TW">讓 Claude Code 指向 pi-ds4</span></span><button class="copy" aria-label="Copy the Claude Code environment"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
@@ -2431,13 +2431,13 @@ claude</pre>
     <div class="aside">
       <span class="label"><span lang="en-GB">If you still want a router</span><span lang="zh-TW">如果你還是想要 router</span></span>
       <p lang="en-GB"><a href="https://github.com/musistudio/claude-code-router"><code>claude-code-router</code></a> is optional. Its job is to split traffic across several backends — code edits to pi-ds4, prose to the cloud, say. With one local backend there is nothing to route.</p>
-      <p lang="zh-TW"><a href="https://github.com/musistudio/claude-code-router"><code>claude-code-router</code></a> 是選用的。它的用途是把流量分到好幾個後端──比如改程式碼走 pi-ds4、寫文章走雲端。只有一個本機後端時，沒有東西需要分流。</p>
+      <p lang="zh-TW"><a href="https://github.com/musistudio/claude-code-router"><code>claude-code-router</code></a> 是選用的。它的用途是把流量分到好幾個後端，比如改程式碼走 pi-ds4、寫文章走雲端。只有一個本機後端時，沒有東西需要分流。</p>
     </div>
 
     <h3 id="8.3"><span class="no">8.3</span><span lang="en-GB">OpenClaw</span><span lang="zh-TW">OpenClaw</span></h3>
 
     <p lang="en-GB">OpenClaw has two useful routes. For ordinary text turns, point an OpenClaw provider straight at the Responses endpoint. If you want to keep the Codex runtime’s plugins and Computer Use, take the Codex-harness route further down, which configures two layers instead of one.</p>
-    <p lang="zh-TW">OpenClaw 有兩條實用的路。一般的文字回合，把 OpenClaw 的 provider 直接指到 Responses 端點就好。若你想保留 Codex runtime 的 plugin 與 Computer Use，就走下面的 Codex harness 路線，設定的是兩層而不是一層。</p>
+    <p lang="zh-TW">OpenClaw 有兩條實用的路。一般的文字回合，把 OpenClaw 的 provider 直接指到 Responses 端點就好。若你想保留 Codex runtime 的 plugin 與 Computer Use，就走下面的 Codex harness 路線，設定的是兩層而非一層。</p>
 
     <div class="term">
       <div class="term-bar"><span><span lang="en-GB">openclaw.json, direct Responses provider</span><span lang="zh-TW">openclaw.json，直接的 Responses provider</span></span><button class="copy" aria-label="Copy the direct OpenClaw configuration"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
@@ -2548,7 +2548,7 @@ enabled = <span class="v">true</span></pre>
       If OpenClaw runs inside Docker or OrbStack, <code>127.0.0.1</code> inside the container is the container. Use <code>host.docker.internal:8000</code>, or put a passthrough <code>api-proxy</code> in front as the example does, so that <code>http://api-proxy:1234/v1</code> forwards to the host’s <code>http://127.0.0.1:8000/v1</code>. Two more things about this route. The first Codex-harness turn often carries a tool prompt of 50,000 tokens or more, so ds4-server’s disk KV cache (<a href="#6.4">§6.4</a>) makes retries and neighbouring sessions far faster. And if you opt into steering here, keep it at the calibrated FFN-only setting — <code>DS4_DIR_STEERING_FFN=-0.75</code>, <code>DS4_DIR_STEERING_ATTN=0</code>, <code>DS4_DIR_STEERING_POLICY=final-answer</code>. The older <code>ffn=-2, attn=-0.5</code> acid-test setting can leak into DSML and tool-call syntax on prompts this long.
     </p>
     <p lang="zh-TW">
-      若 OpenClaw 跑在 Docker 或 OrbStack 裡，容器內的 <code>127.0.0.1</code> 指的是容器自己。改用 <code>host.docker.internal:8000</code>，或像範例那樣在前面放一個直通的 <code>api-proxy</code>，讓 <code>http://api-proxy:1234/v1</code> 轉到主機的 <code>http://127.0.0.1:8000/v1</code>。這條路還有兩件事。Codex harness 的第一個回合，工具提示常常超過五萬 token，所以 ds4-server 的磁碟 KV cache（<a href="#6.4">§6.4</a>）會讓重試與相鄰的對話快很多。另外，若你在這條路上開啟引導，請保持校準過的 FFN-only 設定──<code>DS4_DIR_STEERING_FFN=-0.75</code>、<code>DS4_DIR_STEERING_ATTN=0</code>、<code>DS4_DIR_STEERING_POLICY=final-answer</code>。舊的 <code>ffn=-2, attn=-0.5</code> 壓力測試設定，在這麼長的提示上可能滲進 DSML 與工具呼叫的語法裡。
+      若 OpenClaw 跑在 Docker 或 OrbStack 裡，容器內的 <code>127.0.0.1</code> 指的是容器自己。改用 <code>host.docker.internal:8000</code>，或像範例那樣在前面放一個直通的 <code>api-proxy</code>，讓 <code>http://api-proxy:1234/v1</code> 轉到主機的 <code>http://127.0.0.1:8000/v1</code>。這條路還有兩件事要留意。Codex harness 的第一個回合，工具提示常常超過五萬 token，所以 ds4-server 的磁碟 KV cache（<a href="#6.4">§6.4</a>）會讓重試與相鄰的對話快很多。另外，若你在這條路上開啟引導，請保持校準過的 FFN-only 設定：<code>DS4_DIR_STEERING_FFN=-0.75</code>、<code>DS4_DIR_STEERING_ATTN=0</code>、<code>DS4_DIR_STEERING_POLICY=final-answer</code>。舊的 <code>ffn=-2, attn=-0.5</code> 壓力測試設定，在這麼長的提示上可能滲進 DSML 與工具呼叫的語法裡。
     </p>
 
     <h3 id="8.4"><span class="no">8.4</span><span lang="en-GB">Hermes Agent</span><span lang="zh-TW">Hermes Agent</span></h3>
@@ -2574,7 +2574,7 @@ model:
     <h3 id="8.5"><span class="no">8.5</span><span lang="en-GB">Straight to the API: the OpenAI SDK, curl, your own scripts</span><span lang="zh-TW">直接打 API：OpenAI SDK、curl、自己的腳本</span></h3>
 
     <p lang="en-GB">Everything above is a wrapper around the same two facts: a base URL, and a key that is never checked. If what you have is a pipeline, a cron job, or code already written against the OpenAI SDK, set <code>OPENAI_BASE_URL</code> — or pass <code>base_url</code> — and nothing else changes:</p>
-    <p lang="zh-TW">上面每一節，包的都是同樣兩件事：一個 base URL，加一把從不檢查的金鑰。如果你手上是一條 pipeline、一個 cron job，或已經寫好、對著 OpenAI SDK 的程式，設好 <code>OPENAI_BASE_URL</code>──或直接傳 <code>base_url</code>──其他什麼都不必改：</p>
+    <p lang="zh-TW">上面每一節，包的都是同樣兩件事：一個 base URL，加一把從不檢查的金鑰。如果你手上是一條 pipeline、一個 cron job，或已經寫好、對著 OpenAI SDK 的程式，設好 <code>OPENAI_BASE_URL</code>（或直接傳 <code>base_url</code>），其他什麼都不必改：</p>
 
     <div class="term">
       <div class="term-bar"><span>Python, OpenAI SDK, Chat Completions</span><button class="copy" aria-label="Copy the Python chat completions example"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
@@ -2593,7 +2593,7 @@ resp = client.chat.completions.create(
     </div>
 
     <p lang="en-GB">If your pipeline already speaks the Responses API — the one Codex CLI uses — <code>client.responses.create()</code> reaches the same server:</p>
-    <p lang="zh-TW">若你的 pipeline 已經改說 Responses API──也就是 Codex CLI 用的那套──<code>client.responses.create()</code> 打到的是同一台伺服器：</p>
+    <p lang="zh-TW">若你的 pipeline 已經改說 Responses API，也就是 Codex CLI 用的那套，<code>client.responses.create()</code> 打到的是同一台伺服器：</p>
 
     <div class="term">
       <div class="term-bar"><span>Python, OpenAI SDK, Responses</span><button class="copy" aria-label="Copy the Python responses example"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
@@ -2617,7 +2617,7 @@ resp = client.responses.create(
       The lease and watchdog of <a href="#daily">Chapter 7</a> only see pi. They start the server when a pi process sends a request through the model, and they stop it about a minute after the last pi process leaves. If you never open pi — Codex CLI all day, say — the server has to come from somewhere else. There are three ways, and they differ mainly in <em>who is responsible for the process</em>.
     </p>
     <p lang="zh-TW">
-      <a href="#daily">第七章</a>的租約與看門狗只看得見 pi。它們在 pi 程序透過模型送出請求時啟動伺服器，在最後一個 pi 程序離開約一分鐘後把它停掉。如果你根本不開 pi──比如整天都用 Codex CLI──伺服器就得從別的地方來。有三條路，差別主要在<em>誰為這個程序負責</em>。
+      <a href="#daily">第七章</a>的租約與看門狗只看得見 pi。它們在 pi 程序透過模型送出請求時啟動伺服器，在最後一個 pi 程序離開約一分鐘後把它停掉。如果你根本不開 pi，比如整天都用 Codex CLI，伺服器就得從別的地方來。有三條路，差別主要在<em>誰為這個程序負責</em>。
     </p>
 
     <h4><span lang="en-GB">A. pi is installed; let pi keep it alive</span><span lang="zh-TW">A. 裝了 pi，讓 pi 替你顧著</span></h4>
@@ -2662,7 +2662,7 @@ resp = client.responses.create(
       pi adopts a server it finds already listening on <code>127.0.0.1:8000</code>, and an adopted server has exactly the flags you gave it: pi re-applies neither <code>--ctx</code> nor steering. That is the point, not a gap. A launch you typed is a launch you can audit. It also means that if you want the vision encoder, the KV disk cache or steering on a hand-started server, you type them.
     </p>
     <p lang="zh-TW">
-      pi 會「收養」它發現已經在 <code>127.0.0.1:8000</code> 監聽的伺服器，而收養來的伺服器，旗標就只有你給它的那些：pi 不會替它補上 <code>--ctx</code>，也不會補上引導。這是重點，不是缺漏。你親手打出來的啟動，就是你稽核得了的啟動。這也表示，若你要手動啟動的伺服器有視覺編碼器、KV 磁碟快取或引導，就得自己打上去。
+      pi 會「收養」它發現已經在 <code>127.0.0.1:8000</code> 監聽的伺服器，而收養來的伺服器，旗標就只有你給它的那些：pi 不會替它補上 <code>--ctx</code>，也不會補上引導。這是刻意的：你親手打出來的啟動，就是你稽核得了的啟動。這也表示，若你要手動啟動的伺服器有視覺編碼器、KV 磁碟快取或引導，就得自己打上去。
     </p>
 
     <h4><span lang="en-GB">C. No pi at all</span><span lang="zh-TW">C. 完全沒有 pi</span></h4>
@@ -2696,7 +2696,7 @@ chmod +x download_model.sh
     </div>
 
     <p lang="en-GB">On this path you never touch pi; ds4-server comes straight from the source tree. Whatever the extension would have done for you — download, symlink, watchdog, lease — is yours to do when you need it.</p>
-    <p lang="zh-TW">走這條路你完全不碰 pi；ds4-server 直接來自原始碼樹。擴充套件本來會替你做的事──下載、symlink、看門狗、租約──需要時都由你自己來。</p>
+    <p lang="zh-TW">走這條路你完全不碰 pi；ds4-server 直接來自原始碼樹。擴充套件本來會替你做的事，下載、symlink、看門狗、租約，需要時都由你自己來。</p>
 
     <div class="caution">
       <span class="label"><span lang="en-GB">Do not run both at once</span><span lang="zh-TW">不要兩邊同時跑</span></span>
@@ -2710,14 +2710,14 @@ chmod +x download_model.sh
       You do not need a Mac. On anything that is not Darwin, <a href="https://github.com/audreyt/ds4"><code>audreyt/ds4</code></a>’s <code>Makefile</code> takes the CUDA path — <code>ds4_cuda.cu</code>, some ten thousand lines of NVIDIA kernels — and <code>nvcc</code> builds a native ds4-server. On an NVIDIA DGX Spark (GB10, about 128 GB of unified memory, aarch64 Linux) what runs is therefore not a llama.cpp sidecar but <em>the same engine, the same server and the same <code>--dir-steering-*</code> flags</em>. <code>pi install https://github.com/audreyt/pi-ds4</code> works there unchanged: clone, <code>make ds4-server</code> with nvcc and CUDA selected automatically, download the Vision-Exp pair, spawn the server.
     </p>
     <p lang="zh-TW">
-      你不需要 Mac。在任何不是 Darwin 的系統上，<a href="https://github.com/audreyt/ds4"><code>audreyt/ds4</code></a> 的 <code>Makefile</code> 會走 CUDA 路徑──<code>ds4_cuda.cu</code>，約一萬行的 NVIDIA kernel──由 <code>nvcc</code> 編出原生的 ds4-server。所以在 NVIDIA DGX Spark（GB10、約 128 GB 統一記憶體、aarch64 Linux）上跑的，不是某個 llama.cpp 的旁路，而是<em>同一隻引擎、同一台伺服器、同一組 <code>--dir-steering-*</code> 旗標</em>。<code>pi install https://github.com/audreyt/pi-ds4</code> 在那裡一字不改照樣能用：clone、<code>make ds4-server</code>（自動選 nvcc 與 CUDA）、下載 Vision-Exp 那一對檔案、啟動伺服器。
+      你不需要 Mac。在任何不是 Darwin 的系統上，<a href="https://github.com/audreyt/ds4"><code>audreyt/ds4</code></a> 的 <code>Makefile</code> 會走 CUDA 路徑（<code>ds4_cuda.cu</code>，約一萬行的 NVIDIA kernel），由 <code>nvcc</code> 編出原生的 ds4-server。所以在 NVIDIA DGX Spark（GB10、約 128 GB 統一記憶體、aarch64 Linux）上跑的，不是某個 llama.cpp 的旁路，而是<em>同一隻引擎、同一台伺服器、同一組 <code>--dir-steering-*</code> 旗標</em>。<code>pi install https://github.com/audreyt/pi-ds4</code> 在那裡一字不改照樣能用：clone、<code>make ds4-server</code>（自動選 nvcc 與 CUDA）、下載 Vision-Exp 那一對檔案、啟動伺服器。
     </p>
 
     <p lang="en-GB">
       Since the <a href="#whatsnew">2026-07 pin</a> there is a third backend, <strong>AMD Strix Halo on ROCm</strong>. A 128 GB Ryzen AI Max machine (Radeon 8060S, gfx1151) builds the same binaries with <code>make strix-halo</code>, alias <code>make rocm</code>; the <code>STRIXHALO.md</code> in the checkout walks through ROCm 7.1 and rocWMMA, <code>/dev/kfd</code> permissions and the GTT aperture. One caveat: on that platform prefer the plain aligned-imatrix GGUF and avoid the mixed IQ2/Q4 builds for now — they put far more pressure on the ROCm path and can end in a system OOM rather than a clean ds4 error. The same pin brought <strong>distributed inference</strong>: the 4-bit Flash across two 128 GB MacBooks over Thunderbolt 5, each mapping only its own slice of layers. Pipelined prefill can beat one machine; generation is slower.
     </p>
     <p lang="zh-TW">
-      自 <a href="#whatsnew">2026-07 釘版</a>起有了第三個後端：<strong>ROCm 上的 AMD Strix Halo</strong>。128 GB 的 Ryzen AI Max 機器（Radeon 8060S，gfx1151）用 <code>make strix-halo</code>（別名 <code>make rocm</code>）編出同一組執行檔；checkout 裡的 <code>STRIXHALO.md</code> 逐步交代 ROCm 7.1 與 rocWMMA、<code>/dev/kfd</code> 權限與 GTT aperture。一個注意事項：在那個平台上，暫時請用純粹的 aligned-imatrix GGUF，避開 IQ2/Q4 混合版──後者在 ROCm 路徑上的記憶體壓力大得多，結局可能是系統層的 OOM，而不是 ds4 乾淨的錯誤訊息。同一份釘版也帶來了<strong>分散式推論</strong>：4-bit 的 Flash 跨兩台 128 GB MacBook，走 Thunderbolt 5，每台只 map 自己那一段 layer。管線化的 prefill 可以贏過單機；生成則比較慢。
+      自 <a href="#whatsnew">2026-07 釘選版</a>起有了第三個後端：<strong>ROCm 上的 AMD Strix Halo</strong>。128 GB 的 Ryzen AI Max 機器（Radeon 8060S，gfx1151）用 <code>make strix-halo</code>（別名 <code>make rocm</code>）編出同一組執行檔；checkout 裡的 <code>STRIXHALO.md</code> 逐步交代 ROCm 7.1 與 rocWMMA、<code>/dev/kfd</code> 權限與 GTT aperture。一個注意事項：在那個平台上，暫時請用純粹的 aligned-imatrix GGUF，避開 IQ2/Q4 混合版；後者在 ROCm 路徑上的記憶體壓力大得多，結局可能是系統層的 OOM，而非 ds4 乾淨的錯誤訊息。同一份釘選版也帶來了<strong>分散式推論</strong>：4-bit 的 Flash 跨兩台 128 GB MacBook，走 Thunderbolt 5，每台只 map 自己那一段 layer。管線化的 prefill 可以贏過單機；生成則比較慢。
     </p>
 
     <p lang="en-GB">Once the endpoint is up, the recipes in §8.1–8.5 apply as written; replace <code>127.0.0.1</code> with the machine’s address if you connect from elsewhere. Four things change:</p>
@@ -2731,13 +2731,13 @@ chmod +x download_model.sh
     </ul>
     <ul lang="zh-TW">
       <li><strong>開放到區網是你自己的責任。</strong>ds4-server 綁在 <code>127.0.0.1</code>，不檢查任何金鑰。要跨機器使用，請放在 Tailscale 或帶驗證的 reverse proxy 後面；不要把 <code>--host</code> 改成 <code>0.0.0.0</code>，把一個沒有驗證的模型暴露在網路上。</li>
-      <li><strong>看門狗與租約在 Linux 上也能跑。</strong><code>ds4-watchdog.sh</code> 同時處理 BSD 與 GNU 兩套工具──<code>stat -f %m</code> 對應 <code>stat -c %Y</code>、<code>LC_ALL=C ps -o lstart</code>──所以第七章的生命週期直接覆蓋 Spark。若你寧願跳過自動化，手動 <code>./ds4-server</code>、一個 systemd unit 或一個 tmux 視窗都仍然可行。</li>
+      <li><strong>看門狗與租約在 Linux 上也能跑。</strong><code>ds4-watchdog.sh</code> 同時處理 BSD 與 GNU 兩套工具（<code>stat -f %m</code> 對應 <code>stat -c %Y</code>、<code>LC_ALL=C ps -o lstart</code>），所以第七章的生命週期直接覆蓋 Spark。若你寧願跳過自動化，手動 <code>./ds4-server</code>、一個 systemd unit 或一個 tmux 視窗都仍然可行。</li>
       <li><strong>後端不一樣。</strong>Spark 跑的是 GB10 tensor core 上的 CUDA，不是 Metal。pi-ds4 提供的是同一份 GGUF、引導參數、context 與 KV 預設值，以及生命週期的包裝；後端行為跟著 ds4 的 Linux 建置走。</li>
       <li><strong>Spark 上的長 context 這裡沒有涵蓋。</strong>pi-ds4 在 Mac 與 Linux 上都送 <code>--ctx 100000</code>，但 Spark 上的 KV cache 與長 context 行為不在這封信的測試範圍內。遇到記憶體壓力，手動跑 <code>ds4-server</code>，從 <code>--ctx 32768</code> 開始。</li>
     </ul>
 
     <p lang="en-GB">In other words this is not a strained “same GGUF, different runtime” compatibility. It is the same engine, the same startup shape and the same wrapper defaults across platforms — macOS and Linux share one <code>ds4-watchdog.sh</code>, <code>pi install</code> completes on a DGX Spark the way it does on a Mac, and running the server by hand stays open to you on both.</p>
-    <p lang="zh-TW">換句話說，這不是勉強湊出來的「同一份 GGUF、不同執行期」相容性，而是跨平台的同一隻引擎、同一種啟動形狀、同一組包裝預設值──macOS 與 Linux 共用同一支 <code>ds4-watchdog.sh</code>，<code>pi install</code> 在 DGX Spark 上完成的方式與在 Mac 上一樣，而手動跑伺服器這條路在兩邊都始終開著。</p>
+    <p lang="zh-TW">換句話說，這不是勉強湊出來的「同一份 GGUF、不同執行期」相容性，而是跨平台的同一隻引擎、同一種啟動形狀、同一組包裝預設值。macOS 與 Linux 共用同一支 <code>ds4-watchdog.sh</code>，<code>pi install</code> 在 DGX Spark 上完成的方式與在 Mac 上一樣，而手動跑伺服器這條路在兩邊都始終開著。</p>
   </section>
 
   <div class="sep" aria-hidden="true"><svg><use href="#plurality"/></svg></div>
@@ -2751,7 +2751,7 @@ chmod +x download_model.sh
       The extension keeps every piece of runtime state as a file under <code>~/.pi/ds4/</code>. That is a design choice, not an accident: when something feels wrong, you read the files, and what the extension believes is happening is never hidden from you. You should not need the source open to find out.
     </p>
     <p class="lead" lang="zh-TW">
-      擴充套件把每一份執行期狀態都以檔案的形式放在 <code>~/.pi/ds4/</code> 底下。這是設計上的選擇，不是偶然：覺得哪裡不對的時候，你讀檔案就好，擴充套件以為正在發生的事，從來不會對你隱藏。你不應該需要打開原始碼才弄得清楚。
+      擴充套件把每一份執行期狀態都以檔案的形式放在 <code>~/.pi/ds4/</code> 底下。這是刻意的設計：覺得哪裡不對的時候，你讀檔案就好，擴充套件以為正在發生的事，從來不會對你隱藏。你不應該需要打開原始碼才弄得清楚。
     </p>
 
     <h3 id="9.1"><span class="no">9.1</span><span lang="en-GB">What lives where</span><span lang="zh-TW">什麼東西放在哪裡</span></h3>
@@ -2801,7 +2801,7 @@ find ~/.pi/ds4/clients -maxdepth 1 -name <span class="s">'*.json'</span> -delete
     <div class="caution">
       <span class="label"><span lang="en-GB">Hard restart: three steps, none of them rushed</span><span lang="zh-TW">硬重啟：三步，每一步都別急</span></span>
       <p lang="en-GB">If the watchdog itself is misbehaving, do <em>not</em> reach for <code>pkill -TERM ds4-server</code>. That terminates every process on the machine with that name — another pi-ds4 install, an experimental build, someone else’s server. Take the three steps below, and read the output after each one.</p>
-      <p lang="zh-TW">如果是看門狗本身出了問題，<em>不要</em>伸手去打 <code>pkill -TERM ds4-server</code>。那會終止機器上所有叫這個名字的程序──另一份 pi-ds4 安裝、一個實驗用的建置、別人的伺服器。走下面三步，每一步做完先讀輸出。</p>
+      <p lang="zh-TW">如果是看門狗本身出了問題，<em>不要</em>伸手去打 <code>pkill -TERM ds4-server</code>。那會終止機器上所有叫這個名字的程序：另一份 pi-ds4 安裝、一個實驗用的建置、別人的伺服器。走下面三步，每一步做完先讀輸出。</p>
 
       <p lang="en-GB"><strong>Step one</strong> inspects the current state. Read-only; it changes nothing.</p>
       <p lang="zh-TW"><strong>第一步</strong>檢視目前的狀態。唯讀，什麼都不改。</p>
@@ -2827,7 +2827,7 @@ STATE=~/.pi/ds4/server.json
       </div>
 
       <p lang="en-GB"><strong>Step two</strong> cleans the state <em>only if the PID is already gone</em>. If the PID is alive, the script refuses — it will not blindly kill what might be someone else’s process — prints guidance, and hands you to step three.</p>
-      <p lang="zh-TW"><strong>第二步</strong><em>只在 PID 已經不存在時</em>清理狀態。若 PID 還活著，腳本會拒絕──它不會盲目殺掉一個可能是別人的程序──印出指引，把你交給第三步。</p>
+      <p lang="zh-TW"><strong>第二步</strong><em>只在 PID 已經不存在時</em>清理狀態。若 PID 還活著，腳本會拒絕，它不會盲目殺掉一個可能是別人的程序；它會印出指引，把你交給第三步。</p>
       <div class="term">
         <div class="term-bar"><span><span lang="en-GB">step 2: clean up when the PID is dead (conservative)</span><span lang="zh-TW">第二步：PID 已死時清理（保守）</span></span><button class="copy" aria-label="Copy the conservative clean-up script"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
         <pre>(
@@ -2867,7 +2867,7 @@ STATE=~/.pi/ds4/server.json
       </div>
 
       <p lang="en-GB"><strong>Step three</strong>, only if step two printed <code>refuse: pid X still alive</code>. Go back to the <code>ps</code> line from step one and confirm two things by eye: that <code>args</code> really points at this extension’s <code>~/.pi/ds4/support/ds4-server</code>, and that <code>lstart</code> is the time you expect. Then type the PID yourself — do not paste a variable from anywhere — and run:</p>
-      <p lang="zh-TW"><strong>第三步</strong>，只在第二步印出 <code>refuse: pid X still alive</code> 時才做。回到第一步 <code>ps</code> 那一行，親眼確認兩件事：<code>args</code> 真的指向本擴充套件的 <code>~/.pi/ds4/support/ds4-server</code>，而 <code>lstart</code> 的時間是你預期的。然後親手鍵入那個 PID──不要從任何地方貼變數──執行：</p>
+      <p lang="zh-TW"><strong>第三步</strong>，只在第二步印出 <code>refuse: pid X still alive</code> 時才做。回到第一步 <code>ps</code> 那一行，親眼確認兩件事：<code>args</code> 真的指向本擴充套件的 <code>~/.pi/ds4/support/ds4-server</code>，而 <code>lstart</code> 的時間是你預期的。然後親手鍵入那個 PID（不要從任何地方貼變數）執行：</p>
       <div class="term term-noncopy">
         <div class="term-bar"><span><span lang="en-GB">step 3: manual SIGTERM (a template; no copy button on purpose)</span><span lang="zh-TW">第三步：人工 SIGTERM（範本；刻意不給複製鈕）</span></span><span class="hint" aria-hidden="true"><span lang="en-GB">type it by hand</span><span lang="zh-TW">請親手打字</span></span></div>
         <pre><span class="c"># <span lang="en-GB">Replace PID_FROM_STEP_1_MUST_BE_REPLACED with the PID you confirmed by eye in step 1.</span><span lang="zh-TW">把 PID_FROM_STEP_1_MUST_BE_REPLACED 換成你在第一步親眼確認過的那個 PID。</span></span>
@@ -2889,7 +2889,7 @@ STATE=~/.pi/ds4/server.json
     <div class="aside">
       <span class="label"><span lang="en-GB">Never delete <code>support/gguf/</code></span><span lang="zh-TW">永遠別刪 <code>support/gguf/</code></span></span>
       <p lang="en-GB">It holds the 87 GB of weights that took hours to arrive. Unless you are changing quant or model, leave it alone. Delete it by accident and the next start downloads everything again — it resumes from <code>.part</code> files, but only if the <code>.part</code> files are still there.</p>
-      <p lang="zh-TW">裡面是花了好幾個小時才抓下來的 87 GB 權重。除非要換量化或換模型，否則別動它。不小心刪了，下次啟動就會全部重抓──它會從 <code>.part</code> 檔續傳，但前提是 <code>.part</code> 檔還在。</p>
+      <p lang="zh-TW">裡面是花了好幾個小時才抓下來的 87 GB 權重。除非要換量化或換模型，否則別動它。不小心刪了，下次啟動就會全部重抓；它會從 <code>.part</code> 檔續傳，但前提是 <code>.part</code> 檔還在。</p>
     </div>
   </section>
 
@@ -2920,7 +2920,7 @@ STATE=~/.pi/ds4/server.json
     <h3 id="10.2"><span class="no">10.2</span><span lang="en-GB">When a support directory already exists: <code>--force</code></span><span lang="zh-TW">support 目錄已經存在時：<code>--force</code></span></h3>
 
     <p lang="en-GB">If <code>~/.pi/ds4/support</code> already points somewhere — left over from an earlier <code>pi install</code>, say — the script refuses to overwrite it. With <code>--force</code> it:</p>
-    <p lang="zh-TW">若 <code>~/.pi/ds4/support</code> 已經指向別處──比如上一次 <code>pi install</code>留下的──腳本會拒絕覆寫。加上 <code>--force</code>，它會：</p>
+    <p lang="zh-TW">若 <code>~/.pi/ds4/support</code> 已經指向別處，比如上一次 <code>pi install</code> 留下的，腳本會拒絕覆寫。加上 <code>--force</code>，它會：</p>
 
     <ul lang="en-GB">
       <li>copies <code>gguf/*.gguf</code> and any <code>.gguf.part</code> from the old checkout into the new one with APFS clone-on-write — on macOS no 87 GB actually moves, the two paths share blocks;</li>
@@ -2928,7 +2928,7 @@ STATE=~/.pi/ds4/server.json
       <li>creates the new symlink.</li>
     </ul>
     <ul lang="zh-TW">
-      <li>用 APFS 的 clone-on-write，把舊 checkout 裡的 <code>gguf/*.gguf</code> 與 <code>.gguf.part</code> 複製到新的 checkout──在 macOS 上並沒有真的搬動 87 GB，兩條路徑共用同一批區塊；</li>
+      <li>用 APFS 的 clone-on-write，把舊 checkout 裡的 <code>gguf/*.gguf</code> 與 <code>.gguf.part</code> 複製到新的 checkout；在 macOS 上並沒有真的搬動 87 GB，兩條路徑共用同一批區塊；</li>
       <li>把舊的 support 目錄改名為 <code>support.backup.&lt;timestamp&gt;</code>；</li>
       <li>建立新的 symlink。</li>
     </ul>
@@ -2950,7 +2950,7 @@ STATE=~/.pi/ds4/server.json
       This chapter assumes everything above, and asks a different question. The bundled vector expresses one preference — that a contested question should open into a discussion. Yours may be different: a register, a discipline, a way of hedging. The toolchain that built the bundled direction is in the checkout, and it will build yours.
     </p>
     <p class="lead" lang="zh-TW">
-      本章假設你已經讀完前面所有內容，然後問一個不一樣的問題。內附的向量表達的是一種偏好──有爭議的問題應該打開成討論。你的偏好可能不同：某種語體、某個學科、某種保留餘地的方式。建出內附方向的那套工具鏈就在 checkout 裡，它也能建出你的。
+      本章假設你已經讀完前面所有內容，然後問一個不一樣的問題。內附的向量表達的是一種偏好：有爭議的問題應該打開成討論。你的偏好可能不同：某種語體、某個學科、某種保留餘地的方式。建出內附方向的那套工具鏈就在 checkout 裡，它也能建出你的。
     </p>
 
     <h3 id="11.1"><span class="no">11.1</span><span lang="en-GB">Where the toolchain lives</span><span lang="zh-TW">工具鏈在哪裡</span></h3>
@@ -2995,8 +2995,8 @@ STATE=~/.pi/ds4/server.json
         <ul>
           <li><code>DS4_DIR_STEERING_FILE=dir-steering/out/my-direction.f32</code></li>
           <li><code>DS4_DIR_STEERING_FFN=-0.75</code>，或你自己測出來的強度</li>
-          <li><code>DS4_DIR_STEERING_ATTN=0</code>──只要有工具參與就保持這個值</li>
-          <li><code>DS4_DIR_STEERING_POLICY=final-answer</code>──同理</li>
+          <li><code>DS4_DIR_STEERING_ATTN=0</code>，只要有工具參與就保持這個值</li>
+          <li><code>DS4_DIR_STEERING_POLICY=final-answer</code>，同理</li>
         </ul>
       </li>
       <li>重新啟動 ds4-server 測試：先用建向量時的那些提示，再用你沒用過的。</li>
@@ -3010,7 +3010,7 @@ STATE=~/.pi/ds4/server.json
     </ul>
     <ul lang="zh-TW">
       <li><strong>對比要乾淨。</strong>兩組提示應該在你在意的那一個維度上差異鮮明，其他地方則盡量相似。用「快樂的回答對悲傷的回答」去建，得到的方向裡混進的東西，遠不止情緒。</li>
-      <li><strong>引導語體，不引導信念。</strong>引導模型<em>怎麼</em>回答──保留餘地還是斬釘截鐵、敘事還是條列、學術還是口語──遠比引導它<em>得出什麼結論</em>可靠。這就是這個分叉建的是不確定性方向而不是某個立場的原因，也是 <a href="#4.3">§4.3</a> 存在的原因。</li>
+      <li><strong>引導語體，不引導信念。</strong>引導模型<em>怎麼</em>回答，保留餘地還是斬釘截鐵、敘事還是條列、學術還是口語，遠比引導它<em>得出什麼結論</em>可靠。這就是這個分叉建的是不確定性方向而非某個立場的原因，也是 <a href="#4.3">§4.3</a> 存在的原因。</li>
     </ul>
 
     <div class="aside">
@@ -3043,11 +3043,11 @@ STATE=~/.pi/ds4/server.json
         <div class="q"><span lang="en-GB">How is this different from ChatGPT, Claude or Gemini?</span><span lang="zh-TW">這跟用 ChatGPT、Claude、Gemini 有什麼不同？</span></div>
         <div class="a">
           <p lang="en-GB"><strong>Sovereignty over output.</strong> There is no “we can’t help with that” layer between you and the model. On questions of territory, sovereignty or philosophy, the uncertainty steering you can opt into (<a href="#steering">Chapter 4</a>) turns a rehearsed verdict into a laid-out discussion.</p>
-          <p lang="zh-TW"><strong>輸出的主權。</strong>你與模型之間沒有一層「我們無法協助這個請求」。在領土、主權或哲學這類問題上，你可以選擇開啟的不確定性引導（<a href="#steering">第四章</a>）會把背好的定論，變成攤開來的討論。</p>
+          <p lang="zh-TW"><strong>輸出的主權。</strong>你與模型之間沒有一層「我們無法協助這個請求」。在領土、主權或哲學這類問題上，你可以選擇開啟的不確定性引導（<a href="#steering">第四章</a>）會把背熟的定論，變成攤開來的討論。</p>
           <p lang="en-GB"><strong>Sovereignty over data.</strong> Conversations do not leave the machine, and they do not become anyone’s training set.</p>
           <p lang="zh-TW"><strong>資料的主權。</strong>對話不離開這台機器，也不會變成任何人的訓練資料。</p>
           <p lang="en-GB"><strong>Cost.</strong> No per-token price, no rate limit, no subscription. What you pay instead is the machine itself — a Mac from 96 GB up — and electricity.</p>
-          <p lang="zh-TW"><strong>成本。</strong>沒有逐 token 計價、沒有速率限制、沒有訂閱費。你付的是機器本身──96 GB 起的 Mac──和電費。</p>
+          <p lang="zh-TW"><strong>成本。</strong>沒有逐 token 計價、沒有速率限制、沒有訂閱費。你付的是機器本身，96 GB 起的 Mac，和電費。</p>
           <p lang="en-GB"><strong>Capability.</strong> A 284 B-parameter, 13 B-active MoE is in the bracket of current frontier open-weight models. The IQ2XXS imatrix quantisation gives up some ground to an unquantised cloud deployment on some tasks; conversation quality stays well inside “a daily coding and writing companion”.</p>
           <p lang="zh-TW"><strong>能力。</strong>2,840 億參數、130 億啟用的 MoE，屬於當前開放權重前沿模型的量級。IQ2XXS imatrix 量化在某些任務上會輸給未量化的雲端部署；對話品質仍穩穩落在「日常寫程式與寫作的夥伴」這個範圍裡。</p>
         </div>
@@ -3084,12 +3084,12 @@ STATE=~/.pi/ds4/server.json
             <li><strong>DeepSeek’s own API.</strong> Full capability, billed per token, and no directional steering.</li>
           </ul>
           <ul lang="zh-TW">
-            <li><strong>本機跑小一點的模型。</strong><code>llama.cpp</code>、MLX 或 Ollama 可以跑較小的開放權重模型──Llama、Mistral、Qwen、Gemma 這些系列──64 GB 的 Mac 應付得了 70 B 量級。ds4 引擎本身只為 DeepSeek V4 Flash 而寫。</li>
+            <li><strong>本機跑小一點的模型。</strong><code>llama.cpp</code>、MLX 或 Ollama 可以跑較小的開放權重模型，Llama、Mistral、Qwen、Gemma 這些系列；64 GB 的 Mac 應付得了 70 B 量級。ds4 引擎本身只為 DeepSeek V4 Flash 而寫。</li>
             <li><strong>租一台 Mac。</strong>MacStadium、Scaleway 等服務都有按小時計費的 M 系列機器。</li>
             <li><strong>DeepSeek 官方 API。</strong>完整能力，按 token 計費，沒有方向性引導。</li>
           </ul>
           <p lang="en-GB">The uncertainty steering in this fork was built against this particular abliterated GGUF. Its measured sweet spot — <code>ffn=-0.75, attn=0</code> on the tool path — will not necessarily carry to another model; to use the same mechanism elsewhere you rebuild the vector (<a href="#advanced">Chapter 11</a>).</p>
-          <p lang="zh-TW">這個分叉的不確定性引導，是對著這一份 abliterated GGUF 建的。它實測出來的甜蜜點──工具路徑上的 <code>ffn=-0.75, attn=0</code>──不一定能搬到別的模型上；要在別處用同樣的機制，得重建向量（<a href="#advanced">第十一章</a>）。</p>
+          <p lang="zh-TW">這個分叉的不確定性引導，是對著這一份 abliterated GGUF 建的。它實測出來的甜蜜點，工具路徑上的 <code>ffn=-0.75, attn=0</code>，不一定能搬到別的模型上；要在別處用同樣的機制，得重建向量（<a href="#advanced">第十一章</a>）。</p>
         </div>
       </div>
 
@@ -3097,7 +3097,7 @@ STATE=~/.pi/ds4/server.json
         <div class="q"><span lang="en-GB">How much power does it draw? Will it cook my Mac?</span><span lang="zh-TW">會吃多少電？會把 Mac 燒壞嗎？</span></div>
         <div class="a">
           <p lang="en-GB">During inference the draw is about what any GPU-heavy job costs an M-series machine — typically 30 to 60 W. For long sessions, give it a well-ventilated surface and keep the underside intake clear; keep an eye on unified memory and avoid stacking several other large applications alongside it; and remember that the watchdog closes the server and frees the RAM when you stop using it. The risk is no greater than any other sustained load, and Apple Silicon throttles itself before it comes to harm.</p>
-          <p lang="zh-TW">推論時的功耗，跟 M 系列機器跑任何吃 GPU 的工作差不多──通常在 30 到 60 W 之間。長時間使用的話，放在通風良好的桌面，別堵住底部的進氣；留意統一記憶體的用量，別同時疊好幾個大型應用程式；並記得你停止使用時，看門狗會關掉伺服器、把 RAM 還回來。風險不比其他持續高負載的工作大；Apple Silicon 在受損之前就會自己降頻。</p>
+          <p lang="zh-TW">推論時的功耗，跟 M 系列機器跑任何吃 GPU 的工作差不多，通常在 30 到 60 W 之間。長時間使用的話，放在通風良好的桌面，別堵住底部的進氣；留意統一記憶體的用量，別同時疊好幾個大型應用程式；並記得你停止使用時，看門狗會關掉伺服器、把 RAM 還回來。風險不比其他持續高負載的工作大；Apple Silicon 在受損之前就會自己降頻。</p>
         </div>
       </div>
 
@@ -3107,7 +3107,7 @@ STATE=~/.pi/ds4/server.json
           <p lang="en-GB">No. A jailbreak is a prompt that talks a cloud model past its policy layer: a bypass on the input side. Abliteration edits the weights themselves: a change on the model side. Directional steering is a third thing again, a low-rank edit to activations at run time. Three layers, three mechanisms.</p>
           <p lang="zh-TW">不是。越獄是用提示詞把雲端模型的政策層繞過去：輸入端的規避。Abliteration 直接編輯權重：模型端的修改。方向性引導又是第三件事，執行期對活化值的低秩編輯。三層，三種機制。</p>
           <p lang="en-GB">To see untouched DeepSeek V4 Flash, use the stock-recipe GGUF from upstream antirez/ds4. To see this fork’s weights without steering, leave <code>DS4_DIR_STEERING_FFN</code> and <code>DS4_DIR_STEERING_ATTN</code> unset — or set both to <code>0</code> if you had switched them on.</p>
-          <p lang="zh-TW">想看原封不動的 DeepSeek V4 Flash，用上游 antirez/ds4 的原版配方 GGUF。想看這個分叉的權重但不套用引導，就別設 <code>DS4_DIR_STEERING_FFN</code> 與 <code>DS4_DIR_STEERING_ATTN</code>──若之前開過，把兩個都設成 <code>0</code>。</p>
+          <p lang="zh-TW">想看原封不動的 DeepSeek V4 Flash，用上游 antirez/ds4 的原版配方 GGUF。想看這個分叉的權重但不套用引導，就別設 <code>DS4_DIR_STEERING_FFN</code> 與 <code>DS4_DIR_STEERING_ATTN</code>；若之前開過，把兩個都設成 <code>0</code>。</p>
         </div>
       </div>
 
@@ -3115,7 +3115,7 @@ STATE=~/.pi/ds4/server.json
         <div class="q"><span lang="en-GB">Why “pi”? Is it about π?</span><span lang="zh-TW">為什麼叫「pi」？跟圓周率有關嗎？</span></div>
         <div class="a">
           <p lang="en-GB">No. pi is the name of Earendil’s coding-agent CLI — an acronym that came out of a dream, not the number.</p>
-          <p lang="zh-TW">無關。pi 是 Earendil 那個 coding agent CLI 的名字──來自一場夢的縮寫，不是那個數字。</p>
+          <p lang="zh-TW">無關。pi 是 Earendil 那個 coding agent CLI 的名字，來自一場夢的縮寫，與那個數字無關。</p>
         </div>
       </div>
 
@@ -3139,7 +3139,7 @@ STATE=~/.pi/ds4/server.json
             <thead><tr><th>元件</th><th>授權</th><th>再散布時</th></tr></thead>
             <tbody>
               <tr><td><a href="https://github.com/audreyt/pi-ds4">audreyt/pi-ds4</a><small>本擴充套件</small></td><td>MIT</td><td>附它的 <code>LICENSE</code></td></tr>
-              <tr><td><a href="https://github.com/audreyt/ds4">audreyt/ds4</a>／<a href="https://github.com/antirez/ds4">antirez/ds4</a><small>推論引擎</small></td><td>MIT</td><td>附它的 <code>LICENSE</code>，antirez 為原始版權人</td></tr>
+              <tr><td><a href="https://github.com/audreyt/ds4">audreyt/ds4</a>、<a href="https://github.com/antirez/ds4">antirez/ds4</a><small>推論引擎</small></td><td>MIT</td><td>附它的 <code>LICENSE</code>，antirez 為原始版權人</td></tr>
               <tr><td><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash">DeepSeek-V4-Flash</a><small>上游的模型 checkpoint</small></td><td>MIT</td><td>附模型卡的授權，DeepSeek 為版權人</td></tr>
               <tr><td><a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp GGUF</a><small>這封信下載的權重</small></td><td>MIT，繼承</td><td>附該 repo 的授權，加一句「derivative of DeepSeek-V4-Flash」的標示</td></tr>
               <tr><td><strong>這封信</strong><small>你正在讀的這份 index.html</small></td><td>CC0</td><td>什麼都不必附</td></tr>
@@ -3155,7 +3155,7 @@ STATE=~/.pi/ds4/server.json
         <div class="q"><span lang="en-GB">Can this letter itself be reposted or rewritten?</span><span lang="zh-TW">這封信本身可以轉載或改寫嗎？</span></div>
         <div class="a">
           <p lang="en-GB">Yes. Its text is dedicated to the public domain under CC0. Copy it, translate it, rewrite it, sell it, republish it — no attribution required. A guide about owning your tools should not hold on to itself.</p>
-          <p lang="zh-TW">可以。它的文字以 CC0 貢獻於公眾領域。複製、翻譯、改寫、販售、再發表都可以，不必署名。一封談如何擁有自己工具的信，不應該把自己攥在手裡。</p>
+          <p lang="zh-TW">可以。它的文字以 CC0 貢獻於公眾領域。複製、翻譯、改寫、販售、再發表都可以，不必署名。一封談如何擁有自己工具的信，不應該把自己抓在手裡。</p>
         </div>
       </div>
     </div>
@@ -3181,17 +3181,17 @@ STATE=~/.pi/ds4/server.json
       <div>
         <dt>MoE<small>混合專家</small></dt>
         <dd lang="en-GB">Mixture of Experts. The model is divided into expert sub-networks, and each token wakes only a few of them — here about 13 billion parameters per token, so it runs at the speed of a 13 B model while carrying the knowledge of a 284 B one.</dd>
-        <dd lang="zh-TW">Mixture of Experts。模型分成多個專家子網路，每個 token 只喚醒其中少數幾個──這裡每個 token 約啟用 130 億個參數，所以跑起來是 13 B 模型的速度，裝的卻是 284 B 的知識。</dd>
+        <dd lang="zh-TW">Mixture of Experts。模型分成多個專家子網路，每個 token 只喚醒其中少數幾個；這裡每個 token 約啟用 130 億個參數，所以跑起來是 13 B 模型的速度，裝的卻是 284 B 的知識。</dd>
       </div>
       <div>
         <dt>quantization<small>量化</small></dt>
         <dd lang="en-GB">Compressing weights from their native precision into fewer bits. Vision-Exp IQ2 is not one bit-width: routed experts are mostly IQ2_XXS and Q2_K, attention, shared-expert and output paths stay at Q8_0, and selected indexer and control tensors remain F16, F32 or I32. The language GGUF comes to 86720111776 bytes, plus an 889 MiB encoder.</dd>
-        <dd lang="zh-TW">把權重從原生精度壓縮到更少的位元。Vision-Exp IQ2 不是單一位元寬度：routed expert 以 IQ2_XXS 與 Q2_K 為主，attention、shared expert 與 output 路徑保留 Q8_0，部分 indexer 與 control tensor 維持 F16、F32 或 I32。語言 GGUF 共 86720111776 位元組，另加 889 MiB 的編碼器。</dd>
+        <dd lang="zh-TW">把權重從原生精度壓縮到更少的位元。Vision-Exp IQ2 不是單一位元寬度：routed expert 以 IQ2_XXS 與 Q2_K 為主，attention、shared expert 與 output 路徑保留 Q8_0，部分 indexer 與 control tensor 維持 F16、F32 或 I32。語言 GGUF 共 86 720 111 776 位元組，另加 889 MiB 的編碼器。</dd>
       </div>
       <div>
         <dt>GGUF<small>模型檔格式</small></dt>
         <dd lang="en-GB">The single-file model format of the llama.cpp family (<code>.gguf</code>): weights, architecture and tokenizer in one file. The language GGUF here is 86720111776 bytes.</dd>
-        <dd lang="zh-TW">llama.cpp 家族使用的單檔模型格式（<code>.gguf</code>）：權重、結構、tokenizer 全在一個檔案裡。這裡的語言 GGUF 是 86720111776 位元組。</dd>
+        <dd lang="zh-TW">llama.cpp 家族使用的單檔模型格式（<code>.gguf</code>）：權重、結構、tokenizer 全在一個檔案裡。這裡的語言 GGUF 是 86 720 111 776 位元組。</dd>
       </div>
       <div>
         <dt>abliteration<small>拒絕方向消除</small></dt>
@@ -3240,7 +3240,7 @@ STATE=~/.pi/ds4/server.json
       <div>
         <dt>speculative decoding / DSpark<small>推測解碼</small></dt>
         <dd lang="en-GB">A small draft head guesses a block of tokens; the full model verifies before committing. Enabled in ds4 with <code>--mtp DSpark.gguf</code> (experimental). This fork adds B2 rejection sampling so the output distribution is identical to plain decoding — lossless.</dd>
-        <dd lang="zh-TW">一個小的草稿頭一次猜一整段 token；完整模型驗證之後才採用。ds4 以 <code>--mtp DSpark.gguf</code> 啟用（實驗性）。這個分叉加上了 B2 rejection sampling，讓輸出分佈與不開推測時完全相同──無損。</dd>
+        <dd lang="zh-TW">一個小的草稿頭一次猜一整段 token；完整模型驗證之後才採用。ds4 以 <code>--mtp DSpark.gguf</code> 啟用（實驗性）。這個分叉加上了 B2 rejection sampling，讓輸出分布與不開推測時完全相同，也就是無損。</dd>
       </div>
     </dl>
 
@@ -3259,12 +3259,12 @@ STATE=~/.pi/ds4/server.json
       <div>
         <dt>uncertainty direction<small>不確定性方向</small></dt>
         <dd lang="en-GB">The vector bundled with this fork, built from 120 contested prompts balanced between English and Traditional Chinese, with Taiwan and Hong Kong deliberately left out, contrasting fair stakeholder framing with single-answer framing.</dd>
-        <dd lang="zh-TW">這個分叉內附的向量，用 120 條英文與繁體中文各半、刻意不含台灣與香港的爭議提示建成，對比「公正呈現利害關係人」與「直接給單一答案」兩種框架。</dd>
+        <dd lang="zh-TW">這個分叉內附的向量，用 120 條英文與繁體中文各半、刻意不含臺灣與香港的爭議提示建成，對比「公正呈現利害關係人」與「直接給單一答案」兩種框架。</dd>
       </div>
       <div>
         <dt>response register<small>回應語體</small></dt>
         <dd lang="en-GB">The manner of a reply rather than its content: hedged or assertive, bulleted or narrative, academic or conversational. Far more amenable to steering than stance.</dd>
-        <dd lang="zh-TW">回答的方式而不是內容：保留餘地還是斬釘截鐵、條列還是敘事、學術還是口語。比立場好引導得多。</dd>
+        <dd lang="zh-TW">回答的方式而非內容：保留餘地還是斬釘截鐵、條列還是敘事、學術還是口語。比立場好引導得多。</dd>
       </div>
     </dl>
 
@@ -3298,7 +3298,7 @@ STATE=~/.pi/ds4/server.json
       <div>
         <dt>/health · /stats<small>狀態端點</small></dt>
         <dd lang="en-GB">Read-only endpoints on ds4-server since the 2026-07 pin. <code>/health</code> answers liveness and uptime; <code>/stats</code> answers queue depth, per-source cache hits and the last prefill and decode speeds. Both reply even mid-generation (<a href="#7.1">§7.1</a>).</dd>
-        <dd lang="zh-TW">2026-07 釘版起 ds4-server 的唯讀端點。<code>/health</code> 回存活狀態與執行時間；<code>/stats</code> 回佇列深度、各來源的快取命中數，以及最近一次 prefill 與 decode 的速度。生成到一半也答得動（<a href="#7.1">§7.1</a>）。</dd>
+        <dd lang="zh-TW">2026-07 釘選版起 ds4-server 的唯讀端點。<code>/health</code> 回存活狀態與執行時間；<code>/stats</code> 回佇列深度、各來源的快取命中數，以及最近一次 prefill 與 decode 的速度。生成到一半也答得動（<a href="#7.1">§7.1</a>）。</dd>
       </div>
     </dl>
   </section>
@@ -3319,7 +3319,7 @@ STATE=~/.pi/ds4/server.json
       <li><strong>The cyberneurova research project</strong>, whose abliterated GGUF first made running this model at home a real option.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong>，本擴充套件分叉自的上游。Armin Ronacher 寫了整套生命週期──租約、看門狗、鎖──而且寫得讓人讀得懂。</li>
+      <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong>，本擴充套件分叉自的上游。Armin Ronacher 寫了整套生命週期，租約、看門狗、鎖，而且寫得讓人讀得懂。</li>
       <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>，Salvatore Sanfilippo 用純 C 寫的 DeepSeek V4 Flash 引擎，延續他寫 Redis 的傳統。GGUF 的轉換來自它的姊妹專案 <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>。</li>
       <li><strong>ds4 執行期與後端的貢獻者。</strong>SSD 串流、分散式推論與 ROCm 整合由 antirez 主導；elkaix（伺服器可觀測性與 agent 迴圈快取，PR #489）、MA（DSpark B2 rejection sampling）、Nick Parrin（Strix Halo）、Andrea Borio（混合量化的專家串流）、rinaldofesta（評測評分器）、kamranjon 與 fry69（agent 修正）、Andreas Spannagel（MTP 驗證修正）、ivanfioravanti（M5 Metal 4／MPP）。pi-ds4 站在這個執行期之上，不另外經營一套調校的說法。</li>
       <li><strong>cyberneurova 研究專案</strong>，他們發布的 abliterated GGUF，第一次讓在家裡跑這顆模型成為真實的選項。</li>
@@ -3336,7 +3336,7 @@ STATE=~/.pi/ds4/server.json
       For the ethical and political frame around this project, read <a href="https://civic.ai/software-freedom-as-civic-care/">Software Freedom as Civic Care</a> (<a href="https://civic.ai/tw/software-freedom-as-civic-care/">華文</a>). It places DS4 on free software’s repair path: the question is never whether a cloud vendor means well, but whether users and communities own the inference loop — can inspect it, fork it, roll it back — and can bring AI into the loops their communities already run.
     </p>
     <p lang="zh-TW">
-      想看這個專案周圍的倫理與政治框架，請讀<a href="https://civic.ai/tw/software-freedom-as-civic-care/">〈軟體自由與公民關懷〉</a>（<a href="https://civic.ai/software-freedom-as-civic-care/">English</a>）。那篇文章把 DS4 放進自由軟體的修復路徑：問題從來不是雲端供應商是否善意，而是使用者與社群是否擁有推論的迴圈──能檢視、能分叉、能回滾──並且能把 AI 帶進社群本來就在運轉的循環裡。
+      想看這個專案周圍的倫理與政治框架，請讀<a href="https://civic.ai/tw/software-freedom-as-civic-care/">〈軟體自由與公民關懷〉</a>（<a href="https://civic.ai/software-freedom-as-civic-care/">English</a>）。那篇文章把 DS4 放進自由軟體的修復路徑：問題從來不是雲端供應商是否善意，而是使用者與社群是否擁有推論的迴圈，能檢視、能分叉、能回滾，並且能把 AI 帶進社群本來就在運轉的循環裡。
     </p>
 
     <h3 id="afterword"><span lang="en-GB">Afterword</span><span lang="zh-TW">後話</span></h3>
@@ -3345,7 +3345,7 @@ STATE=~/.pi/ds4/server.json
       Running a frontier model on your own machine is, technically, the relocation of some computation. Politically, it is taking a steering wheel back into your own hands. This fork ships <em>uncertainty steering</em> as something you can switch on — not to decide any question for you, but to give back the space for discussion in front of the questions that training has sealed shut. And it ships it as a choice rather than a default for the same reason the managed launch passes nothing you did not ask for: a nudge you chose is a nudge you can name, measure and remove.
     </p>
     <p lang="zh-TW">
-      把前沿模型放到自己的機器上跑，技術上，是把一段運算搬了個地方；政治上，是把一個方向盤接回自己手中。這個分叉把<em>不確定性引導</em>做成一個你可以打開的東西──不是替你決定任何問題的答案，而是在那些被訓練封死的提問面前，把討論的空間還給你。而它做成選項、不做成預設，理由和代管啟動不傳任何你沒要求的參數一樣：你自己選的推力，才是你叫得出名字、量得出大小、也拿得掉的推力。
+      把前沿模型放到自己的機器上跑，技術上，是把一段運算搬了個地方；政治上，是把一個方向盤接回自己手中。這個分叉把<em>不確定性引導</em>做成一個你可以打開的東西：它不替你決定任何問題的答案，而是在那些被訓練封死的提問面前，把討論的空間還給你。它做成選項而不做成預設，理由和代管啟動不傳任何你沒要求的參數一樣：你自己選的推力，才是你叫得出名字、量得出大小、也拿得掉的推力。
     </p>
 
     <p class="pull q" lang="en-GB">A model can close a question on an answer; the user can open it back into a discussion. The moment this guide finishes its work is the moment you no longer need it.</p>
