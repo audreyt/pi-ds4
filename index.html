@@ -1059,16 +1059,16 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
   </div>
   <div class="hero-below">
     <p class="hero-stand">
-      <span lang="en-GB">pi-ds4 runs DeepSeek V4.1 Flash, a model that can also read images, entirely on a 128 GB Apple Silicon Mac. No cloud, no meter, no rate limit, and a decision trace you can replay, compare and argue with.</span>
-      <span lang="zh-TW">pi-ds4 把 DeepSeek V4.1 Flash 整個放進一台 128&nbsp;GB 的 Apple Silicon Mac。這個模型也看得懂圖片。不用雲端、不計費、沒有速率限制，每一次決策的軌跡都能重跑、比對、質疑。</span>
+      <span lang="en-GB">pi-ds4 runs DeepSeek V4.1 Flash, a frontier model that reads images as well as text, on one 128 GB Apple Silicon Mac. No cloud, no meter and no rate limit. Every decision leaves a trace you can replay, compare and argue with.</span>
+      <span lang="zh-TW">pi-ds4 在一台 128&nbsp;GB 的 Apple Silicon Mac 上執行 DeepSeek V4.1 Flash，這個最先進的模型看得懂圖片，也讀得懂文字。不用雲端、不計費，也沒有速率限制。每一次決策都會留下軌跡，你可以重跑、比對、質疑。</span>
     </p>
     <div class="install" role="group" aria-label="Install command">
       <code><span class="prompt">$</span>pi install https://github.com/audreyt/pi-ds4</code>
       <button class="copy" data-copy="pi install https://github.com/audreyt/pi-ds4" aria-label="Copy the install command"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button>
     </div>
     <p class="hero-note">
-      <span lang="en-GB">needs <a href="https://github.com/earendil-works/pi">pi</a> first, and a 128 GB Mac; the first launch downloads about 367 GB</span>
-      <span lang="zh-TW">先裝好 <a href="https://github.com/earendil-works/pi">pi</a>，還要一台 128 GB 的 Mac；首次啟動會下載約 367 GB。</span>
+      <span lang="en-GB">the first launch downloads about 367 GB. Before that, you need <a href="https://github.com/earendil-works/pi">pi</a> installed and a 128 GB Mac with its wired-memory limit raised once.</span>
+      <span lang="zh-TW">首次啟動會下載約 367 GB。在那之前，要先裝好 <a href="https://github.com/earendil-works/pi">pi</a>，並準備一台把可鎖定記憶體上限調高過一次的 128 GB Mac。</span>
     </p>
     <a class="cue" href="#letter"><span lang="en-GB">$ scroll to continue</span><span lang="zh-TW">$ 往下捲動</span><span class="caret">▌</span></a>
   </div>
@@ -1471,9 +1471,9 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <ul lang="en-GB">
       <li><strong>Chapter 0</strong>: why this exists, in the language of civic care.</li>
       <li><strong>Chapters 1 and 2</strong>: the hardware you need, the one-line install, and what actually happens on first launch.</li>
-      <li><strong>Chapters 3 and 4</strong>: the model (abliteration, the Q1 profile) and the fork’s signature feature, directional steering.</li>
-      <li><strong>Chapters 5 and 6</strong>: every environment variable, then tuning of the context window and the KV cache.</li>
-      <li><strong>Chapter 7</strong>: day-to-day use: the API, the log, leases, the native agent.</li>
+      <li><strong>Chapters 3 and 4</strong>: the model, including abliteration (a treatment that makes it refuse less) and the Q1 profile, and the fork’s signature feature, directional steering.</li>
+      <li><strong>Chapters 5 and 6</strong>: every environment variable, then tuning the context window (how much text the model can hold in view at once) and the KV cache (its short-term memory).</li>
+      <li><strong>Chapter 7</strong>: day-to-day use, from the API and the log to leases and the native agent.</li>
       <li><strong>Chapter 8</strong>: pi-ds4 as a backend for Codex CLI, Claude Code, OpenClaw and Hermes Agent, including the path for non-Mac hardware.</li>
       <li><strong>Chapters 9 to 11</strong>: troubleshooting, the local development install, and building your own steering direction.</li>
     </ul>
@@ -1482,7 +1482,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       <li><strong>第一、二章</strong>：需要的硬體、一行安裝，以及第一次啟動時到底發生什麼事。</li>
       <li><strong>第三、四章</strong>：這顆模型（abliteration，一種去除拒答傾向的處理；Q1 配方），以及這個分叉的招牌功能：方向性引導。</li>
       <li><strong>第五、六章</strong>：每一個環境變數，然後是 context（模型一次能讀的文字長度）與 KV cache（模型的短期記憶）的調校。</li>
-      <li><strong>第七章</strong>：日常使用：API、log、租約、原生智慧體。</li>
+      <li><strong>第七章</strong>：日常使用，包括 API、log、租約和原生智慧體。</li>
       <li><strong>第八章</strong>：把 pi-ds4 當成 Codex CLI、Claude Code、OpenClaw、Hermes Agent 的後端，也包括非 Mac 硬體的做法。</li>
       <li><strong>第九到十一章</strong>：故障排除、本機開發安裝、自己建一個引導方向。</li>
     </ul>
@@ -3091,9 +3091,9 @@ STATE=~/.pi/ds4/server.json
     <p lang="zh-TW">若 <code>~/.pi/ds4/support</code> 已經指向別的地方，例如上次 <code>pi install</code> 留下來的，腳本不會直接覆蓋。加上 <code>--force</code> 之後，它會：</p>
 
     <ul lang="en-GB">
-      <li>copies <code>gguf/*.gguf</code> and any <code>.gguf.part</code> from the old checkout into the new one using APFS clone-on-write. On macOS no 341.5 GiB really moves, because the two paths share the same blocks;</li>
-      <li>renames the old support directory to <code>support.backup.&lt;timestamp&gt;</code>;</li>
-      <li>creates the new symlink.</li>
+      <li>copy <code>gguf/*.gguf</code> and any <code>.gguf.part</code> from the old checkout into the new one with APFS clone-on-write (a copy that shares the original’s disk blocks). On macOS none of the 341.5 GiB actually moves, as the two paths share the same blocks.</li>
+      <li>rename the old support directory to <code>support.backup.&lt;timestamp&gt;</code>.</li>
+      <li>create the new symlink.</li>
     </ul>
     <ul lang="zh-TW">
       <li>用 APFS 的 clone-on-write（複製時不真的複製資料），把舊 checkout 裡的 <code>gguf/*.gguf</code> 和 <code>.gguf.part</code> 複製到新的 checkout。在 macOS 上，341.5 GiB 不會真的搬動，兩個路徑共用同一批資料區塊；</li>
@@ -3513,16 +3513,16 @@ STATE=~/.pi/ds4/server.json
 
     <ul lang="en-GB">
       <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong>, the upstream this extension is forked from. Armin Ronacher wrote the whole lifecycle: the leases, the watchdog, the lock. He wrote it so that people could read it.</li>
-      <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>, Salvatore Sanfilippo's DeepSeek V4 Flash engine, written in plain C in the same spirit as Redis. The GGUF conversion comes from its sibling project, <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>.</li>
-      <li><strong>The ds4 runtime and backend contributors.</strong> SSD streaming, distributed inference and the ROCm integration were led by antirez. Others: elkaix (server observability and the agent-loop cache, PR #489), MA (DSpark B2 rejection sampling), Nick Parrin (Strix Halo), Andrea Borio (mixed-quant expert streaming), rinaldofesta (the eval grader), kamranjon and fry69 (agent fixes), Andreas Spannagel (the MTP verify fix) and ivanfioravanti (M5 Metal 4 / MPP). pi-ds4 builds on that runtime and doesn't tell a tuning story of its own.</li>
+      <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>, Salvatore Sanfilippo's DeepSeek V4 and V4.1 Flash engine, written in plain C in the same spirit as Redis. The V4 GGUF conversion came from its sibling project, <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>. V4.1 files are built with ds4’s own <code>gguf-tools</code>.</li>
+      <li><strong>The ds4 runtime and backend contributors.</strong> SSD streaming, distributed inference and the ROCm integration were led by antirez. Others: elkaix (server observability and the agent-loop cache, PR #489), MA (DSpark B2 rejection sampling), Nick Parrin (Strix Halo), Andrea Borio (mixed-quant expert streaming), rinaldofesta (the eval grader), kamranjon and fry69 (agent fixes), Andreas Spannagel (the MTP verify fix) and ivanfioravanti (M5 Metal 4 / MPP). pi-ds4 only packages that runtime; it adds no tuning of its own.</li>
       <li><strong><a href="https://huggingface.co/unsloth">Unsloth</a></strong>, whose UD-IQ1_S quantisation, dense tensors and imatrix make up most of this Q1.</li>
       <li><strong><a href="https://github.com/kernelpool/ds4">kernelpool/ds4</a> and Ivan Fioravanti</strong>, whose V4.1 Metal work is merged into the pinned engine.</li>
       <li><strong>The cyberneurova research project</strong>, whose abliterated GGUF first made running DeepSeek V4 Flash at home a real option.</li>
     </ul>
     <ul lang="zh-TW">
       <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong>，本擴充套件分叉自它。Armin Ronacher 寫了整套生命週期管理，包括租約、看門狗和鎖，而且寫得讓人讀得懂。</li>
-      <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>，Salvatore Sanfilippo 用純 C 寫的 DeepSeek V4 Flash 引擎，和他寫 Redis 時一脈相承。GGUF 的轉換來自它的姊妹專案 <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>。</li>
-      <li><strong>ds4 執行期與後端的貢獻者。</strong>SSD 串流、分散式推論和 ROCm 整合，由 antirez 主導。其他貢獻者有：elkaix（伺服器可觀測性與智慧體迴圈快取，PR #489）、MA（DSpark B2 rejection sampling）、Nick Parrin（Strix Halo）、Andrea Borio（混合量化的專家串流）、rinaldofesta（評測評分器）、kamranjon 與 fry69（智慧體修正）、Andreas Spannagel（MTP 驗證修正）、ivanfioravanti（M5 Metal 4／MPP）。pi-ds4 站在這個執行期之上，沒有另外講一套自己的調校故事。</li>
+      <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>，Salvatore Sanfilippo 用純 C 寫的 DeepSeek V4 與 V4.1 Flash 引擎，和他寫 Redis 時一脈相承。V4 的 GGUF 轉換來自它的姊妹專案 <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>，V4.1 的檔案則用 ds4 自己的 <code>gguf-tools</code> 做出來。</li>
+      <li><strong>ds4 執行期與後端的貢獻者。</strong>SSD 串流、分散式推論和 ROCm 整合，由 antirez 主導。其他貢獻者有：elkaix（伺服器可觀測性與智慧體迴圈快取，PR #489）、MA（DSpark B2 rejection sampling）、Nick Parrin（Strix Halo）、Andrea Borio（混合量化的專家串流）、rinaldofesta（評測評分器）、kamranjon 與 fry69（智慧體修正）、Andreas Spannagel（MTP 驗證修正）、ivanfioravanti（M5 Metal 4／MPP）。pi-ds4 只是把這個執行期打包好，沒有另外加上自己的調校。</li>
       <li><strong><a href="https://huggingface.co/unsloth">Unsloth</a></strong>，他們的 UD-IQ1_S 量化、稠密張量和 imatrix，構成了這個 Q1 的大部分。</li>
       <li><strong><a href="https://github.com/kernelpool/ds4">kernelpool/ds4</a> 與 Ivan Fioravanti</strong>，他們的 V4.1 Metal 工作已合併進固定版本的引擎。</li>
       <li><strong>cyberneurova 研究專案</strong>，他們發布的 abliterated GGUF，第一次讓在家跑 DeepSeek V4 Flash 成為可行的選擇。</li>
