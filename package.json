@@ -1,7 +1,7 @@
 {
   "name": "pi-ds4",
-  "version": "0.6.1",
-  "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4 Flash Vision-Exp inference (audreyt/ds4 main + preferred Vision-Exp abliterated IQ2 GGUF + encoder).",
+  "version": "0.7.0",
+  "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4.1 Flash inference on 128 GB Apple Silicon (audreyt/ds4 main + V4.1 Flash 1017 abliterated Q1 GGUF + vision sidecar).",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -16,7 +16,8 @@
     "ds4",
     "deepseek",
     "deepseek-v4-flash",
-    "vision-exp",
+    "deepseek-v4.1-flash",
+    "vision",
     "abliterated",
     "m5"
   ],

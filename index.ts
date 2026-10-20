@@ -57,7 +57,7 @@ const BUILD_RECORD_FILE = join(DS4_DIR, "build.json");
 // disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
-const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "7855b7a45196b328c6266be157d60160e9442a88").trim();
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "d3f4cd6928b20a189da3b68ab5bfcc47bebf7505").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)
@@ -102,16 +102,20 @@ const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API
 //   window, admission reserves output 50k + compaction 16k + speculation 8k
 //   + DeepSeek safety 12k + system/tools (~25k on a full omo prompt) = 112k
 //   (reproduced 2026-09-27: ModelUsabilityBudgetError, 12174 short of 112174).
-//   256 k was already the documented 96 GB+ recommendation; 1 M was measured
-//   on a 128 GB M5 Max. Common values:
+//   The V4.1 Flash Q1 keeps ~106 GiB of weights resident under ds4's 112 GiB
+//   V4.1 budget, so a long window opens with a narrower prefill batch
+//   instead of being refused. Measured on a 128 GB M5 Max without the vision
+//   sidecar:
 //     128   → 128 k  (tight: also cap advertised maxTokens)
-//     256   → 256 k
-//     512   → 512 k
-//     1024  → 1 024 000 tokens (full 1 M context of DeepSeek V4 Flash)
+//     256   → 256 k  (2048-row prefill)
+//     384   → 384 k  (1024-row prefill)
+//     512+  → refused at open: it does not fit next to the weights
+//   pi-ds4 always loads the 0.9 GiB sidecar, which costs about one batch
+//   step: 256 k opens with a 1024-row prefill (measured), and 384 k is
+//   estimated not to fit.
 //
 // When raising DS4_CONTEXT_KB you should normally also raise
-// DS4_KV_DISK_SPACE_MB so the on-disk KV cache can hold a full working set
-// (e.g. 65536 or higher for 1 M context).
+// DS4_KV_DISK_SPACE_MB so the on-disk KV cache can hold a full working set.
 //
 // Default KV disk budget is RAM-tiered when DS4_KV_DISK_SPACE_MB is unset:
 //   128 GB+  → 65536 MiB (64 GB) — keeps long agent-session prefixes on disk
@@ -120,9 +124,6 @@ const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API
 //   96–127 GB → 32768 MiB (32 GB)
 //   else      → 8192 MiB (legacy 8 GB floor)
 //
-// The 1 M path (DS4_CONTEXT_KB=1024 + 65536 MiB KV) was measured on a 128 GB M5 Max:
-// ≈ 21.3 GB live KV buffers, server reached "listening" successfully.
-// On 96 GB machines keep ≤ 256 unless other memory usage is minimal.
 const CONTEXT_KB = (process.env.DS4_CONTEXT_KB ?? "256").trim();
 const CTX_SIZE = /^\d+$/.test(CONTEXT_KB)
 	? String(Number(CONTEXT_KB) * 1000)
@@ -144,18 +145,16 @@ function defaultKvDiskSpaceMb(): string {
 }
 
 const KV_DISK_SPACE_MB = process.env.DS4_KV_DISK_SPACE_MB?.trim() || defaultKvDiskSpaceMb();
-// Directional steering is opt-in for Vision-Exp and other non-calibrated
-// weights. The legacy cyberneurova-calibrated uncertainty vector remains
-// available in the ds4 checkout, but it is weight-specific: leave FFN/ATTN at
-// 0 until a Vision-Exp direction is validated. Set DS4_DIR_STEERING_FFN (and
-// optionally ATTN) to enable, or point DS4_DIR_STEERING_FILE at a different
-// .f32.
+// Directional steering is opt-in. V4.1 needs one f32 direction per layer at
+// its own width (40 x 5120); the V4 vectors in the ds4 checkout
+// (dir-steering/out/*.f32, 43 x 4096) do not fit it, and no V4.1 direction
+// ships yet. Set DS4_DIR_STEERING_FILE to a V4.1 .f32 and DS4_DIR_STEERING_FFN
+// (optionally ATTN) to enable.
 //
-// When enabled, keep FFN-only for tool-enabled agent runs. Seeded
+// When enabled, keep FFN-only for tool-enabled agent runs. On V4, seeded
 // OpenClaw/Codex-harness replays showed ffn=-2, attn=-0.5 can over-amplify the
-// direction into DSML/tool-call leakage on long 50k+ tool prompts. ffn=-0.75,
-// attn=0 is the historical guarded magnitude on the cyberneurova vector.
-const STEERING_FILE = process.env.DS4_DIR_STEERING_FILE ?? "dir-steering/out/uncertainty_ablit_imatrix.f32";
+// direction into DSML/tool-call leakage on long 50k+ tool prompts.
+const STEERING_FILE = process.env.DS4_DIR_STEERING_FILE ?? "";
 const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "0";
 const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "0";
 const STEERING_POLICY = process.env.DS4_DIR_STEERING_POLICY ?? "final-answer";
@@ -174,7 +173,7 @@ const AGENT_STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Numb
 		"--dir-steering-attn", STEERING_ATTN,
 	]
 	: [];
-const VISION_ENCODER_REL = "gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf";
+const VISION_ENCODER_REL = "gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf";
 const SERVER_ARGS = ["--ctx", CTX_SIZE, "--kv-disk-dir", KV_DIR, "--kv-disk-space-mb", KV_DISK_SPACE_MB, "--vision", VISION_ENCODER_REL, ...STEERING_ARGS];
 
 
@@ -197,11 +196,11 @@ const WATCHDOG_POLL_MS = 2_000;
 const PROGRESS_NOTIFY_MS = 750;
 const PROGRESS_MAX_CHARS = 160;
 
-// pi-ds4 prefers the official-recipe Vision-Exp IQ2 language GGUF with the
-// published rank-1 wo_b graft (33 Q8_0 attn_output_b tensors), from
-// audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF (~80.76 GiB), plus the
-// unmodified 316-tensor encoder. Historic "q2" selector kept for lease/state.
-type ModelQuant = "q2";
+// pi-ds4 runs the DeepSeek V4.1 Flash 1017 abliterated Q1 from
+// audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF (365.7 GB file: ~106 GiB of
+// weights resident on Metal, Engram tables read from disk) with the 1017
+// vision sidecar. "q1" is the selector; "preferred" is an alias.
+type ModelQuant = "q1";
 
 type ServerState = {
 	managedBy: string;
@@ -358,28 +357,39 @@ function truncateText(value: string, width: number, ellipsis = "", pad = false):
 
 function selectedModelQuant(): ModelQuant {
 	const forcedRaw = process.env.DS4_MODEL_QUANT?.toLowerCase();
-	const forced = forcedRaw === "preferred" || forcedRaw === "vision-abliterated" || forcedRaw === "ds4f-vision-abliterated" ? "q2" : forcedRaw;
-	if (forced && forced !== "q2") {
+	const forced = forcedRaw === "preferred" || forcedRaw === "ds41f-q1-abliterated" ? "q1" : forcedRaw;
+	if (forced && forced !== "q1") {
 		throw new Error(
-			`DS4_MODEL_QUANT=${forcedRaw} not supported; this extension only automates the preferred Vision-Exp abliterated IQ2 GGUF (audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF, historic selector q2 / preferred) plus the Vision encoder. Unset DS4_MODEL_QUANT or set it to q2 or preferred. (To experiment with another GGUF, bypass this extension and run ds4-server directly — see explainer §8.6 C path.)`,
+			`DS4_MODEL_QUANT=${forcedRaw} not supported; this extension only automates the DeepSeek V4.1 Flash 1017 abliterated Q1 (audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF, selector q1 or preferred) plus its vision sidecar. The V4 Vision-Exp IQ2 (selector q2) was pi-ds4 v0.6.x. Unset DS4_MODEL_QUANT or set it to q1. (To run another GGUF, bypass this extension and start ds4-server directly.)`,
 		);
 	}
 
-	const ramGb = totalmem() / 1_000_000_000;
-	if (ramGb < 96) {
+	// ds4 runs IQ1_S experts and Q5_K/Q6_K dense weights only on Metal; CUDA and
+	// ROCm refuse the file at open, after a 366 GB download.
+	if (process.platform !== "darwin") {
 		throw new Error(
-			`DeepSeek V4 Flash Vision-Exp IQ2 needs at least 96 GB RAM; detected ${ramGb.toFixed(1)} GB`,
+			"DeepSeek V4.1 Flash Q1 runs only on Apple Silicon (Metal). On Linux CUDA/ROCm hosts use pi-ds4 v0.6.1, or bring your own GGUF and ds4-server via DS4_RUNTIME_DIR.",
 		);
 	}
+
+	// A 128 GB Mac reports about 137 GB here; 96 GB Macs report about 103 GB.
+	const ramGb = totalmem() / 1_000_000_000;
 	if (ramGb < 128) {
-		const wiredLimitMb = readIogpuWiredLimitMb();
-		if (wiredLimitMb < 87_000) {
-			throw new Error(
-				`Detected ${ramGb.toFixed(1)} GB RAM. On Macs below 128 GB the Metal wired-memory ceiling must be raised first so the ~80.76 GiB Vision-Exp language GGUF fits. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=92000\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command. 128 GB+ Macs do not need this step and can run more apps alongside ds4-server.`,
-			);
-		}
+		throw new Error(
+			`DeepSeek V4.1 Flash Q1 keeps ~106 GiB of weights resident and needs a 128 GB Mac; detected ${ramGb.toFixed(1)} GB RAM. pi-ds4 v0.6.1 runs the smaller V4 Vision-Exp IQ2 on 96 GB Macs.`,
+		);
 	}
-	return "q2";
+	// ds4 caps its V4.1 budget at Metal's recommended working set, which a
+	// 128 GB Mac leaves at about 107.5 GiB unless iogpu.wired_limit_mb is set:
+	// less than the Q1 plus the vision sidecar need. 114688 MiB matches ds4's own
+	// 112 GiB cap. Macs with more memory default above that.
+	const WIRED_LIMIT_MB = 114_688;
+	if (ramGb < 160 && readIogpuWiredLimitMb() < WIRED_LIMIT_MB) {
+		throw new Error(
+			`Detected ${ramGb.toFixed(1)} GB RAM. On a 128 GB Mac the Metal wired-memory ceiling must be raised first so the ~106 GiB V4.1 Flash Q1 and its vision sidecar fit ds4's 112 GiB budget. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=${WIRED_LIMIT_MB}\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=${WIRED_LIMIT_MB}' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command.`,
+		);
+	}
+	return "q1";
 }
 
 function readIogpuWiredLimitMb(): number {
@@ -1725,11 +1735,11 @@ function buildAgentArgs(initialPrompt: string): string[] {
 
 async function ensureModel(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
 	const quant = selectedModelQuant();
-	onStatus?.(`ensuring ${quant} model (preferred Vision-Exp abliterated IQ2 + encoder)`);
+	onStatus?.(`ensuring ${quant} model (V4.1 Flash abliterated Q1 + vision sidecar)`);
 	// audreyt/pi-ds4 fork: shadow the antirez/ds4 download_model.sh with our
-	// own copy that fetches the preferred Vision-Exp language GGUF from
-	// audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF and the encoder
-	// from antirez/deepseek-v4-gguf. Idempotent. No 0731 DSpark attach.
+	// own copy that fetches the V4.1 Flash 1017 abliterated Q1 from
+	// audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF and the 1017 vision sidecar
+	// from audreyt/deepseek-v4.1-flash-1017-gguf. Idempotent.
 	await runLogged(DOWNLOAD_SCRIPT, [quant], runtimeDir, `download ${quant} model`, {
 		onStatus,
 		progressPrefix: `downloading ${quant} model`,
@@ -2324,7 +2334,7 @@ function registerDs4Provider(pi: ExtensionAPI): void {
 		models: [
 			{
 				id: MODEL_ID,
-				name: "DeepSeek V4 Flash (ds4.c local)",
+				name: "DeepSeek V4.1 Flash (ds4.c local)",
 				reasoning: true,
 				thinkingLevelMap: {
 					// ds4-server exposes only NONE, HIGH, and MAX. Null keeps pi

@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>pi-ds4 — a frontier model on your own Mac, with traces you can contest</title>
-<meta name="description" content="Audrey Tang's guide to pi-ds4: run the 284-billion-parameter DeepSeek V4 Flash entirely on a 96 GB Apple Silicon Mac — vision included — with reproducible decision traces, optional uncertainty steering, and a repair path that stays in your hands.">
+<meta name="description" content="Audrey Tang's guide to pi-ds4: run DeepSeek V4.1 Flash entirely on a 128 GB Apple Silicon Mac, vision included, with reproducible decision traces, opt-in steering, and a repair path that stays in your hands.">
 <meta property="og:title" content="pi-ds4 · Audrey Tang">
 <meta property="og:description" content="Run a frontier model on your own machine, keep the decision trace, keep the steering wheel. Install, reproducibility, steering, tuning, and four AI shells — in English and 華文.">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=23d3c7e01b0a">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=b19909fbb9b8">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="pi-ds4 guide card: an ocean horizon with the current local inference readout — ~81 GiB of Vision-Exp IQ2 weights plus the encoder, 286 t/s on a 207-token /read image turn, 45 t/s generation on an M5 Max.">
+<meta property="og:image:alt" content="pi-ds4 guide card: an ocean horizon with the current local inference readout — ~106 GiB of DeepSeek V4.1 Flash abliterated Q1 weights resident plus the vision sidecar, a 256k default window and 37.9 t/s generation on a 128 GB M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=23d3c7e01b0a">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=b19909fbb9b8">
 <meta name="theme-color" content="#ebe7e4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#161d27" media="(prefers-color-scheme: dark)">
 <link rel="preload" href="fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -991,7 +991,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     z = s ? s === 'zh' : (navigator.languages || []).some(function(l){ return l.indexOf('zh') === 0; });
   }
   var TITLE_EN = 'pi-ds4 — a frontier model on your own Mac, with traces you can contest';
-  var TITLE_ZH = 'pi-ds4 指南 — 在自己的 Mac 上駕馭 DeepSeek V4 Flash';
+  var TITLE_ZH = 'pi-ds4 指南 — 在自己的 Mac 上駕馭 DeepSeek V4.1 Flash';
   function apply(zh){
     document.documentElement.setAttribute('lang', zh ? 'zh-TW' : 'en-GB');
     document.title = zh ? TITLE_ZH : TITLE_EN;
@@ -1059,16 +1059,16 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
   </div>
   <div class="hero-below">
     <p class="hero-stand">
-      <span lang="en-GB">pi-ds4 runs DeepSeek V4 Flash, a 284-billion-parameter model that can also read images, entirely on a 96 GB Apple Silicon Mac. No cloud, no meter, no rate limit, and a decision trace you can replay, compare and argue with.</span>
-      <span lang="zh-TW">pi-ds4 把 DeepSeek V4 Flash 整個放進一台 96&nbsp;GB 以上的 Apple Silicon Mac。這個模型有 2,840&nbsp;億個參數，也看得懂圖片。不用雲端、不計費、沒有速率限制，每一次決策的軌跡都能重跑、比對、質疑。</span>
+      <span lang="en-GB">pi-ds4 runs DeepSeek V4.1 Flash, a model that can also read images, entirely on a 128 GB Apple Silicon Mac. No cloud, no meter, no rate limit, and a decision trace you can replay, compare and argue with.</span>
+      <span lang="zh-TW">pi-ds4 把 DeepSeek V4.1 Flash 整個放進一台 128&nbsp;GB 的 Apple Silicon Mac。這個模型也看得懂圖片。不用雲端、不計費、沒有速率限制，每一次決策的軌跡都能重跑、比對、質疑。</span>
     </p>
     <div class="install" role="group" aria-label="Install command">
       <code><span class="prompt">$</span>pi install https://github.com/audreyt/pi-ds4</code>
       <button class="copy" data-copy="pi install https://github.com/audreyt/pi-ds4" aria-label="Copy the install command"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button>
     </div>
     <p class="hero-note">
-      <span lang="en-GB">needs <a href="https://github.com/earendil-works/pi">pi</a> first; the first launch downloads about 82 GiB</span>
-      <span lang="zh-TW">先裝好 <a href="https://github.com/earendil-works/pi">pi</a>；首次啟動會下載約 82 GiB。</span>
+      <span lang="en-GB">needs <a href="https://github.com/earendil-works/pi">pi</a> first, and a 128 GB Mac; the first launch downloads about 367 GB</span>
+      <span lang="zh-TW">先裝好 <a href="https://github.com/earendil-works/pi">pi</a>，還要一台 128 GB 的 Mac；首次啟動會下載約 367 GB。</span>
     </p>
     <a class="cue" href="#letter"><span lang="en-GB">$ scroll to continue</span><span lang="zh-TW">$ 往下捲動</span><span class="caret">▌</span></a>
   </div>
@@ -1079,15 +1079,15 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
 
   <dl class="meta" aria-label="Letter header">
     <dt><span lang="en-GB">Date</span><span lang="zh-TW">日期</span></dt>
-    <dd><span lang="en-GB">2 September 2026 (v 0.6.1)</span><span lang="zh-TW">2026 年 9 月 2 日（v 0.6.1）</span></dd>
+    <dd><span lang="en-GB">20 October 2026 (v 0.7.0)</span><span lang="zh-TW">2026 年 10 月 20 日（v 0.7.0）</span></dd>
     <dt><span lang="en-GB">From</span><span lang="zh-TW">寄件人</span></dt>
     <dd><span lang="en-GB">Audrey Tang <span class="zh">唐鳳</span></span><span lang="zh-TW">唐鳳 Audrey Tang</span></dd>
     <dt><span lang="en-GB">To</span><span lang="zh-TW">收件人</span></dt>
     <dd><span lang="en-GB">You, and whoever runs this machine after you</span><span lang="zh-TW">你，還有下一位接手這台機器的人</span></dd>
     <dt><span lang="en-GB">Subject</span><span lang="zh-TW">主旨</span></dt>
-    <dd><span lang="en-GB">Running DeepSeek V4 Flash on your own Mac, with traces you can contest</span><span lang="zh-TW">在自己的 Mac 上跑 DeepSeek V4 Flash，留下可以拿來質疑的軌跡</span></dd>
+    <dd><span lang="en-GB">Running DeepSeek V4.1 Flash on your own Mac, with traces you can contest</span><span lang="zh-TW">在自己的 Mac 上跑 DeepSeek V4.1 Flash，留下可以拿來質疑的軌跡</span></dd>
     <dt><span lang="en-GB">Lineage</span><span lang="zh-TW">源流</span></dt>
-    <dd><span lang="en-GB">forked from <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>; engine DwarfStar (<a href="https://github.com/antirez/ds4">antirez/ds4</a>), pinned at <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>d0c2b43</code></span><span lang="zh-TW">分叉自 <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>；引擎是 DwarfStar（<a href="https://github.com/antirez/ds4">antirez/ds4</a>），固定在 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 的 <code>d0c2b43</code></span></dd>
+    <dd><span lang="en-GB">forked from <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>; engine DwarfStar (<a href="https://github.com/antirez/ds4">antirez/ds4</a>), pinned at <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>d3f4cd6</code></span><span lang="zh-TW">分叉自 <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>；引擎是 DwarfStar（<a href="https://github.com/antirez/ds4">antirez/ds4</a>），固定在 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 的 <code>d3f4cd6</code></span></dd>
   </dl>
 
   <section id="primer" aria-labelledby="primer-h">
@@ -1103,10 +1103,10 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <h2 class="runin"><span lang="en-GB">What this is</span><span lang="zh-TW">這是什麼</span></h2>
 
     <p lang="en-GB">
-      pi-ds4 runs a local inference server (a program that runs the model and answers requests) called <code>ds4-server</code> on your Mac. It loads DeepSeek V4 Flash and serves it at <code>127.0.0.1:8000</code>, speaking the OpenAI API <em>and</em> the Anthropic API at once. Nothing you type leaves the machine. There's no account and no meter. You also don't get the “sorry, I can’t help with that” gates that hosted services put in on your behalf.
+      pi-ds4 runs a local inference server (a program that runs the model and answers requests) called <code>ds4-server</code> on your Mac. It loads DeepSeek V4.1 Flash and serves it at <code>127.0.0.1:8000</code>, speaking the OpenAI API <em>and</em> the Anthropic API at once. Nothing you type leaves the machine. There's no account and no meter. You also don't get the “sorry, I can’t help with that” gates that hosted services put in on your behalf.
     </p>
     <p lang="zh-TW">
-      pi-ds4 會在你的 Mac 上執行一個本機的推論伺服器（負責跑模型、回應請求的程式），名字叫 <code>ds4-server</code>。它載入 DeepSeek V4 Flash，在 <code>127.0.0.1:8000</code> <em>同時</em>支援 OpenAI 和 Anthropic 兩種 API。你打的每個字，都不會離開這台機器。不用帳號，不計費，也沒有託管服務替你設下的那句「抱歉，我無法協助」。
+      pi-ds4 會在你的 Mac 上執行一個本機的推論伺服器（負責跑模型、回應請求的程式），名字叫 <code>ds4-server</code>。它載入 DeepSeek V4.1 Flash，在 <code>127.0.0.1:8000</code> <em>同時</em>支援 OpenAI 和 Anthropic 兩種 API。你打的每個字，都不會離開這台機器。不用帳號，不計費，也沒有託管服務替你設下的那句「抱歉，我無法協助」。
     </p>
     <p lang="en-GB">
       pi is the easiest way in, hence the name, but it's only a door. Codex CLI, Claude Code, OpenClaw and Hermes Agent can all point at the same server. <a href="#shells">Chapter 8</a> shows how. Each one needs just an environment variable (a setting a program reads when it starts) or a config block. If you'd rather use pi only as a package manager (a tool that installs software) and talk through ds4’s own native agent, <code>/ds4-agent</code> hands your terminal to that agent and hands it back when you leave.
@@ -1133,15 +1133,17 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <h2 class="runin"><span lang="en-GB">What it will cost you</span><span lang="zh-TW">你要付出什麼</span></h2>
 
     <ul lang="en-GB">
-      <li><strong>A machine.</strong> An Apple Silicon Mac with at least 96 GB of memory: M2 Ultra, M3 Max or above, M4 Pro or above, or M5. With 96 to 127 GB, first raise Metal’s wired-memory ceiling (the cap on how much memory the GPU may lock down; <a href="#ram96">§1.1</a>). At 128 GB and above it installs directly, with room left for everything else you run. An NVIDIA DGX Spark, or another Linux box with 128 GB of unified memory, runs <em>the same engine</em>. On Linux, audreyt/ds4’s Makefile takes the CUDA path (NVIDIA's GPU toolkit). pi-ds4’s <code>ds4-watchdog.sh</code> works with both BSD and GNU tools, so <code>pi install</code> completes there too (<a href="#otherhw">§8.7</a>).</li>
-      <li><strong>Disk.</strong> At least 120 GB free.</li>
-      <li><strong>Time.</strong> The first launch downloads about 81 GiB of language weights (the numbers the model learned) plus an 889 MiB vision encoder (the part that lets it see images). That takes one to three hours, depending on your connection. Then it compiles the engine.</li>
+      <li><strong>A machine.</strong> An Apple Silicon Mac with 128 GB of unified memory (the memory the CPU and GPU share). It runs on Metal only. A Mac with less memory is refused at the start. So is any Linux CUDA or ROCm host, such as a DGX Spark or a Strix Halo, before anything downloads, as ds4 runs this model’s IQ1_S experts and its Q5_K/Q6_K dense weights (the parts every token passes through) only on Metal. Those readers should stay on v 0.6.1, which runs the V4 Vision-Exp IQ2 build on 96 GB (<a href="#otherhw">§8.7</a>). About 106 GiB of weights stay resident in memory.</li>
+      <li><strong>Disk.</strong> About 367 GB for the model pair, plus the KV disk cache (64 GB by default on a 128 GB Mac) and the build. An internal SSD matters: the two Engram tables (about 189 GiB of lookup tables, of which V4.1 reads only a few rows per token) stay on disk. Upgrading from v 0.6.x keeps the old 81.63 GiB pair until the new one passes its size checks, so plan for a peak near 455 GB.</li>
+      <li><strong>Time.</strong> The first launch downloads about 341.5 GiB: a language file plus a vision sidecar (a companion file that lets the model look at images). On a typical home connection that takes many hours, and the download resumes where it stopped if the connection drops. Then it compiles the engine.</li>
+      <li><strong>Two settings.</strong> Once, raise Metal’s wired-memory ceiling (the cap on how much memory the GPU may lock down) with <code>sudo sysctl iogpu.wired_limit_mb=114688</code>. macOS leaves a 128 GB Mac at about 107.5 GiB, less than the Q1 and its vision sidecar need (<a href="#install">Chapter 1</a>). And while it runs, set Energy Mode to High Power. On the M5 Max used for this letter, generation ran at about 37.9 t/s in High Power; on earlier builds of this engine, Low Power decoded at less than half that rate.</li>
       <li><strong>Not needed.</strong> A separate graphics card, a paid API, an account, or sending a single byte to the cloud.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>一台機器。</strong>記憶體至少 96 GB 的 Apple Silicon Mac：M2 Ultra、M3 Max 以上、M4 Pro 以上，或 M5。記憶體 96 到 127 GB 的機器，要先調高 Metal 可鎖定記憶體的上限（GPU 最多能鎖住多少記憶體，<a href="#ram96">§1.1</a>）。128 GB 以上可以直接安裝，還有空間留給你同時跑的其他東西。NVIDIA DGX Spark 這類 128 GB 統一記憶體的 Linux 機器，跑的是<em>同一套引擎</em>。audreyt/ds4 的 Makefile 在 Linux 上會自動走 CUDA（NVIDIA 的 GPU 運算工具）。pi-ds4 的 <code>ds4-watchdog.sh</code> 也同時支援 BSD 和 GNU 兩套工具，所以 <code>pi install</code> 在 Spark 上一樣裝得起來（<a href="#otherhw">§8.7</a>）。</li>
-      <li><strong>硬碟。</strong>至少要有 120 GB 的可用空間。</li>
-      <li><strong>時間。</strong>第一次啟動會下載約 81 GiB 的語言權重（模型學到的數字）和 889 MiB 的視覺編碼器（讓模型看懂圖片的部分）。依網速不同，要一到三個小時。接著還要編譯引擎。</li>
+      <li><strong>一台機器。</strong>記憶體 128 GB 的 Apple Silicon Mac（統一記憶體，也就是 CPU 與 GPU 共用的那塊記憶體），只走 Metal。記憶體比這少的 Mac，啟動時會被拒絕。Linux 的 CUDA 或 ROCm 主機，例如 DGX Spark 或 Strix Halo，也會在下載之前就被拒絕，因為 ds4 只在 Metal 上執行這個模型的 IQ1_S 專家，以及 Q5_K／Q6_K 的稠密權重（每個 token 都會經過的部分）。這些讀者請留在 v 0.6.1，它在 96 GB 的機器上跑 V4 Vision-Exp IQ2 版（<a href="#otherhw">§8.7</a>）。約 106 GiB 的權重會常駐記憶體。</li>
+      <li><strong>硬碟。</strong>模型這一對檔案約 367 GB，另外還要 KV 磁碟快取（128 GB 的 Mac 預設 64 GB）和編譯用的空間。內建 SSD 很重要：兩張 Engram 表（約 189 GiB 的查找表，V4.1 每個 token 只讀其中幾列）留在硬碟上。從 v 0.6.x 升級時，舊的 81.63 GiB 檔案會留到新的一對通過大小檢查才刪，所以用量最高會到約 455 GB。</li>
+      <li><strong>時間。</strong>第一次啟動會下載約 341.5 GiB：一個語言檔，加一個視覺附屬檔（sidecar，讓模型看懂圖片的配套檔案）。一般家用網路要好幾個小時，中途斷線也能從中斷處續傳。接著還要編譯引擎。</li>
+      <li><strong>兩項設定。</strong>先執行一次 <code>sudo sysctl iogpu.wired_limit_mb=114688</code>，調高 Metal 可鎖定記憶體的上限（GPU 最多能鎖住多少記憶體）。macOS 預設只讓 128 GB 的 Mac 鎖住約 107.5 GiB，比 Q1 加視覺附屬檔需要的少（<a href="#install">第一章</a>）。執行期間，再把能源模式設成「高功率」。在寫這封信的 M5 Max 上，高功率模式下生成約 37.9 t/s；在這個引擎較早的版本上，低耗電模式的 decode 不到高功率時的一半。</li>
       <li><strong>不需要。</strong>獨立顯示卡、付費 API、帳號，也不必把任何一個位元組送上雲端。</li>
     </ul>
 
@@ -1151,36 +1153,36 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       <li><span class="who">A journalist or researcher</span><span>Read <a href="#motivation">Chapter 0</a> for the reasons, then the side-by-side outputs in <a href="#steering">Chapter 4</a>. That is the whole argument.</span></li>
       <li><span class="who">Already use another AI tool</span><span><a href="#shells">Chapter 8</a> points Codex CLI, Claude Code, OpenClaw or Hermes at pi-ds4 as a backend. You may never open pi itself.</span></li>
       <li><span class="who">Want to understand every setting</span><span>Read in order from Chapter 0. It takes about twenty minutes, and you'll know why each default is what it is.</span></li>
-      <li><span class="who">Not on a Mac</span><span><a href="#otherhw">§8.7</a>: DGX Spark (CUDA), AMD Strix Halo (ROCm) and other 128 GB machines run the same engine.</span></li>
+      <li><span class="who">Not on a 128 GB Mac</span><span><a href="#otherhw">§8.7</a>: a Mac under 128 GB, a DGX Spark (CUDA) or an AMD Strix Halo (ROCm) should stay on v 0.6.1, or bring its own GGUF and binary.</span></li>
     </ul>
     <ul class="paths" lang="zh-TW">
       <li><span class="who">記者、研究者</span><span>先讀<a href="#motivation">第零章</a>的理由，再看<a href="#steering">第四章</a>的並列對照。整個論證就在那裡。</span></li>
       <li><span class="who">已經有慣用的 AI 工具</span><span><a href="#shells">第八章</a>教你把 Codex CLI、Claude Code、OpenClaw 或 Hermes 接到 pi-ds4 當後端。你可能從頭到尾都不用打開 pi。</span></li>
       <li><span class="who">想搞懂每個設定</span><span>從第零章依序讀，大約二十分鐘。讀完你就知道每個預設值為什麼這樣訂。</span></li>
-      <li><span class="who">手邊不是 Mac</span><span><a href="#otherhw">§8.7</a>：DGX Spark（CUDA）、AMD Strix Halo（ROCm）和其他 128 GB 的機器，跑的是同一套引擎。</span></li>
+      <li><span class="who">手邊沒有 128 GB 的 Mac</span><span><a href="#otherhw">§8.7</a>：不到 128 GB 的 Mac、DGX Spark（CUDA）或 AMD Strix Halo（ROCm），請留在 v 0.6.1，或自備 GGUF 與執行檔。</span></li>
     </ul>
   </section>
 
   <section id="guide-entry" aria-labelledby="readout-h">
     <h2 class="runin" id="readout-h"><span lang="en-GB">Six readings from the machine</span><span lang="zh-TW">這台機器的六個讀數</span></h2>
-    <p lang="en-GB">Numbers first, so that nothing below has to be taken on trust. They come from the same M5 Max this letter was written on.</p>
-    <p lang="zh-TW">先把數字擺出來，底下的話就不必靠你信任我。這些讀數來自寫這封信的同一台 M5 Max。</p>
+    <p lang="en-GB">Numbers first, so that nothing below has to be taken on trust. The generation reading comes from the M5 Max this letter was written on.</p>
+    <p lang="zh-TW">先把數字擺出來，底下的話就不必靠你信任我。生成的讀數來自寫這封信的那台 M5 Max。</p>
 
     <dl class="readout" aria-label="System readout">
       <div>
-        <dt><span lang="en-GB">parameters</span><span lang="zh-TW">參數</span></dt>
-        <dd><span class="n">284 B</span> <span lang="en-GB">Mixture-of-Experts (many small expert networks, only a few used at a time), 13 B active per token (a token is a small piece of text)</span><span lang="zh-TW">Mixture-of-Experts（由許多專家小網路組成，每次只用其中幾個），每個 token（文字的最小單位）啟用 13 B</span>
-          <span class="why"><span lang="en-GB">You store 284 B of knowledge and wait for only 13 B of arithmetic per step.</span><span lang="zh-TW">你存的是 284 B 的知識，每一步只需要等 13 B 的運算。</span></span></dd>
+        <dt><span lang="en-GB">architecture</span><span lang="zh-TW">架構</span></dt>
+        <dd><span class="n">6 of 384</span> <span lang="en-GB">routed experts per token, plus one shared expert, across 40 layers (a token is a small piece of text)</span><span lang="zh-TW">每個 token 用 384 個路由專家中的 6 個，外加一個共用專家，共 40 層（token 是文字的最小單位）</span>
+          <span class="why"><span lang="en-GB">Mixture-of-Experts (many small expert networks, only a few used at a time). Hidden width is 5120 and the official context window is 1M tokens.</span><span lang="zh-TW">Mixture-of-Experts（由許多專家小網路組成，每次只用其中幾個）。隱藏層寬度是 5120，官方的 context window 是 1M 個 token。</span></span></dd>
       </div>
       <div>
         <dt><span lang="en-GB">weights on disk</span><span lang="zh-TW">權重佔用</span></dt>
-        <dd><span class="n">87 652 969 536 B</span> <span lang="en-GB">≈ 81.63 GiB</span><span lang="zh-TW">≈ 81.63 GiB</span>
-          <span class="why"><span lang="en-GB">The language file is Vision-Exp abliterated IQ2 (86 720 111 776 B). The vision encoder is unmodified, with 316 tensors (932 857 760 B).</span><span lang="zh-TW">語言檔是 Vision-Exp abliterated IQ2（86 720 111 776 B）。視覺編碼器沒有修改過，有 316 個張量（一塊塊數字陣列，932 857 760 B）。</span></span></dd>
+        <dd><span class="n">366 684 242 080 B</span> <span lang="en-GB">≈ 341.5 GiB</span><span lang="zh-TW">≈ 341.5 GiB</span>
+          <span class="why"><span lang="en-GB">The language file is V4.1 Flash 1017 abliterated Q1 (365 713 686 528 B). The vision sidecar is 970 555 552 B. About 106 GiB of weights stay resident in memory on Metal. The two Engram tables (about 189 GiB) stay on disk.</span><span lang="zh-TW">語言檔是 V4.1 Flash 1017 abliterated Q1（365 713 686 528 B），視覺附屬檔是 970 555 552 B。約 106 GiB 的權重常駐在 Metal 的記憶體裡，兩張 Engram 表（約 189 GiB）留在硬碟上。</span></span></dd>
       </div>
       <div>
         <dt><span lang="en-GB">engine</span><span lang="zh-TW">引擎</span></dt>
-        <dd><span class="n">audreyt/ds4 @ d0c2b43</span>
-          <span class="why"><span lang="en-GB">DwarfStar, pinned to one commit (a fixed snapshot of the code) so tomorrow’s build is today’s build. What that commit carries is in <a href="#whatsnew">What’s new</a>.</span><span lang="zh-TW">DwarfStar，固定在某一個 commit（程式碼的一個存檔點）上，所以明天編出來的，跟今天的一模一樣。這個 commit 帶了哪些更新，看<a href="#whatsnew">更新誌</a>。</span></span></dd>
+        <dd><span class="n">audreyt/ds4 @ d3f4cd6</span>
+          <span class="why"><span lang="en-GB">DwarfStar, pinned to one commit (a fixed snapshot of the code) so tomorrow’s build is today’s build. It adds IQ1_S on Metal, a faster single-token Q5_K/Q6_K route and a V4.1 context fit. The rest is in <a href="#whatsnew">What’s new</a>.</span><span lang="zh-TW">DwarfStar，固定在某一個 commit（程式碼的一個存檔點）上，所以明天編出來的，跟今天的一模一樣。這個 commit 在 Metal 上加了 IQ1_S、更快的單 token Q5_K／Q6_K 路徑，以及 V4.1 的 context 適配。其餘看<a href="#whatsnew">更新誌</a>。</span></span></dd>
       </div>
       <div>
         <dt><span lang="en-GB">seed</span><span lang="zh-TW">種子</span></dt>
@@ -1189,13 +1191,13 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       </div>
       <div>
         <dt><span lang="en-GB">prefill</span><span lang="zh-TW">prefill</span></dt>
-        <dd><span class="n">286 t/s</span>
-          <span class="why"><span lang="en-GB">Prefill is the model reading your prompt before it replies. This reading comes from a 207-token <code>/read</code> image turn at <code>--ctx 2048</code> (285.75). It isn't a 2k-context benchmark.</span><span lang="zh-TW">prefill 是模型回答之前，先讀完你的提示（prompt）的階段。這個讀數來自一個 207 個 token 的 <code>/read</code> 圖片回合，<code>--ctx 2048</code>（285.75）。它不是 2k context（模型一次能讀的長度）的基準測試。</span></span></dd>
+        <dd><span class="n">194 t/s</span>
+          <span class="why"><span lang="en-GB">Prefill is the model reading your prompt, or an image, before it replies. This reading is a 533-token image turn (the OCR fixture, every field read back exactly) with pi-ds4’s exact server arguments, ctx 256000 plus the vision sidecar, on a second 128 GB M5 Max. The 195-token <code>earth.jpg</code> turn ran at 148 t/s.</span><span lang="zh-TW">prefill 是模型回答之前，先讀完你的提示（prompt）或圖片的階段。這個讀數來自一個 533 個 token 的圖片回合（OCR 測試圖，每一欄都準確讀回），用的是 pi-ds4 一模一樣的伺服器參數：ctx 256000，加上視覺附屬檔，在另一台 128 GB 的 M5 Max 上量到。195 個 token 的 <code>earth.jpg</code> 回合是 148 t/s。</span></span></dd>
       </div>
       <div>
         <dt><span lang="en-GB">generation</span><span lang="zh-TW">生成</span></dt>
-        <dd><span class="n">45 t/s</span>
-          <span class="why"><span lang="en-GB">The same turn (44.94). Text-only runs at 2k context measured about 42 t/s on the previous pinned version; see the 0.5 series below.</span><span lang="zh-TW">同一個回合（44.94）。純文字、2k context 的測試，在前一個版本約 42 t/s；見下方的 0.5 系列。</span></span></dd>
+        <dd><span class="n">37.9 t/s</span>
+          <span class="why"><span lang="en-GB">The ds4 CLI at ctx 8192 over 128 greedy tokens (always picking the likeliest word), on an M5 Max with 128 GB in High Power energy mode. Low Power is much slower: on earlier builds of this engine it decoded at less than half the High Power rate. There is no speculative decoding: the DSpark drafter does not fit next to the Q1 on 128 GB, and on V4.1 it measured slower than plain decode anyway.</span><span lang="zh-TW">ds4 CLI，ctx 8192，連續 128 個貪婪取樣的 token（永遠選機率最高的字），在 128 GB 的 M5 Max 上、能源模式為高功率時量到。低耗電模式慢很多：在這個引擎較早的版本上，decode 不到高功率時的一半。沒有用推測解碼：DSpark 草稿模型在 128 GB 裡放不進 Q1 旁邊，而且在 V4.1 上量到的結果，比一般 decode 還慢。</span></span></dd>
       </div>
     </dl>
   </section>
@@ -1207,7 +1209,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       <li><span class="no">—</span><a href="#preface"><span lang="en-GB">Who this letter is for</span><span lang="zh-TW">這封信寫給誰</span></a></li>
       <li><span class="no">01</span><a href="#install"><span lang="en-GB">What hardware you need, and the one-line install</span><span lang="zh-TW">需要什麼硬體，以及一行安裝</span></a></li>
       <li><span class="no">02</span><a href="#firstrun"><span lang="en-GB">What happens on first launch</span><span lang="zh-TW">首次啟動會發生什麼事</span></a></li>
-      <li><span class="no">03</span><a href="#model"><span lang="en-GB">The model: Vision-Exp IQ2 and the vision encoder</span><span lang="zh-TW">這顆模型：Vision-Exp IQ2 與視覺編碼器</span></a></li>
+      <li><span class="no">03</span><a href="#model"><span lang="en-GB">The model: DeepSeek V4.1 Flash, the Q1 build and the vision sidecar</span><span lang="zh-TW">這顆模型：DeepSeek V4.1 Flash、Q1 配方與視覺附屬檔</span></a></li>
       <li><span class="no">04</span><a href="#steering"><span lang="en-GB">Directional steering: why this fork exists</span><span lang="zh-TW">方向性引導：這個分叉最重要的功能</span></a></li>
       <li><span class="no">05</span><a href="#config"><span lang="en-GB">Environment variables, the full reference</span><span lang="zh-TW">環境變數：完整對照表</span></a></li>
       <li><span class="no">06</span><a href="#tuning"><span lang="en-GB">Tuning while it runs: context and the KV cache</span><span lang="zh-TW">執行時調校：context 與 KV cache</span></a></li>
@@ -1219,7 +1221,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       <li><span class="no">—</span><a href="#coda"><span lang="en-GB">Coda: thanks, licence, afterword</span><span lang="zh-TW">尾聲：致謝、授權、後話</span></a></li>
     </ol>
     <div class="also">
-      <a href="#whatsnew"><span lang="en-GB">What's new, 2026-09</span><span lang="zh-TW">更新誌 2026-09</span></a>
+      <a href="#whatsnew"><span lang="en-GB">What's new, 2026-10</span><span lang="zh-TW">更新誌 2026-10</span></a>
       <a href="#faq"><span lang="en-GB">FAQ</span><span lang="zh-TW">常見問題</span></a>
       <a href="#glossary"><span lang="en-GB">Glossary</span><span lang="zh-TW">字彙</span></a>
     </div>
@@ -1229,20 +1231,63 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
   <div class="sep" aria-hidden="true"><svg><use href="#plurality"/></svg></div>
 
   <section class="chapter" id="whatsnew">
-    <span class="chapter-no"><span lang="en-GB">What’s new, September 2026</span><span lang="zh-TW">更新誌　二〇二六年九月</span></span>
-    <h2 class="chapter-title"><span lang="en-GB">v 0.6: the model learns to see. The 0.5 series stays on the record.</span><span lang="zh-TW">v 0.6：模型學會看圖，0.5 系列留作紀錄</span></h2>
+    <span class="chapter-no"><span lang="en-GB">What’s new, October 2026</span><span lang="zh-TW">更新誌　二〇二六年十月</span></span>
+    <h2 class="chapter-title"><span lang="en-GB">v 0.7: a bigger model fits the Mac. The 0.6 and 0.5 series stay on the record.</span><span lang="zh-TW">v 0.7：更大的模型塞進了這台 Mac，0.6 與 0.5 系列留作紀錄</span></h2>
 
     <p class="lead" lang="en-GB">
-      Version 0.6.0 changes what the managed download fetches. It used to fetch the Headroom128 0731 Flash weights. Now it fetches the <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated IQ2</a> pair: a language file of 86 720 111 776 bytes plus a vision encoder (the part that lets the model look at pictures) of 932 857 760 bytes. That is 87 652 969 536 bytes in all (about 81.63 GiB, or 87.653 GB as your disk counts it). The engine pin, which fixes the engine to one exact version, moves to <code>d0c2b43</code>. <code>ds4-server</code> and <code>ds4-agent</code> now start with <code>--vision</code> and advertise <code>input: text+image</code>. The reason is simple. A model that can read the screenshot, the chart or the scanned page in front of you can be repaired in more situations than one that can’t.
+      Version 0.7.0 changes the model. The managed download now fetches DeepSeek V4.1 Flash 1017, abliterated, in a Q1 build: a language file of 365 713 686 528 bytes from <a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</a> (pinned revision <code>54ee865</code>), plus a vision sidecar (a companion file that lets the model look at pictures) of 970 555 552 bytes from <a href="https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf">audreyt/deepseek-v4.1-flash-1017-gguf</a> at revision <code>5ab6e05</code>. Together that is 366 684 242 080 bytes (about 341.5 GiB, or 366.7 GB as your disk counts it). The engine pin, which fixes the engine to one exact version, moves to <code>d3f4cd6</code>. The provider ID stays <code>ds4/deepseek-v4-flash</code>, so your existing settings keep working. Only the display name changes, to “DeepSeek V4.1 Flash (ds4.c local)”. The price is the machine: this release needs a Mac with 128 GB of unified memory.
     </p>
     <p class="lead" lang="zh-TW">
-      0.6.0 換了代管下載的內容。以前抓的是 Headroom128 0731 Flash 權重，現在改抓 <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated IQ2</a> 這一對檔案：語言檔 86 720 111 776 位元組，加上視覺編碼器（讓模型看懂圖片的部分）932 857 760 位元組，合計 87 652 969 536 位元組（約 81.63 GiB，照硬碟的算法是 87.653 GB）。引擎版本固定在 <code>d0c2b43</code>。<code>ds4-server</code> 和 <code>ds4-agent</code> 現在啟動時都帶 <code>--vision</code>，並對外宣告 <code>input: text+image</code>。原因很單純：看得懂你眼前的截圖、圖表或掃描頁的模型，能修的情況比看不懂的多得多。
+      0.7.0 換了模型。代管下載現在抓的是 DeepSeek V4.1 Flash 1017 的 abliterated Q1 版：語言檔 365 713 686 528 位元組，來自 <a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</a>（釘選的版本是 <code>54ee865</code>）；另有視覺附屬檔（sidecar，讓模型看懂圖片的配套檔案）970 555 552 位元組，來自 <a href="https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf">audreyt/deepseek-v4.1-flash-1017-gguf</a>，版本是 <code>5ab6e05</code>。合計 366 684 242 080 位元組（約 341.5 GiB，照硬碟的算法是 366.7 GB）。引擎版本（把引擎固定在某個確切版本）移到 <code>d3f4cd6</code>。provider ID 維持 <code>ds4/deepseek-v4-flash</code>，所以你現有的設定照常可用，只有顯示名稱改成「DeepSeek V4.1 Flash (ds4.c local)」。代價是機器：這個版本需要 128 GB 統一記憶體的 Mac。
     </p>
     <p lang="en-GB">
-      Two honest notes before the details. The 0731 DSpark draft head does not fit these weights, so it is no longer attached. And the two headline numbers on this page, 286 t/s prefill (reading your prompt) and 45 t/s generation (writing the reply), come from <code>/read earth.jpg</code> on an M5 Max. That was one image turn of 207 tokens at <code>--ctx 2048</code>, and it measured 285.75 and 44.94. A plain text turn on the same machine answered normally. Read them as what they are: numbers from an image turn, not a 2k-context prefill benchmark. The 0.5 entries further down are August history. I kept them because someone will need to know what the previous weights were.
+      Three honest notes before the details. First, the Q1 is a compromise that fits a 128 GB Mac. No official-continuation quality score has been run for it yet, so do not read it as a quality upgrade over larger quants. Second, steering stays off. The V4 direction vectors do not fit V4.1, and no V4.1 direction ships yet (<a href="#steering">Chapter 4</a>). Third, there is no speculative decoding. The DSpark drafter does not fit next to the Q1 on 128 GB, and on V4.1 it measured slower than plain decode anyway. The 0.6 and 0.5 entries further down are history. I kept them because someone will need to know what the previous weights were.
     </p>
     <p lang="zh-TW">
-      進入細節前，先老實說兩件事。第一，0731 的 DSpark 草稿頭（負責先猜幾個字、幫忙加速的小零件）跟這組權重不合，所以不再掛上去。第二，本頁最醒目的兩個數字，prefill（先讀完整段提示）286 t/s、生成 45 t/s（t/s 是每秒幾個 token），是在 M5 Max 上跑 <code>/read earth.jpg</code> 量到的。那是一次 207 token 的圖片回合，設定 <code>--ctx 2048</code>，量到 285.75 和 44.94。同一台機器跑純文字回合，回答也正常。請照原樣看這兩個數字：它們是圖片回合的讀數，不是 2k context 的 prefill 基準測試。再往下的 0.5 條目是八月的歷史，留著是因為總有人需要知道上一組權重是什麼。
+      進入細節前，先老實說三件事。第一，這個 Q1 是為了塞進 128 GB 的 Mac 所做的折衷。它還沒有跑過官方續寫品質分數，所以請不要把它當成比更大的量化版更好的品質升級。第二，引導維持關閉。V4 的方向向量不適用於 V4.1，V4.1 的方向向量也還沒有附上（<a href="#steering">第四章</a>）。第三，沒有推測解碼。DSpark 草稿模型在 128 GB 裡放不進 Q1 旁邊，而且在 V4.1 上量到的結果，比一般 decode 還慢。再往下的 0.6 和 0.5 條目是歷史，留著是因為總有人需要知道上一組權重是什麼。
+    </p>
+
+    <h3><span class="no">0.7.0</span><span lang="en-GB">What changed in the extension</span><span lang="zh-TW">擴充套件改了什麼</span></h3>
+
+    <ul lang="en-GB">
+      <li><strong>Managed model.</strong> <code>download_model.sh q1</code> (alias <code>preferred</code>; <code>ds41f-q1-abliterated</code> is also accepted) fetches <code>DeepSeek-V4.1-Flash-Abliterated-Q1.gguf</code> and <code>DeepSeek-V4.1-Flash-1017-Vision.gguf</code>. <code>q2</code> now errors and points to v 0.6.1. Both URLs are pinned to <code>/resolve/&lt;rev&gt;/</code>, never <code>/resolve/main/</code>, so what you download next year is what was tested this year. The partial file is <code>DeepSeek-V4.1-Flash-Abliterated-Q1.gguf.part</code>.</li>
+      <li><strong>Engine pin <code>d3f4cd6</code>.</strong> It adds IQ1_S on Metal (a very low-bit format for the experts), a faster single-token Q5_K/Q6_K matvec route (the matrix-times-vector step that dominates writing one token at a time) and a V4.1 context fit that opens long windows with a narrower prefill instead of refusing. It also merges the V4.1 Metal work of <a href="https://github.com/kernelpool/ds4">kernelpool/ds4</a> and <a href="https://github.com/ivanfioravanti">Ivan Fioravanti</a>. The managed <code>ds4-server</code> and <code>ds4-agent</code> both start with <code>--vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf</code> and still advertise <code>input: text+image</code>.</li>
+      <li><strong>How the Q1 is built.</strong> The routed experts come from Unsloth’s UD-IQ1_S, with 32 of them requantised to fit the budget. The dense path mostly keeps Unsloth’s Q6_K and Q5_K tensors. The 38 abliterated <code>attn_output_b</code> tensors come from pqhaz’s Heretic edit of the 1017 checkpoint. Details are in <a href="#3.3">§3.3</a>.</li>
+      <li><strong>Memory and context.</strong> About 106 GiB of weights stay resident on Metal. ds4 has a 112 GiB memory budget for V4.1. Measured without the vision sidecar, a 256k window (<code>DS4_CONTEXT_KB=256</code>, the default) opens with a narrower 2048-row prefill batch, 384k opens with 1024 rows, and 512k and above are refused at open. The managed server also loads the 0.9 GiB sidecar, which costs about one more step: with it, the default 256k opens with 1024-row prefill chunks (measured), and 384k is estimated not to fit. Prefill reads the prompt in batches, so a narrower batch costs some prefill speed on long prompts, not correctness (<a href="#6.4">§6.4</a>).</li>
+      <li><strong>Who can run it.</strong> Apple Silicon with 128 GB, Metal only. Macs under 128 GB and Linux CUDA or ROCm hosts are refused before anything downloads. A 128 GB Mac first needs Metal’s wired-memory ceiling raised to 114688 MiB; the extension checks it before the model download and prints the <code>sudo sysctl</code> command (<a href="#install">Chapter 1</a>, <a href="#otherhw">§8.7</a>).</li>
+      <li><strong>Disk during an upgrade.</strong> Upgrading from v 0.6.x keeps the old 81.63 GiB Vision-Exp pair until the new pair passes its size checks and <code>./ds4flash.gguf</code> is switched, so the peak is about 455 GB. <code>download_model.sh</code> checks free space before it starts, and deletes the v 0.6 files (and any v 0.5 Headroom128 leftovers) only after the switch. A fresh install needs about 367 GB plus the KV cache.</li>
+      <li><strong>Read the numbers as labelled.</strong> Generation runs at about 37.9 t/s with the ds4 CLI at ctx 8192 over 128 greedy tokens, on an M5 Max with 128 GB in High Power energy mode. Low Power mode is much slower (on earlier builds of this engine it decoded at less than half the High Power rate), so set Energy Mode to High Power while you use it (System Settings › Battery › Energy Mode on a MacBook). With pi-ds4’s exact server arguments (ctx 256000 plus the vision sidecar) on a second 128 GB M5 Max, a 533-token image turn prefilled at 194 t/s and read every OCR field back exactly, a 195-token <code>earth.jpg</code> turn prefilled at 148 t/s, and generation held at about 37 t/s.</li>
+      <li><strong>Steering is off.</strong> V4.1 needs one f32 direction per layer at its own width, 40 × 5120. The V4 vectors in <code>dir-steering/out/</code> (43 × 4096) do not fit, and no V4.1 direction ships yet, so <code>DS4_DIR_STEERING_FILE</code> now defaults to empty. Opting in needs your own V4.1 vector (<a href="#advanced">Chapter 11</a>).</li>
+      <li><strong>Defaults that changed.</strong> <code>DS4_SUPPORT_PIN</code> is <code>d3f4cd6</code>, <code>DS4_MODEL_QUANT</code> is <code>q1</code> (alias <code>preferred</code>), <code>DS4_DIR_STEERING_FILE</code> is empty, and <code>DS4_DOWNLOAD_SCRIPT</code> now fetches the V4.1 Q1 plus the vision sidecar (<a href="#config">Chapter 5</a>).</li>
+    </ul>
+    <ul lang="zh-TW">
+      <li><strong>代管的模型。</strong><code>download_model.sh q1</code>（別名 <code>preferred</code>，也接受 <code>ds41f-q1-abliterated</code>）會抓 <code>DeepSeek-V4.1-Flash-Abliterated-Q1.gguf</code> 和 <code>DeepSeek-V4.1-Flash-1017-Vision.gguf</code>。<code>q2</code> 現在會報錯，並指向 v 0.6.1。兩個網址都固定在 <code>/resolve/&lt;rev&gt;/</code>，不走 <code>/resolve/main/</code>，所以明年下載到的，就是今年測過的。暫存檔是 <code>DeepSeek-V4.1-Flash-Abliterated-Q1.gguf.part</code>。</li>
+      <li><strong>引擎固定在 <code>d3f4cd6</code>。</strong>它在 Metal 上加了 IQ1_S（專家用的極低位元格式）、更快的單 token Q5_K／Q6_K matvec 路徑（逐字生成時佔最大宗的矩陣乘向量運算），以及 V4.1 的 context 適配：長視窗改用較窄的 prefill 批次打開，而不是直接拒絕。它也合併了 <a href="https://github.com/kernelpool/ds4">kernelpool/ds4</a> 與 <a href="https://github.com/ivanfioravanti">Ivan Fioravanti</a> 的 V4.1 Metal 工作。代管的 <code>ds4-server</code> 和 <code>ds4-agent</code> 都用 <code>--vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf</code> 啟動，並仍對外宣告 <code>input: text+image</code>。</li>
+      <li><strong>Q1 怎麼組出來。</strong>路由專家來自 Unsloth 的 UD-IQ1_S，其中 32 個為了塞進預算而重新量化。稠密路徑多半沿用 Unsloth 的 Q6_K 和 Q5_K 張量。38 個 abliterated 的 <code>attn_output_b</code> 張量，來自 pqhaz 對 1017 版做的 Heretic 編輯。細節見 <a href="#3.3">§3.3</a>。</li>
+      <li><strong>記憶體與 context。</strong>約 106 GiB 的權重常駐在 Metal 的記憶體裡。ds4 對 V4.1 的記憶體預算是 112 GiB。在不載入視覺附屬檔時量到：256k 視窗（<code>DS4_CONTEXT_KB=256</code>，也就是預設值）以較窄的 2048 列 prefill 批次打開，384k 用 1024 列，512k 以上在開啟時就會被拒絕。代管伺服器還會載入 0.9 GiB 的視覺附屬檔，大約再多佔一級：載入它之後，預設的 256k 以 1024 列的 prefill 批次打開（實測），384k 估計放不下。prefill 是分批讀完提示的，批次較窄只會讓長提示的 prefill 慢一些，不影響正確性（<a href="#6.4">§6.4</a>）。</li>
+      <li><strong>誰能跑。</strong>128 GB 的 Apple Silicon，只走 Metal。不到 128 GB 的 Mac 和 Linux 的 CUDA／ROCm 主機，會在下載之前就被拒絕。128 GB 的 Mac 要先把 Metal 可鎖定記憶體的上限調到 114688 MiB；擴充套件在下載模型之前會先檢查，並印出 <code>sudo sysctl</code> 指令（<a href="#install">第一章</a>、<a href="#otherhw">§8.7</a>）。</li>
+      <li><strong>升級時的硬碟空間。</strong>從 v 0.6.x 升級時，舊的 81.63 GiB Vision-Exp 一對檔案會留到新的一對通過大小檢查、<code>./ds4flash.gguf</code> 切換完成為止，所以用量最高約 455 GB。<code>download_model.sh</code> 在開始之前會先檢查剩餘空間，切換之後才刪除 v 0.6 的檔案（以及任何 v 0.5 留下的 Headroom128 檔案）。全新安裝需要約 367 GB，外加 KV 快取。</li>
+      <li><strong>數字請照標示來讀。</strong>生成約 37.9 t/s，用 ds4 CLI、ctx 8192、連續 128 個貪婪取樣的 token，在 128 GB 的 M5 Max 上、能源模式為高功率時量到。低耗電模式慢很多（在這個引擎較早的版本上，decode 不到高功率時的一半），所以使用期間請把能源模式設成「高功率」（MacBook 在「系統設定 › 電池 › 能源模式」）。在另一台 128 GB 的 M5 Max 上，用 pi-ds4 一模一樣的伺服器參數（ctx 256000，加上視覺附屬檔）：533 個 token 的圖片回合 prefill 194 t/s，OCR 每一欄都準確讀回；195 個 token 的 <code>earth.jpg</code> 回合 prefill 148 t/s；生成維持在約 37 t/s。</li>
+      <li><strong>引導維持關閉。</strong>V4.1 的每一層需要一個 f32 方向，寬度是它自己的 40 × 5120。<code>dir-steering/out/</code> 裡的 V4 向量（43 × 4096）不適用，V4.1 的方向向量也還沒有附上，所以 <code>DS4_DIR_STEERING_FILE</code> 現在預設是空的。要開啟，得自備 V4.1 的向量（<a href="#advanced">第十一章</a>）。</li>
+      <li><strong>預設值改了哪些。</strong><code>DS4_SUPPORT_PIN</code> 是 <code>d3f4cd6</code>，<code>DS4_MODEL_QUANT</code> 是 <code>q1</code>（別名 <code>preferred</code>），<code>DS4_DIR_STEERING_FILE</code> 是空的，<code>DS4_DOWNLOAD_SCRIPT</code> 現在抓的是 V4.1 Q1 加視覺附屬檔（<a href="#config">第五章</a>）。</li>
+    </ul>
+
+    <h3><span class="no">0.6</span><span lang="en-GB">The 0.6 series, for the record</span><span lang="zh-TW">0.6 系列，存檔備查</span></h3>
+
+    <p lang="en-GB">v 0.6.1 remains the release for Macs with 96 GB and for Linux CUDA and ROCm hosts. Its notes follow as history.</p>
+    <p lang="zh-TW">v 0.6.1 仍是 96 GB 的 Mac，以及 Linux CUDA、ROCm 主機該用的版本。它的說明照歷史留在下面。</p>
+
+    <p lang="en-GB">
+      Version 0.6.0 changed what the managed download fetched. It had fetched the Headroom128 0731 Flash weights. From 0.6.0 it fetched the <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated IQ2</a> pair: a language file of 86 720 111 776 bytes plus a vision encoder (the part that lets the model look at pictures) of 932 857 760 bytes. That was 87 652 969 536 bytes in all (about 81.63 GiB, or 87.653 GB as your disk counts it). The engine pin, which fixes the engine to one exact version, moved to <code>d0c2b43</code>. <code>ds4-server</code> and <code>ds4-agent</code> started with <code>--vision</code> and advertised <code>input: text+image</code>. The reason was simple. A model that can read the screenshot, the chart or the scanned page in front of you can be repaired in more situations than one that can’t.
+    </p>
+    <p lang="zh-TW">
+      0.6.0 換掉了代管下載的內容。之前抓的是 Headroom128 0731 Flash 權重，0.6.0 起改抓 <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated IQ2</a> 這一對檔案：語言檔 86 720 111 776 位元組，加上視覺編碼器（讓模型看懂圖片的部分）932 857 760 位元組，合計 87 652 969 536 位元組（約 81.63 GiB，照硬碟的算法是 87.653 GB）。引擎版本固定在 <code>d0c2b43</code>。<code>ds4-server</code> 和 <code>ds4-agent</code> 啟動時都帶 <code>--vision</code>，並對外宣告 <code>input: text+image</code>。原因很單純：看得懂你眼前的截圖、圖表或掃描頁的模型，能修的情況比看不懂的多得多。
+    </p>
+    <p lang="en-GB">
+      Two honest notes on that release. The 0731 DSpark draft head does not fit these weights, so it is no longer attached. And the two headline numbers of 0.6, 286 t/s prefill (reading your prompt) and 45 t/s generation (writing the reply), come from <code>/read earth.jpg</code> on an M5 Max. That was one image turn of 207 tokens at <code>--ctx 2048</code>, and it measured 285.75 and 44.94. A plain text turn on the same machine answered normally. Read them as what they are: numbers from an image turn, not a 2k-context prefill benchmark. The 0.5 entries further down are August history. I kept them because someone will need to know what the previous weights were.
+    </p>
+    <p lang="zh-TW">
+      先老實說那個版本的兩件事。第一，0731 的 DSpark 草稿頭（負責先猜幾個字、幫忙加速的小零件）跟這組權重不合，所以不再掛上去。第二，0.6 最醒目的兩個數字，prefill（先讀完整段提示）286 t/s、生成 45 t/s（t/s 是每秒幾個 token），是在 M5 Max 上跑 <code>/read earth.jpg</code> 量到的。那是一次 207 token 的圖片回合，設定 <code>--ctx 2048</code>，量到 285.75 和 44.94。同一台機器跑純文字回合，回答也正常。請照原樣看這兩個數字：它們是圖片回合的讀數，不是 2k context 的 prefill 基準測試。再往下的 0.5 條目是八月的歷史，留著是因為總有人需要知道上一組權重是什麼。
     </p>
 
     <h3><span class="no">0.6.0</span><span lang="en-GB">What changed in the extension</span><span lang="zh-TW">擴充套件改了什麼</span></h3>
@@ -1304,14 +1349,14 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
 
     <ul lang="en-GB">
       <li><strong>SSD streaming</strong> (<code>--ssd-streaming</code>, upstream). Weights that aren’t routed experts stay in memory. The routed MoE experts (the model’s specialist sub-networks) live in an in-memory cache and are read back from the GGUF file (the model’s file format) on a miss. The automatic budget takes 80 percent of Metal’s recommended working set, minus the non-routed weights. Upstream documents a 64 GB MacBook running the 2-bit Flash with <code>--ssd-streaming-cache-experts 32GB</code>. A 128 GB Mac can even inspect DeepSeek V4 <em>Pro</em> at q2 this way (on an M5 Max the automatic budget chose about 59 GB of expert cache). Streaming with per-layer boosted quantisation also covers the Headroom128 mixed-precision file. The trade is plain: prefill stays fast, and decode becomes sensitive to cache misses.</li>
-      <li><strong>DSpark speculative decoding</strong> (experimental; this fork is ahead of upstream). Speculative decoding means a small drafter guesses ahead and the big model checks the guesses. Convert the official DSpark draft head with <code>gguf-tools/deepseek4-quantize --dspark-only</code>. Then <code>--mtp DSpark.gguf</code> (the CLI and the server both accept it) turns on Metal block-speculative decoding: it drafts in parallel blocks, and the target model verifies them before anything is committed. This fork adds B2 rejection sampling, which is lossless speculative <em>sampling</em>: the output distribution is identical to the target’s. It also adds saved RNG state, adaptive block sizing via <code>DS4_DSPARK_ADAPTIVE=1</code>, and partial accepts from prefix checkpoints. The speed-up depends on the base/draft pair and on the prompt. Measure with <code>DS4_MTP_TIMING=1</code> before you believe any claim.</li>
+      <li><strong>DSpark speculative decoding</strong> (experimental; this fork is ahead of upstream). Speculative decoding means a small drafter guesses ahead and the big model checks the guesses. Convert the official DSpark draft head with <code>gguf-tools/deepseek4-quantize --dspark-only</code>. Then <code>--mtp DSpark.gguf</code> (the CLI and the server both accept it) turns on Metal block-speculative decoding: it drafts in parallel blocks, and the target model verifies them before anything is committed. This fork adds B2 rejection sampling, which is lossless speculative <em>sampling</em>: the output distribution is identical to the target’s. It also adds saved RNG state, adaptive block sizing via <code>DS4_DSPARK_ADAPTIVE=1</code>, and partial accepts from prefix checkpoints. The speed-up depends on the base/draft pair and on the prompt. Measure with <code>DS4_MTP_TIMING=1</code> before you believe any claim. With the v 0.7 Q1 it is not an option: the drafter does not fit next to it on 128 GB.</li>
       <li><strong>A bounded request queue</strong> (<code>--max-queue N</code>). Once N jobs are waiting, the server returns <code>429</code>. That way client timeouts can’t quietly pile up duplicate work that nobody will collect. The default <code>0</code> keeps the old behaviour.</li>
       <li><strong>Correctness repairs</strong> (upstream). A speculative-verify bug is fixed: with <code>--mtp-draft &gt; 2</code> it committed wrong tokens (<a href="https://github.com/antirez/ds4/pull/358">PR #358</a>). A chain of false negatives in the <code>ds4-eval</code> multiple-choice grader is fixed, with golden self-tests added (<a href="https://github.com/antirez/ds4/pull/319">PR #319</a>). Upstream also added a release QA checklist.</li>
       <li><strong>Exact Metal decode fusions</strong> (<a href="https://github.com/antirez/ds4/pull/755">PR #755</a>). On pre-M5 and M5 chips, the Q2 and MXFP4 decode paths now use a batch of bit-identical kernel fusions: compressor pool, q_a/kv pair and quad store, HC norm-mix clustering, split-K FlashAttention reduction, and more. Greedy decoding gives byte-for-byte the same output, only faster. Each fusion keeps a <code>DS4_METAL_DISABLE_M5_*</code> or <code>DS4_METAL_DISABLE_PRE_M5_*</code> switch, so you can turn it off alone for A/B work. The same batch also fixes a long-context inverse-RoPE/top-k bug and recovers truncated DSML tool calls from an unclosed <code>&lt;think&gt;</code>.</li>
     </ul>
     <ul lang="zh-TW">
       <li><strong>SSD 串流</strong>（<code>--ssd-streaming</code>，上游）。不屬於路由的權重常駐記憶體。路由的 MoE 專家（模型裡各有專長的子網路）放在記憶體快取裡，快取裡沒有時，再從 GGUF 檔（模型的檔案格式）讀回來。自動預算是 Metal 建議工作集的 80%，再扣掉非路由權重。上游文件示範過：64 GB 的 MacBook 用 <code>--ssd-streaming-cache-experts 32GB</code> 跑 2-bit 的 Flash。128 GB 的 Mac 甚至可以這樣檢視 DeepSeek V4 <em>Pro</em> 的 q2（在 M5 Max 上，自動預算選了約 59 GB 的專家快取）。逐層加碼量化的串流，也適用 Headroom128 那個混合精度檔。代價很清楚：prefill 一樣快，decode 則會受快取未命中影響。</li>
-      <li><strong>DSpark 推測解碼</strong>（實驗性；本分叉比上游走得更前面）。推測解碼的意思是：小的草稿模型先猜幾個字，大模型再來驗證。先用 <code>gguf-tools/deepseek4-quantize --dspark-only</code> 轉出官方的 DSpark 草稿頭，再加 <code>--mtp DSpark.gguf</code>（CLI 和伺服器都接受），就會開啟 Metal 的區塊推測解碼：整塊平行起草，由目標模型驗證過才提交。本分叉另外加了 B2 拒絕取樣，這是無損的推測<em>取樣</em>，輸出分布和目標模型完全一樣。還有保存 RNG 狀態（亂數狀態）、用 <code>DS4_DSPARK_ADAPTIVE=1</code> 開啟的自適應區塊大小，以及從前綴檢查點部分接受。加速多少，要看基底／草稿的搭配和提示內容。先用 <code>DS4_MTP_TIMING=1</code> 量過，再相信任何說法。</li>
+      <li><strong>DSpark 推測解碼</strong>（實驗性；本分叉比上游走得更前面）。推測解碼的意思是：小的草稿模型先猜幾個字，大模型再來驗證。先用 <code>gguf-tools/deepseek4-quantize --dspark-only</code> 轉出官方的 DSpark 草稿頭，再加 <code>--mtp DSpark.gguf</code>（CLI 和伺服器都接受），就會開啟 Metal 的區塊推測解碼：整塊平行起草，由目標模型驗證過才提交。本分叉另外加了 B2 拒絕取樣，這是無損的推測<em>取樣</em>，輸出分布和目標模型完全一樣。還有保存 RNG 狀態（亂數狀態）、用 <code>DS4_DSPARK_ADAPTIVE=1</code> 開啟的自適應區塊大小，以及從前綴檢查點部分接受。加速多少，要看基底／草稿的搭配和提示內容。先用 <code>DS4_MTP_TIMING=1</code> 量過，再相信任何說法。對 v 0.7 的 Q1 來說，這不是選項：128 GB 裡，草稿模型放不進它旁邊。</li>
       <li><strong>有上限的請求佇列</strong>（<code>--max-queue N</code>）。排隊的工作滿 N 件，就回 <code>429</code>。這樣客戶端逾時時，就不會默默堆出一堆沒人來領的重複工作。預設值 <code>0</code> 維持舊行為。</li>
       <li><strong>正確性修補</strong>（上游）。推測驗證有個錯誤，<code>--mtp-draft &gt; 2</code> 時會提交錯誤的 token，已經修好（<a href="https://github.com/antirez/ds4/pull/358">PR #358</a>）。<code>ds4-eval</code> 選擇題評分器接連出現的偽陰性（明明答對卻判錯）也修了，並補上黃金自我測試（<a href="https://github.com/antirez/ds4/pull/319">PR #319</a>）。上游還加了發行前的 QA 清單。</li>
       <li><strong>位元等價的 Metal decode 融合</strong>（<a href="https://github.com/antirez/ds4/pull/755">PR #755</a>）。在 pre-M5 和 M5 晶片上，Q2 與 MXFP4 的 decode 路徑，改走一批位元等價的核心（kernel）融合：compressor pool、q_a／kv pair 與 quad store、HC norm-mix 叢集、split-K FlashAttention 歸約等等。貪婪解碼的輸出逐位元組相同，只是更快。每一項融合都留了 <code>DS4_METAL_DISABLE_M5_*</code> 或 <code>DS4_METAL_DISABLE_PRE_M5_*</code> 開關，可以單獨關掉，拿來做 A／B 比較。同一批也修了長 context 的 inverse-RoPE／top-k 錯誤，並救回未閉合 <code>&lt;think&gt;</code> 裡被截斷的 DSML 工具呼叫。</li>
@@ -1398,10 +1443,10 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     </p>
 
     <p lang="en-GB">
-      The engine matters for the same reason. antirez wrote <a href="https://github.com/antirez/ds4">ds4</a> in plain C, in the tradition of Redis: one source tree, one Makefile, no Python environment to rot, and a GGUF file (the model’s weight file) that the engine reads directly, with no conversion step. mitsuhiko’s <a href="https://github.com/mitsuhiko/pi-ds4">pi-ds4</a> wrapped that engine in code that manages starting, running and stopping the server: leases, a watchdog and a lock. It’s small enough to read in an afternoon. This fork keeps all of it and adds a civic layer on top: reproducibility, pinned downloads, the vision pair and a steering vector you can decline.
+      The engine matters for the same reason. antirez wrote <a href="https://github.com/antirez/ds4">ds4</a> in plain C, in the tradition of Redis: one source tree, one Makefile, no Python environment to rot, and a GGUF file (the model’s weight file) that the engine reads directly, with no conversion step. mitsuhiko’s <a href="https://github.com/mitsuhiko/pi-ds4">pi-ds4</a> wrapped that engine in code that manages starting, running and stopping the server: leases, a watchdog and a lock. It’s small enough to read in an afternoon. This fork keeps all of it and adds a civic layer on top: reproducibility, pinned downloads, the vision sidecar and a steering option you can decline.
     </p>
     <p lang="zh-TW">
-      引擎也是同樣的道理。antirez 用純 C 寫了 <a href="https://github.com/antirez/ds4">ds4</a>，延續他寫 Redis 的作風：一棵原始碼樹、一份 Makefile、沒有會慢慢壞掉的 Python 環境。引擎直接讀 GGUF（模型的權重檔），中間不必轉檔。mitsuhiko 的 <a href="https://github.com/mitsuhiko/pi-ds4">pi-ds4</a> 替這個引擎加了一層管理啟動與關閉的機制：租約、看門狗（watchdog）和鎖。它小到一個下午就讀得完。這個分叉全部保留，再疊上公民這一層：可重現、固定版本的下載、視覺這一對檔案，以及一個你可以拒絕的引導向量。
+      引擎也是同樣的道理。antirez 用純 C 寫了 <a href="https://github.com/antirez/ds4">ds4</a>，延續他寫 Redis 的作風：一棵原始碼樹、一份 Makefile、沒有會慢慢壞掉的 Python 環境。引擎直接讀 GGUF（模型的權重檔），中間不必轉檔。mitsuhiko 的 <a href="https://github.com/mitsuhiko/pi-ds4">pi-ds4</a> 替這個引擎加了一層管理啟動與關閉的機制：租約、看門狗（watchdog）和鎖。它小到一個下午就讀得完。這個分叉全部保留，再疊上公民這一層：可重現、固定版本的下載、視覺附屬檔，以及一個你可以拒絕的引導選項。
     </p>
 
     <p class="pull"><span lang="en-GB">Local inference doesn’t just save you the API fee. It hands the steering wheel back.</span><span lang="zh-TW">在本機跑模型，省下的不只是 API 費用，還把方向盤還給你。</span></p>
@@ -1426,7 +1471,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <ul lang="en-GB">
       <li><strong>Chapter 0</strong>: why this exists, in the language of civic care.</li>
       <li><strong>Chapters 1 and 2</strong>: the hardware you need, the one-line install, and what actually happens on first launch.</li>
-      <li><strong>Chapters 3 and 4</strong>: the model (abliteration, the Vision-Exp IQ2 profile) and the fork’s signature feature, directional steering.</li>
+      <li><strong>Chapters 3 and 4</strong>: the model (abliteration, the Q1 profile) and the fork’s signature feature, directional steering.</li>
       <li><strong>Chapters 5 and 6</strong>: every environment variable, then tuning of the context window and the KV cache.</li>
       <li><strong>Chapter 7</strong>: day-to-day use: the API, the log, leases, the native agent.</li>
       <li><strong>Chapter 8</strong>: pi-ds4 as a backend for Codex CLI, Claude Code, OpenClaw and Hermes Agent, including the path for non-Mac hardware.</li>
@@ -1435,7 +1480,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <ul lang="zh-TW">
       <li><strong>第零章</strong>：它為什麼存在，從公民關懷的角度說。</li>
       <li><strong>第一、二章</strong>：需要的硬體、一行安裝，以及第一次啟動時到底發生什麼事。</li>
-      <li><strong>第三、四章</strong>：這顆模型（abliteration，一種去除拒答傾向的處理；Vision-Exp IQ2 配方），以及這個分叉的招牌功能：方向性引導。</li>
+      <li><strong>第三、四章</strong>：這顆模型（abliteration，一種去除拒答傾向的處理；Q1 配方），以及這個分叉的招牌功能：方向性引導。</li>
       <li><strong>第五、六章</strong>：每一個環境變數，然後是 context（模型一次能讀的文字長度）與 KV cache（模型的短期記憶）的調校。</li>
       <li><strong>第七章</strong>：日常使用：API、log、租約、原生智慧體。</li>
       <li><strong>第八章</strong>：把 pi-ds4 當成 Codex CLI、Claude Code、OpenClaw、Hermes Agent 的後端，也包括非 Mac 硬體的做法。</li>
@@ -1447,8 +1492,8 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
 
     <div class="aside">
       <span class="label"><span lang="en-GB">Two premises</span><span lang="zh-TW">兩個前提</span></span>
-      <p lang="en-GB">First, you’ll give about 87 GB of disk to the model weights. That’s the entry fee for running locally, and there’s no way around it.</p>
-      <p lang="zh-TW">第一，你要讓出大約 87 GB 的硬碟空間放模型權重。這是在本機執行的入場費，省不掉。</p>
+      <p lang="en-GB">First, you’ll give about 367 GB of disk to the model weights. That’s the entry fee for running locally, and there’s no way around it.</p>
+      <p lang="zh-TW">第一，你要讓出大約 367 GB 的硬碟空間放模型權重。這是在本機執行的入場費，省不掉。</p>
       <p lang="en-GB">Second, the one-line path in Chapters 1 and 2 needs <a href="https://github.com/earendil-works/pi">pi</a>, Earendil’s coding-agent CLI. If you only want <code>ds4-server</code> as a local backend for a shell you already use, you can skip pi. Go to <a href="#shells">§8.6, path C</a>, clone <code>audreyt/ds4</code>, run <code>make ds4-server</code> and fetch the weights yourself.</p>
       <p lang="zh-TW">第二，第一、二章那條一行安裝的路，需要 <a href="https://github.com/earendil-works/pi">pi</a>。它是 Earendil 做的、幫你寫程式的智慧體 CLI。如果你只想把 <code>ds4-server</code> 當成現有 shell 的本機後端，可以完全不裝 pi。請直接看 <a href="#shells">§8.6 的 C 路線</a>：clone <code>audreyt/ds4</code>，執行 <code>make ds4-server</code>，再自己下載權重。</p>
     </div>
@@ -1461,57 +1506,35 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <h2 class="chapter-title"><span lang="en-GB">The hardware bar and the one-line install</span><span lang="zh-TW">硬體門檻與一行安裝</span></h2>
 
     <p class="lead" lang="en-GB">
-      Check your machine before you type the command. That isn’t gatekeeping. A model that <em>almost</em> fits is the worst case. DeepSeek V4 Flash is a Mixture-of-Experts model (many specialist sub-networks, only a few used at a time) with 284 billion parameters. Vision-Exp IQ2 shrinks its language weights to about 81 GiB, plus an 889 MiB encoder. That’s why a 128 GB-class machine can hold it at all. Running it still needs unified memory (the memory the CPU and GPU share) for activations (the model’s internal signals) and the KV cache, and macOS will freeze before it complains.
+      Check your machine before you type the command. That isn’t gatekeeping. A model that <em>almost</em> fits is the worst case. DeepSeek V4.1 Flash is a Mixture-of-Experts model (many specialist sub-networks, only a few used at a time) with 40 layers and 384 routed experts. The Q1 build takes about 341.5 GiB on disk including the vision sidecar, and about 106 GiB of weights stay resident in memory. The two Engram tables, about 189 GiB, stay on disk. That’s why a 128 GB machine can hold it at all, and why nothing smaller can. Running it still needs unified memory (the memory the CPU and GPU share) for activations (the model’s internal signals) and the KV cache, and macOS will freeze before it complains.
     </p>
     <p class="lead" lang="zh-TW">
-      輸入指令之前，先看看你的機器。這不是在設門檻，而是因為「差一點就裝得下」的模型，是最糟的情況。DeepSeek V4 Flash 是 2,840 億參數的 Mixture-of-Experts（專家混合）模型，由許多小專家組成，每次只動用其中幾個。Vision-Exp IQ2 把它的語言權重壓到約 81 GiB，另外加一個 889 MiB 的編碼器，所以 128 GB 等級的機器才裝得下。執行時還需要統一記憶體（CPU 與 GPU 共用的記憶體），用來放激活值（模型內部的訊號）和 KV cache。而 macOS 不會先抱怨，它會直接卡死。
+      輸入指令之前，先看看你的機器。這不是在設門檻，而是因為「差一點就裝得下」的模型，是最糟的情況。DeepSeek V4.1 Flash 是 Mixture-of-Experts（專家混合）模型，有 40 層、384 個路由專家，每次只動用其中幾個。Q1 版連同視覺附屬檔，在硬碟上約 341.5 GiB，其中約 106 GiB 的權重會常駐記憶體，兩張 Engram 表（約 189 GiB）則留在硬碟上。所以 128 GB 的機器才裝得下，再小的就不行。執行時還需要統一記憶體（CPU 與 GPU 共用的記憶體），用來放激活值（模型內部的訊號）和 KV cache。而 macOS 不會先抱怨，它會直接卡死。
     </p>
 
     <h3 id="1.1"><span class="no">1.1</span><span lang="en-GB">Minimum hardware</span><span lang="zh-TW">最低硬體需求</span></h3>
 
     <ul lang="en-GB">
-      <li><strong>Memory: at least 96 GB.</strong> Below that, the extension refuses to start. Between 96 and 127 GB, first raise Metal’s wired-memory ceiling (next section). At 128 GB and above it installs directly and leaves room for everything else.</li>
-      <li><strong>Disk.</strong> The language file and encoder together take 87 652 969 536 bytes (about 81.63 GiB, or 87.653 GB). Add the KV disk cache. When <code>DS4_KV_DISK_SPACE_MB</code> is unset, that’s about 64 GB on 128 GB+ machines and about 32 GB on 96 to 127 GB machines. Then add the ds4 source tree and logs. For a fresh install, plan on at least 88 GB plus the KV cache. An upgrade from 0.5.x peaks near 175 GB, or 181 GB with DSpark. Experiments with the full 1M context need an even bigger KV budget.</li>
-      <li><strong>Chip.</strong> Any Apple Silicon works. Linux machines with CUDA or ROCm run the same engine (<a href="#otherhw">§8.7</a>). Backend behaviour follows whatever upstream runtime audreyt/ds4 currently inherits.</li>
-      <li><strong>Network.</strong> The first download is 82 GiB, so bandwidth matters once. If your Hugging Face account gets you faster downloads, set <code>HF_TOKEN</code>.</li>
+      <li><strong>Memory: 128 GB, on Apple Silicon.</strong> A Mac with less memory is refused at the start. ds4 keeps a 112 GiB memory budget for V4.1, and about 106 GiB of weights stay resident. Macs under 128 GB should stay on v 0.6.1, which runs the V4 Vision-Exp IQ2 build on 96 GB.</li>
+      <li><strong>Wired-memory ceiling.</strong> macOS lets Metal lock down only about 107.5 GiB of a 128 GB Mac by default, less than the Q1 and its vision sidecar need under ds4’s 112 GiB budget. Raise the ceiling once with <code>sudo sysctl iogpu.wired_limit_mb=114688</code>, which matches that budget, and add <code>iogpu.wired_limit_mb=114688</code> to <code>/etc/sysctl.conf</code> to keep it across reboots. The extension checks this before it downloads the model and prints the command if it is missing.</li>
+      <li><strong>Disk.</strong> The language file and the vision sidecar together take 366 684 242 080 bytes (about 341.5 GiB, or 366.7 GB). Add the KV disk cache, 64 GB by default on a 128 GB Mac when <code>DS4_KV_DISK_SPACE_MB</code> is unset, then the ds4 source tree, the build and the logs. For a fresh install, plan on about 367 GB plus the KV cache. An upgrade from v 0.6.x keeps the old 81.63 GiB pair until the new one passes its size checks, so it peaks near 455 GB. <code>download_model.sh</code> checks free space before it starts. An internal SSD matters, as the two Engram tables (about 189 GiB) stay on disk.</li>
+      <li><strong>Chip.</strong> Apple Silicon, Metal only. Linux hosts with CUDA or ROCm are refused before anything downloads, because ds4 runs the IQ1_S experts and the Q5_K/Q6_K dense weights only on Metal. They can stay on v 0.6.1, or bring their own GGUF and binary through <code>DS4_RUNTIME_DIR</code> (<a href="#otherhw">§8.7</a>).</li>
+      <li><strong>Energy Mode.</strong> Set Energy Mode to High Power while the model runs (System Settings › Battery › Energy Mode on a MacBook). High Power generates about 37.9 t/s. On earlier builds of this engine, Low Power decoded at less than half the High Power rate.</li>
+      <li><strong>Network.</strong> The first download is 341.5 GiB, so expect many hours on a typical home connection. It is resumable with <code>curl -C -</code>. If your Hugging Face account gets you faster downloads, set <code>HF_TOKEN</code>.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>記憶體：至少 96 GB。</strong>低於這個數字，擴充套件會拒絕啟動。96 到 127 GB 之間，要先調高 Metal 可鎖定記憶體的上限（見下一節）。128 GB 以上可以直接安裝，還剩不少空間給其他程式。</li>
-      <li><strong>硬碟。</strong>語言檔加編碼器，合計 87 652 969 536 位元組（約 81.63 GiB，也就是 87.653 GB）。再加上 KV 磁碟快取：沒設 <code>DS4_KV_DISK_SPACE_MB</code> 的話，128 GB 以上的機器約 64 GB，96 到 127 GB 的機器約 32 GB。還要加 ds4 原始碼和 log 的空間。全新安裝請至少預留 88 GB，外加 KV 快取。從 0.5.x 升級時，用量最高約 175 GB，有 DSpark 的話約 181 GB。想玩完整的 1M context，KV 預算還要更大。</li>
-      <li><strong>晶片。</strong>任何 Apple Silicon 都可以。裝有 CUDA 或 ROCm 的 Linux 機器，也能跑同一個引擎（<a href="#otherhw">§8.7</a>）。後端的行為，取決於 audreyt/ds4 目前繼承的上游執行環境。</li>
-      <li><strong>網路。</strong>第一次要下載 82 GiB，網速只有這一次會有影響。如果你的 Hugging Face 帳號可以加速下載，就設定 <code>HF_TOKEN</code>。</li>
+      <li><strong>記憶體：128 GB，而且要是 Apple Silicon。</strong>記憶體比這少的 Mac，啟動時會被拒絕。ds4 對 V4.1 的記憶體預算是 112 GiB，約 106 GiB 的權重會常駐記憶體。不到 128 GB 的 Mac 請留在 v 0.6.1，它在 96 GB 上跑 V4 Vision-Exp IQ2 版。</li>
+      <li><strong>可鎖定記憶體上限。</strong>macOS 預設只讓 Metal 鎖住 128 GB Mac 裡約 107.5 GiB 的記憶體，比 Q1 加視覺附屬檔在 ds4 的 112 GiB 預算下需要的少。請先執行一次 <code>sudo sysctl iogpu.wired_limit_mb=114688</code>（剛好對應這個預算）調高上限；要在重新開機後保留，就把 <code>iogpu.wired_limit_mb=114688</code> 加進 <code>/etc/sysctl.conf</code>。擴充套件在下載模型之前會先檢查，沒設定時會印出這行指令。</li>
+      <li><strong>硬碟。</strong>語言檔加視覺附屬檔，合計 366 684 242 080 位元組（約 341.5 GiB，也就是 366.7 GB）。再加上 KV 磁碟快取：沒設 <code>DS4_KV_DISK_SPACE_MB</code> 的話，128 GB 的 Mac 預設 64 GB。還要加 ds4 原始碼、編譯產物和 log 的空間。全新安裝請預留約 367 GB，外加 KV 快取。從 v 0.6.x 升級時，舊的 81.63 GiB 一對檔案會留到新的一對通過大小檢查才刪，所以用量最高約 455 GB。<code>download_model.sh</code> 開始前會先檢查剩餘空間。內建 SSD 很重要，因為兩張 Engram 表（約 189 GiB）留在硬碟上。</li>
+      <li><strong>晶片。</strong>Apple Silicon，只走 Metal。裝有 CUDA 或 ROCm 的 Linux 主機，會在下載之前就被拒絕，因為 ds4 只在 Metal 上執行 IQ1_S 專家和 Q5_K／Q6_K 的稠密權重。它們可以留在 v 0.6.1，或用 <code>DS4_RUNTIME_DIR</code> 自備 GGUF 與執行檔（<a href="#otherhw">§8.7</a>）。</li>
+      <li><strong>能源模式。</strong>模型執行時，請把能源模式設成「高功率」（MacBook 在「系統設定 › 電池 › 能源模式」）。高功率的生成約 37.9 t/s。在這個引擎較早的版本上，低耗電模式的 decode 不到高功率時的一半。</li>
+      <li><strong>網路。</strong>第一次要下載 341.5 GiB，一般家用網路要好幾個小時，而且可以用 <code>curl -C -</code> 續傳。如果你的 Hugging Face 帳號可以加速下載，就設定 <code>HF_TOKEN</code>。</li>
     </ul>
 
-    <div class="aside" id="ram96">
-      <span class="label"><span lang="en-GB">On a 96 GB Mac, raise the wired-memory ceiling first</span><span lang="zh-TW">96 GB 的 Mac：先調高可鎖定記憶體的上限</span></span>
-      <p lang="en-GB">
-        Upstream contributors and users of this extension have confirmed that the IQ2XXS imatrix recipe runs on a 96 GB Mac Studio at 250k context, at around 25 to 27 tokens per second (t/s). See <a href="https://github.com/antirez/ds4/issues/46">antirez/ds4 issue #46</a>, since folded into the upstream README. The SHMK47 / 47chan community has reported the same figures independently. At the time of writing, 96 GB is the largest Mac Studio apple.com lists, so this is the normal situation for someone who just bought the top configuration.
-      </p>
-      <p lang="zh-TW">
-        上游貢獻者和本擴充套件的使用者都確認過：IQ2XXS imatrix 這個配方，可以在 96 GB 的 Mac Studio 上跑 250k context，速度約 25 到 27 t/s（每秒 token 數）。出處是 <a href="https://github.com/antirez/ds4/issues/46">antirez/ds4 issue #46</a>，後來已併入上游 README。SHMK47／47chan 社群也各自回報過同樣的數字。寫這封信的時候，apple.com 上最大的 Mac Studio 就是 96 GB，所以剛買頂規機器的人，多半就是這個狀況。
-      </p>
-      <p lang="en-GB">
-        On a Mac with 96 to 127 GB, macOS won’t let Metal lock down the roughly 82 GiB pair of files unless you raise the ceiling. This extension’s <code>index.ts</code> checks for two things: less than 128 GB of memory, and <code>iogpu.wired_limit_mb</code> still unset or low. If it finds both, it prints the exact command and stops, so you run it once, knowingly:
-      </p>
-      <p lang="zh-TW">
-        記憶體在 96 到 127 GB 之間的 Mac，除非你調高上限，否則 macOS 不讓 Metal 鎖住這一對約 82 GiB 的檔案。本擴充套件的 <code>index.ts</code> 會檢查兩件事：記憶體不到 128 GB，而且 <code>iogpu.wired_limit_mb</code> 還沒設定或偏低。兩者都成立時，它會印出該跑的指令然後停下來，讓你清楚知道自己在做什麼，再自己跑一次：
-      </p>
-      <ol lang="en-GB">
-        <li>For this boot only, leaving 6 GB to macOS:<br><code>sudo sysctl iogpu.wired_limit_mb=92000</code></li>
-        <li>To keep it across reboots:<br><code>echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf</code></li>
-        <li>Then run <code>pi install https://github.com/audreyt/pi-ds4</code> as on a 128 GB machine.</li>
-      </ol>
-      <ol lang="zh-TW">
-        <li>只對這次開機有效，留 6 GB 給 macOS：<br><code>sudo sysctl iogpu.wired_limit_mb=92000</code></li>
-        <li>要讓設定在重開機後保留：<br><code>echo 'iogpu.wired_limit_mb=92000' | sudo tee -a /etc/sysctl.conf</code></li>
-        <li>接著照 128 GB 機器的流程，執行 <code>pi install https://github.com/audreyt/pi-ds4</code>。</li>
-      </ol>
-      <p lang="en-GB">
-        <strong>The caveat is real.</strong> With 92 000 MB wired, the operating system has very little left. Run an IDE, a browser, a video call and a VM next to the server and macOS can freeze. If that’s how you work every day, a machine with 128 GB or more is calmer.
-      </p>
-      <p lang="zh-TW">
-        <strong>這個提醒是認真的。</strong>鎖定 92 000 MB 之後，作業系統剩下的記憶體很少。如果伺服器旁邊還開著 IDE、瀏覽器、視訊會議和虛擬機，macOS 可能整個卡住。你每天都這樣用的話，128 GB 以上的機器會安穩得多。
-      </p>
+    <div class="aside" id="v061">
+      <span class="label"><span lang="en-GB">Under 128 GB? Stay on v 0.6.1</span><span lang="zh-TW">不到 128 GB？請留在 v 0.6.1</span></span>
+      <p lang="en-GB">The 96 GB route belongs to the previous release. v 0.6.1 runs the V4 Vision-Exp IQ2 build (81.63 GiB) on a 96 GB Mac, once you raise Metal’s wired-memory ceiling (the cap on how much memory the GPU may lock down). This release does not use that ceiling. The managed path now refuses any Mac under 128 GB, so this letter no longer carries those instructions.</p>
+      <p lang="zh-TW">96 GB 這條路屬於上一個版本。v 0.6.1 在 96 GB 的 Mac 上跑 V4 Vision-Exp IQ2 版（81.63 GiB），前提是先調高 Metal 可鎖定記憶體的上限（GPU 最多能鎖住多少記憶體）。這個版本不用這個上限。代管路徑現在會拒絕任何不到 128 GB 的 Mac，所以這封信不再附那些步驟。</p>
     </div>
 
     <h3 id="1.2"><span class="no">1.2</span><span lang="en-GB">If you installed the upstream extension before</span><span lang="zh-TW">如果你之前裝過上游版本</span></h3>
@@ -1550,10 +1573,10 @@ pi --version</pre>
     </div>
 
     <p lang="en-GB">
-      That’s the whole command. Cloning the engine source, building <code>ds4-server</code>, downloading the 87.653 GB language-and-encoder pair, starting the server and registering the provider all happen in the background. Everything is logged.
+      That’s the whole command. Cloning the engine source, building <code>ds4-server</code>, downloading the 366.7 GB language-and-sidecar pair, starting the server and registering the provider all happen in the background. Everything is logged.
     </p>
     <p lang="zh-TW">
-      指令就這一行。把引擎原始碼 clone 下來、編譯 <code>ds4-server</code>、下載 87.653 GB 的語言檔與編碼器、啟動伺服器、註冊 provider，全都在背景完成，而且每一步都有 log 紀錄。
+      指令就這一行。把引擎原始碼 clone 下來、編譯 <code>ds4-server</code>、下載 366.7 GB 的語言檔與視覺附屬檔、啟動伺服器、註冊 provider，全都在背景完成，而且每一步都有 log 紀錄。
     </p>
 
     <div class="aside">
@@ -1575,10 +1598,10 @@ pi --version</pre>
     <h2 class="chapter-title"><span lang="en-GB">What happens on first launch</span><span lang="zh-TW">第一次啟動會發生什麼事</span></h2>
 
     <p class="lead" lang="en-GB">
-      The install command only registers the extension. Nothing heavy happens until you first select <code>ds4/deepseek-v4-flash</code>. An 82 GiB download should be something you asked for, not something that happened while you installed a package. Every step is written to <code>~/.pi/ds4/log</code>.
+      The install command only registers the extension. Nothing heavy happens until you first select <code>ds4/deepseek-v4-flash</code>. A 341.5 GiB download should be something you asked for, not something that happened while you installed a package. Every step is written to <code>~/.pi/ds4/log</code>.
     </p>
     <p class="lead" lang="zh-TW">
-      安裝指令只是先登記一下，還沒有開始做事。要等你第一次真的選用 <code>ds4/deepseek-v4-flash</code>，才會動手。因為 82 GiB 的下載，應該是你自己開口要的，不該在你裝套件時悄悄發生。每一步都會記在 <code>~/.pi/ds4/log</code>。
+      安裝指令只是先登記一下，還沒有開始做事。要等你第一次真的選用 <code>ds4/deepseek-v4-flash</code>，才會動手。因為 341.5 GiB 的下載，應該是你自己開口要的，不該在你裝套件時悄悄發生。每一步都會記在 <code>~/.pi/ds4/log</code>。
     </p>
 
     <h3 id="2.1"><span class="no">2.1</span><span lang="en-GB">The startup sequence</span><span lang="zh-TW">啟動的六個步驟</span></h3>
@@ -1620,18 +1643,18 @@ git clone --depth 1 --single-branch \
         <span class="n" aria-hidden="true">4</span>
         <div>
           <h4><span lang="en-GB">Make sure the model is there</span><span lang="zh-TW">確認模型已經在硬碟上</span></h4>
-          <p lang="en-GB">The bundled <code>download_model.sh q2</code> (alias <code>preferred</code>) runs:</p>
-          <p lang="zh-TW">執行內附的 <code>download_model.sh q2</code>（別名 <code>preferred</code>）：</p>
-          <code class="args"><span class="c"># <span lang="zh-TW">curl -C - 續傳；網址釘選在 Hugging Face 的 commit 上。各檔 fetch → mv → size check，兩檔都過才切 ds4flash</span><span lang="en-GB">curl -C - resumes; URLs are pinned to Hugging Face commits. Each file: fetch → mv → size check; ds4flash switches only after both pass</span></span>
+          <p lang="en-GB">The bundled <code>download_model.sh q1</code> (alias <code>preferred</code>) checks that there is enough free disk space, then runs:</p>
+          <p lang="zh-TW">執行內附的 <code>download_model.sh q1</code>（別名 <code>preferred</code>），它會先檢查剩餘的硬碟空間，再執行：</p>
+          <code class="args"><span class="c"># <span lang="zh-TW">curl -C - 續傳；網址釘選在 Hugging Face 的版本上。各檔 fetch → mv → size check，兩檔都過才切 ds4flash</span><span lang="en-GB">curl -C - resumes; URLs are pinned to Hugging Face revisions. Each file: fetch → mv → size check; ds4flash switches only after both pass</span></span>
 curl -fL --progress-meter -C - \
-  -o gguf/DeepSeek-V4-Flash-Vision-Exp-Abliterated-….<span class="hi">gguf.part</span> \
-  <span class="hi">https://huggingface.co/…/resolve/367a1fef…/…</span>
-mv gguf/…Abliterated-….gguf.part gguf/…Abliterated-….gguf
+  -o gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.<span class="hi">gguf.part</span> \
+  <span class="hi">https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF/resolve/54ee865/…</span>
+mv gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf.part gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf
 curl -fL --progress-meter -C - \
-  -o gguf/DeepSeek-V4-Flash-Vision-Encoder.<span class="hi">gguf.part</span> \
-  <span class="hi">https://huggingface.co/antirez/deepseek-v4-gguf/resolve/f71f23d…/…</span>
-mv gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf.part gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf
-ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code>
+  -o gguf/DeepSeek-V4.1-Flash-1017-Vision.<span class="hi">gguf.part</span> \
+  <span class="hi">https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf/resolve/5ab6e05/…</span>
+mv gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf.part gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf
+ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.gguf</span></code>
         </div>
       </li>
       <li class="pivot">
@@ -1641,22 +1664,22 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
           <p lang="en-GB">The server starts in the background on <code>127.0.0.1:8000</code> with the built-in arguments. It gets nothing you didn't ask for:</p>
           <p lang="zh-TW">伺服器在背景啟動，位址是 <code>127.0.0.1:8000</code>，用的是內建的參數。你沒要求的東西，一樣都不會加：</p>
           <code class="args">ds4-server \
-  --ctx <span class="hi">100000</span> \
+  --ctx <span class="hi">256000</span> \
   --kv-disk-dir ~/.pi/ds4/kv \
   --kv-disk-space-mb <span class="hi">65536</span> \
-  --vision gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf
-<span class="c"># 65536 on 128 GB+; 32768 on 96–127 GB
-# steering is off unless you opt in (Chapter 4):
-#   --dir-steering-file dir-steering/out/uncertainty_ablit_imatrix.f32
-#   --dir-steering-ffn -0.75 --dir-steering-attn 0 --dir-steering-policy final-answer</span></code>
+  --vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf
+<span class="c"># 65536 is the default on a 128 GB Mac
+# steering is off unless you opt in with your own V4.1 direction (Chapter 4):
+#   --dir-steering-file &lt;your 40 × 5120 direction file&gt;
+#   --dir-steering-ffn &lt;strength&gt; --dir-steering-attn 0 --dir-steering-policy final-answer</span></code>
         </div>
       </li>
       <li>
         <span class="n" aria-hidden="true">6</span>
         <div>
           <h4><span lang="en-GB">Start the watchdog</span><span lang="zh-TW">啟動看門狗</span></h4>
-          <p lang="en-GB">The extension starts <code>/bin/sh ds4-watchdog.sh</code> in the background. Every two seconds it looks through <code>clients/</code>. When no valid lease is left, it sends SIGTERM (a polite "please stop" signal) to the server and quits. This is how 87 GB of memory comes back when you walk away.</p>
-          <p lang="zh-TW">擴充套件會在背景啟動 <code>/bin/sh ds4-watchdog.sh</code>。它每兩秒檢查一次 <code>clients/</code>。要是沒有任何有效的租約，就對伺服器送出 SIGTERM（請它結束的訊號），然後自己也收工。你一離開，87 GB 的記憶體就是這樣還回來的。</p>
+          <p lang="en-GB">The extension starts <code>/bin/sh ds4-watchdog.sh</code> in the background. Every two seconds it looks through <code>clients/</code>. When no valid lease is left, it sends SIGTERM (a polite "please stop" signal) to the server and quits. This is how the memory comes back when you walk away.</p>
+          <p lang="zh-TW">擴充套件會在背景啟動 <code>/bin/sh ds4-watchdog.sh</code>。它每兩秒檢查一次 <code>clients/</code>。要是沒有任何有效的租約，就對伺服器送出 SIGTERM（請它結束的訊號），然後自己也收工。你一離開，記憶體就是這樣還回來的。</p>
         </div>
       </li>
     </ol>
@@ -1677,19 +1700,19 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     <h3 id="2.2"><span class="no">2.2</span><span lang="en-GB">Seeing where it is right now</span><span lang="zh-TW">看看現在進行到哪了</span></h3>
 
     <p lang="en-GB">
-      Inside pi, <code>/ds4</code> opens a live log window. While the 82 GiB pair of files downloads, you'll see curl's progress meter squeezed into one line: percentage, speed and time left.
+      Inside pi, <code>/ds4</code> opens a live log window. While the 341.5 GiB pair of files downloads, you'll see curl's progress meter squeezed into one line: percentage, speed and time left.
     </p>
     <p lang="zh-TW">
-      在 pi 裡輸入 <code>/ds4</code>，會開啟即時的 log 視窗。那一對 82 GiB 的檔案在下載時，你會看到 curl 的進度條被縮成一行：百分比、速度、剩下的時間。
+      在 pi 裡輸入 <code>/ds4</code>，會開啟即時的 log 視窗。那一對 341.5 GiB 的檔案在下載時，你會看到 curl 的進度條被縮成一行：百分比、速度、剩下的時間。
     </p>
 
     <div class="aside">
       <span class="label"><span lang="en-GB">If the first download is interrupted</span><span lang="zh-TW">如果第一次下載中斷了</span></span>
       <p lang="en-GB">
-        Nothing is lost. <code>download_model.sh</code> uses <code>curl -C -</code>, so the next launch picks up where it stopped. The temporary file is <code>DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf.part</code>. It only gets renamed to <code>.gguf</code> once every byte has arrived.
+        Nothing is lost. <code>download_model.sh</code> uses <code>curl -C -</code>, so the next launch picks up where it stopped. The temporary file is <code>DeepSeek-V4.1-Flash-Abliterated-Q1.gguf.part</code>. It only gets renamed to <code>.gguf</code> once every byte has arrived.
       </p>
       <p lang="zh-TW">
-        不會有任何損失。<code>download_model.sh</code> 用的是 <code>curl -C -</code>，下次啟動會從中斷的地方接著下載。暫存檔叫 <code>DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf.part</code>。要等每一個位元組都到齊，才會改名成 <code>.gguf</code>。
+        不會有任何損失。<code>download_model.sh</code> 用的是 <code>curl -C -</code>，下次啟動會從中斷的地方接著下載。暫存檔叫 <code>DeepSeek-V4.1-Flash-Abliterated-Q1.gguf.part</code>。要等每一個位元組都到齊，才會改名成 <code>.gguf</code>。
       </p>
     </div>
   </section>
@@ -1698,43 +1721,50 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
   <div class="sep" aria-hidden="true"><svg><use href="#plurality"/></svg></div>
   <section class="chapter" id="model">
     <span class="chapter-no"><span lang="en-GB">Chapter 3</span><span lang="zh-TW">第三章</span></span>
-    <h2 class="chapter-title"><span lang="en-GB">The model: Vision-Exp IQ2 and the vision encoder</span><span lang="zh-TW">這顆模型：Vision-Exp IQ2 與視覺編碼器</span></h2>
+    <h2 class="chapter-title"><span lang="en-GB">The model: DeepSeek V4.1 Flash, the Q1 build and the vision sidecar</span><span lang="zh-TW">這顆模型：DeepSeek V4.1 Flash、Q1 配方與視覺附屬檔</span></h2>
 
     <p class="lead" lang="en-GB">
-      Take five minutes to learn what you're running. A quantised (shrunk to fit), abliterated (made to refuse less) model is a bundle of trade-offs someone else made for you. This chapter lays them out so you can check them, or turn them down. The extension now downloads the Vision-Exp IQ2 language file from <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF</code>, together with antirez's unmodified vision encoder, which has 316 tensors. It is not Headroom128 0731 Flash, and it is not CyberNeurova dual-tier.
+      Take five minutes to learn what you’re running. A quantised (shrunk to fit), abliterated (made to refuse less) model is a bundle of trade-offs someone else made for you. This chapter lays them out so you can check them, or turn them down. The extension downloads DeepSeek V4.1 Flash 1017 in an abliterated Q1 build from <code>audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</code>, together with a vision sidecar (<code>DeepSeek-V4.1-Flash-1017-Vision.gguf</code>). It is not the V4 Vision-Exp IQ2 of v 0.6, and <a href="#3.3">§3.3</a> says plainly what that trade costs.
     </p>
     <p class="lead" lang="zh-TW">
-      花五分鐘，弄清楚你在跑的是什麼。這顆模型經過量化（壓小，好塞進記憶體）和 abliteration（讓它少拒絕一些），裡面是別人替你做的一堆取捨。這一章把它們全攤開，讓你檢查，也可以不接受。擴充套件現在下載的，是 <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF</code> 的 Vision-Exp IQ2 語言檔，再加上 antirez 沒有改過的視覺編碼器，裡面有 316 個張量。它不是 Headroom128 0731 Flash，也不是 CyberNeurova 的雙層版。
+      花五分鐘，弄清楚你在跑的是什麼。這顆模型經過量化（壓小，好塞進記憶體）和 abliteration（讓它少拒絕一些），裡面是別人替你做的一堆取捨。這一章把它們全攤開，讓你檢查，也可以不接受。擴充套件下載的，是 <code>audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</code> 的 DeepSeek V4.1 Flash 1017 abliterated Q1 版，加上一個視覺附屬檔（<code>DeepSeek-V4.1-Flash-1017-Vision.gguf</code>）。它不是 v 0.6 的 V4 Vision-Exp IQ2，這筆取捨的代價，<a href="#3.3">§3.3</a> 會老實說明。
     </p>
 
-    <h3 id="3.1"><span class="no">3.1</span><span lang="en-GB">What DeepSeek V4 Flash is</span><span lang="zh-TW">DeepSeek V4 Flash 是什麼</span></h3>
+    <h3 id="3.1"><span class="no">3.1</span><span lang="en-GB">What DeepSeek V4.1 Flash is</span><span lang="zh-TW">DeepSeek V4.1 Flash 是什麼</span></h3>
 
     <p lang="en-GB">
-      It is a Mixture-of-Experts (MoE) model with 284 billion parameters. MoE means only a few specialist parts switch on for each piece of text, so it uses roughly 13 billion parameters per token. A token is the smallest chunk of text the model reads and writes. This is the "fast" member of the V4 family, built for lower latency and a large context window, which is how much text the model can keep in view at once. The official 0731 release replaced the preview and improved the agentic benchmarks a lot. This extension sets <code>ds4-server</code>'s <code>--ctx</code> to 100 000 tokens. That is the most the engine will accept. It doesn't promise that every kind of job works best at that length.
+      It is a Mixture-of-Experts (MoE) model with 40 layers, 384 routed experts plus one shared expert, and 6 routed experts used for each token. MoE means only a few specialist parts switch on for each piece of text. A token is the smallest chunk of text the model reads and writes. The hidden width, the size of the vector that carries each token through the layers, is 5120. The official context window, how much text the model can keep in view at once, is 1M tokens. This extension opens 256k by default, and a 128 GB Mac cannot open the full 1M (<a href="#6.4">§6.4</a>).
     </p>
     <p lang="zh-TW">
-      它是一顆有 2,840 億參數的 Mixture-of-Experts（MoE，專家混合）模型。意思是每處理一小段文字，只會啟動其中幾個專家，所以每個 token 大約只用 130 億參數。token 是模型讀寫文字的最小單位。它是 V4 家族裡「快」的那一款，設計目標是回應延遲低，而且 context window（一次能放在眼前的文字量）很大。官方的 0731 版取代了預覽版，在 agent 相關的基準測試上進步很多。這個擴充套件把 <code>ds4-server</code> 的 <code>--ctx</code> 設成 100 000 個 token。這是引擎願意接受的上限，並不保證每種工作在這個長度都表現最好。
+      它是一顆有 40 層的 Mixture-of-Experts（MoE，專家混合）模型，有 384 個路由專家加上一個共用專家，每個 token 用其中 6 個路由專家。意思是每處理一小段文字，只會啟動幾個專家。token 是模型讀寫文字的最小單位。隱藏層寬度（帶著每個 token 穿過各層的向量大小）是 5120，官方的 context window（一次能放在眼前的文字量）是 1M 個 token。這個擴充套件預設開 256k，128 GB 的 Mac 開不了完整的 1M（<a href="#6.4">§6.4</a>）。
     </p>
     <p lang="en-GB">
-      The engine is antirez's <a href="https://github.com/antirez/ds4">ds4</a>. It's a local inference engine, meaning the program that runs the model on your own machine. It is written in plain C in the Redis tradition, and it squeezes this model onto Apple Silicon. This extension uses the <code>main</code> branch of the <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> fork. That branch is pinned to the merged DwarfStar runtime and the Vision-Exp abliterated IQ2 pair. The older CyberNeurova steering vector is still there as an opt-in for research. The managed launch leaves steering off.
+      The engine is antirez’s <a href="https://github.com/antirez/ds4">ds4</a>. It’s a local inference engine, meaning the program that runs the model on your own machine. It is written in plain C in the Redis tradition. This extension uses the <code>main</code> branch of the <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> fork, pinned at <code>d3f4cd6</code>. That commit adds IQ1_S on Metal, a faster single-token Q5_K/Q6_K route and a V4.1 context fit, and it merges kernelpool’s V4.1 Metal work. The managed launch leaves directional steering off (<a href="#steering">Chapter 4</a>).
     </p>
     <p lang="zh-TW">
-      引擎是 antirez 的 <a href="https://github.com/antirez/ds4">ds4</a>。它是本機推論引擎，也就是在你自己的電腦上讓模型跑起來的程式。它用純 C 寫成，延續 Redis 的風格，能把這顆模型塞進 Apple Silicon。這個擴充套件用的是 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 分叉的 <code>main</code> 分支。這個分支固定在合併後的 DwarfStar 執行環境，以及 Vision-Exp abliterated IQ2 這一對檔案上。舊的 CyberNeurova 引導向量還留著，當作研究用的選項。代管啟動時，預設不開引導。
+      引擎是 antirez 的 <a href="https://github.com/antirez/ds4">ds4</a>。它是本機推論引擎，也就是在你自己的電腦上讓模型跑起來的程式。它用純 C 寫成，延續 Redis 的風格。這個擴充套件用的是 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 分叉的 <code>main</code> 分支，固定在 <code>d3f4cd6</code>。這個 commit 在 Metal 上加了 IQ1_S、更快的單 token Q5_K／Q6_K 路徑和 V4.1 的 context 適配，也合併了 kernelpool 的 V4.1 Metal 工作。代管啟動時，方向性引導預設關閉（<a href="#steering">第四章</a>）。
+    </p>
+
+    <p lang="en-GB">
+      V4.1 adds two Engram tables: lookup tables, about 189 GiB together, from which the model reads only a few rows per token. ds4 leaves them on disk. The other weights, about 106 GiB (106.27 GiB), stay resident in memory on Metal. That is why an internal SSD matters, and why a 128 GB Mac is the floor.
+    </p>
+    <p lang="zh-TW">
+      V4.1 多了兩張 Engram 表：查找表，合計約 189 GiB，模型每個 token 只讀其中幾列。ds4 把它們留在硬碟上。其餘的權重約 106 GiB（106.27 GiB），常駐在 Metal 的記憶體裡。這就是內建 SSD 很重要的原因，也是 128 GB 的 Mac 是門檻的原因。
     </p>
 
     <h3 id="3.2"><span class="no">3.2</span><span lang="en-GB">What abliteration is, and what it is not</span><span lang="zh-TW">abliteration 是什麼，不是什麼</span></h3>
 
     <p lang="en-GB">
-      The <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated GGUF</a> has had a small operation. Abliteration edits the model's internal signals (its activations) with a low-rank change, meaning a very small, targeted one. First, find the one internal direction that lights up when the model meets prompts it was trained to refuse. A prompt is just the text you give the model. Then remove that direction while the model computes its answer. The trained "I cannot respond to that" reply gets pried open, and a more natural continuation takes its place.
+      The <a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">abliterated V4.1 GGUF</a> has had a small operation. Abliteration edits the model's internal signals (its activations) with a low-rank change, meaning a very small, targeted one. First, find the one internal direction that lights up when the model meets prompts it was trained to refuse. A prompt is just the text you give the model. Then remove that direction while the model computes its answer. The trained "I cannot respond to that" reply gets pried open, and a more natural continuation takes its place.
     </p>
     <p lang="zh-TW">
-      這份 <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated GGUF</a> 動過一個小手術。abliteration 是對模型內部的訊號（激活值）做低秩編輯，也就是範圍很小、很有針對性的改動。做法是：先找出一個方向，當模型遇到它被訓練成要拒絕的提示（prompt，就是你丟給模型的那段文字）時，這個方向就會亮起來。然後在模型算答案的過程中，把這個方向拿掉。訓練出來的那句「我無法回應這個請求」就被撬開了，換成比較自然的接續。
+      這份 <a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">abliterated V4.1 GGUF</a> 動過一個小手術。abliteration 是對模型內部的訊號（激活值）做低秩編輯，也就是範圍很小、很有針對性的改動。做法是：先找出一個方向，當模型遇到它被訓練成要拒絕的提示（prompt，就是你丟給模型的那段文字）時，這個方向就會亮起來。然後在模型算答案的過程中，把這個方向拿掉。訓練出來的那句「我無法回應這個請求」就被撬開了，換成比較自然的接續。
     </p>
     <p lang="en-GB">
-      What it loosens is the <em>over-refusal</em> layer. It doesn't touch the model's judgement about content. That judgement still comes from whatever the model learned in training. The next paragraph exists because of this difference.
+      What it loosens is the <em>over-refusal</em> layer. It doesn't touch the model's judgement about content. That judgement still comes from whatever the model learned in training. In this build, the edit lives in 38 <code>attn_output_b</code> tensors (blocks of numbers in the attention output step). They come from pqhaz’s Heretic edit of the 1017 checkpoint (<a href="https://huggingface.co/pqhaz/DeepSeek-V4.1-Flash-1017-heretic">pqhaz/DeepSeek-V4.1-Flash-1017-heretic</a>), which removes the refusal direction from the attention output projection in blocks 2 to 39. pqhaz reports held-out refusals falling from 92 to 1 in 100, a KL divergence of 0.136 on harmless prompts (how far ordinary answers drift from the original), and no capability benchmarks. The next paragraph exists because of this difference.
     </p>
     <p lang="zh-TW">
-      它鬆開的，是<em>過度拒絕</em>那一層。模型對內容本身的判斷，它沒有動。那份判斷還是來自訓練時學到的東西。下一段為什麼要寫，就是因為這個差別。
+      它鬆開的，是<em>過度拒絕</em>那一層。模型對內容本身的判斷，它沒有動。那份判斷還是來自訓練時學到的東西。在這個版本裡，這個編輯落在 38 個 <code>attn_output_b</code> 張量（注意力輸出那一步裡的數字區塊）上。它們來自 pqhaz 對 1017 版做的 Heretic 編輯（<a href="https://huggingface.co/pqhaz/DeepSeek-V4.1-Flash-1017-heretic">pqhaz/DeepSeek-V4.1-Flash-1017-heretic</a>），把第 2 到第 39 層注意力輸出投影裡的拒答方向拿掉。pqhaz 回報：保留測試集上的拒答，從 100 題裡的 92 題降到 1 題；無害提示上的 KL 散度是 0.136（一般回答偏離原版有多遠）；沒有跑能力評測。下一段為什麼要寫，就是因為這個差別。
     </p>
 
     <div class="aside">
@@ -1744,43 +1774,43 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       <ul lang="en-GB">
         <li>treat it as help with a draft, not as a source of fact, and cross-check elsewhere;</li>
         <li>for anything touching personal safety, law or medicine, keep relying on qualified people;</li>
-        <li>when you need the untouched model's behaviour for comparison, download upstream antirez/ds4's stock-recipe GGUF and run both.</li>
+        <li>when you need the untouched model’s behaviour for comparison, run an unmodified GGUF of the same model next to this one.</li>
       </ul>
       <ul lang="zh-TW">
         <li>把它當成幫你打草稿的助手，不要當成事實的來源，並且去別的地方交叉查證；</li>
         <li>只要牽涉到人身安全、法律或醫療，還是要找有資格的人；</li>
-        <li>想拿沒動過的模型來對照時，就下載上游 antirez/ds4 的原始配方 GGUF，兩個都跑跑看。</li>
+        <li>想拿沒動過的模型來對照時，就拿同一顆模型沒改過的 GGUF，和這個並排跑跑看。</li>
       </ul>
     </div>
 
-    <h3 id="3.3"><span class="no">3.3</span><span lang="en-GB">The Vision-Exp IQ2 profile</span><span lang="zh-TW">Vision-Exp IQ2 配方</span></h3>
+    <h3 id="3.3"><span class="no">3.3</span><span lang="en-GB">The Q1 profile and what it costs</span><span lang="zh-TW">Q1 配方與它的代價</span></h3>
 
     <p lang="en-GB">
-      This fork's <code>download_model.sh</code> fetches <strong>DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</strong> (86 720 111 776 bytes) from <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF</code>, plus antirez's encoder. The file is GGUF, a single-file model format. Quantisation stores each weight with fewer bits, so the file gets smaller. Across all 43 layers, the routed experts' gate and up projections use imatrix-calibrated IQ2_XXS. Their down projections use imatrix-calibrated Q2_K. Attention, the shared-expert projections and the output head stay at Q8_0. The <code>attn_q_b</code> indexers keep F16. The remaining control, normalisation and routing tensors keep the F16, F32 or I32 their template declares. The language file also carries 33 <code>attn_output_b</code> tensors that are already quantised and rank-1 abliterated, at Q8_0.
+      This fork’s <code>download_model.sh</code> fetches <strong>DeepSeek-V4.1-Flash-Abliterated-Q1.gguf</strong> (365 713 686 528 bytes) from <code>audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</code>, plus the vision sidecar. The file is GGUF, a single-file model format. Quantisation stores each weight with fewer bits, so the file gets smaller. <strong>IQ1_S</strong> is one of the lowest-bit formats in that family. The routed experts come from <a href="https://huggingface.co/unsloth">Unsloth</a>’s UD-IQ1_S: 88 expert tensors are used as Unsloth published them, and 32 were requantised from Unsloth’s IQ2_XXS down to IQ1_S, using Unsloth’s imatrix (a calibration file that tells the quantiser which weights matter most), to fit the budget. Nine dense roles use Unsloth’s own tensors, mostly Q6_K and Q5_K: attention q_a, q_b and kv, the shared-expert gate, up and down, the output head, the token embedding and the Engram projection. The attention output projections stay at Q8_0. Everything else comes from the ds4-native 1017 Q2.
     </p>
     <p lang="zh-TW">
-      這個分叉的 <code>download_model.sh</code>，會從 <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF</code> 抓 <strong>DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</strong>（86 720 111 776 位元組），再加上 antirez 的編碼器。GGUF 是把模型裝在單一檔案裡的格式。量化，就是每個權重用比較少的位元來存，檔案就變小了。在全部 43 層裡，路由專家的 gate 和 up 投影，用 imatrix 校準過的 IQ2_XXS。它們的 down 投影，用 imatrix 校準過的 Q2_K。注意力層、共用專家的投影和輸出頭，維持在 Q8_0。<code>attn_q_b</code> 索引器維持 F16。其餘的控制、正規化和路由張量，維持樣板上寫的 F16、F32 或 I32。語言檔還多帶了 33 個 <code>attn_output_b</code> 張量，它們已經量化好，也做過 rank-1 abliteration，格式是 Q8_0。
+      這個分叉的 <code>download_model.sh</code> 會從 <code>audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</code> 抓 <strong>DeepSeek-V4.1-Flash-Abliterated-Q1.gguf</strong>（365 713 686 528 位元組），再加上視覺附屬檔。GGUF 是把模型裝在單一檔案裡的格式。量化，就是每個權重用比較少的位元來存，檔案就變小了。<strong>IQ1_S</strong> 是這一族裡位元數最低的格式之一。路由專家來自 <a href="https://huggingface.co/unsloth">Unsloth</a> 的 UD-IQ1_S：88 個專家張量照 Unsloth 發布的原樣使用，另外 32 個為了塞進預算，用 Unsloth 的 imatrix（一份告訴量化器哪些權重最重要的校準檔），從 Unsloth 的 IQ2_XXS 重新量化成 IQ1_S。九個稠密角色用 Unsloth 自己的張量，多半是 Q6_K 和 Q5_K：注意力的 q_a、q_b 和 kv，共用專家的 gate、up 和 down，輸出頭，token embedding，以及 Engram 投影。注意力的輸出投影維持 Q8_0。其餘的部分，都來自 ds4 原生的 1017 Q2。
     </p>
     <p lang="en-GB">
-      That profile's shape is why the model fits. The routed experts hold most of the bytes, so they are squeezed hardest. The dense path that <em>every</em> token walks through is protected: attention, shared experts, output. An error there is paid for on every step. What's left over is the runtime and KV headroom that a 128 GB-class machine needs. The KV cache is the model's short-term memory of the text so far.
+      That shape is why the model fits. The routed experts hold most of the bytes, so they are squeezed hardest. The dense path that <em>every</em> token walks through (attention, shared experts, output head) keeps the heavier formats, as an error there is paid for on every step. What is left over is the runtime and KV headroom that a 128 GB machine needs. The KV cache is the model’s short-term memory of the text so far.
     </p>
     <p lang="zh-TW">
-      這個配方的形狀，就是它塞得下的原因。路由專家佔了大部分的位元組，所以壓得最兇。<em>每一個</em> token 都要走過的那條稠密路徑，則受到保護：注意力層、共用專家、輸出。那裡只要有誤差，每一步都要付一次代價。省下來的空間，剛好是 128 GB 等級的機器所需要的執行空間和 KV 空間。KV cache 是模型用來記住前面讀過內容的短期記憶。
+      這個形狀，就是它塞得下的原因。路由專家佔了大部分的位元組，所以壓得最兇。<em>每一個</em> token 都要走過的那條稠密路徑（注意力層、共用專家、輸出頭），則保留較重的格式，因為那裡只要有誤差，每一步都要付一次代價。省下來的空間，剛好是 128 GB 的機器所需要的執行空間和 KV 空間。KV cache 是模型用來記住前面讀過內容的短期記憶。
     </p>
     <p lang="en-GB">
-      One thing worth knowing. V4 Flash has <em>no</em> even middle tiers in GGUF form, such as Q4_K_M, Q5_K_M or Q6_K. That isn't a release choice. It is a limit in the design. V4 Flash's native FP8 expert layout doesn't match the quantisation schemes today's DS4 tooling can produce. So "just run the whole thing at Q4" usually isn't an option. Vision-Exp IQ2 is itself a mixed-precision, low-bit recipe. And <code>audreyt/ds4</code> main reads this DS4-native GGUF directly, with no harmonisation step and no Python virtual environment. That is one of the main differences between this fork and upstream <code>mitsuhiko/pi-ds4</code>.
+      Here is the honest part. No official-continuation quality score has been run for this Q1 yet. It is a compromise that fits a 128 GB Mac, not a quality upgrade over larger quants. Where an answer matters, check it against a larger quant of the same model if you can.
     </p>
     <p lang="zh-TW">
-      有一件事值得先知道。V4 Flash 的 GGUF 版本，<em>沒有</em> Q4_K_M、Q5_K_M、Q6_K 這種平均的中間等級。這不是發行時的選擇，而是設計上的限制。V4 Flash 原生的 FP8 專家排列，和現在的 DS4 工具能做出的量化方式，對不起來。所以「整顆都跑 Q4 就好」，通常行不通。Vision-Exp IQ2 本身就是混合精度的低位元配方。而 <code>audreyt/ds4</code> 的 main 分支，可以直接讀這種 DS4 原生的 GGUF，不用另外轉檔，也不用 Python 虛擬環境。這是這個分叉和上游 <code>mitsuhiko/pi-ds4</code> 最主要的差別之一。
+      老實說的部分在這裡。這個 Q1 還沒有跑過官方續寫品質分數。它是為了塞進 128 GB 的 Mac 所做的折衷，不是比更大的量化版更好的品質升級。答案重要的時候，請盡量拿同一顆模型更大的量化版來對照。
     </p>
 
-    <h3 id="3.4"><span class="no">3.4</span><span lang="en-GB">The vision encoder</span><span lang="zh-TW">視覺編碼器</span></h3>
+    <h3 id="3.4"><span class="no">3.4</span><span lang="en-GB">The vision sidecar</span><span lang="zh-TW">視覺附屬檔</span></h3>
 
     <p lang="en-GB">
-      The second file is <code>DeepSeek-V4-Flash-Vision-Encoder.gguf</code>. It is 932 857 760 bytes with 316 tensors, taken unmodified from <code>antirez/deepseek-v4-gguf</code> at <code>f71f23d</code>. This file lets the managed server and agent start with <code>--vision</code> and advertise <code>input: text+image</code>. In the native agent, <code>/read earth.jpg</code> puts a picture into the turn. The readout numbers on this page come from that turn. The encoder is kept as its own file on purpose. You can update it, check it or drop it without downloading 81 GiB of language weights again.
+      The second file is <code>DeepSeek-V4.1-Flash-1017-Vision.gguf</code>. A sidecar is a companion file that carries one part of the model, here the part that reads images. It is 970 555 552 bytes, from <code>audreyt/deepseek-v4.1-flash-1017-gguf</code> at revision <code>5ab6e05</code>. This file lets the managed server and agent start with <code>--vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf</code> and advertise <code>input: text+image</code>. In the native agent, <code>/read earth.jpg</code> puts a picture into the turn. The sidecar is kept as its own file on purpose. You can update it, check it or drop it without downloading the language weights again.
     </p>
     <p lang="zh-TW">
-      第二個檔案是 <code>DeepSeek-V4-Flash-Vision-Encoder.gguf</code>。它有 932 857 760 位元組、316 個張量，原封不動取自 <code>antirez/deepseek-v4-gguf</code> 的 <code>f71f23d</code>。有了這個檔案，代管的伺服器和智慧體才能用 <code>--vision</code> 啟動，並對外宣告 <code>input: text+image</code>。在原生智慧體裡，<code>/read earth.jpg</code> 會把一張圖放進這一回合。本頁的讀數，就是從那一回合來的。編碼器特意獨立成一個檔案。你可以單獨更新、檢查或拿掉它，不必重新下載 81 GiB 的語言權重。
+      第二個檔案是 <code>DeepSeek-V4.1-Flash-1017-Vision.gguf</code>。附屬檔（sidecar）是帶著模型某一部分的配套檔案，這裡指的是讀圖片的那一部分。它有 970 555 552 位元組，取自 <code>audreyt/deepseek-v4.1-flash-1017-gguf</code> 的 <code>5ab6e05</code>。有了這個檔案，代管的伺服器和智慧體才能用 <code>--vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf</code> 啟動，並對外宣告 <code>input: text+image</code>。在原生智慧體裡，<code>/read earth.jpg</code> 會把一張圖放進這一回合。附屬檔特意獨立成一個檔案。你可以單獨更新、檢查或拿掉它，不必重新下載語言權重。
     </p>
   </section>
 
@@ -1798,10 +1828,10 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       如果這個分叉只有一樣東西值得單獨留下來，就是它。方向性引導是在模型執行的當下調整模型：沿著選好的方向，輕輕推一下模型內部的訊號（激活值）。因為只動到很少的內部方向，所以叫做低秩調整。不必重新訓練，硬碟上的權重也不會改動。本分叉附帶的方向叫做<em>不確定性</em>，目的是讓模型把有爭議的問題當成有爭議的問題來對待。
     </p>
     <p lang="en-GB">
-      First, a status note. This changed in 0.6.0. The bundled vector was calibrated on the older CyberNeurova and Headroom128 weights. It has not been calibrated again for Vision-Exp, so managed launches leave steering <em>off</em>. You can opt in with three environment variables (<a href="#4.6">§4.6</a>). This letter recommends <code>ffn = −0.75</code>, <code>attn = 0</code> and policy <code>final-answer</code>. On the earlier weights, that setting kept tool calls working.
+      First, a status note. This changed in 0.7.0. V4.1 needs one f32 direction per layer at its own width, 40 × 5120. The V4 vectors in <code>dir-steering/out/</code> (43 × 4096, including <code>uncertainty_ablit_imatrix.f32</code>) do not fit, and no V4.1 direction ships yet. So <code>DS4_DIR_STEERING_FILE</code> now defaults to empty and managed launches leave steering <em>off</em>. To opt in you need your own V4.1 vector (<a href="#4.6">§4.6</a>), and <a href="#advanced">Chapter 11</a> is how one would be built. The side-by-side outputs and the <code>ffn = −0.75</code> guidance below were measured on V4 weights. I kept them as V4 evidence for the method, not as a promise about V4.1.
     </p>
     <p lang="zh-TW">
-      先說目前的狀態，因為 0.6.0 有改動。內附向量是在較早的 CyberNeurova 和 Headroom128 權重上校準，還沒為 Vision-Exp 重新校準。因此，代管啟動預設<em>不開啟</em>引導。你可以用三個環境變數開啟它（<a href="#4.6">§4.6</a>）。這封信建議用 <code>ffn = −0.75</code>、<code>attn = 0</code> 和 policy <code>final-answer</code>。它在前一組權重上實測過，工具呼叫仍能正常運作。
+      先說目前的狀態，因為 0.7.0 有改動。V4.1 的每一層需要一個 f32 方向，寬度是它自己的 40 × 5120。<code>dir-steering/out/</code> 裡的 V4 向量（43 × 4096，包括 <code>uncertainty_ablit_imatrix.f32</code>）放不進去，V4.1 的方向向量也還沒有附上。所以 <code>DS4_DIR_STEERING_FILE</code> 現在預設是空的，代管啟動<em>不開啟</em>引導。要開啟，得自備 V4.1 的向量（<a href="#4.6">§4.6</a>），<a href="#advanced">第十一章</a>就是建一個的做法。下面並排的輸出，以及 <code>ffn = −0.75</code> 的建議，都是在 V4 權重上量到的。我留著它們，是當作這個方法在 V4 上的證據，不是對 V4.1 的承諾。
     </p>
 
     <h3 id="4.1"><span class="no">4.1</span><span lang="en-GB">The problem it solves</span><span lang="zh-TW">它解決什麼問題</span></h3>
@@ -1823,6 +1853,9 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     </p>
 
     <h3 id="4.2"><span class="no">4.2</span><span lang="en-GB">Two outputs, side by side</span><span lang="zh-TW">兩種輸出放在一起看</span></h3>
+
+    <p lang="en-GB">Both outputs below were produced on V4 weights, before v 0.7.</p>
+    <p lang="zh-TW">下面兩種輸出，都是在 v 0.7 之前的 V4 權重上產生的。</p>
 
     <div class="pair">
       <div class="before">
@@ -1866,11 +1899,11 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
 
     <ul lang="en-GB">
       <li><strong>Steering and the system prompt work together.</strong> Steering without a prompt only makes the model hesitate. A cautious prompt without steering is pushed back by the learned lock. Use both.</li>
-      <li><strong><code>ffn = −0.75, attn = 0</code> is a measured opt-in, not the managed default.</strong> This setting was found on Headroom128 with seed 42, stable tool IDs and Codex-harness prompts of 50k tokens or more. It keeps the stakeholder framing without changing DSML or tool-call grammar. It has not been calibrated again for Vision-Exp. If tools behave oddly, use <code>ffn = −0.5, attn = 0</code>. The older <code>ffn = −2, attn = −0.5</code> setting is only an acid test for isolated evaluation. It can produce repetition or cross-lingual noise.</li>
+      <li><strong><code>ffn = −0.75, attn = 0</code> is a V4 measurement, not a managed default.</strong> This setting was found on V4 (Headroom128) with seed 42, stable tool IDs and Codex-harness prompts of 50k tokens or more. It keeps the stakeholder framing without changing DSML or tool-call grammar. It has not been measured on V4.1, where no direction ships yet. If tools behave oddly, use <code>ffn = −0.5, attn = 0</code>. The older <code>ffn = −2, attn = −0.5</code> setting is only an acid test for isolated evaluation. It can produce repetition or cross-lingual noise.</li>
     </ul>
     <ul lang="zh-TW">
       <li><strong>引導和 system prompt 要一起用。</strong>只有引導、沒有提示，模型只會猶豫。只有保留餘地的提示、沒有引導，訓練出的鎖會把它壓回去。兩者合用才有效。</li>
-      <li><strong><code>ffn = −0.75, attn = 0</code> 是實測過的選項，不是代管預設。</strong>這個設定是在 Headroom128 上找到的，條件是種子 42、穩定的工具 ID，以及 50k token 以上的 Codex-harness 提示。它能保住利害關係人的框架，也不會動到 DSML 或工具呼叫的語法。它還沒為 Vision-Exp 重新校準。工具行為怪異時，改用 <code>ffn = −0.5, attn = 0</code>。舊的 <code>ffn = −2, attn = −0.5</code> 只用於隔離評估的壓力測試，可能會變成重複內容或跨語言雜訊。</li>
+      <li><strong><code>ffn = −0.75, attn = 0</code> 是在 V4 上實測的結果，不是代管預設。</strong>這個設定是在 V4（Headroom128）上找到的，條件是種子 42、穩定的工具 ID，以及 50k token 以上的 Codex-harness 提示。它能保住利害關係人的框架，也不會動到 DSML 或工具呼叫的語法。它還沒在 V4.1 上量過，而 V4.1 也還沒有附上方向向量。工具行為怪異時，改用 <code>ffn = −0.5, attn = 0</code>。舊的 <code>ffn = −2, attn = −0.5</code> 只用於隔離評估的壓力測試，可能會變成重複內容或跨語言雜訊。</li>
     </ul>
 
     <h3 id="4.5"><span class="no">4.5</span><span lang="en-GB">The prompt to pair with it (an example, not a default)</span><span lang="zh-TW">和它搭配的提示，範例而非預設</span></h3>
@@ -1904,12 +1937,13 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
 
     <h3 id="4.6"><span class="no">4.6</span><span lang="en-GB">Turn it on and off</span><span lang="zh-TW">開啟與關閉</span></h3>
 
-    <p lang="en-GB">On the 0.6.0 managed path, steering is opt-in. To turn it on at the recommended setting, set three variables in the shell before starting pi:</p>
-    <p lang="zh-TW">在 0.6.0 的代管路徑，引導要自行開啟。要用建議強度，先在啟動 pi 的 shell 設定三個變數：</p>
+    <p lang="en-GB">On the managed path, steering is off by default. To turn it on, bring your own V4.1 direction file and set these variables in the shell before starting pi. The strengths below are the V4 measurement, so re-measure them for V4.1:</p>
+    <p lang="zh-TW">在代管路徑上，引導預設是關的。要開啟，請自備 V4.1 的方向檔，並在啟動 pi 的 shell 設定這幾個變數。下面的強度是 V4 的實測值，用在 V4.1 之前請重新量過：</p>
 
     <div class="term">
       <div class="term-bar"><span><span lang="en-GB">opt in to uncertainty steering</span><span lang="zh-TW">開啟不確定性引導</span></span><button class="copy" aria-label="Copy the commands to enable steering"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
-      <pre><span class="k">export</span> DS4_DIR_STEERING_FFN<span class="k">=</span><span class="v">-0.75</span>
+      <pre><span class="k">export</span> DS4_DIR_STEERING_FILE<span class="k">=</span><span class="v">dir-steering/out/my-v4.1-direction.f32</span>
+<span class="k">export</span> DS4_DIR_STEERING_FFN<span class="k">=</span><span class="v">-0.75</span>
 <span class="k">export</span> DS4_DIR_STEERING_ATTN<span class="k">=</span><span class="v">0</span>
 <span class="k">export</span> DS4_DIR_STEERING_POLICY<span class="k">=</span><span class="v">final-answer</span></pre>
     </div>
@@ -1933,10 +1967,10 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     <div class="aside">
       <span class="label"><span lang="en-GB">Where the vector comes from</span><span lang="zh-TW">引導向量的來源</span></span>
       <p lang="en-GB">
-        <code>uncertainty_ablit_imatrix.f32</code> is a low-rank direction built from 120 contested prompts. Half are in English and half in Traditional Chinese. They <em>deliberately exclude Taiwan and Hong Kong</em>, so the test in §4.2 shows generalisation rather than memorisation. The current build compares fair stakeholder framing with direct single-answer framing on the same prompts. It was calibrated on the older CyberNeurova and Headroom128 weights, not the Vision-Exp IQ2 that this extension now downloads. That is why managed launches leave it off. You can find it in <code>audreyt/ds4</code>, under <code>dir-steering/out/</code>. The full method is in the <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>.
+        <code>uncertainty_ablit_imatrix.f32</code> is a low-rank direction built from 120 contested prompts. Half are in English and half in Traditional Chinese. They <em>deliberately exclude Taiwan and Hong Kong</em>, so the test in §4.2 shows generalisation rather than memorisation. The current build compares fair stakeholder framing with direct single-answer framing on the same prompts. It was calibrated on V4 weights and has V4’s shape, one direction per layer at 43 × 4096. V4.1 is 40 × 5120, so v 0.7 cannot use it. The file stays in <code>audreyt/ds4</code>, under <code>dir-steering/out/</code>, for V4 users. The full method is in the <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>.
       </p>
       <p lang="zh-TW">
-        <code>uncertainty_ablit_imatrix.f32</code> 是用 120 條有爭議的提示建出的低秩方向。英文和繁體中文各占一半，並且<em>刻意不含台灣和香港</em>。因此，§4.2 的測試顯示的是泛化能力，不是背誦。目前這一版用同一批提示，比較「公正呈現利害關係人」和「直接給單一答案」兩種框架。它是在較早的 CyberNeurova 和 Headroom128 權重上校準，不是這個擴充套件現在下載的 Vision-Exp IQ2。因此，代管啟動預設不開啟它。檔案在 <code>audreyt/ds4</code> 的 <code>dir-steering/out/</code>。完整方法請看 <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>。
+        <code>uncertainty_ablit_imatrix.f32</code> 是用 120 條有爭議的提示建出的低秩方向。英文和繁體中文各占一半，並且<em>刻意不含台灣和香港</em>。因此，§4.2 的測試顯示的是泛化能力，不是背誦。目前這一版用同一批提示，比較「公正呈現利害關係人」和「直接給單一答案」兩種框架。它是在 V4 權重上校準的，形狀也是 V4 的：每層一個方向，43 × 4096。V4.1 是 40 × 5120，所以 v 0.7 用不了它。檔案仍留在 <code>audreyt/ds4</code> 的 <code>dir-steering/out/</code>，給 V4 的使用者。完整方法請看 <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>。
       </p>
     </div>
   </section>
@@ -1973,24 +2007,24 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
         </dd>
       </div>
       <div>
-        <dt>DS4_SUPPORT_PIN<span class="default"><span lang="en-GB">default: 7855b7a45196b328c6266be157d60160e9442a88</span><span lang="zh-TW">預設：7855b7a45196b328c6266be157d60160e9442a88</span></span></dt>
+        <dt>DS4_SUPPORT_PIN<span class="default"><span lang="en-GB">default: d3f4cd6</span><span lang="zh-TW">預設：d3f4cd6</span></span></dt>
         <dd>
-          <p lang="en-GB">The exact <code>audreyt/ds4</code> commit enforced at every start. If it differs, the extension fetches that commit, hard-resets the checkout and deletes cached <code>ds4-server</code> / <code>ds4-agent</code> so they rebuild. Set an empty string to leave the local checkout where it is. v 0.6.1 pins <code>7855b7a</code> (which adds the preferred alias) on the <code>d0c2b43</code> Vision-Exp engine.</p>
-          <p lang="zh-TW">每次啟動都強制使用這個 <code>audreyt/ds4</code> commit。不符時，擴充套件會 fetch 該 commit、hard reset checkout，並刪除快取的 <code>ds4-server</code>／<code>ds4-agent</code>，讓它們重新編譯。設成空字串，就維持本機 checkout 目前的版本。v 0.6.1 釘在 <code>7855b7a</code>，它在 <code>d0c2b43</code> Vision-Exp 引擎上加了 <code>preferred</code> 別名。</p>
+          <p lang="en-GB">The exact <code>audreyt/ds4</code> commit enforced at every start. If it differs, the extension fetches that commit, hard-resets the checkout and deletes cached <code>ds4-server</code> / <code>ds4-agent</code> so they rebuild. Set an empty string to leave the local checkout where it is. v 0.7.0 pins <code>d3f4cd6</code>, which adds IQ1_S on Metal, a faster single-token Q5_K/Q6_K route and the V4.1 context fit. v 0.6.1 had pinned <code>7855b7a</code>.</p>
+          <p lang="zh-TW">每次啟動都強制使用這個 <code>audreyt/ds4</code> commit。不符時，擴充套件會 fetch 該 commit、hard reset checkout，並刪除快取的 <code>ds4-server</code>／<code>ds4-agent</code>，讓它們重新編譯。設成空字串，就維持本機 checkout 目前的版本。v 0.7.0 釘在 <code>d3f4cd6</code>，它在 Metal 上加了 IQ1_S、更快的單 token Q5_K／Q6_K 路徑，以及 V4.1 的 context 適配。v 0.6.1 當時釘在 <code>7855b7a</code>。</p>
         </dd>
       </div>
       <div>
         <dt>DS4_DOWNLOAD_SCRIPT<span class="default"><span lang="en-GB">default: bundled with this extension</span><span lang="zh-TW">預設：隨擴充套件內附</span></span></dt>
         <dd>
-          <p lang="en-GB">The absolute path to the model download script. The bundled <code>download_model.sh</code> downloads the Vision-Exp language GGUF and encoder. To use antirez’s upstream recipe, point this to that script.</p>
-          <p lang="zh-TW">模型下載腳本的絕對路徑。內附的 <code>download_model.sh</code> 會下載 Vision-Exp 語言 GGUF 和編碼器。想改用 antirez 上游的原始做法，就改指向他的腳本。</p>
+          <p lang="en-GB">The absolute path to the model download script. The bundled <code>download_model.sh</code> downloads the V4.1 Flash Q1 language GGUF and the vision sidecar. To use another recipe, point this to that script.</p>
+          <p lang="zh-TW">模型下載腳本的絕對路徑。內附的 <code>download_model.sh</code> 會下載 V4.1 Flash Q1 語言 GGUF 和視覺附屬檔。想改用別的做法，就改指向那份腳本。</p>
         </dd>
       </div>
       <div>
-        <dt>DS4_MODEL_QUANT<span class="default"><span lang="en-GB">default: q2 (hard-coded, alias: preferred)</span><span lang="zh-TW">預設：q2（寫死；別名 preferred）</span></span></dt>
+        <dt>DS4_MODEL_QUANT<span class="default"><span lang="en-GB">default: q1 (alias: preferred)</span><span lang="zh-TW">預設：q1（別名 preferred）</span></span></dt>
         <dd>
-          <p lang="en-GB"><code>q2</code> and <code>preferred</code> are accepted, and so are <code>vision-abliterated</code> / <code>ds4f-vision-abliterated</code>. All of them name the same files: <code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</code> and <code>DeepSeek-V4-Flash-Vision-Encoder.gguf</code>. <code>q2</code> is an old selector retained for lease and state compatibility. It does not name another quant family or memory tier. <code>selectedModelQuant()</code> in <code>index.ts</code> turns <code>preferred</code> into <code>q2</code>. Any other value throws and exits. To run another GGUF, start <code>ds4-server</code> yourself outside the managed path.</p>
-          <p lang="zh-TW"><code>q2</code> 和 <code>preferred</code> 都可以用，<code>vision-abliterated</code>／<code>ds4f-vision-abliterated</code> 也行，全都指向同一組檔案：<code>audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf</code> 和 <code>DeepSeek-V4-Flash-Vision-Encoder.gguf</code>。<code>q2</code> 是為了相容租約和狀態而保留的舊選項，不是另一個量化家族或記憶體等級。<code>index.ts</code> 的 <code>selectedModelQuant()</code> 會把 <code>preferred</code> 轉成 <code>q2</code>。其他值會直接拋錯並結束。想跑別的 GGUF，請在代管流程外手動啟動 <code>ds4-server</code>。</p>
+          <p lang="en-GB"><code>q1</code> and <code>preferred</code> are accepted, and so is <code>ds41f-q1-abliterated</code>. All of them name the same files: <code>audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf</code> and <code>audreyt/deepseek-v4.1-flash-1017-gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf</code>. <code>q2</code> now errors and points to v 0.6.1. Any other value throws and exits. To run another GGUF, start <code>ds4-server</code> yourself outside the managed path.</p>
+          <p lang="zh-TW"><code>q1</code> 和 <code>preferred</code> 都可以用，<code>ds41f-q1-abliterated</code> 也行，全都指向同一組檔案：<code>audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf</code> 和 <code>audreyt/deepseek-v4.1-flash-1017-gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf</code>。<code>q2</code> 現在會報錯，並指向 v 0.6.1。其他值會直接拋錯並結束。想跑別的 GGUF，請在代管流程外手動啟動 <code>ds4-server</code>。</p>
         </dd>
       </div>
       <div>
@@ -2052,8 +2086,8 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       <div>
         <dt>DS4_READY_TIMEOUT_MS<span class="default"><span lang="en-GB">default: 600000 (ten minutes)</span><span lang="zh-TW">預設：600000（十分鐘）</span></span></dt>
         <dd>
-          <p lang="en-GB">The maximum wait for <code>ds4-server</code> to become ready. Loading the model and warming the first KV cache from an internal SSD usually takes a few seconds. Ten minutes is a generous safety margin, not the expected time. Raise it only when the GGUF is on an unusually slow or external drive.</p>
-          <p lang="zh-TW">等待 <code>ds4-server</code> 就緒的最長時間。從內建 SSD 載入模型，再預熱第一份 KV cache，通常只要幾秒。十分鐘是寬鬆的安全時間，不是預期時間。只有 GGUF 放在特別慢的磁碟或外接硬碟時，才需要調高。</p>
+          <p lang="en-GB">The maximum wait for <code>ds4-server</code> to become ready. Ten minutes is a generous safety margin, not the expected time. Raise it only when the GGUF is on an unusually slow or external drive.</p>
+          <p lang="zh-TW">等待 <code>ds4-server</code> 就緒的最長時間。十分鐘是寬鬆的安全時間，不是預期時間。只有 GGUF 放在特別慢的磁碟或外接硬碟時，才需要調高。</p>
         </dd>
       </div>
       <div>
@@ -2118,17 +2152,17 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
 
     <dl class="vars">
       <div>
-        <dt>DS4_DIR_STEERING_FILE<span class="default"><span lang="en-GB">default: dir-steering/out/uncertainty_ablit_imatrix.f32</span><span lang="zh-TW">預設：dir-steering/out/uncertainty_ablit_imatrix.f32</span></span></dt>
+        <dt>DS4_DIR_STEERING_FILE<span class="default"><span lang="en-GB">default: empty (steering off)</span><span lang="zh-TW">預設：空（引導關閉）</span></span></dt>
         <dd>
-          <p lang="en-GB">The steering vector path, relative to the ds4 checkout root. Change it to use your own direction (<a href="#advanced">Chapter 11</a>).</p>
-          <p lang="zh-TW">引導向量的路徑，從 ds4 checkout 根目錄起算。想使用自己建立的方向，就改這裡（<a href="#advanced">第十一章</a>）。</p>
+          <p lang="en-GB">The steering vector path, relative to the ds4 checkout root. Empty by default, which leaves steering off. V4.1 needs its own direction, 40 × 5120, and none ships yet. The V4 vectors in <code>dir-steering/out/</code> do not fit. Point this at your own direction (<a href="#advanced">Chapter 11</a>).</p>
+          <p lang="zh-TW">引導向量的路徑，從 ds4 checkout 根目錄起算。預設是空的，也就是不開啟引導。V4.1 需要它自己的方向，40 × 5120，目前還沒有附上。<code>dir-steering/out/</code> 裡的 V4 向量放不進去。請指向你自己建立的方向（<a href="#advanced">第十一章</a>）。</p>
         </dd>
       </div>
       <div>
-        <dt>DS4_DIR_STEERING_FFN<span class="default"><span lang="en-GB">0.6.0 managed path: off (unset) · recommended opt-in: −0.75</span><span lang="zh-TW">0.6.0 代管路徑：關（未設）· 建議的開啟值：−0.75</span></span></dt>
+        <dt>DS4_DIR_STEERING_FFN<span class="default"><span lang="en-GB">default: off (unset) · V4 measurement: −0.75</span><span lang="zh-TW">預設：關（未設）· V4 的實測值：−0.75</span></span></dt>
         <dd>
-          <p lang="en-GB">The steering strength at the FFN output. Negative values strengthen the direction in the vector. Positive values reverse it. <code>0</code> turns off the FFN side. <code>−0.75</code> is the Headroom128-tested strength that keeps tool calls intact (<a href="#4.4">§4.4</a>).</p>
-          <p lang="zh-TW">FFN 輸出端的引導強度。負值會加強向量代表的方向，正值會反轉方向。<code>0</code> 關閉 FFN 這一端。<code>−0.75</code> 是在 Headroom128 測過，能保住工具呼叫的強度（<a href="#4.4">§4.4</a>）。</p>
+          <p lang="en-GB">The steering strength at the FFN output. Negative values strengthen the direction in the vector. Positive values reverse it. <code>0</code> turns off the FFN side. <code>−0.75</code> is the strength that kept tool calls intact on V4 (Headroom128). It has not been measured on V4.1 (<a href="#4.4">§4.4</a>).</p>
+          <p lang="zh-TW">FFN 輸出端的引導強度。負值會加強向量代表的方向，正值會反轉方向。<code>0</code> 關閉 FFN 這一端。<code>−0.75</code> 是在 V4（Headroom128）上能保住工具呼叫的強度，還沒在 V4.1 上量過（<a href="#4.4">§4.4</a>）。</p>
         </dd>
       </div>
       <div>
@@ -2149,8 +2183,8 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
 
     <div class="aside">
       <span class="label"><span lang="en-GB">When both strengths are zero</span><span lang="zh-TW">兩個強度都是零的時候</span></span>
-      <p lang="en-GB">With <code>DS4_DIR_STEERING_FFN=0</code> and <code>DS4_DIR_STEERING_ATTN=0</code>, the extension omits all <code>--dir-steering-*</code> arguments. You get the plain, unsteered model. On the 0.6.0 managed path, you get the same result when neither variable is set.</p>
-      <p lang="zh-TW"><code>DS4_DIR_STEERING_FFN=0</code> 且 <code>DS4_DIR_STEERING_ATTN=0</code> 時，擴充套件會省略所有 <code>--dir-steering-*</code> 參數。這就是未引導的原始模型。在 0.6.0 代管流程中，兩個變數都未設定時，結果也一樣。</p>
+      <p lang="en-GB">With <code>DS4_DIR_STEERING_FFN=0</code> and <code>DS4_DIR_STEERING_ATTN=0</code>, the extension omits all <code>--dir-steering-*</code> arguments. You get the plain, unsteered model. By default, with no direction file set, you get the same result.</p>
+      <p lang="zh-TW"><code>DS4_DIR_STEERING_FFN=0</code> 且 <code>DS4_DIR_STEERING_ATTN=0</code> 時，擴充套件會省略所有 <code>--dir-steering-*</code> 參數。這就是未引導的原始模型。預設沒有指定方向檔時，結果也一樣。</p>
     </div>
 
     <h3 id="5.5"><span class="no">5.5</span><span lang="en-GB">Context size and the KV disk cache</span><span lang="zh-TW">Context 大小與 KV 磁碟快取</span></h3>
@@ -2159,17 +2193,17 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       <div>
         <dt>DS4_CONTEXT_KB<span class="default"><span lang="en-GB">default: 256</span><span lang="zh-TW">預設：256</span></span></dt>
         <dd>
-          <p lang="en-GB">The context window (how much text the model can hold in view at once), in thousands of tokens. This is the only supported way to set it. <code>256</code> means 256 000 tokens. It is the default that still fits senpi/omo’s start budget. Common values are <code>100</code>, <code>128</code>, <code>256</code>, <code>512</code> and <code>1024</code>. <code>100</code> is a tight override, so advertised <code>maxTokens</code> is capped to keep admission working. <code>1024</code> selects the model’s full 1M context.</p>
-          <p lang="zh-TW">context window（模型一次能看進多少文字）的大小，以千個 token 為單位。這是唯一支援的設定方式。<code>256</code> 代表 256 000 個 token，也是能容納 senpi/omo 啟動預算的預設值。常用值是 <code>100</code>、<code>128</code>、<code>256</code>、<code>512</code> 和 <code>1024</code>。<code>100</code> 是較緊的覆寫，所以會限制對外的 <code>maxTokens</code>，讓啟動檢查仍能通過。<code>1024</code> 會選用模型完整的 1M context。</p>
-          <p lang="en-GB">A larger context normally also needs more <code>DS4_KV_DISK_SPACE_MB</code>. For 1M, use <code>65536</code> or more so the disk cache holds a full working set (<a href="#tuning">Chapter 6</a>).</p>
-          <p lang="zh-TW">context 調大時，通常也要調高 <code>DS4_KV_DISK_SPACE_MB</code>。1M 至少用 <code>65536</code>，磁碟快取才裝得下完整工作集（<a href="#tuning">第六章</a>）。</p>
+          <p lang="en-GB">The context window (how much text the model can hold in view at once), in thousands of tokens. This is the only supported way to set it. <code>256</code> means 256 000 tokens and is the default. ds4 has a 112 GiB memory budget for V4.1. Measured without the vision sidecar, <code>256</code> opens with a narrower 2048-row prefill batch, <code>384</code> with 1024 rows, and <code>512</code> and above are refused at open. The managed server always loads the 0.9 GiB sidecar; with it, <code>256</code> opens with 1024-row prefill chunks (measured) and <code>384</code> is estimated not to fit. Prefill reads the prompt in batches, so a narrower batch costs some prefill speed on long prompts, not correctness. <code>100</code> is a tight override, so advertised <code>maxTokens</code> is capped to keep admission working.</p>
+          <p lang="zh-TW">context window（模型一次能看進多少文字）的大小，以千個 token 為單位。這是唯一支援的設定方式。<code>256</code> 代表 256 000 個 token，也是預設值。ds4 對 V4.1 的記憶體預算是 112 GiB。在不載入視覺附屬檔時量到：<code>256</code> 以較窄的 2048 列 prefill 批次打開，<code>384</code> 用 1024 列，<code>512</code> 以上在開啟時就會被拒絕。代管伺服器一定會載入 0.9 GiB 的視覺附屬檔；載入之後，<code>256</code> 以 1024 列的 prefill 批次打開（實測），<code>384</code> 估計放不下。prefill 是分批讀完提示的，批次較窄只會讓長提示的 prefill 慢一些，不影響正確性。<code>100</code> 是較緊的覆寫，所以會限制對外的 <code>maxTokens</code>，讓啟動檢查仍能通過。</p>
+          <p lang="en-GB">A larger context normally also needs more <code>DS4_KV_DISK_SPACE_MB</code>, so the disk cache can hold a full working set (<a href="#tuning">Chapter 6</a>).</p>
+          <p lang="zh-TW">context 調大時，通常也要調高 <code>DS4_KV_DISK_SPACE_MB</code>，磁碟快取才裝得下完整工作集（<a href="#tuning">第六章</a>）。</p>
         </dd>
       </div>
       <div>
-        <dt>DS4_KV_DISK_SPACE_MB<span class="default"><span lang="en-GB">default: sized by memory</span><span lang="zh-TW">預設：依記憶體分級</span></span></dt>
+        <dt>DS4_KV_DISK_SPACE_MB<span class="default"><span lang="en-GB">default: 65536 on a 128 GB Mac</span><span lang="zh-TW">預設：128 GB 的 Mac 為 65536</span></span></dt>
         <dd>
-          <p lang="en-GB">The MiB disk budget for KV checkpoints, passed to <code>ds4-server --kv-disk-space-mb</code>. When unset, it is <code>65536</code> on 128 GB+ machines, <code>32768</code> on 96 to 127 GB and <code>8192</code> otherwise. Long agent sessions need the larger tiers so their prefix checkpoints are not removed every turn (<a href="https://x.com/thomasjansn">@tjansn</a>). Raise it further for 1M context.</p>
-          <p lang="zh-TW">傳給 <code>ds4-server --kv-disk-space-mb</code>、用來放 KV 檢查點的磁碟預算，單位是 MiB。未設定時，128 GB 以上的機器用 <code>65536</code>，96 到 127 GB 用 <code>32768</code>，其餘用 <code>8192</code>。長時間的智慧體對話需要較大等級，前綴檢查點才不會每回合都被移除（<a href="https://x.com/thomasjansn">@tjansn</a>）。使用 1M context 時要再調高。</p>
+          <p lang="en-GB">The MiB disk budget for KV checkpoints, passed to <code>ds4-server --kv-disk-space-mb</code>. When unset, it is <code>65536</code> on a 128 GB Mac, the only size of Mac this release accepts. Long agent sessions need that larger tier so their prefix checkpoints are not removed every turn (<a href="https://x.com/thomasjansn">@tjansn</a>).</p>
+          <p lang="zh-TW">傳給 <code>ds4-server --kv-disk-space-mb</code>、用來放 KV 檢查點的磁碟預算，單位是 MiB。未設定時，128 GB 的 Mac 用 <code>65536</code>，這也是這個版本唯一接受的機器等級。長時間的智慧體對話需要這個較大的等級，前綴檢查點才不會每回合都被移除（<a href="https://x.com/thomasjansn">@tjansn</a>）。</p>
         </dd>
       </div>
     </dl>
@@ -2215,10 +2249,10 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     </dl>
 
     <p lang="en-GB">
-      <code>/ds4-agent</code> shares <code>DS4_REPRODUCIBLE_SEED</code>, <code>DS4_CONTEXT_KB</code>, <code>DS4_DIR_STEERING_FILE</code>, <code>FFN</code> and <code>ATTN</code>. It does not use <code>DS4_DIR_STEERING_POLICY</code> because the native agent has no such flag yet. It also does not use server-only <code>DS4_MT</code> or <code>DS4_KV_DISK_SPACE_MB</code>.
+      <code>/ds4-agent</code> shares <code>DS4_REPRODUCIBLE_SEED</code>, <code>DS4_CONTEXT_KB</code>, <code>DS4_DIR_STEERING_FILE</code>, <code>FFN</code> and <code>ATTN</code>. It does not use <code>DS4_DIR_STEERING_POLICY</code> because the native agent has no such flag yet. It also does not use the server-only <code>DS4_KV_DISK_SPACE_MB</code>.
     </p>
     <p lang="zh-TW">
-      <code>/ds4-agent</code> 共用 <code>DS4_REPRODUCIBLE_SEED</code>、<code>DS4_CONTEXT_KB</code>、<code>DS4_DIR_STEERING_FILE</code>、<code>FFN</code> 和 <code>ATTN</code>。它不使用 <code>DS4_DIR_STEERING_POLICY</code>，因為原生智慧體還沒有這個旗標。它也不使用只限伺服器的 <code>DS4_MT</code> 和 <code>DS4_KV_DISK_SPACE_MB</code>。
+      <code>/ds4-agent</code> 共用 <code>DS4_REPRODUCIBLE_SEED</code>、<code>DS4_CONTEXT_KB</code>、<code>DS4_DIR_STEERING_FILE</code>、<code>FFN</code> 和 <code>ATTN</code>。它不使用 <code>DS4_DIR_STEERING_POLICY</code>，因為原生智慧體還沒有這個旗標。它也不使用只限伺服器的 <code>DS4_KV_DISK_SPACE_MB</code>。
     </p>
   </section>
 
@@ -2247,10 +2281,10 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
     <h3 id="6.2"><span class="no">6.2</span><span lang="en-GB">Backend choice belongs to ds4</span><span lang="zh-TW">後端的選擇屬於 ds4</span></h3>
 
     <p lang="en-GB">
-      Metal on Apple Silicon, CUDA on Linux, ROCm on AMD Strix Halo since the 2026-07 pin, and whatever upstream adds next all live in the ds4 build. pi-ds4 pins a known commit, builds it, fetches matching weights and starts it with consistent arguments.
+      Metal on Apple Silicon, CUDA on Linux, ROCm on AMD Strix Halo since the 2026-07 pin, and whatever upstream adds next all live in the ds4 build. pi-ds4 pins a known commit, builds it, fetches matching weights and starts it with consistent arguments. In this release only Metal runs the V4.1 Q1 weights, so the managed path refuses CUDA and ROCm hosts (<a href="#otherhw">§8.7</a>).
     </p>
     <p lang="zh-TW">
-      Apple Silicon 的 Metal、Linux 的 CUDA、從 2026-07 釘版開始支援的 AMD Strix Halo ROCm，還有上游之後新增的後端，都在 ds4 的建置中。pi-ds4 會固定已知 commit、編譯它、下載對應權重，再用一致的參數啟動。
+      Apple Silicon 的 Metal、Linux 的 CUDA、從 2026-07 釘版開始支援的 AMD Strix Halo ROCm，還有上游之後新增的後端，都在 ds4 的建置中。pi-ds4 會固定已知 commit、編譯它、下載對應權重，再用一致的參數啟動。這個版本裡，只有 Metal 跑得動 V4.1 的 Q1 權重，所以代管路徑會拒絕 CUDA 和 ROCm 主機（<a href="#otherhw">§8.7</a>）。
     </p>
 
     <h3 id="6.3"><span class="no">6.3</span><span lang="en-GB">When to run it by hand</span><span lang="zh-TW">什麼時候手動跑</span></h3>
@@ -2259,48 +2293,48 @@ ln -sfn gguf/…Abliterated-….gguf <span class="hi">ds4flash.gguf</span></code
       <li>You want to test the engine’s own backend flags, a patched kernel, or a different build.</li>
       <li>You want to evaluate the same GGUF and steering vector in isolation, without pi’s watchdog and leases.</li>
       <li>You are under memory pressure and want to confirm a task completes at a smaller <code>--ctx</code> first.</li>
-      <li>You want engine modes from the <a href="#whatsnew">2026-07 pin</a>: <code>--ssd-streaming</code> when the full weights do not fit, <code>--mtp DSpark.gguf</code> for experimental speculative decoding or <code>--max-queue N</code> for a bounded queue. The managed start never passes these.</li>
+      <li>You want engine modes from the <a href="#whatsnew">2026-07 pin</a>: <code>--ssd-streaming</code> when the full weights do not fit, <code>--mtp DSpark.gguf</code> for experimental speculative decoding or <code>--max-queue N</code> for a bounded queue. The managed start never passes these, and the DSpark drafter does not fit next to the V4.1 Q1 on 128 GB.</li>
     </ul>
     <ul lang="zh-TW">
       <li>想測引擎自己的後端旗標、改過的核心，或另一種建置。</li>
       <li>想在沒有 pi 看門狗與租約介入的情況下，隔離評估同一份 GGUF 與引導向量。</li>
       <li>記憶體吃緊，想先用較小的 <code>--ctx</code> 確認同一項工作能穩定完成。</li>
-      <li>想使用 <a href="#whatsnew">2026-07 釘版</a>加入的引擎模式：權重放不下時的 <code>--ssd-streaming</code>、實驗性推測解碼的 <code>--mtp DSpark.gguf</code>，或限制佇列大小的 <code>--max-queue N</code>。代管啟動不會傳入這些。</li>
+      <li>想使用 <a href="#whatsnew">2026-07 釘版</a>加入的引擎模式：權重放不下時的 <code>--ssd-streaming</code>、實驗性推測解碼的 <code>--mtp DSpark.gguf</code>，或限制佇列大小的 <code>--max-queue N</code>。代管啟動不會傳入這些，而且 DSpark 草稿模型在 128 GB 裡放不進 V4.1 Q1 旁邊。</li>
     </ul>
 
     <h3 id="6.4"><span class="no">6.4</span><span lang="en-GB">Context, KV cache and disk</span><span lang="zh-TW">Context、KV cache 與磁碟</span></h3>
 
-    <p lang="en-GB">The server starts with <code>DS4_CONTEXT_KB=256</code> and a memory-tiered <code>DS4_KV_DISK_SPACE_MB</code>, <code>65536</code> on 128 GB+ machines. In other words: <code>--ctx 256000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb …</code>. In practice:</p>
-    <p lang="zh-TW">伺服器以 <code>DS4_CONTEXT_KB=256</code> 和依記憶體分級的 <code>DS4_KV_DISK_SPACE_MB</code> 啟動，128 GB 以上的機器是 <code>65536</code>。也就是 <code>--ctx 256000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb …</code>。實際情況如下：</p>
+    <p lang="en-GB">The server starts with <code>DS4_CONTEXT_KB=256</code> and <code>DS4_KV_DISK_SPACE_MB</code> at <code>65536</code> on a 128 GB Mac. In other words: <code>--ctx 256000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb …</code>. In practice:</p>
+    <p lang="zh-TW">伺服器以 <code>DS4_CONTEXT_KB=256</code> 啟動，在 128 GB 的 Mac 上 <code>DS4_KV_DISK_SPACE_MB</code> 是 <code>65536</code>。也就是 <code>--ctx 256000 --kv-disk-dir ~/.pi/ds4/kv --kv-disk-space-mb …</code>。實際情況如下：</p>
 
     <ul lang="en-GB">
       <li>one conversation is capped at 256 000 tokens;</li>
       <li>the KV cache spills to <code>~/.pi/ds4/kv</code> when memory runs low;</li>
-      <li>the disk limit follows your memory, about 64 GB on 128 GB+, so a long agent session can reuse its prefix checkpoints.</li>
+      <li>the disk limit is about 64 GB by default on a 128 GB Mac, so a long agent session can reuse its prefix checkpoints.</li>
     </ul>
     <ul lang="zh-TW">
       <li>一場對話的上限是 256 000 個 token；</li>
       <li>記憶體不夠時，KV cache 溢到 <code>~/.pi/ds4/kv</code>；</li>
-      <li>磁碟上限跟著記憶體走，128 GB 以上約 64 GB，讓長時間的智慧體對話能重用前綴檢查點。</li>
+      <li>磁碟上限預設在 128 GB 的 Mac 上約 64 GB，讓長時間的智慧體對話能重用前綴檢查點。</li>
     </ul>
 
     <div class="aside">
-      <span class="label"><span lang="en-GB">256k and 1M have very different costs</span><span lang="zh-TW">256k 和 1M 的成本差很多</span></span>
-      <p lang="en-GB">ds4’s Metal context estimator puts the KV and context buffers at about 5.5 GiB for the 256k default. 100k is about 2.4 GiB and 300k about 6.5 GiB. At 1M, they reach about 20.8 GiB. That is before the 87 GB of weights and temporary inference buffers. Disk use grows too. A full checkpoint rises from about 1.4 GB at 100k to about 14 GB at 1M. An 8 GB KV budget is therefore not a 1M setting. 128 GB+ installs default to 64 GB.</p>
-      <p lang="zh-TW">ds4 的 Metal context 估算器顯示，256k 預設的 KV 和 context 緩衝約需 5.5 GiB。100k 約 2.4 GiB，300k 約 6.5 GiB。到了 1M，會升到約 20.8 GiB。這還沒算 87 GB 權重和推論時的暫存緩衝。磁碟用量也會增加。完整檢查點從 100k 的約 1.4 GB，增加到 1M 的約 14 GB。所以 8 GB 的 KV 預算不適合 1M 設定。128 GB 以上的安裝預設為 64 GB。</p>
+      <span class="label"><span lang="en-GB">What the memory budget means for context</span><span lang="zh-TW">記憶體預算對 context 的影響</span></span>
+      <p lang="en-GB">ds4 has a 112 GiB memory budget for V4.1, and about 106 GiB of weights stay resident in memory. Measured without the vision sidecar, a 256k window opens with a narrower 2048-row prefill batch, a 384k window with 1024 rows, and 512k and above are refused at open. The managed server always loads the 0.9 GiB sidecar, which costs about one more batch step: with it, the default 256k opens with 1024-row prefill chunks (measured), and 384k is estimated not to fit. Prefill reads the prompt in batches (groups of tokens), so a narrower batch costs some prefill speed on long prompts, not correctness. Disk use grows with context too, so keep the KV disk cache at its 64 GB default or higher.</p>
+      <p lang="zh-TW">ds4 對 V4.1 的記憶體預算是 112 GiB，約 106 GiB 的權重會常駐記憶體。在不載入視覺附屬檔時量到：256k 視窗以較窄的 2048 列 prefill 批次打開，384k 視窗用 1024 列，512k 以上在開啟時就會被拒絕。代管伺服器一定會載入 0.9 GiB 的視覺附屬檔，大約再多佔一級批次：載入之後，預設的 256k 以 1024 列的 prefill 批次打開（實測），384k 估計放不下。prefill 是分批（一組一組 token）讀完提示的，批次較窄只會讓長提示的 prefill 慢一些，不影響正確性。磁碟用量也會隨 context 增加，所以 KV 磁碟快取請維持 64 GB 預設值，或更高。</p>
     </div>
 
     <div class="aside">
       <span class="label"><span lang="en-GB">Inputs beyond 32k tokens are an experiment</span><span lang="zh-TW">超過 32k token 的輸入，請當實驗</span></span>
-      <p lang="en-GB"><code>--ctx 256000</code> is the length the server accepts by default. But the cyberneurova model card says <em>the abliterated V4 Flash has not been validated above 32 000 tokens</em>. If you are putting a whole book, codebase or report into one prompt, split it and cross-check it. This especially applies to journalists, researchers and policy analysts. Do not treat one output above 32k as known-good.</p>
-      <p lang="zh-TW"><code>--ctx 256000</code> 是伺服器預設接受的長度。但 cyberneurova 模型卡明白寫著：<em>abliterated 過的 V4 Flash 在 32 000 個 token 以上尚未驗證</em>。如果要把整本書、整個程式庫或整份報告放進同一個 prompt，請分段並交叉查證。記者、研究者和政策分析師尤其該這樣做。不要把超過 32k 的單次輸出當成已知可靠的結果。</p>
+      <p lang="en-GB"><code>--ctx 256000</code> is the length the server accepts by default. But the cyberneurova model card for the earlier abliterated V4 Flash said that model <em>had not been validated above 32 000 tokens</em>, and no quality score has been run for this V4.1 Q1 either. If you are putting a whole book, codebase or report into one prompt, split it and cross-check it. This especially applies to journalists, researchers and policy analysts. Do not treat one output above 32k as known-good.</p>
+      <p lang="zh-TW"><code>--ctx 256000</code> 是伺服器預設接受的長度。但 cyberneurova 對較早的 abliterated V4 Flash 寫在模型卡上的是：該模型<em>在 32 000 個 token 以上尚未驗證</em>，而這個 V4.1 Q1 也還沒有跑過品質分數。如果要把整本書、整個程式庫或整份報告放進同一個 prompt，請分段並交叉查證。記者、研究者和政策分析師尤其該這樣做。不要把超過 32k 的單次輸出當成已知可靠的結果。</p>
     </div>
 
     <p lang="en-GB">
-      For the model’s full 1M context, set <code>DS4_CONTEXT_KB=1024</code> and <code>DS4_KV_DISK_SPACE_MB=65536</code> or higher. The <code>256</code> default and memory tier are for 96 GB+ machines, not for squeezing out every last token.
+      A 128 GB Mac does not open the model’s full 1M window. Keep <code>DS4_CONTEXT_KB</code> at 384 or lower, as 512 and above are refused at open. The <code>256</code> default favours prefill speed over length.
     </p>
     <p lang="zh-TW">
-      想用模型完整的 1M context，請設定 <code>DS4_CONTEXT_KB=1024</code> 和 <code>DS4_KV_DISK_SPACE_MB=65536</code> 或更高。<code>256</code> 預設值和記憶體分級，是為 96 GB 以上的機器而定，不是為了擠出最後一個 token。
+      128 GB 的 Mac 開不了模型完整的 1M 視窗。請把 <code>DS4_CONTEXT_KB</code> 維持在 384 或更低，因為 512 以上在開啟時就會被拒絕。預設的 <code>256</code> 是偏向 prefill 速度、而不是長度的選擇。
     </p>
   </section>
 
@@ -2412,19 +2446,19 @@ curl -s http://127.0.0.1:8000/stats
     <h3 id="7.3"><span class="no">7.3</span><span lang="en-GB">Leases and the watchdog</span><span lang="zh-TW">租約和看門狗</span></h3>
 
     <p lang="en-GB">
-      Leases decide when the server starts and stops, so you don’t have to remember to shut down a background program. Each pi process using the model writes <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code> and refreshes it every ten seconds. <code>ds4-watchdog</code>, a small watcher program, checks every two seconds. When no valid lease remains, it sends SIGTERM (a “please quit” signal) to the server and exits. Ten pi windows can share one server. About sixty seconds after the last window closes, <code>ds4-server</code> stops itself and frees 87 GB of memory.
+      Leases decide when the server starts and stops, so you don’t have to remember to shut down a background program. Each pi process using the model writes <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code> and refreshes it every ten seconds. <code>ds4-watchdog</code>, a small watcher program, checks every two seconds. When no valid lease remains, it sends SIGTERM (a “please quit” signal) to the server and exits. Ten pi windows can share one server. About sixty seconds after the last window closes, <code>ds4-server</code> stops itself and frees the memory the weights held.
     </p>
     <p lang="zh-TW">
-      伺服器什麼時候開、什麼時候關，由租約來管，你不必記得去關一個常駐程式。每個用到這個模型的 pi 程序，都會寫入 <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code>，當作自己的租約，並每十秒更新一次。<code>ds4-watchdog</code>（看門狗程式）每兩秒檢查一次。一旦沒有任何有效租約，它就送 SIGTERM（請程式結束的訊號）給伺服器，然後自己退場。十個 pi 視窗可以共用一台伺服器。最後一個視窗關掉大約六十秒後，<code>ds4-server</code> 會自己關機，87 GB 的記憶體就回到你手上。
+      伺服器什麼時候開、什麼時候關，由租約來管，你不必記得去關一個常駐程式。每個用到這個模型的 pi 程序，都會寫入 <code>~/.pi/ds4/clients/&lt;pid&gt;.json</code>，當作自己的租約，並每十秒更新一次。<code>ds4-watchdog</code>（看門狗程式）每兩秒檢查一次。一旦沒有任何有效租約，它就送 SIGTERM（請程式結束的訊號）給伺服器，然後自己退場。十個 pi 視窗可以共用一台伺服器。最後一個視窗關掉大約六十秒後，<code>ds4-server</code> 會自己關機，權重佔用的記憶體就回到你手上。
     </p>
 
     <h3 id="7.4"><span class="no">7.4</span><span lang="en-GB">The cost of starting and the cost of running</span><span lang="zh-TW">啟動的代價與持續的代價</span></h3>
 
     <p lang="en-GB">
-      A cold start reads about 87 GB of weights (the model’s learned numbers) into unified memory, the memory your Mac’s CPU and GPU share. From an internal SSD, this usually takes a few seconds. If the file is still in the page cache, the operating system’s copy of recently read files, a restart takes well under one second. Once the server is running, every request is immediate. So a few long conversations feel better than many short ones: the long ones keep using one warm server.
+      A cold start reads about 106 GiB of weights (the model’s learned numbers) into unified memory, the memory your Mac’s CPU and GPU share. How long that takes depends on your SSD. The two Engram tables stay on disk and are read as tokens need them, so an internal SSD matters. Once the server is running, every request is immediate. So a few long conversations feel better than many short ones: the long ones keep using one warm server.
     </p>
     <p lang="zh-TW">
-      冷啟動時，系統要把約 87 GB 的權重（模型學到的數值）讀進統一記憶體，也就是 CPU 和 GPU 共用的那塊記憶體。從內建 SSD 讀，通常只要幾秒。如果檔案還留在系統的檔案快取（page cache）裡，重新啟動不到一秒。伺服器一旦跑起來，每個請求都是即時的。所以少數幾場長對話，會比很多場短對話舒服：長對話一直用同一台已經熱好的伺服器。
+      冷啟動時，系統要把約 106 GiB 的權重（模型學到的數值）讀進統一記憶體，也就是 CPU 和 GPU 共用的那塊記憶體。要花多久，看你的 SSD。兩張 Engram 表留在硬碟上，token 需要時才讀，所以內建 SSD 很重要。伺服器一旦跑起來，每個請求都是即時的。所以少數幾場長對話，會比很多場短對話舒服：長對話一直用同一台已經熱好的伺服器。
     </p>
 
     <div class="aside">
@@ -2448,10 +2482,10 @@ curl -s http://127.0.0.1:8000/stats
     </div>
 
     <p lang="en-GB">
-      <code>/ds4-agent</code> waits for pi to finish its current response. It checks that <code>~/.pi/ds4/support</code> exists, builds <code>ds4-agent</code> if needed and confirms that the same 87 GB GGUF file is present. It then pauses pi’s interface and gives <code>ds4-agent</code> the whole terminal. Type <code>/quit</code> in the agent to leave. pi’s screen returns.
+      <code>/ds4-agent</code> waits for pi to finish its current response. It checks that <code>~/.pi/ds4/support</code> exists, builds <code>ds4-agent</code> if needed and confirms that the same GGUF files are present. It then pauses pi’s interface and gives <code>ds4-agent</code> the whole terminal. Type <code>/quit</code> in the agent to leave. pi’s screen returns.
     </p>
     <p lang="zh-TW">
-      <code>/ds4-agent</code> 會先等 pi 目前正在輸出的回應結束。它會確認 <code>~/.pi/ds4/support</code> 存在，必要時編譯 <code>ds4-agent</code>，也會確認同一份 87 GB 的 GGUF 檔案已備妥。接著它會暫停 pi 的介面，把整個終端機交給 <code>ds4-agent</code>。在智慧體裡輸入 <code>/quit</code> 即可離開，pi 的畫面會回來。
+      <code>/ds4-agent</code> 會先等 pi 目前正在輸出的回應結束。它會確認 <code>~/.pi/ds4/support</code> 存在，必要時編譯 <code>ds4-agent</code>，也會確認同樣的 GGUF 檔案已備妥。接著它會暫停 pi 的介面，把整個終端機交給 <code>ds4-agent</code>。在智慧體裡輸入 <code>/quit</code> 即可離開，pi 的畫面會回來。
     </p>
 
     <div class="aside">
@@ -2461,10 +2495,10 @@ curl -s http://127.0.0.1:8000/stats
     </div>
 
     <p lang="en-GB">
-      A memory guard prevents a second copy of the model. <code>/ds4-agent</code> will not load the 87 GB model once in <code>ds4-server</code> and again in <code>ds4-agent</code>. If the server pi manages is idle, it stops it first. If another pi window or an HTTP client is using it, the command refuses instead of interrupting someone else’s work. Back in pi, the next request to <code>ds4/deepseek-v4-flash</code> starts the server again as usual.
+      A memory guard prevents a second copy of the model. <code>/ds4-agent</code> will not load the model twice, once in <code>ds4-server</code> and again in <code>ds4-agent</code>. If the server pi manages is idle, it stops it first. If another pi window or an HTTP client is using it, the command refuses instead of interrupting someone else’s work. Back in pi, the next request to <code>ds4/deepseek-v4-flash</code> starts the server again as usual.
     </p>
     <p lang="zh-TW">
-      這裡也有記憶體保護，避免模型載入兩份。<code>/ds4-agent</code> 不會讓 87 GB 的模型先由 <code>ds4-server</code> 載入，再由 <code>ds4-agent</code> 載入一次。若由 pi 代管的伺服器閒置，它會先把伺服器停掉。若其他 pi 視窗或 HTTP 客戶端正在使用，指令會拒絕執行，不會中斷別人的工作。回到 pi 後，下一次對 <code>ds4/deepseek-v4-flash</code> 的請求會照平常方式重新啟動伺服器。
+      這裡也有記憶體保護，避免模型載入兩份。<code>/ds4-agent</code> 不會讓模型先由 <code>ds4-server</code> 載入，再由 <code>ds4-agent</code> 載入第二次。若由 pi 代管的伺服器閒置，它會先把伺服器停掉。若其他 pi 視窗或 HTTP 客戶端正在使用，指令會拒絕執行，不會中斷別人的工作。回到 pi 後，下一次對 <code>ds4/deepseek-v4-flash</code> 的請求會照平常方式重新啟動伺服器。
     </p>
   </section>
 
@@ -2558,10 +2592,10 @@ claude</pre>
     </div>
 
     <p lang="en-GB">
-      Your slash commands, subagents and MCP servers stay the same. Only the model underneath changes. Be honest with yourself about what else changes with it. DeepSeek V4 Flash’s tool-calling training is weaker than Claude’s, so it slips more often in long tool loops. It works best for long conversations, writing and explaining code. You will notice the difference in a workflow built from many tool calls.
+      Your slash commands, subagents and MCP servers stay the same. Only the model underneath changes. Be honest with yourself about what else changes with it. This model’s tool-calling training is weaker than Claude’s, so it slips more often in long tool loops. It works best for long conversations, writing and explaining code. You will notice the difference in a workflow built from many tool calls.
     </p>
     <p lang="zh-TW">
-      你的 slash command、subagent 和 MCP server 都會保留，只有底下的模型換掉。也請老實面對一件事：換掉的不只是模型。DeepSeek V4 Flash 的工具呼叫訓練不如 Claude，在很長的工具迴圈裡比較常出錯。它最擅長長對話、寫作和解釋程式碼。如果你的工作流程是一個工具接著一個工具一路呼叫，就會感覺到差別。
+      你的 slash command、subagent 和 MCP server 都會保留，只有底下的模型換掉。也請老實面對一件事：換掉的不只是模型。這顆模型的工具呼叫訓練不如 Claude，在很長的工具迴圈裡比較常出錯。它最擅長長對話、寫作和解釋程式碼。如果你的工作流程是一個工具接著一個工具一路呼叫，就會感覺到差別。
     </p>
 
     <div class="aside">
@@ -2589,7 +2623,7 @@ claude</pre>
         "timeoutSeconds": <span class="v">600</span>,
         "models": [{
           "id": <span class="s">"deepseek-v4-flash"</span>,
-          "name": <span class="s">"DeepSeek V4 Flash (local Responses)"</span>,
+          "name": <span class="s">"DeepSeek V4.1 Flash (local Responses)"</span>,
           "api": <span class="s">"openai-responses"</span>,
           "reasoning": <span class="v">true</span>,
           "input": [<span class="s">"text"</span>],
@@ -2648,7 +2682,7 @@ claude</pre>
         "api": <span class="s">"openai-responses"</span>,
         "models": [{
           "id": <span class="s">"deepseek-v4-flash"</span>,
-          "name": <span class="s">"DeepSeek V4 Flash (ds4.c local)"</span>,
+          "name": <span class="s">"DeepSeek V4.1 Flash (ds4.c local)"</span>,
           "api": <span class="s">"openai-responses"</span>,
           "reasoning": <span class="v">true</span>,
           "input": [<span class="s">"text"</span>],
@@ -2768,67 +2802,68 @@ resp = client.responses.create(
       <div class="term-bar"><span><span lang="en-GB">by hand, after pi install</span><span lang="zh-TW">手動，pi install 之後</span></span><button class="copy" aria-label="Copy the manual server launch"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
       <pre><span class="k">cd</span> ~/.pi/ds4/support
 ./ds4-server \
-  --ctx <span class="v">100000</span> \
+  --ctx <span class="v">256000</span> \
   --kv-disk-dir ~/.pi/ds4/kv \
   --kv-disk-space-mb <span class="v">65536</span> \
-  --vision gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf
-<span class="c"># <span lang="en-GB">65536 is the 128 GB+ tier; use 32768 on 96–127 GB.</span><span lang="zh-TW">65536 是 128 GB 以上的級距；96–127 GB 請用 32768。</span></span>
+  --vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf
+<span class="c"># <span lang="en-GB">65536 is the default on a 128 GB Mac.</span><span lang="zh-TW">65536 是 128 GB 的 Mac 的預設值。</span></span>
 <span class="c"># <span lang="en-GB">Drop --vision for a text-only server. Engine-level flags from the</span><span lang="zh-TW">只要純文字就拿掉 --vision。更新誌裡的引擎級旗標</span></span>
 <span class="c"># <span lang="en-GB">What's-new list (--ssd-streaming, --mtp DSpark.gguf, --max-queue N) go here.</span><span lang="zh-TW">（--ssd-streaming、--mtp DSpark.gguf、--max-queue N）就加在這裡。</span></span></pre>
     </div>
 
-    <p lang="en-GB">To enable uncertainty steering on a hand-started server, add the four flags that the managed path would use:</p>
-    <p lang="zh-TW">若要在手動啟動的伺服器開啟不確定性引導，加上代管路徑會用的四個旗標：</p>
+    <p lang="en-GB">To enable steering on a hand-started server, add the four flags the managed path would use, with a direction file of your own for V4.1 (the −0.75 is the V4 measurement):</p>
+    <p lang="zh-TW">若要在手動啟動的伺服器開啟引導，加上代管路徑會用的四個旗標，方向檔請用你自己為 V4.1 建的（−0.75 是 V4 的實測值）：</p>
 
     <div class="term">
       <div class="term-bar"><span><span lang="en-GB">the same launch, steering opted in</span><span lang="zh-TW">同一個啟動，加上引導</span></span><button class="copy" aria-label="Copy the manual server launch with steering"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
       <pre><span class="k">cd</span> ~/.pi/ds4/support
 ./ds4-server \
-  --ctx <span class="v">100000</span> \
+  --ctx <span class="v">256000</span> \
   --kv-disk-dir ~/.pi/ds4/kv \
   --kv-disk-space-mb <span class="v">65536</span> \
-  --vision gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf \
-  --dir-steering-file dir-steering/out/uncertainty_ablit_imatrix.f32 \
+  --vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf \
+  --dir-steering-file <span class="v">your-v4.1-direction.f32</span> \
   --dir-steering-ffn <span class="v">-0.75</span> \
   --dir-steering-attn <span class="v">0</span> \
   --dir-steering-policy <span class="v">final-answer</span></pre>
     </div>
 
     <p lang="en-GB">
-      pi adopts a server already listening on <code>127.0.0.1:8000</code>. The adopted server keeps exactly the flags you gave it. pi does not add <code>--ctx</code> or steering again. That is deliberate. You can audit a command you typed. It also means you must add the vision encoder, KV disk cache or steering yourself when you start the server by hand.
+      pi adopts a server already listening on <code>127.0.0.1:8000</code>. The adopted server keeps exactly the flags you gave it. pi does not add <code>--ctx</code> or steering again. That is deliberate. You can audit a command you typed. It also means you must add the vision sidecar, KV disk cache or steering yourself when you start the server by hand.
     </p>
     <p lang="zh-TW">
-      pi 會「收養」已經在 <code>127.0.0.1:8000</code> 監聽的伺服器。被收養的伺服器只保留你給的旗標，pi 不會再補 <code>--ctx</code> 或引導。這是刻意的設計，不是少了功能。你親手輸入的啟動指令，自己就能檢查。這也表示，若手動啟動時要視覺編碼器、KV 磁碟快取或引導，必須自己加上。
+      pi 會「收養」已經在 <code>127.0.0.1:8000</code> 監聽的伺服器。被收養的伺服器只保留你給的旗標，pi 不會再補 <code>--ctx</code> 或引導。這是刻意的設計，不是少了功能。你親手輸入的啟動指令，自己就能檢查。這也表示，若手動啟動時要視覺附屬檔、KV 磁碟快取或引導，必須自己加上。
     </p>
 
     <h4><span lang="en-GB">C. No pi at all</span><span lang="zh-TW">C. 完全沒有 pi</span></h4>
     <p lang="en-GB">
-      Bootstrap directly from the two repositories. You need neither pi nor <code>~/.pi/ds4/</code>. Both repositories matter because <code>ds4</code>’s <code>download_model.sh</code> fetches antirez’s upstream stock recipe. The identically named script in <code>pi-ds4</code> fetches the Vision-Exp pair covered by this letter.
+      Bootstrap directly from the two repositories. You need neither pi nor <code>~/.pi/ds4/</code>. Both repositories matter because <code>ds4</code>’s <code>download_model.sh</code> fetches antirez’s upstream stock recipe. The identically named script in <code>pi-ds4</code> fetches the V4.1 Q1 pair covered by this letter.
     </p>
     <p lang="zh-TW">
-      直接從兩個 repo 開始。不需要 pi，也不需要 <code>~/.pi/ds4/</code>。需要兩個 repo 是因為 <code>ds4</code> 裡的 <code>download_model.sh</code> 會抓 antirez 上游的原版配方。<code>pi-ds4</code> 裡同名的腳本，才會抓這封信談的 Vision-Exp 一對檔案。
+      直接從兩個 repo 開始。不需要 pi，也不需要 <code>~/.pi/ds4/</code>。需要兩個 repo 是因為 <code>ds4</code> 裡的 <code>download_model.sh</code> 會抓 antirez 上游的原版配方。<code>pi-ds4</code> 裡同名的腳本，才會抓這封信談的 V4.1 Q1 一對檔案。
     </p>
 
     <div class="term">
       <div class="term-bar"><span><span lang="en-GB">bootstrap without pi</span><span lang="zh-TW">不經 pi 的 bootstrap</span></span><button class="copy" aria-label="Copy the bootstrap without pi"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
-      <pre><span class="c"># <span lang="en-GB">1. Fetch and build the engine (Mac: Metal; Linux: CUDA, see §8.7)</span><span lang="zh-TW">1. 取得並編譯引擎（Mac：Metal；Linux：CUDA，見 §8.7）</span></span>
+      <pre><span class="c"># <span lang="en-GB">1. Fetch and build the engine at this release’s pin (Metal only for this model, see §8.7)</span><span lang="zh-TW">1. 取得並依這個版本的釘版編譯引擎（這顆模型只走 Metal，見 §8.7）</span></span>
 git clone https://github.com/audreyt/ds4
 <span class="k">cd</span> ds4
+git checkout d3f4cd6
 make ds4-server
 
-<span class="c"># <span lang="en-GB">2. The Vision-Exp download script from pi-ds4, not ds4's own stock-recipe one</span><span lang="zh-TW">2. 用 pi-ds4 的 Vision-Exp 下載腳本，不是 ds4 自帶的原版配方那支</span></span>
+<span class="c"># <span lang="en-GB">2. The V4.1 Q1 download script from pi-ds4, not ds4's own stock-recipe one</span><span lang="zh-TW">2. 用 pi-ds4 的 V4.1 Q1 下載腳本，不是 ds4 自帶的原版配方那支</span></span>
 curl -fL -o download_model.sh \
   https://raw.githubusercontent.com/audreyt/pi-ds4/main/download_model.sh
 chmod +x download_model.sh
-./download_model.sh q2
-<span class="c"># <span lang="en-GB">fetches the ~81 GiB language GGUF plus the encoder and links ds4flash.gguf</span><span lang="zh-TW">抓約 81 GiB 的語言 GGUF 與編碼器，並連結為 ds4flash.gguf</span></span>
+./download_model.sh q1
+<span class="c"># <span lang="en-GB">fetches the ~341.5 GiB language GGUF plus the vision sidecar and links ds4flash.gguf</span><span lang="zh-TW">抓約 341.5 GiB 的語言 GGUF 與視覺附屬檔，並連結為 ds4flash.gguf</span></span>
 
 <span class="c"># <span lang="en-GB">3. Start the server (append the four steering flags from path B to opt in)</span><span lang="zh-TW">3. 啟動伺服器（要開引導，把 B 路線的四個旗標接在後面）</span></span>
 ./ds4-server \
-  --ctx <span class="v">100000</span> \
+  --ctx <span class="v">256000</span> \
   --kv-disk-dir ./kv \
   --kv-disk-space-mb <span class="v">65536</span> \
-  --vision gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf</pre>
+  --vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf</pre>
     </div>
 
     <p lang="en-GB">With this option, you never use pi. ds4-server comes directly from the source tree. You handle the jobs the extension would otherwise do: downloading, symlinks, the watchdog and leases.</p>
@@ -2843,37 +2878,33 @@ chmod +x download_model.sh
     <h3 id="8.7"><span class="no">8.7</span><span lang="en-GB">Other hardware: DGX Spark (CUDA) and Strix Halo (ROCm)</span><span lang="zh-TW">其他硬體：DGX Spark（CUDA）與 Strix Halo（ROCm）</span><a id="otherhw"></a></h3>
 
     <p lang="en-GB">
-      You do not need a Mac. On non-Darwin systems, the <code>Makefile</code> in <a href="https://github.com/audreyt/ds4"><code>audreyt/ds4</code></a> uses CUDA. <code>ds4_cuda.cu</code> contains about ten thousand lines of NVIDIA GPU kernels (small programs that run on the GPU), and <code>nvcc</code> builds a native ds4-server. On an NVIDIA DGX Spark with GB10, about 128 GB unified memory and aarch64 Linux, you run <em>the same engine, server and <code>--dir-steering-*</code> flags</em>, not a llama.cpp sidecar. <code>pi install https://github.com/audreyt/pi-ds4</code> works unchanged. It clones, selects nvcc and CUDA for <code>make ds4-server</code>, downloads the Vision-Exp pair and starts the server.
+      Version 0.7.0 needs a Mac with 128 GB, and Metal. ds4 runs this model’s IQ1_S experts and its Q5_K/Q6_K dense weights only on Metal, so pi-ds4 refuses a Linux host with CUDA or ROCm, such as an NVIDIA DGX Spark or an AMD Strix Halo, before it downloads anything. Those hosts should stay on v 0.6.1, which runs the V4 Vision-Exp IQ2 build as that release describes. Or bring your own: point <code>DS4_RUNTIME_DIR</code> at your own ds4 checkout and binary, and supply a GGUF your backend can run.
     </p>
     <p lang="zh-TW">
-      你不需要 Mac。在不是 Darwin 的系統上，<a href="https://github.com/audreyt/ds4"><code>audreyt/ds4</code></a> 的 <code>Makefile</code> 會使用 CUDA。<code>ds4_cuda.cu</code> 有約一萬行 NVIDIA kernel（在 GPU 上執行的小程式），<code>nvcc</code> 會編出原生的 ds4-server。在 NVIDIA DGX Spark 上，硬體是 GB10、約 128 GB 統一記憶體、aarch64 Linux。這裡跑的是<em>同一個引擎、同一台伺服器和同一組 <code>--dir-steering-*</code> 旗標</em>，不是 llama.cpp 的旁掛程式。<code>pi install https://github.com/audreyt/pi-ds4</code> 不用改就能用：clone、用自動選好的 nvcc 和 CUDA 執行 <code>make ds4-server</code>、下載 Vision-Exp 一對檔案，再啟動伺服器。
+      v 0.7.0 需要 128 GB 的 Mac，而且要走 Metal。ds4 只在 Metal 上執行這個模型的 IQ1_S 專家和 Q5_K／Q6_K 稠密權重，所以 pi-ds4 會在下載任何東西之前，就拒絕 Linux 上用 CUDA 或 ROCm 的主機，例如 NVIDIA DGX Spark 或 AMD Strix Halo。這些主機請留在 v 0.6.1，它依該版本的說明跑 V4 Vision-Exp IQ2 版。或者自備：把 <code>DS4_RUNTIME_DIR</code> 指向你自己的 ds4 checkout 與執行檔，再提供你的後端跑得動的 GGUF。
     </p>
 
     <p lang="en-GB">
-      Since the <a href="#whatsnew">2026-07 pin</a>, there is a third backend: <strong>AMD Strix Halo on ROCm</strong>. A 128 GB Ryzen AI Max machine with Radeon 8060S and gfx1151 builds the same binaries with <code>make strix-halo</code>, also called <code>make rocm</code>. The checkout’s <code>STRIXHALO.md</code> covers ROCm 7.1, rocWMMA, <code>/dev/kfd</code> permissions and the GTT aperture. On this platform, use the plain aligned-imatrix GGUF. For now, avoid mixed IQ2/Q4 builds. They put much more memory pressure on the ROCm path and may end in a system out-of-memory (OOM) error instead of a clean ds4 error. The same pin added <strong>distributed inference</strong>: 4-bit Flash runs across two 128 GB MacBooks over Thunderbolt 5, with each mapping only its own layers. Pipelined prefill (reading the prompt in a relay across both machines) can beat one machine, but generation is slower.
+      The rest of this section describes the engine, for v 0.6.1 or your own GGUF. Since the <a href="#whatsnew">2026-07 pin</a>, there is a third backend: <strong>AMD Strix Halo on ROCm</strong>. A 128 GB Ryzen AI Max machine with Radeon 8060S and gfx1151 builds the same binaries with <code>make strix-halo</code>, also called <code>make rocm</code>. The checkout’s <code>STRIXHALO.md</code> covers ROCm 7.1, rocWMMA, <code>/dev/kfd</code> permissions and the GTT aperture. On this platform, use the plain aligned-imatrix GGUF. For now, avoid mixed IQ2/Q4 builds. They put much more memory pressure on the ROCm path and may end in a system out-of-memory (OOM) error instead of a clean ds4 error. The same pin added <strong>distributed inference</strong>: 4-bit Flash runs across two 128 GB MacBooks over Thunderbolt 5, with each mapping only its own layers. Pipelined prefill (reading the prompt in a relay across both machines) can beat one machine, but generation is slower.
     </p>
     <p lang="zh-TW">
-      <a href="#whatsnew">2026-07 釘版</a>加入了第三個後端：<strong>ROCm 上的 AMD Strix Halo</strong>。128 GB 的 Ryzen AI Max 機器，搭配 Radeon 8060S 和 gfx1151，可用 <code>make strix-halo</code> 編出同一組執行檔。它也叫 <code>make rocm</code>。checkout 裡的 <code>STRIXHALO.md</code> 說明 ROCm 7.1、rocWMMA、<code>/dev/kfd</code> 權限和 GTT aperture。這個平台請用單純的 aligned-imatrix GGUF。暫時先避開 IQ2/Q4 混合版。它在 ROCm 路徑上的記憶體壓力大得多，結果可能是整台系統記憶體不足（OOM），而不是 ds4 給出的明確錯誤訊息。同一份釘版也加入<strong>分散式推論</strong>：4-bit Flash 可透過 Thunderbolt 5 跨兩台 128 GB MacBook 執行，每台只 map 自己負責的那幾層 layer。管線化的 prefill（兩台接力讀完整段提示）可能比單機快，但生成較慢。
+      這一節其餘部分談的是引擎本身，適用於 v 0.6.1 或你自備的 GGUF。<a href="#whatsnew">2026-07 釘版</a>加入了第三個後端：<strong>ROCm 上的 AMD Strix Halo</strong>。128 GB 的 Ryzen AI Max 機器，搭配 Radeon 8060S 和 gfx1151，可用 <code>make strix-halo</code> 編出同一組執行檔。它也叫 <code>make rocm</code>。checkout 裡的 <code>STRIXHALO.md</code> 說明 ROCm 7.1、rocWMMA、<code>/dev/kfd</code> 權限和 GTT aperture。這個平台請用單純的 aligned-imatrix GGUF。暫時先避開 IQ2/Q4 混合版。它在 ROCm 路徑上的記憶體壓力大得多，結果可能是整台系統記憶體不足（OOM），而不是 ds4 給出的明確錯誤訊息。同一份釘版也加入<strong>分散式推論</strong>：4-bit Flash 可透過 Thunderbolt 5 跨兩台 128 GB MacBook 執行，每台只 map 自己負責的那幾層 layer。管線化的 prefill（兩台接力讀完整段提示）可能比單機快，但生成較慢。
     </p>
 
-    <p lang="en-GB">Once the endpoint is running, use the §8.1 to §8.5 setups as written. If you connect from another machine, replace <code>127.0.0.1</code> with its address. Four things differ:</p>
-    <p lang="zh-TW">端點啟動後，§8.1 到 §8.5 的設定可以照用。若從另一台機器連線，請把 <code>127.0.0.1</code> 改成那台機器的位址。不過有四點不同：</p>
+    <p lang="en-GB">Once the endpoint is running, use the §8.1 to §8.5 setups as written. If you connect from another machine, replace <code>127.0.0.1</code> with its address. Two things to know:</p>
+    <p lang="zh-TW">端點啟動後，§8.1 到 §8.5 的設定可以照用。若從另一台機器連線，請把 <code>127.0.0.1</code> 改成那台機器的位址。不過有兩點要知道：</p>
 
     <ul lang="en-GB">
       <li><strong>Opening it to a LAN is your responsibility.</strong> ds4-server binds <code>127.0.0.1</code> and checks no key. To use it across machines, put it behind Tailscale or an authenticated reverse proxy. Do not change <code>--host</code> to <code>0.0.0.0</code> and expose an unauthenticated model to the network.</li>
-      <li><strong>The watchdog and leases work on Linux.</strong> <code>ds4-watchdog.sh</code> handles BSD and GNU userlands, including <code>stat -f %m</code> and <code>stat -c %Y</code>, plus <code>LC_ALL=C ps -o lstart</code>. Chapter 7’s lifecycle therefore works directly on a Spark. You can still run <code>./ds4-server</code> by hand, or use a systemd unit or tmux session, if you prefer no automation.</li>
-      <li><strong>The backend differs.</strong> A Spark runs CUDA on GB10 tensor cores, not Metal. pi-ds4 provides the same GGUF, steering arguments, context and KV defaults and lifecycle wrapper. Backend behaviour follows ds4’s Linux build.</li>
-      <li><strong>This letter does not cover long context on a Spark.</strong> pi-ds4 sends <code>--ctx 256000</code> on Mac and Linux, but this letter does not test KV-cache or long-context behaviour on the Spark. If memory is tight, run <code>ds4-server</code> by hand and start with <code>--ctx 32768</code>.</li>
+      <li><strong>The watchdog and leases work on Linux.</strong> <code>ds4-watchdog.sh</code> handles BSD and GNU userlands, including <code>stat -f %m</code> and <code>stat -c %Y</code>, plus <code>LC_ALL=C ps -o lstart</code>. Chapter 7’s lifecycle therefore works on Linux too, for v 0.6.1 or your own binary. You can still run <code>./ds4-server</code> by hand, or use a systemd unit or tmux session, if you prefer no automation.</li>
     </ul>
     <ul lang="zh-TW">
       <li><strong>開放到區網要由你負責。</strong>ds4-server 綁在 <code>127.0.0.1</code>，也不檢查金鑰。跨機器使用時，請放在 Tailscale 或有驗證的 reverse proxy 後面。不要把 <code>--host</code> 改成 <code>0.0.0.0</code>，把沒有驗證的模型直接暴露到網路上。</li>
-      <li><strong>看門狗和租約也能在 Linux 執行。</strong><code>ds4-watchdog.sh</code> 同時處理 BSD 和 GNU 工具，包含 <code>stat -f %m</code> 對應 <code>stat -c %Y</code>，以及 <code>LC_ALL=C ps -o lstart</code>。所以第七章的生命週期可直接用在 Spark。若不想用自動化，也能手動執行 <code>./ds4-server</code>，或用 systemd unit、tmux 視窗。</li>
-      <li><strong>後端不同。</strong>Spark 在 GB10 tensor core 上跑 CUDA，不是 Metal。pi-ds4 仍提供同一份 GGUF、引導參數、context 和 KV 預設值，也提供生命週期包裝。後端行為依 ds4 的 Linux 建置而定。</li>
-      <li><strong>這封信沒有測試 Spark 的長 context。</strong>pi-ds4 在 Mac 和 Linux 都送出 <code>--ctx 256000</code>，但 Spark 的 KV cache 和長 context 行為不在測試範圍內。記憶體吃緊時，請手動執行 <code>ds4-server</code>，並從 <code>--ctx 32768</code> 開始。</li>
+      <li><strong>看門狗和租約也能在 Linux 執行。</strong><code>ds4-watchdog.sh</code> 同時處理 BSD 和 GNU 工具，包含 <code>stat -f %m</code> 對應 <code>stat -c %Y</code>，以及 <code>LC_ALL=C ps -o lstart</code>。所以第七章的生命週期在 Linux 上也能用，適用於 v 0.6.1 或你自備的執行檔。若不想用自動化，也能手動執行 <code>./ds4-server</code>，或用 systemd unit、tmux 視窗。</li>
     </ul>
 
-    <p lang="en-GB">This is not a strained “same GGUF, different runtime” arrangement. Platforms share the same engine, startup shape and wrapper defaults. macOS and Linux use one <code>ds4-watchdog.sh</code>. <code>pi install</code> completes on a DGX Spark as it does on a Mac. You can also run the server by hand on either.</p>
-    <p lang="zh-TW">這不是勉強拼出的「同一份 GGUF，不同執行期」相容方案。各平台用的是同一個引擎、同一種啟動方式和同一組包裝預設值。macOS 和 Linux 共用 <code>ds4-watchdog.sh</code>。<code>pi install</code> 在 DGX Spark 上和在 Mac 上一樣能完成。兩邊也都可以手動啟動伺服器。</p>
+    <p lang="en-GB">Everything but the weights is the same across platforms: one engine, one startup shape, one <code>ds4-watchdog.sh</code>. What v 0.7 changes is the model, and that model needs Metal.</p>
+    <p lang="zh-TW">除了權重，各平台都一樣：同一個引擎、同一種啟動方式、同一份 <code>ds4-watchdog.sh</code>。v 0.7 改變的是模型，而這顆模型需要 Metal。</p>
   </section>
 
   <div class="sep" aria-hidden="true"><svg><use href="#plurality"/></svg></div>
@@ -2901,7 +2932,7 @@ chmod +x download_model.sh
 │   └── dir-steering/
 │       └── out/
 │           └── uncertainty_ablit_imatrix.f32
-├── kv/              <span class="c"># <span lang="en-GB">KV cache (the model’s short-term memory) overflow; the cap depends on your RAM, about 64 GB on 128 GB or more</span><span lang="zh-TW">KV cache（模型的短期記憶）放不下時存這裡，上限看記憶體大小，128 GB 以上約 64 GB</span></span>
+├── kv/              <span class="c"># <span lang="en-GB">KV cache (the model’s short-term memory) overflow; the default cap is about 64 GB on a 128 GB Mac</span><span lang="zh-TW">KV cache（模型的短期記憶）放不下時存這裡，預設上限在 128 GB 的 Mac 約 64 GB</span></span>
 ├── clients/         <span class="c"># <span lang="en-GB">one lease file per pi process (a note saying “I’m still using the server”)</span><span lang="zh-TW">每個 pi 程序一份租約檔（註記「我還在用伺服器」）</span></span>
 │   ├── 51234.json
 │   └── 51789.json
@@ -2913,16 +2944,16 @@ chmod +x download_model.sh
     <h3 id="9.2"><span class="no">9.2</span><span lang="en-GB">Symptoms, and what to do about them</span><span lang="zh-TW">症狀，以及怎麼處理</span></h3>
 
     <h4><span lang="en-GB">“The server has been starting for more than ten minutes”</span><span lang="zh-TW">「伺服器啟動中已經超過十分鐘」</span></h4>
-    <p lang="en-GB">Read the last few hundred lines of <code>log</code>. Loading the model from an internal SSD takes only seconds, so ten minutes is rarely about disk speed. More often the GGUF (the model file) sits on a slow external drive, or another startup step is stuck. Check the log first. Raise <code>DS4_READY_TIMEOUT_MS</code> only if you have a real reason to wait longer.</p>
-    <p lang="zh-TW">先讀 <code>log</code> 的最後幾百行。從內建 SSD 載入模型，只要幾秒鐘，所以等十分鐘通常不是磁碟太慢。比較常見的原因，是 GGUF（模型檔）放在很慢的外接硬碟上，或是啟動的某個步驟卡住了。先看 log 找原因。只有你確定有理由多等一下，才把 <code>DS4_READY_TIMEOUT_MS</code> 調大。</p>
+    <p lang="en-GB">Read the last few hundred lines of <code>log</code>. With the model on an internal SSD, ten minutes is rarely about disk speed. More often the GGUF (the model file) sits on a slow external drive, or another startup step is stuck. Check the log first. Raise <code>DS4_READY_TIMEOUT_MS</code> only if you have a real reason to wait longer.</p>
+    <p lang="zh-TW">先讀 <code>log</code> 的最後幾百行。模型放在內建 SSD 上時，等十分鐘通常不是磁碟太慢。比較常見的原因，是 GGUF（模型檔）放在很慢的外接硬碟上，或是啟動的某個步驟卡住了。先看 log 找原因。只有你確定有理由多等一下，才把 <code>DS4_READY_TIMEOUT_MS</code> 調大。</p>
 
     <h4><span lang="en-GB">“pi says ds4-server startup failed”</span><span lang="zh-TW">「pi 說 ds4-server startup failed」</span></h4>
     <p lang="en-GB">The log names the cause. It’s usually one of three things: <code>make ds4-server</code> failed (missing Xcode command-line tools?), the GGUF download broke (network? disk full?), or the current build rejected a <code>ds4-server</code> flag you added by hand.</p>
     <p lang="zh-TW">log 會寫出失敗的原因，通常是這三種之一：<code>make ds4-server</code> 失敗了（是不是沒裝 Xcode 命令列工具？）、GGUF 下載中斷了（網路斷了？硬碟滿了？），或是你手動加的某個 <code>ds4-server</code> 參數，目前這個版本不接受。</p>
 
     <h4><span lang="en-GB">“<code>/ds4-agent</code> says the server is in use”</span><span lang="zh-TW">「<code>/ds4-agent</code> 說伺服器正在使用中」</span></h4>
-    <p lang="en-GB">This is a safety guard, not a fault. The native agent has to load its own copy of the same 87 GB model. If another pi window or HTTP client is still using <code>ds4-server</code>, the extension says no, so it won’t cut someone off mid-request. Wait for those requests to finish, close the other pi windows, or clear old leases with the gentle restart below. Then try again.</p>
-    <p lang="zh-TW">這是保護機制，不是故障。原生智慧體得自己載入同一個 87 GB 的模型。如果還有別的 pi 視窗或 HTTP 用戶端在用 <code>ds4-server</code>，擴充套件會拒絕，免得把別人的請求切到一半。你可以等那些請求跑完、關掉其他 pi 視窗，或用下面的溫和重啟，清掉過期的租約（lease，也就是「我還在用」的登記檔）。然後再試一次。</p>
+    <p lang="en-GB">This is a safety guard, not a fault. The native agent has to load its own copy of the same model. If another pi window or HTTP client is still using <code>ds4-server</code>, the extension says no, so it won’t cut someone off mid-request. Wait for those requests to finish, close the other pi windows, or clear old leases with the gentle restart below. Then try again.</p>
+    <p lang="zh-TW">這是保護機制，不是故障。原生智慧體得自己載入同一個模型。如果還有別的 pi 視窗或 HTTP 用戶端在用 <code>ds4-server</code>，擴充套件會拒絕，免得把別人的請求切到一半。你可以等那些請求跑完、關掉其他 pi 視窗，或用下面的溫和重啟，清掉過期的租約（lease，也就是「我還在用」的登記檔）。然後再試一次。</p>
 
     <h4><span lang="en-GB">“I want to restart everything”</span><span lang="zh-TW">「我想把一切重啟」</span></h4>
     <p lang="en-GB">Try the gentle way first. Empty <code>~/.pi/ds4/clients/</code>. About two seconds later the watchdog (a small background check that stops the server when nobody is using it) looks again, sees no leases and shuts the server down cleanly.</p>
@@ -3025,8 +3056,8 @@ STATE=~/.pi/ds4/server.json
 
     <div class="aside">
       <span class="label"><span lang="en-GB">Never delete <code>support/gguf/</code></span><span lang="zh-TW">永遠別刪 <code>support/gguf/</code></span></span>
-      <p lang="en-GB">It holds the 87 GB of weights (the model itself), which took hours to download. Unless you are changing the quant (the compression level) or the model, leave it alone. If you delete it by accident, the next start downloads everything again. A download can resume from <code>.part</code> files, but only if those files are still there.</p>
-      <p lang="zh-TW">裡面放的是 87 GB 的權重（模型本體），當初下載了好幾個小時。除非你要換量化（壓縮的程度）或換模型，否則別動它。如果不小心刪掉，下次啟動就得全部重新下載。下載可以接著 <code>.part</code> 檔繼續，但前提是這些 <code>.part</code> 檔還在。</p>
+      <p lang="en-GB">It holds the weights (the model itself, about 341.5 GiB with the vision sidecar), which took hours to download. Unless you are changing the quant (the compression level) or the model, leave it alone. If you delete it by accident, the next start downloads everything again. A download can resume from <code>.part</code> files, but only if those files are still there.</p>
+      <p lang="zh-TW">裡面放的是權重（模型本體，連同視覺附屬檔約 341.5 GiB），當初下載了好幾個小時。除非你要換量化（壓縮的程度）或換模型，否則別動它。如果不小心刪掉，下次啟動就得全部重新下載。下載可以接著 <code>.part</code> 檔繼續，但前提是這些 <code>.part</code> 檔還在。</p>
     </div>
   </section>
 
@@ -3060,12 +3091,12 @@ STATE=~/.pi/ds4/server.json
     <p lang="zh-TW">若 <code>~/.pi/ds4/support</code> 已經指向別的地方，例如上次 <code>pi install</code> 留下來的，腳本不會直接覆蓋。加上 <code>--force</code> 之後，它會：</p>
 
     <ul lang="en-GB">
-      <li>copies <code>gguf/*.gguf</code> and any <code>.gguf.part</code> from the old checkout into the new one using APFS clone-on-write. On macOS no 87 GB really moves, because the two paths share the same blocks;</li>
+      <li>copies <code>gguf/*.gguf</code> and any <code>.gguf.part</code> from the old checkout into the new one using APFS clone-on-write. On macOS no 341.5 GiB really moves, because the two paths share the same blocks;</li>
       <li>renames the old support directory to <code>support.backup.&lt;timestamp&gt;</code>;</li>
       <li>creates the new symlink.</li>
     </ul>
     <ul lang="zh-TW">
-      <li>用 APFS 的 clone-on-write（複製時不真的複製資料），把舊 checkout 裡的 <code>gguf/*.gguf</code> 和 <code>.gguf.part</code> 複製到新的 checkout。在 macOS 上，87 GB 不會真的搬動，兩個路徑共用同一批資料區塊；</li>
+      <li>用 APFS 的 clone-on-write（複製時不真的複製資料），把舊 checkout 裡的 <code>gguf/*.gguf</code> 和 <code>.gguf.part</code> 複製到新的 checkout。在 macOS 上，341.5 GiB 不會真的搬動，兩個路徑共用同一批資料區塊；</li>
       <li>把舊的 support 目錄改名為 <code>support.backup.&lt;timestamp&gt;</code>；</li>
       <li>建立新的 symlink。</li>
     </ul>
@@ -3089,6 +3120,9 @@ STATE=~/.pi/ds4/server.json
     <p class="lead" lang="zh-TW">
       這一章假設你已經讀完前面的內容，要問的是另一個問題。內附的向量（一串指向某個方向的數字）代表一種偏好：有爭議的問題，應該展開成討論。你想要的可能不一樣，例如某種語氣、某個學科，或某種留餘地的說法。建出內附方向的那套工具就在 checkout 裡，也能拿來建你自己的。
     </p>
+
+    <p lang="en-GB">A V4.1 direction is one f32 vector per layer at V4.1’s own width, 40 × 5120. The bundled V4 vectors (43 × 4096) cannot be reused, so for v 0.7 everything below starts from your own prompts.</p>
+    <p lang="zh-TW">V4.1 的方向，是每一層一個 f32 向量，寬度是 V4.1 自己的 40 × 5120。內附的 V4 向量（43 × 4096）不能沿用，所以在 v 0.7 裡，下面的一切都要從你自己的提示開始。</p>
 
     <h3 id="11.1"><span class="no">11.1</span><span lang="en-GB">Where the toolchain lives</span><span lang="zh-TW">工具鏈在哪裡</span></h3>
 
@@ -3184,10 +3218,10 @@ STATE=~/.pi/ds4/server.json
           <p lang="zh-TW"><strong>輸出的主權。</strong>你和模型之間，沒有那一層「我們無法協助這個請求」。碰到領土、主權或哲學這類問題，你可以打開不確定性引導（<a href="#steering">第四章</a>）。它會把背好的標準答案，變成攤開來的討論。</p>
           <p lang="en-GB"><strong>Sovereignty over data.</strong> Your conversations stay on the machine. They don't become anyone's training data.</p>
           <p lang="zh-TW"><strong>資料的主權。</strong>對話不會離開這台機器，也不會變成任何人的訓練資料。</p>
-          <p lang="en-GB"><strong>Cost.</strong> There's no per-token price, no rate limit and no subscription. You pay for the machine itself (a Mac with 96 GB or more) and for electricity.</p>
-          <p lang="zh-TW"><strong>成本。</strong>沒有按 token 計價（token 是模型讀寫文字的最小單位），沒有速率限制，也沒有訂閱費。你付的是機器本身（96 GB 以上的 Mac）和電費。</p>
-          <p lang="en-GB"><strong>Capability.</strong> The model has 284 B parameters, but only 13 B of them work on each token. That design is called MoE (mixture of experts). Models of this size are among today's best open-weight ones. The IQ2XXS imatrix quantisation (a way of shrinking the weights so they fit in memory) loses a little ground to an unshrunk cloud version on some tasks. Conversation quality stays well within "a daily companion for coding and writing".</p>
-          <p lang="zh-TW"><strong>能力。</strong>模型有 2,840 億個參數，但每個 token 只動用其中 130 億個。這種設計叫 MoE（混合專家）。這個量級，在目前開放權重的模型裡，算最前面那一群。IQ2XXS imatrix 量化（把權重壓小，好塞進記憶體）在某些任務上，會輸給沒壓縮的雲端版本。不過聊天品質仍然夠用，當作每天寫程式、寫文章的夥伴沒問題。</p>
+          <p lang="en-GB"><strong>Cost.</strong> There's no per-token price, no rate limit and no subscription. You pay for the machine itself (a Mac with 128 GB) and for electricity.</p>
+          <p lang="zh-TW"><strong>成本。</strong>沒有按 token 計價（token 是模型讀寫文字的最小單位），沒有速率限制，也沒有訂閱費。你付的是機器本身（128 GB 的 Mac）和電費。</p>
+          <p lang="en-GB"><strong>Capability.</strong> The model is a Mixture-of-Experts with 384 routed experts and one shared expert, and 6 routed experts work on each token. That design is called MoE (mixture of experts). The Q1 quantisation (a way of shrinking the weights so they fit in memory) is a compromise. No official-continuation quality score has been run for it yet, so expect it to lose ground to larger quants and to unshrunk cloud versions. Whether it is good enough as a daily companion for coding and writing is something to judge on your own tasks.</p>
+          <p lang="zh-TW"><strong>能力。</strong>模型是 Mixture-of-Experts，有 384 個路由專家加一個共用專家，每個 token 由其中 6 個路由專家處理。這種設計叫 MoE（混合專家）。Q1 量化（把權重壓小，好塞進記憶體）是一種折衷。它還沒有跑過官方續寫品質分數，所以預期它會輸給更大的量化版，也會輸給沒壓縮的雲端版本。夠不夠當每天寫程式、寫文章的夥伴，請用你自己的工作來判斷。</p>
         </div>
       </div>
 
@@ -3214,20 +3248,22 @@ STATE=~/.pi/ds4/server.json
       </div>
 
       <div>
-        <div class="q"><span lang="en-GB">I don’t have a 96 GB Mac. What are my options?</span><span lang="zh-TW">我沒有 96 GB 的 Mac，有什麼選擇？</span></div>
+        <div class="q"><span lang="en-GB">I don’t have a 128 GB Mac. What are my options?</span><span lang="zh-TW">我沒有 128 GB 的 Mac，有什麼選擇？</span></div>
         <div class="a">
           <ul lang="en-GB">
-            <li><strong>A smaller model, locally.</strong> <code>llama.cpp</code>, MLX or Ollama can run smaller open-weight models, such as the Llama, Mistral, Qwen and Gemma families. A 64 GB Mac can handle the 70 B class. The ds4 engine itself is built only for DeepSeek V4 Flash.</li>
+            <li><strong>Stay on v 0.6.1.</strong> It runs the V4 Vision-Exp IQ2 build on a 96 GB Mac, and on a Linux CUDA or ROCm host.</li>
+            <li><strong>A smaller model, locally.</strong> <code>llama.cpp</code>, MLX or Ollama can run smaller open-weight models, such as the Llama, Mistral, Qwen and Gemma families. A 64 GB Mac can handle the 70 B class. The ds4 engine itself is not a general runner for other models.</li>
             <li><strong>A rented Mac.</strong> MacStadium and Scaleway, among others, rent out M-series machines by the hour.</li>
             <li><strong>DeepSeek’s own API.</strong> You get full capability and pay per token. There's no directional steering.</li>
           </ul>
           <ul lang="zh-TW">
-            <li><strong>在本機跑小一點的模型。</strong><code>llama.cpp</code>、MLX 或 Ollama 可以跑比較小的開放權重模型，例如 Llama、Mistral、Qwen、Gemma 這幾個系列。64 GB 的 Mac 跑得動 70 B 這個量級。ds4 引擎本身只為 DeepSeek V4 Flash 而寫。</li>
+            <li><strong>留在 v 0.6.1。</strong>它在 96 GB 的 Mac，以及 Linux 的 CUDA 或 ROCm 主機上，跑 V4 Vision-Exp IQ2 版。</li>
+            <li><strong>在本機跑小一點的模型。</strong><code>llama.cpp</code>、MLX 或 Ollama 可以跑比較小的開放權重模型，例如 Llama、Mistral、Qwen、Gemma 這幾個系列。64 GB 的 Mac 跑得動 70 B 這個量級。ds4 引擎本身不是通用的模型執行器。</li>
             <li><strong>租一台 Mac。</strong>MacStadium、Scaleway 等服務，都有按小時計費的 M 系列機器。</li>
             <li><strong>用 DeepSeek 官方 API。</strong>能力完整，按 token 計費。沒有方向性引導。</li>
           </ul>
-          <p lang="en-GB">The uncertainty steering in this fork was built for this particular abliterated GGUF (a single-file model with its habit of refusing removed). Its measured sweet spot is <code>ffn=-0.75, attn=0</code> on the tool path. That may not carry over to another model. To use the same method elsewhere, you rebuild the vector (<a href="#advanced">Chapter 11</a>).</p>
-          <p lang="zh-TW">這個分叉的不確定性引導，是針對這份 abliterated GGUF（拿掉「拒絕回答」習慣的單檔模型）調出來的。實測的甜蜜點，在工具路徑上是 <code>ffn=-0.75, attn=0</code>。換成別的模型，不一定適用。想在別處用同樣的方法，得重新做一個向量（<a href="#advanced">第十一章</a>）。</p>
+          <p lang="en-GB">The uncertainty steering in this fork was built and measured on the V4 abliterated weights. Its sweet spot there was <code>ffn=-0.75, attn=0</code> on the tool path. That does not carry over to V4.1 or another model. To use the same method elsewhere, you rebuild the vector (<a href="#advanced">Chapter 11</a>).</p>
+          <p lang="zh-TW">這個分叉的不確定性引導，是在 V4 的 abliterated 權重上建立並實測的。當時在工具路徑上的甜蜜點是 <code>ffn=-0.75, attn=0</code>。這不會自動套用到 V4.1 或別的模型。想在別處用同樣的方法，得重新做一個向量（<a href="#advanced">第十一章</a>）。</p>
         </div>
       </div>
 
@@ -3244,8 +3280,8 @@ STATE=~/.pi/ds4/server.json
         <div class="a">
           <p lang="en-GB">No. A jailbreak is a prompt that talks a cloud model past its policy layer. It gets around the rules on the input side. Abliteration edits the weights themselves, so it's a change on the model side. Directional steering is a third thing: a small edit to the model's internal signals (its activations) while it runs. Three layers, three mechanisms.</p>
           <p lang="zh-TW">不是。越獄是用提示詞，說服雲端模型繞過它的政策層，從輸入端下手。Abliteration 是直接改權重，從模型本身下手。方向性引導又是第三種：模型執行時，輕輕改動它內部的訊號（激活值）。三個層次，三種做法。</p>
-          <p lang="en-GB">To see untouched DeepSeek V4 Flash, use the stock-recipe GGUF from upstream antirez/ds4. To see this fork's weights without steering, leave <code>DS4_DIR_STEERING_FFN</code> and <code>DS4_DIR_STEERING_ATTN</code> unset. If you'd switched them on, set both to <code>0</code>.</p>
-          <p lang="zh-TW">想用原封不動的 DeepSeek V4 Flash，請用上游 antirez/ds4 的原版配方 GGUF。想用這個分叉的權重，但不要引導，就不要設定 <code>DS4_DIR_STEERING_FFN</code> 和 <code>DS4_DIR_STEERING_ATTN</code>。如果之前開過，就把兩個都設成 <code>0</code>。</p>
+          <p lang="en-GB">To see an untouched model, use an unmodified GGUF of DeepSeek V4.1 Flash. To see this fork's weights without steering, leave <code>DS4_DIR_STEERING_FFN</code> and <code>DS4_DIR_STEERING_ATTN</code> unset. If you'd switched them on, set both to <code>0</code>.</p>
+          <p lang="zh-TW">想用原封不動的模型，請用 DeepSeek V4.1 Flash 沒改過的 GGUF。想用這個分叉的權重，但不要引導，就不要設定 <code>DS4_DIR_STEERING_FFN</code> 和 <code>DS4_DIR_STEERING_ATTN</code>。如果之前開過，就把兩個都設成 <code>0</code>。</p>
         </div>
       </div>
 
@@ -3260,16 +3296,16 @@ STATE=~/.pi/ds4/server.json
       <div>
         <div class="q"><span lang="en-GB">Can I use it commercially?</span><span lang="zh-TW">可以商業使用嗎？</span></div>
         <div class="a">
-          <p lang="en-GB">Yes. The whole chain is MIT-licensed. Use it as you like. If you <em>redistribute</em> any part, each component keeps its own licence notice. If you only use it and never redistribute, the table below doesn't concern you.</p>
-          <p lang="zh-TW">可以。整條鏈路都採 MIT 授權。自己用，隨你。要<em>再散布</em>（轉給別人）時，每個元件都要附上自己的授權聲明。如果你只是使用，不轉發，下面的表就跟你無關。</p>
+          <p lang="en-GB">The code is MIT-licensed, and the weights carry the licences of their sources, so read each model card before you rely on a commercial use. Use it as you like. If you <em>redistribute</em> any part, each component keeps its own licence notice. If you only use it and never redistribute, the table below doesn't concern you.</p>
+          <p lang="zh-TW">程式碼採 MIT 授權，權重則帶著各自來源的授權，商業使用之前請先讀各個模型卡。自己用，隨你。要<em>再散布</em>（轉給別人）時，每個元件都要附上自己的授權聲明。如果你只是使用，不轉發，下面的表就跟你無關。</p>
           <div class="scroll-x">
           <table class="lic" lang="en-GB">
             <thead><tr><th>Component</th><th>Licence</th><th>On redistribution</th></tr></thead>
             <tbody>
               <tr><td><a href="https://github.com/audreyt/pi-ds4">audreyt/pi-ds4</a><small>this extension</small></td><td>MIT</td><td>its <code>LICENSE</code></td></tr>
               <tr><td><a href="https://github.com/audreyt/ds4">audreyt/ds4</a> / <a href="https://github.com/antirez/ds4">antirez/ds4</a><small>the inference engine</small></td><td>MIT</td><td>its <code>LICENSE</code>, antirez as original copyright holder</td></tr>
-              <tr><td><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash">DeepSeek-V4-Flash</a><small>the upstream checkpoint</small></td><td>MIT</td><td>the model card’s licence, DeepSeek as copyright holder</td></tr>
-              <tr><td><a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp GGUF</a><small>the weights this letter downloads</small></td><td>MIT, inherited</td><td>that repo’s licence plus a “derivative of DeepSeek-V4-Flash” notice</td></tr>
+              <tr><td>DeepSeek V4.1 Flash<small>the upstream checkpoint</small></td><td>see its model card</td><td>the model card’s licence, DeepSeek as copyright holder</td></tr>
+              <tr><td><a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">V4.1 Q1 GGUF</a><small>the weights this letter downloads</small></td><td>see that repo</td><td>that repo’s licence, plus the terms of the upstream checkpoint and of the Unsloth tensors it contains</td></tr>
               <tr><td><strong>This letter</strong><small>the index.html you are reading</small></td><td>CC0</td><td>nothing at all</td></tr>
             </tbody>
           </table>
@@ -3278,8 +3314,8 @@ STATE=~/.pi/ds4/server.json
             <tbody>
               <tr><td><a href="https://github.com/audreyt/pi-ds4">audreyt/pi-ds4</a><small>本擴充套件</small></td><td>MIT</td><td>附它的 <code>LICENSE</code></td></tr>
               <tr><td><a href="https://github.com/audreyt/ds4">audreyt/ds4</a>、<a href="https://github.com/antirez/ds4">antirez/ds4</a><small>推論引擎</small></td><td>MIT</td><td>附它的 <code>LICENSE</code>，antirez 為原始版權人</td></tr>
-              <tr><td><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash">DeepSeek-V4-Flash</a><small>上游的模型 checkpoint</small></td><td>MIT</td><td>附模型卡的授權，DeepSeek 為版權人</td></tr>
-              <tr><td><a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp GGUF</a><small>這封信下載的權重</small></td><td>MIT，繼承</td><td>附該 repo 的授權，加一句「derivative of DeepSeek-V4-Flash」的標示</td></tr>
+              <tr><td>DeepSeek V4.1 Flash<small>上游的模型 checkpoint</small></td><td>見其模型卡</td><td>附模型卡的授權，DeepSeek 為版權人</td></tr>
+              <tr><td><a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">V4.1 Q1 GGUF</a><small>這封信下載的權重</small></td><td>見該 repo</td><td>附該 repo 的授權，並附上上游 checkpoint 與其中 Unsloth 張量的條款</td></tr>
               <tr><td><strong>這封信</strong><small>你正在讀的這份 index.html</small></td><td>CC0</td><td>什麼都不必附</td></tr>
             </tbody>
           </table>
@@ -3313,23 +3349,48 @@ STATE=~/.pi/ds4/server.json
     <dl class="gloss">
       <div>
         <dt>parameter<small>參數</small></dt>
-        <dd lang="en-GB">A number inside a neural network that gets adjusted during training. More parameters roughly means the model can hold more. The DeepSeek V4 Flash in this letter has 284 billion of them.</dd>
-        <dd lang="zh-TW">神經網路裡的一個數字，訓練時會不斷調整它。參數越多，大致上模型能裝的東西越多。這封信裡的 DeepSeek V4 Flash 有 2,840 億個。</dd>
+        <dd lang="en-GB">A number inside a neural network that gets adjusted during training. More parameters roughly means the model can hold more. This letter quotes no total for V4.1 Flash, as no verified figure exists.</dd>
+        <dd lang="zh-TW">神經網路裡的一個數字，訓練時會不斷調整它。參數越多，大致上模型能裝的東西越多。這封信沒有引用 V4.1 Flash 的總數，因為沒有可靠的數字。</dd>
       </div>
       <div>
         <dt>MoE<small>混合專家</small></dt>
-        <dd lang="en-GB">Mixture of Experts. The model is split into many small expert networks, but each token wakes only a few, about 13 billion parameters here. It runs at the speed of a 13 B model while carrying the knowledge of a 284 B one.</dd>
-        <dd lang="zh-TW">Mixture of Experts。模型分成許多小型專家網路，每個 token（模型讀寫文字的單位）只會喚醒其中幾個，這裡約為 130 億個參數。它跑起來像 13 B 模型，卻裝著 284 B 模型的知識。</dd>
+        <dd lang="en-GB">Mixture of Experts. The model is split into many small expert networks, but each token wakes only a few, here 6 of 384 routed experts plus one shared expert. It does the arithmetic of a much smaller model while carrying the knowledge of a large one.</dd>
+        <dd lang="zh-TW">Mixture of Experts。模型分成許多小型專家網路，每個 token（模型讀寫文字的單位）只會喚醒其中幾個，這裡是 384 個路由專家中的 6 個，外加一個共用專家。它做的運算像一顆小得多的模型，卻裝著大模型的知識。</dd>
       </div>
       <div>
         <dt>quantization<small>量化</small></dt>
-        <dd lang="en-GB">Quantization squeezes weights into fewer bits so the model takes less space. Vision-Exp IQ2 mixes formats: routed experts (the specialist parts chosen for each token) are mostly IQ2_XXS and Q2_K, attention, shared-expert and output paths stay at Q8_0, and a few indexer and control tensors (number arrays that organise or direct the model) stay at F16, F32 or I32. The language GGUF is 86720111776 bytes, plus an 889 MiB encoder.</dd>
-        <dd lang="zh-TW">量化把權重壓成較少的位元，讓模型佔用更少空間。Vision-Exp IQ2 混用多種格式：路由專家（每個 token 選出的專門部分）多為 IQ2_XXS 與 Q2_K，注意力層、共用專家和輸出路徑保留 Q8_0，少數 indexer 與 control tensor（整理或控制模型的數字陣列）維持 F16、F32 或 I32。語言 GGUF 共 86720111776 位元組，另有 889 MiB 的編碼器。</dd>
+        <dd lang="en-GB">Quantization squeezes weights into fewer bits so the model takes less space. The V4.1 Q1 mixes formats: routed experts (the specialist parts chosen for each token) are IQ1_S, the dense path is mostly Q6_K and Q5_K, and the attention output projections stay at Q8_0. The language GGUF is 365713686528 bytes, plus a 970555552-byte vision sidecar.</dd>
+        <dd lang="zh-TW">量化把權重壓成較少的位元，讓模型佔用更少空間。V4.1 Q1 混用多種格式：路由專家（每個 token 選出的專門部分）是 IQ1_S，稠密路徑多為 Q6_K 與 Q5_K，注意力的輸出投影保留 Q8_0。語言 GGUF 共 365713686528 位元組，另有 970555552 位元組的視覺附屬檔。</dd>
       </div>
       <div>
         <dt>GGUF<small>模型檔格式</small></dt>
-        <dd lang="en-GB">The single-file model format of the llama.cpp family (<code>.gguf</code>). The weights, the model's structure and its tokenizer (the part that cuts text into tokens) all sit in one file. The language GGUF here is 86720111776 bytes.</dd>
-        <dd lang="zh-TW">llama.cpp 這一系列工具用的單檔模型格式（<code>.gguf</code>）。權重、模型結構和 tokenizer（把文字切成 token 的部分），都放在同一個檔案裡。這裡的語言 GGUF 是 86720111776 位元組。</dd>
+        <dd lang="en-GB">The single-file model format of the llama.cpp family (<code>.gguf</code>). The weights, the model's structure and its tokenizer (the part that cuts text into tokens) all sit in one file. The language GGUF here is 365713686528 bytes.</dd>
+        <dd lang="zh-TW">llama.cpp 這一系列工具用的單檔模型格式（<code>.gguf</code>）。權重、模型結構和 tokenizer（把文字切成 token 的部分），都放在同一個檔案裡。這裡的語言 GGUF 是 365713686528 位元組。</dd>
+      </div>
+      <div>
+        <dt>Engram tables<small>Engram 查找表</small></dt>
+        <dd lang="en-GB">Lookup tables that V4.1 adds next to its experts. The model reads only a few rows of them per token, so ds4 leaves them on disk: about 189 GiB in two tables. An internal SSD matters for that reason (<a href="#3.1">§3.1</a>).</dd>
+        <dd lang="zh-TW">V4.1 在專家旁邊多出來的查找表。模型每個 token 只讀其中幾列，所以 ds4 把它們留在硬碟上：兩張共約 189 GiB。內建 SSD 因此很重要（<a href="#3.1">§3.1</a>）。</dd>
+      </div>
+      <div>
+        <dt>IQ1_S<small>IQ1_S 格式</small></dt>
+        <dd lang="en-GB">A very low-bit quantisation format, used here for the routed experts. ds4 runs it on Metal since the d3f4cd6 pin (<a href="#3.3">§3.3</a>).</dd>
+        <dd lang="zh-TW">非常低位元的量化格式，這裡用在路由專家上。從 d3f4cd6 這個釘版起，ds4 在 Metal 上能跑它（<a href="#3.3">§3.3</a>）。</dd>
+      </div>
+      <div>
+        <dt>Unsloth<small>Unsloth</small></dt>
+        <dd lang="en-GB">The team whose published quantisations supply most of this Q1: the routed experts (UD-IQ1_S), the imatrix used for the requantised ones, and nine dense roles (<a href="#3.3">§3.3</a>).</dd>
+        <dd lang="zh-TW">他們發布的量化版，提供了這個 Q1 的大部分內容：路由專家（UD-IQ1_S）、重新量化時用的 imatrix，以及九個稠密角色（<a href="#3.3">§3.3</a>）。</dd>
+      </div>
+      <div>
+        <dt>imatrix<small>重要性矩陣</small></dt>
+        <dd lang="en-GB">A calibration file recording which weights matter most for the model’s output. The quantiser spends its bits there first. The 32 requantised experts used Unsloth’s imatrix.</dd>
+        <dd lang="zh-TW">一份校準檔，記錄哪些權重對模型的輸出最重要。量化器會先把位元花在那些地方。重新量化的 32 個專家，用的是 Unsloth 的 imatrix。</dd>
+      </div>
+      <div>
+        <dt>vision sidecar<small>視覺附屬檔</small></dt>
+        <dd lang="en-GB">A companion file that carries the part of the model that reads images, kept apart from the language weights (<a href="#3.4">§3.4</a>).</dd>
+        <dd lang="zh-TW">帶著讀圖片那一部分模型的配套檔案，和語言權重分開存放（<a href="#3.4">§3.4</a>）。</dd>
       </div>
       <div>
         <dt>abliteration<small>拒絕方向消除</small></dt>
@@ -3352,13 +3413,13 @@ STATE=~/.pi/ds4/server.json
       </div>
       <div>
         <dt>context window<small>上下文視窗</small></dt>
-        <dd lang="en-GB">How many tokens the model can see at once. This extension asks for 100,000, about a novella. But the abliterated weights haven't been validated beyond 32k, so treat anything above that as experimental (<a href="#6.4">§6.4</a>).</dd>
-        <dd lang="zh-TW">模型一次能看到多少 token。本擴充套件要求 100,000，大約是一本中篇小說。但 abliterated 權重在 32k 以上沒有驗證過，超過的部分請當作實驗（<a href="#6.4">§6.4</a>）。</dd>
+        <dd lang="en-GB">How many tokens the model can see at once. The official window is 1M. This extension opens 256k by default, and a 128 GB Mac refuses 512k and above (<a href="#6.4">§6.4</a>). The abliterated weights haven’t been validated beyond 32k, so treat anything above that as experimental.</dd>
+        <dd lang="zh-TW">模型一次能看到多少 token。官方的視窗是 1M。這個擴充套件預設開 256k，128 GB 的 Mac 會拒絕 512k 以上（<a href="#6.4">§6.4</a>）。abliterated 權重在 32k 以上沒有驗證過，超過的部分請當作實驗。</dd>
       </div>
       <div>
         <dt>KV cache<small>鍵值快取</small></dt>
-        <dd lang="en-GB">The model's short-term memory during inference, which saves intermediate results so earlier tokens do not need recomputing. Long conversations create a lot of it, and this extension lets it spill onto disk. When <code>DS4_KV_DISK_SPACE_MB</code> is unset, the size depends on your RAM, about 64 GB on a 128 GB machine.</dd>
-        <dd lang="zh-TW">模型在推論時使用的短期記憶，會存下中間結果，讓先前的 token 不必重算。長對話會累積很多，本擴充套件允許它溢出到硬碟。<code>DS4_KV_DISK_SPACE_MB</code> 沒設定時，大小依 RAM 分級，128 GB 的機器約 64 GB。</dd>
+        <dd lang="en-GB">The model's short-term memory during inference, which saves intermediate results so earlier tokens do not need recomputing. Long conversations create a lot of it, and this extension lets it spill onto disk. When <code>DS4_KV_DISK_SPACE_MB</code> is unset, it is about 64 GB on a 128 GB Mac.</dd>
+        <dd lang="zh-TW">模型在推論時使用的短期記憶，會存下中間結果，讓先前的 token 不必重算。長對話會累積很多，本擴充套件允許它溢出到硬碟。<code>DS4_KV_DISK_SPACE_MB</code> 沒設定時，128 GB 的 Mac 約 64 GB。</dd>
       </div>
       <div>
         <dt>unified memory<small>統一記憶體</small></dt>
@@ -3377,8 +3438,8 @@ STATE=~/.pi/ds4/server.json
       </div>
       <div>
         <dt>speculative decoding / DSpark<small>推測解碼</small></dt>
-        <dd lang="en-GB">A small draft head guesses a block of tokens ahead, and the full model checks them before keeping any. ds4 turns it on with <code>--mtp DSpark.gguf</code> (experimental). This fork adds B2 rejection sampling, so the output is statistically identical to plain decoding, with nothing lost.</dd>
-        <dd lang="zh-TW">先由一個小的草稿頭一次猜一整段 token，完整模型檢查過才採用。ds4 用 <code>--mtp DSpark.gguf</code> 開啟（實驗性）。這個分叉加了 B2 rejection sampling，輸出的機率分佈和不開推測時完全一樣，沒有任何損失。</dd>
+        <dd lang="en-GB">A small draft head guesses a block of tokens ahead, and the full model checks them before keeping any. ds4 turns it on with <code>--mtp DSpark.gguf</code> (experimental). This fork adds B2 rejection sampling, so the output is statistically identical to plain decoding, with nothing lost. The V4.1 Q1 does not use it: the drafter does not fit beside it on 128 GB.</dd>
+        <dd lang="zh-TW">先由一個小的草稿頭一次猜一整段 token，完整模型檢查過才採用。ds4 用 <code>--mtp DSpark.gguf</code> 開啟（實驗性）。這個分叉加了 B2 rejection sampling，輸出的機率分佈和不開推測時完全一樣，沒有任何損失。V4.1 Q1 不用它：128 GB 裡，草稿頭放不進它旁邊。</dd>
       </div>
     </dl>
 
@@ -3391,13 +3452,13 @@ STATE=~/.pi/ds4/server.json
       </div>
       <div>
         <dt>FFN / attention<small>前饋／注意力</small></dt>
-        <dd lang="en-GB">The two main blocks of computation inside each Transformer layer. This fork's recommended setting steers only the FFN output (<code>ffn=-0.75</code>) and leaves attention alone (<code>attn=0</code>), so the syntax of tool calls isn't disturbed.</dd>
-        <dd lang="zh-TW">Transformer 每一層裡兩個主要的運算區塊。這個分叉建議的開啟方式，只引導 FFN 的輸出（<code>ffn=-0.75</code>），不動注意力層（<code>attn=0</code>），這樣工具呼叫的格式就不會被干擾。</dd>
+        <dd lang="en-GB">The two main blocks of computation inside each Transformer layer. This fork’s V4 setting steers only the FFN output (<code>ffn=-0.75</code>) and leaves attention alone (<code>attn=0</code>), so the syntax of tool calls isn't disturbed.</dd>
+        <dd lang="zh-TW">Transformer 每一層裡兩個主要的運算區塊。這個分叉在 V4 上的開啟方式，只引導 FFN 的輸出（<code>ffn=-0.75</code>），不動注意力層（<code>attn=0</code>），這樣工具呼叫的格式就不會被干擾。</dd>
       </div>
       <div>
         <dt>uncertainty direction<small>不確定性方向</small></dt>
-        <dd lang="en-GB">The vector shipped with this fork. It was built from 120 contested prompts, half English and half Traditional Chinese, with Taiwan and Hong Kong deliberately left out. It contrasts fairly laying out each side's stake with giving a single answer.</dd>
-        <dd lang="zh-TW">這個分叉附的向量，用 120 條有爭議的提示建成，英文和繁體中文各一半，刻意不放台灣與香港。它對比兩種回答框架：公平呈現各方利害關係，或直接給單一答案。</dd>
+        <dd lang="en-GB">The vector shipped with this fork. It was built from 120 contested prompts, half English and half Traditional Chinese, with Taiwan and Hong Kong deliberately left out. It contrasts fairly laying out each side's stake with giving a single answer. It was built for V4, and V4.1 needs its own.</dd>
+        <dd lang="zh-TW">這個分叉附的向量，用 120 條有爭議的提示建成，英文和繁體中文各一半，刻意不放台灣與香港。它對比兩種回答框架：公平呈現各方利害關係，或直接給單一答案。它是為 V4 建的，V4.1 需要自己的方向。</dd>
       </div>
       <div>
         <dt>response register<small>回應語體</small></dt>
@@ -3454,13 +3515,17 @@ STATE=~/.pi/ds4/server.json
       <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong>, the upstream this extension is forked from. Armin Ronacher wrote the whole lifecycle: the leases, the watchdog, the lock. He wrote it so that people could read it.</li>
       <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>, Salvatore Sanfilippo's DeepSeek V4 Flash engine, written in plain C in the same spirit as Redis. The GGUF conversion comes from its sibling project, <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>.</li>
       <li><strong>The ds4 runtime and backend contributors.</strong> SSD streaming, distributed inference and the ROCm integration were led by antirez. Others: elkaix (server observability and the agent-loop cache, PR #489), MA (DSpark B2 rejection sampling), Nick Parrin (Strix Halo), Andrea Borio (mixed-quant expert streaming), rinaldofesta (the eval grader), kamranjon and fry69 (agent fixes), Andreas Spannagel (the MTP verify fix) and ivanfioravanti (M5 Metal 4 / MPP). pi-ds4 builds on that runtime and doesn't tell a tuning story of its own.</li>
-      <li><strong>The cyberneurova research project</strong>, whose abliterated GGUF first made running this model at home a real option.</li>
+      <li><strong><a href="https://huggingface.co/unsloth">Unsloth</a></strong>, whose UD-IQ1_S quantisation, dense tensors and imatrix make up most of this Q1.</li>
+      <li><strong><a href="https://github.com/kernelpool/ds4">kernelpool/ds4</a> and Ivan Fioravanti</strong>, whose V4.1 Metal work is merged into the pinned engine.</li>
+      <li><strong>The cyberneurova research project</strong>, whose abliterated GGUF first made running DeepSeek V4 Flash at home a real option.</li>
     </ul>
     <ul lang="zh-TW">
       <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong>，本擴充套件分叉自它。Armin Ronacher 寫了整套生命週期管理，包括租約、看門狗和鎖，而且寫得讓人讀得懂。</li>
       <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>，Salvatore Sanfilippo 用純 C 寫的 DeepSeek V4 Flash 引擎，和他寫 Redis 時一脈相承。GGUF 的轉換來自它的姊妹專案 <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>。</li>
       <li><strong>ds4 執行期與後端的貢獻者。</strong>SSD 串流、分散式推論和 ROCm 整合，由 antirez 主導。其他貢獻者有：elkaix（伺服器可觀測性與智慧體迴圈快取，PR #489）、MA（DSpark B2 rejection sampling）、Nick Parrin（Strix Halo）、Andrea Borio（混合量化的專家串流）、rinaldofesta（評測評分器）、kamranjon 與 fry69（智慧體修正）、Andreas Spannagel（MTP 驗證修正）、ivanfioravanti（M5 Metal 4／MPP）。pi-ds4 站在這個執行期之上，沒有另外講一套自己的調校故事。</li>
-      <li><strong>cyberneurova 研究專案</strong>，他們發布的 abliterated GGUF，第一次讓在家跑這顆模型成為可行的選擇。</li>
+      <li><strong><a href="https://huggingface.co/unsloth">Unsloth</a></strong>，他們的 UD-IQ1_S 量化、稠密張量和 imatrix，構成了這個 Q1 的大部分。</li>
+      <li><strong><a href="https://github.com/kernelpool/ds4">kernelpool/ds4</a> 與 Ivan Fioravanti</strong>，他們的 V4.1 Metal 工作已合併進固定版本的引擎。</li>
+      <li><strong>cyberneurova 研究專案</strong>，他們發布的 abliterated GGUF，第一次讓在家跑 DeepSeek V4 Flash 成為可行的選擇。</li>
     </ul>
 
     <h3 id="licence"><span lang="en-GB">Licence</span><span lang="zh-TW">授權</span></h3>
@@ -3480,10 +3545,10 @@ STATE=~/.pi/ds4/server.json
     <h3 id="afterword"><span lang="en-GB">Afterword</span><span lang="zh-TW">後話</span></h3>
 
     <p lang="en-GB">
-      Running a frontier model on your own machine is, technically, just moving some computation to a new place. Politically, it means taking the steering wheel back. This fork ships <em>uncertainty steering</em> as something you can switch on. It isn't there to decide any question for you. It gives back room for discussion on questions that training has sealed shut. And it's a choice, not a default, for the same reason the managed launch passes nothing you didn't ask for: a nudge you chose is a nudge you can name, measure and remove.
+      Running a frontier model on your own machine is, technically, just moving some computation to a new place. Politically, it means taking the steering wheel back. This fork ships <em>uncertainty steering</em> as something you can switch on (on V4 today, as V4.1 still needs a direction of its own). It isn't there to decide any question for you. It gives back room for discussion on questions that training has sealed shut. And it's a choice, not a default, for the same reason the managed launch passes nothing you didn't ask for: a nudge you chose is a nudge you can name, measure and remove.
     </p>
     <p lang="zh-TW">
-      把最前沿的模型放在自己的機器上跑，技術上只是把一段運算搬了個地方。政治上，是把方向盤拿回自己手裡。這個分叉把<em>不確定性引導</em>做成可以打開的選項。它不替你決定任何問題的答案，只是在那些被訓練封死的問題面前，把討論的空間還給你。它是選項，不是預設，道理和代管啟動不傳任何你沒要求的參數一樣：你自己選的推力，你說得出名字、量得出大小，也拿得掉。
+      把最前沿的模型放在自己的機器上跑，技術上只是把一段運算搬了個地方。政治上，是把方向盤拿回自己手裡。這個分叉把<em>不確定性引導</em>做成可以打開的選項（目前在 V4 上，V4.1 還需要自己的方向）。它不替你決定任何問題的答案，只是在那些被訓練封死的問題面前，把討論的空間還給你。它是選項，不是預設，道理和代管啟動不傳任何你沒要求的參數一樣：你自己選的推力，你說得出名字、量得出大小，也拿得掉。
     </p>
 
     <p class="pull q" lang="en-GB">A model can close a question on an answer. The user can open it back into a discussion. This guide has done its job when you no longer need it.</p>
@@ -3492,7 +3557,7 @@ STATE=~/.pi/ds4/server.json
     <div class="signoff">
       <div class="hand">
         <span lang="en-GB">With care,<br>Audrey Tang</span><span lang="zh-TW">敬祝 自由<br>唐鳳</span>
-        <small><span lang="en-GB">2 September 2026 · pi-ds4 v 0.6.1</span><span lang="zh-TW">2026 年 9 月 2 日 · pi-ds4 v 0.6.1</span></small>
+        <small><span lang="en-GB">20 October 2026 · pi-ds4 v 0.7.0</span><span lang="zh-TW">2026 年 10 月 20 日 · pi-ds4 v 0.7.0</span></small>
       </div>
       <div class="seal" aria-label="Seal: 唐鳳" role="img">唐鳳</div>
     </div>

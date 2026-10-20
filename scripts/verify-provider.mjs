@@ -51,7 +51,7 @@ assert.ok(
   startBudget(model.contextWindow, model.maxTokens) <= model.contextWindow,
   "default window must host omo's 2026-09-27 start budget",
 );
-assert.deepEqual(model.input, ["text", "image"], "Vision-Exp managed path must advertise image input");
+assert.deepEqual(model.input, ["text", "image"], "the managed V4.1 path runs the vision sidecar and must advertise image input");
 
 const child = spawnSync(
   process.execPath,

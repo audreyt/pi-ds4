@@ -1,4 +1,4 @@
-# pi-ds4 — managed local DeepSeek V4 Flash for pi (audreyt fork)
+# pi-ds4 — managed local DeepSeek V4.1 Flash for pi (audreyt fork)
 
 > 👉 [**完整指南 / Full guide: pi.audreyt.org**](https://pi.audreyt.org/)
 
@@ -10,13 +10,14 @@ backend for `ds4/deepseek-v4-flash`. It is a personal fork of
 [mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds4): same lease / watchdog /
 on-demand server UX, different engine pin, preferred GGUF, and steering defaults.
 
-**Primary supported managed path today: Apple Silicon (Metal), ≥96 GB unified
-RAM.** Linux CUDA and AMD ROCm are real `audreyt/ds4` backends. The extension
-selects the Makefile’s product targets (`cuda-spark`, `cuda CUDA_ARCH=…`,
-`strix-halo`) instead of bare `make ds4-server` — but a correct CUDA install still
-needs a working `nvidia-smi`, matching toolkit, and a post-build generation smoke
-check. Until you have verified that path on your box, prefer
-bring-your-own-binary on NVIDIA hosts (see below).
+**Managed path today: Apple Silicon (Metal) with 128 GB unified RAM, with
+Metal's wired-memory ceiling raised (`sudo sysctl iogpu.wired_limit_mb=114688`).** The
+managed model is DeepSeek V4.1 Flash 1017 abliterated Q1, and ds4 runs its
+IQ1_S experts and Q5_K/Q6_K dense weights only on Metal: CUDA and ROCm refuse
+the file at open, so the extension refuses non-macOS hosts before downloading.
+On Linux CUDA/ROCm, or on a 96 GB Mac, stay on `v0.6.1` (V4 Vision-Exp IQ2) or
+bring your own GGUF and binary (see below). The build-target selection for
+CUDA and ROCm below still applies to bring-your-own runs.
 
 ## Install
 
@@ -25,15 +26,15 @@ pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream exte
 pi install  https://github.com/audreyt/pi-ds4
 ```
 
-### What GitHub serves today (tag `v0.6.1`)
+### What GitHub serves today (tag `v0.7.0`)
 
 | Item | Value |
 |---|---|
-| Package version | **0.6.1** |
-| `SUPPORT_PIN` | `7855b7a` (`audreyt/ds4` main: Vision-Exp engine + `preferred` alias; `--vision` works) |
-| Preferred GGUF | Vision-Exp abliterated IQ2 from [`audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF) plus the unmodified encoder from [`antirez/deepseek-v4-gguf`](https://huggingface.co/antirez/deepseek-v4-gguf) — `preferred` alias now accepted (`q2`/`preferred`) |
-| Default context | 256 k tokens (`DS4_CONTEXT_KB=256`) |
-| Guide / OG card | **v0.6.1** Vision-Exp (~81 GiB IQ2 + encoder; 286/45 t/s is a 207-token `/read` smoke, not a 2k prefill bench) |
+| Package version | **0.7.0** |
+| `SUPPORT_PIN` | `d3f4cd6` (`audreyt/ds4` main: V4.1 Q1 on Metal, V4.1 context fit, kernelpool `ds41-perf` merge) |
+| Preferred GGUF | DeepSeek V4.1 Flash 1017 abliterated Q1 from [`audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF) plus the 1017 vision sidecar from [`audreyt/deepseek-v4.1-flash-1017-gguf`](https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf) (selector `q1`, alias `preferred`) |
+| Default context | 256 k tokens (`DS4_CONTEXT_KB=256`). Without vision it opens with a 2048-row prefill; with the 0.9 GiB vision sidecar pi-ds4 loads, it opens with a 1024-row prefill (measured) |
+| Guide | **v0.7.0** V4.1 Q1 (~106 GiB resident + vision sidecar) |
 
 `pi install https://github.com/audreyt/pi-ds4` installs exactly this tag.
 
@@ -42,31 +43,30 @@ pi install  https://github.com/audreyt/pi-ds4
 1. **Pulls [`audreyt/ds4`](https://github.com/audreyt/ds4) at a pinned commit**
    (`SUPPORT_PIN`), not floating `antirez/ds4` `main`. The pin is enforced on
    launch: mismatch → fetch + hard reset + delete cached binaries so they rebuild.
-2. **Ships its own `download_model.sh`** for the preferred Vision-Exp language
-   GGUF (~80.76 GiB) plus the 889 MiB encoder, language file symlinked as
+2. **Ships its own `download_model.sh`** for the V4.1 Flash 1017 abliterated Q1
+   (365.7 GB file, ~106 GiB of it resident; the Engram tables stay on disk)
+   plus the 926 MiB vision sidecar, language file symlinked as
    `ds4flash.gguf`. `ds4-server` / `ds4-agent` are started with `--vision`.
-3. **No 0731 DSpark attach.** That support GGUF is a different Flash checkpoint.
-   Directional steering stays off by default until a Vision-Exp-matched vector
-   is validated. Opt-in via env (below).
+3. **No speculative decoding.** On a 128 GB Mac the DSpark drafter does not fit
+   next to the Q1, and on V4.1 it measured slower than plain decode anyway.
+   Directional steering stays off: no V4.1 direction ships yet. Opt-in via env
+   (below).
 
 ### Requirements by platform
 
 | Platform | Managed `pi install` | Notes |
 |---|---|---|
-| Apple Silicon, 128 GB+ | Yes | Preferred path. |
-| Apple Silicon, 96–127 GB | Yes after wired-limit raise | `sudo sysctl iogpu.wired_limit_mb=92000` (persist via `/etc/sysctl.conf`). |
-| Apple Silicon, &lt;96 GB | No | Extension refuses; Vision-Exp IQ2 footprint. |
-| Linux + NVIDIA | Auto-selects Makefile CUDA targets | Needs `nvidia-smi` + `nvcc`. GB10 / sm_121 → `make cuda-spark`. Post-build **generation smoke** must pass. |
-| Linux + AMD Strix Halo (gfx1151) | Auto-selects `make strix-halo` when no NVIDIA device and `hipcc` exists | Or force `DS4_BACKEND=rocm`. |
-| CPU-only | Opt-in only | `DS4_ALLOW_CPU=1` or `DS4_BACKEND=cpu`. Not silent fallback. |
+| Apple Silicon, 128 GB | Yes, after a wired-limit raise | macOS leaves Metal about 107.5 GiB by default, less than the Q1 plus vision sidecar need under ds4's 112 GiB budget. Run `sudo sysctl iogpu.wired_limit_mb=114688` (persist via `/etc/sysctl.conf`); the extension checks it before the model download and prints the command. |
+| Apple Silicon, more than 128 GB | Yes | The extension does not check the wired limit here; if ds4 refuses the model at open, raise it the same way. |
+| Apple Silicon, &lt;128 GB | No | Extension refuses: ~106 GiB stays resident. Use `v0.6.1`. |
+| Linux + NVIDIA / AMD | No managed model | ds4 refuses IQ1_S and Q5_K/Q6_K weights on CUDA and ROCm. Use `v0.6.1`, or bring your own GGUF and binary; the Makefile CUDA/ROCm targets below still apply there. |
+| CPU-only | Opt-in only | `DS4_ALLOW_CPU=1` or `DS4_BACKEND=cpu`. Reference/debug only. |
 
-**Disk (managed Vision-Exp):** language 86720111776 B + encoder 932857760 B = 87652969536 B (~81.63 GiB / 87.653 GB). Fresh install: plan ≥ ~88 GB plus KV. A v0.5.x upgrade keeps the old Headroom128 language GGUF (~87 GB) and optional 0731 DSpark (5989114272 B, ~5.6 GiB / ~5.99 GB) until the new pair passes size checks and *then* `ds4flash.gguf` is switched. Peak occupancy: ~175 GB without DSpark, ~181 GB with DSpark. After the switch, `download_model.sh` deletes those obsolete files. To free space *before* the fetch (this destroys the working 0731 model):
+**Disk (managed V4.1 Q1):** language 365713686528 B + vision sidecar 970555552 B = 366684242080 B (~341.5 GiB / 366.7 GB). The Engram tables (~189 GiB of that) are read from disk, so an internal SSD helps. A v0.6.x upgrade keeps the Vision-Exp language GGUF (~81 GiB) and V4 encoder until the new pair passes size checks and *then* `ds4flash.gguf` is switched, so peak occupancy is about 455 GB; `download_model.sh` checks free space first and deletes the v0.6 files after the switch. To free space *before* the fetch (this removes the working v0.6 model):
 
 ```sh
-rm -f ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf \
-      ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.gguf.part \
-      ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf \
-      ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128-DSpark-support.gguf.part
+rm -f ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf \
+      ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf
 ```
 
 ### What first launch does
@@ -74,11 +74,13 @@ rm -f ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-0731-Abliterated-DS4-Headroom128.
 1. Clone `audreyt/ds4` at `SUPPORT_PIN` into `~/.pi/ds4/support/` (or hard-reset an
    existing checkout to the pin and delete cached `ds4-server` / `ds4-agent`).
 2. **Select a build plan and run the matching `make` target** (see table below).
-3. Run bundled `download_model.sh` for the Vision-Exp language GGUF + encoder.
+3. Run bundled `download_model.sh` for the V4.1 Q1 language GGUF + vision sidecar.
 4. On non-Metal backends, run a **generation smoke test** (asserts non-empty
    `choices[0].message.content` — not merely HTTP 200) with `--vision`.
-5. Spawn `ds4-server --vision gguf/DeepSeek-V4-Flash-Vision-Encoder.gguf` on
-   `127.0.0.1:8000` and register `ds4/deepseek-v4-flash`.
+5. Spawn `ds4-server --vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf` on
+   `127.0.0.1:8000` and register `ds4/deepseek-v4-flash` (shown as
+   “DeepSeek V4.1 Flash”; the provider ID is unchanged so existing settings
+   keep working).
 
 Subsequent launches are idempotent when the pin, build plan, and GGUF already match.
 
@@ -146,6 +148,8 @@ a retarget.
 
 | Claim | Status |
 |---|---|
+| v0.7.0 M5 Max 128 GB, V4.1 Q1 abliterated: ~37.9 t/s generation | `ds4` CLI on `d3f4cd6`, ctx 8192, 128 greedy tokens, High Power energy mode (Low Power is far slower). Not a `ds4-bench` sweep. |
+| v0.7.0 vision, second 128 GB M5 Max: 194 t/s prefill on a 533-token image turn, 148 t/s on a 195-token `earth.jpg` turn, ~37 t/s generation | pi-ds4's exact `ds4-server` launch (ctx 256000 + vision sidecar, wired limit 114688); strict OCR fixture read back exactly. Single runs, not a `ds4-bench` sweep. |
 | v0.5.4 M5 Max ~622 t/s prefill / ~42 t/s gen @ 2k Headroom128 | Published Metal bench on `67acbd8` (same fusions as `e4812d8`) |
 | Any DSpark drafter tok/s or “+N%” figure | **Not claimed** — prior numbers void; re-measure on a correct build |
 | CUDA GB10 tokens/s after `cuda-spark` | **Unverified on this README surface** — measure before claiming |
@@ -205,14 +209,15 @@ Under `~/.pi/ds4`:
 
 The engine supports runtime
 [directional steering](https://github.com/audreyt/ds4/blob/main/dir-steering/README.md).
-`audreyt/ds4` still ships the historical `uncertainty_ablit_imatrix.f32` vector
-(CyberNeurova-calibrated). **Default on Vision-Exp: off**
-(`DS4_DIR_STEERING_FFN=0`, `DS4_DIR_STEERING_ATTN=0`).
+**Default: off.** V4.1 needs one f32 direction per layer at its own width
+(40 × 5120). The historical V4 vectors in `dir-steering/out/` (such as
+`uncertainty_ablit_imatrix.f32`, 43 × 4096) do not fit V4.1, and no V4.1
+direction ships yet, so `DS4_DIR_STEERING_FILE` now defaults to empty.
 
-Opt in for research:
+Opt in for research with your own V4.1 vector:
 
 ```sh
-export DS4_DIR_STEERING_FILE=dir-steering/out/uncertainty_ablit_imatrix.f32
+export DS4_DIR_STEERING_FILE=/path/to/v41-direction.f32   # 40 x 5120 float32
 export DS4_DIR_STEERING_FFN=-0.75
 export DS4_DIR_STEERING_ATTN=0
 export DS4_DIR_STEERING_POLICY=final-answer
@@ -220,10 +225,10 @@ export DS4_DIR_STEERING_POLICY=final-answer
 
 ![uncertainty demo](uncertainty.gif)
 
-Guarded magnitude on the historical vector is `ffn=-0.75, attn=0`. Stronger
-settings can leak into tool-call grammar on long agent prompts. Reproducibility
-uses seed `42` by default (`DS4_REPRODUCIBLE=1`) and deterministic tool-call IDs
-from seeded requests on audreyt/ds4.
+The demo above is V4. On V4, `ffn=-0.75, attn=0` was the guarded magnitude;
+stronger settings leaked into tool-call grammar on long agent prompts.
+Reproducibility uses seed `42` by default (`DS4_REPRODUCIBLE=1`) and
+deterministic tool-call IDs from seeded requests on audreyt/ds4.
 
 ## Configuration
 
@@ -241,11 +246,11 @@ from seeded requests on audreyt/ds4.
 * `DS4_REPRODUCIBLE` / `DS4_REPRODUCIBLE_SEED` — seed injection (default on / `42`)
 * `DS4_CONTEXT_KB` — context kilotokens (default `256`; `100` is a tight override and caps advertised `maxTokens`)
 * `DS4_KV_DISK_SPACE_MB` — KV disk budget (RAM-tiered default when unset)
-* `DS4_DIR_STEERING_FILE` / `_FFN` / `_ATTN` / `_POLICY` — steering controls
+* `DS4_DIR_STEERING_FILE` / `_FFN` / `_ATTN` / `_POLICY` — steering controls (file defaults to empty; needs a V4.1-shaped vector)
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout; do not clobber its binaries
 * `DS4_SERVER_BINARY` / `DS4_AGENT_BINARY` — custom binary paths
 * `DS4_AGENT_TOKENS` / `DS4_AGENT_THINK` / `DS4_AGENT_SYSTEM` / `DS4_AGENT_TRACE`
-* `DS4_MODEL_QUANT` — must be `q2` (historic selector) or `preferred` (alias) or unset; other values error — both select the abliterated Vision-Exp IQ2 + encoder
+* `DS4_MODEL_QUANT` — must be `q1`, `preferred` (alias) or unset; both select the V4.1 Flash 1017 abliterated Q1 + vision sidecar. `q2` (v0.6.x Vision-Exp) now errors with a pointer to `v0.6.1`
 * `DS4_READY_TIMEOUT_MS` — server ready timeout
 * `DS4_WATCHDOG_SCRIPT` — absolute path to the watchdog; default bundled `ds4-watchdog.sh`
 * `HF_TOKEN` — passed through for HuggingFace downloads
@@ -258,8 +263,28 @@ from seeded requests on audreyt/ds4.
   only checks short non-empty prose on non-Metal backends.
 * **CUDA and DSpark performance** are not claimed here until measured on a
   correctly targeted binary (both require `make cuda-spark` / correct arch).
+* **The Q1's routed experts are Unsloth's UD-IQ1_S**, 32 of them requantized
+  from Unsloth's IQ2_XXS to fit the 112 GiB V4.1 budget. No official-continuation
+  quality score has been run for it yet; it is a 128 GB-Mac compromise, not a
+  quality upgrade over larger quants.
 
 ## What's new
+
+### Published v0.7.0 (`d3f4cd6` pin, 2026-10-20)
+
+The managed model moves from V4 Vision-Exp IQ2 to **DeepSeek V4.1 Flash 1017
+abliterated Q1**: Unsloth's UD-IQ1_S routed experts and Q5_K/Q6_K dense
+weights in a ds4-native file, with the abliterated 1017 attention-output
+tensors, from `audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF` @ `54ee865`, plus
+the 1017 vision sidecar from `audreyt/deepseek-v4.1-flash-1017-gguf` @ `5ab6e05`. About 106 GiB stays
+resident on a 128 GB Mac; the Engram tables are read from disk. Engine pin
+`d3f4cd6` adds IQ1_S on Metal, a single-token Q5_K/Q6_K matvec route, a V4.1
+context fit that keeps the 256 k default window open with a narrower prefill,
+and kernelpool's V4.1 Metal work. On an M5 Max this decodes at about 37.9 t/s
+(ctx 8192, 128 greedy tokens, High Power); with the vision sidecar at the managed
+256 k window, an image turn prefilled at 148–194 t/s. Macs below 128 GB and Linux hosts
+are refused before download and should stay on `v0.6.1`. The V4 steering
+vectors do not fit V4.1, so the steering file now defaults to empty.
 
 ### Published v0.6.1 (`d0c2b43` pin + `7855b7a` ds4, 2026-09-02)
 
@@ -315,7 +340,12 @@ distributed / ROCm workflows documented upstream in audreyt/ds4.
 
 * **[mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds4)** — upstream extension;
   lifecycle / watchdog / lease machinery is Armin Ronacher's work.
-* **[antirez/ds4](https://github.com/antirez/ds4)** — DeepSeek V4 Flash engine.
+* **[antirez/ds4](https://github.com/antirez/ds4)** — DeepSeek V4 / V4.1 Flash engine.
+* **[Unsloth](https://huggingface.co/unsloth/DeepSeek-V4.1-Flash-1017-GGUF)** — the UD-IQ1_S
+  experts and imatrix behind the V4.1 Q1.
+* **[kernelpool/ds4](https://github.com/kernelpool/ds4)** and
+  **[Ivan Fioravanti](https://github.com/ivanfioravanti/ds4)** — the V4.1 Metal
+  decode and prefill work merged into the pinned engine.
 * **[ivanfioravanti's PR #15](https://github.com/antirez/ds4/pull/15)** and the
   wider 2026 engine round (SSD streaming, distributed inference, ROCm, DSpark,
   observability).
