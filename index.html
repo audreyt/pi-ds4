@@ -10,14 +10,14 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=b19909fbb9b8">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=81f42dede3e7">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="pi-ds4 guide card: an ocean horizon with the current local inference readout — ~106 GiB of DeepSeek V4.1 Flash abliterated Q1 weights resident plus the vision sidecar, a 256k default window and 37.9 t/s generation on a 128 GB M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=b19909fbb9b8">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=81f42dede3e7">
 <meta name="theme-color" content="#ebe7e4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#161d27" media="(prefers-color-scheme: dark)">
 <link rel="preload" href="fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -392,7 +392,8 @@ html:has(#lang-zh:checked) .hero-stand { max-width: 26em; line-height: 1.85; }
 @keyframes blink { to { visibility: hidden; } }
 
 @media (max-width: 680px) {
-  .hero { grid-template-rows: 56% 44%; min-height: max(100svh, 640px); }
+  /* phones: the lower half takes its own height, so the cue clears the fixed footer; the sea draws its horizon at this boundary */
+  .hero { grid-template-rows: minmax(0, 1fr) auto; min-height: max(100svh, 640px); }
   .hero-above { padding-top: 4.2rem; padding-bottom: 1.5rem; }
   .hero-below { padding-top: 1.8rem; padding-bottom: 5rem; }
   .install { font-size: 0.78rem; gap: 0.6rem; }
@@ -1079,7 +1080,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
 
   <dl class="meta" aria-label="Letter header">
     <dt><span lang="en-GB">Date</span><span lang="zh-TW">日期</span></dt>
-    <dd><span lang="en-GB">20 October 2026 (v 0.7.0)</span><span lang="zh-TW">2026 年 10 月 20 日（v 0.7.0）</span></dd>
+    <dd><span lang="en-GB">21 October 2026 (v 0.7.1)</span><span lang="zh-TW">2026 年 10 月 21 日（v 0.7.1）</span></dd>
     <dt><span lang="en-GB">From</span><span lang="zh-TW">寄件人</span></dt>
     <dd><span lang="en-GB">Audrey Tang <span class="zh">唐鳳</span></span><span lang="zh-TW">唐鳳 Audrey Tang</span></dd>
     <dt><span lang="en-GB">To</span><span lang="zh-TW">收件人</span></dt>
@@ -1270,6 +1271,21 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       <li><strong>數字請照標示來讀。</strong>生成約 37.9 t/s，用 ds4 CLI、ctx 8192、連續 128 個貪婪取樣的 token，在 128 GB 的 M5 Max 上、能源模式為高功率時量到。低耗電模式慢很多（在這個引擎較早的版本上，decode 不到高功率時的一半），所以使用期間請把能源模式設成「高功率」（MacBook 在「系統設定 › 電池 › 能源模式」）。在另一台 128 GB 的 M5 Max 上，用 pi-ds4 一模一樣的伺服器參數（ctx 256000，加上視覺附屬檔）：533 個 token 的圖片回合 prefill 194 t/s，OCR 每一欄都準確讀回；195 個 token 的 <code>earth.jpg</code> 回合 prefill 148 t/s；生成維持在約 37 t/s。</li>
       <li><strong>引導維持關閉。</strong>V4.1 的每一層需要一個 f32 方向，寬度是它自己的 40 × 5120。<code>dir-steering/out/</code> 裡的 V4 向量（43 × 4096）不適用，V4.1 的方向向量也還沒有附上，所以 <code>DS4_DIR_STEERING_FILE</code> 現在預設是空的。要開啟，得自備 V4.1 的向量（<a href="#advanced">第十一章</a>）。</li>
       <li><strong>預設值改了哪些。</strong><code>DS4_SUPPORT_PIN</code> 是 <code>d3f4cd6</code>，<code>DS4_MODEL_QUANT</code> 是 <code>q1</code>（別名 <code>preferred</code>），<code>DS4_DIR_STEERING_FILE</code> 是空的，<code>DS4_DOWNLOAD_SCRIPT</code> 現在抓的是 V4.1 Q1 加視覺附屬檔（<a href="#config">第五章</a>）。</li>
+    </ul>
+
+    <h3><span class="no">0.7.1</span><span lang="en-GB">Patch: port 8000 and the memory messages</span><span lang="zh-TW">修補：8000 埠與記憶體訊息</span></h3>
+
+    <ul lang="en-GB">
+      <li><strong>No weight or engine change.</strong> The <code>d3f4cd6</code> engine and both GGUF files are the ones 0.7.0 shipped.</li>
+      <li><strong>Port 8000 must hold a ds4-server.</strong> If another program already answers at <code>http://127.0.0.1:8000/v1</code>, the extension stops with “Something is already answering … could not identify it as a ds4-server” and names the <code>lsof</code> command that finds it. Before, it took any answer there for a ready server and skipped the memory and model checks. Your request then went to that program, which replied with its own errors (on the test Mac, a 404 for <code>deepseek-v4-flash</code>).</li>
+      <li><strong>Memory sizes as Apple sells them.</strong> The memory checks now print a 128 GB Mac as 128 GB, not 137.4 GB. The wired-memory message says plainly what to run.</li>
+      <li><strong>Phones.</strong> On narrow screens the opening screen sizes its lower half to its text, so the scroll cue no longer sits under the footer.</li>
+    </ul>
+    <ul lang="zh-TW">
+      <li><strong>權重和引擎都沒變。</strong><code>d3f4cd6</code> 引擎和兩個 GGUF 檔，都是 0.7.0 發布的那一份。</li>
+      <li><strong>8000 埠上只能是 ds4-server。</strong>如果已經有別的程式在 <code>http://127.0.0.1:8000/v1</code> 回應，擴充套件會停下來，回報「Something is already answering … could not identify it as a ds4-server」，並附上找出它的 <code>lsof</code> 指令。以前它把那裡的任何回應都當成伺服器已就緒，跳過記憶體與模型檢查，你的請求就交給了那個程式，由它用自己的錯誤回覆（在測試用的 Mac 上，是 <code>deepseek-v4-flash</code> 的 404）。</li>
+      <li><strong>記憶體容量照 Apple 標示的寫。</strong>記憶體檢查現在把 128 GB 的 Mac 顯示成 128 GB，不再是 137.4 GB。可鎖定記憶體的訊息也直接說要執行什麼。</li>
+      <li><strong>手機。</strong>在窄螢幕上，開頭畫面的下半部會依文字調整高度，「往下捲動」不再被頁尾蓋住。</li>
     </ul>
 
     <h3><span class="no">0.6</span><span lang="en-GB">The 0.6 series, for the record</span><span lang="zh-TW">0.6 系列，存檔備查</span></h3>
@@ -2009,8 +2025,8 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
       <div>
         <dt>DS4_SUPPORT_PIN<span class="default"><span lang="en-GB">default: d3f4cd6</span><span lang="zh-TW">預設：d3f4cd6</span></span></dt>
         <dd>
-          <p lang="en-GB">The exact <code>audreyt/ds4</code> commit enforced at every start. If it differs, the extension fetches that commit, hard-resets the checkout and deletes cached <code>ds4-server</code> / <code>ds4-agent</code> so they rebuild. Set an empty string to leave the local checkout where it is. v 0.7.0 pins <code>d3f4cd6</code>, which adds IQ1_S on Metal, a faster single-token Q5_K/Q6_K route and the V4.1 context fit. v 0.6.1 had pinned <code>7855b7a</code>.</p>
-          <p lang="zh-TW">每次啟動都強制使用這個 <code>audreyt/ds4</code> commit。不符時，擴充套件會 fetch 該 commit、hard reset checkout，並刪除快取的 <code>ds4-server</code>／<code>ds4-agent</code>，讓它們重新編譯。設成空字串，就維持本機 checkout 目前的版本。v 0.7.0 釘在 <code>d3f4cd6</code>，它在 Metal 上加了 IQ1_S、更快的單 token Q5_K／Q6_K 路徑，以及 V4.1 的 context 適配。v 0.6.1 當時釘在 <code>7855b7a</code>。</p>
+          <p lang="en-GB">The exact <code>audreyt/ds4</code> commit enforced at every start. If it differs, the extension fetches that commit, hard-resets the checkout and deletes cached <code>ds4-server</code> / <code>ds4-agent</code> so they rebuild. Set an empty string to leave the local checkout where it is. v 0.7.1 pins <code>d3f4cd6</code>, which adds IQ1_S on Metal, a faster single-token Q5_K/Q6_K route and the V4.1 context fit. v 0.6.1 had pinned <code>7855b7a</code>.</p>
+          <p lang="zh-TW">每次啟動都強制使用這個 <code>audreyt/ds4</code> commit。不符時，擴充套件會 fetch 該 commit、hard reset checkout，並刪除快取的 <code>ds4-server</code>／<code>ds4-agent</code>，讓它們重新編譯。設成空字串，就維持本機 checkout 目前的版本。v 0.7.1 釘在 <code>d3f4cd6</code>，它在 Metal 上加了 IQ1_S、更快的單 token Q5_K／Q6_K 路徑，以及 V4.1 的 context 適配。v 0.6.1 當時釘在 <code>7855b7a</code>。</p>
         </dd>
       </div>
       <div>
@@ -2878,10 +2894,10 @@ chmod +x download_model.sh
     <h3 id="8.7"><span class="no">8.7</span><span lang="en-GB">Other hardware: DGX Spark (CUDA) and Strix Halo (ROCm)</span><span lang="zh-TW">其他硬體：DGX Spark（CUDA）與 Strix Halo（ROCm）</span><a id="otherhw"></a></h3>
 
     <p lang="en-GB">
-      Version 0.7.0 needs a Mac with 128 GB, and Metal. ds4 runs this model’s IQ1_S experts and its Q5_K/Q6_K dense weights only on Metal, so pi-ds4 refuses a Linux host with CUDA or ROCm, such as an NVIDIA DGX Spark or an AMD Strix Halo, before it downloads anything. Those hosts should stay on v 0.6.1, which runs the V4 Vision-Exp IQ2 build as that release describes. Or bring your own: point <code>DS4_RUNTIME_DIR</code> at your own ds4 checkout and binary, and supply a GGUF your backend can run.
+      Version 0.7 needs a Mac with 128 GB, and Metal. ds4 runs this model’s IQ1_S experts and its Q5_K/Q6_K dense weights only on Metal, so pi-ds4 refuses a Linux host with CUDA or ROCm, such as an NVIDIA DGX Spark or an AMD Strix Halo, before it downloads anything. Those hosts should stay on v 0.6.1, which runs the V4 Vision-Exp IQ2 build as that release describes. Or bring your own: point <code>DS4_RUNTIME_DIR</code> at your own ds4 checkout and binary, and supply a GGUF your backend can run.
     </p>
     <p lang="zh-TW">
-      v 0.7.0 需要 128 GB 的 Mac，而且要走 Metal。ds4 只在 Metal 上執行這個模型的 IQ1_S 專家和 Q5_K／Q6_K 稠密權重，所以 pi-ds4 會在下載任何東西之前，就拒絕 Linux 上用 CUDA 或 ROCm 的主機，例如 NVIDIA DGX Spark 或 AMD Strix Halo。這些主機請留在 v 0.6.1，它依該版本的說明跑 V4 Vision-Exp IQ2 版。或者自備：把 <code>DS4_RUNTIME_DIR</code> 指向你自己的 ds4 checkout 與執行檔，再提供你的後端跑得動的 GGUF。
+      v 0.7 需要 128 GB 的 Mac，而且要走 Metal。ds4 只在 Metal 上執行這個模型的 IQ1_S 專家和 Q5_K／Q6_K 稠密權重，所以 pi-ds4 會在下載任何東西之前，就拒絕 Linux 上用 CUDA 或 ROCm 的主機，例如 NVIDIA DGX Spark 或 AMD Strix Halo。這些主機請留在 v 0.6.1，它依該版本的說明跑 V4 Vision-Exp IQ2 版。或者自備：把 <code>DS4_RUNTIME_DIR</code> 指向你自己的 ds4 checkout 與執行檔，再提供你的後端跑得動的 GGUF。
     </p>
 
     <p lang="en-GB">
@@ -3557,7 +3573,7 @@ STATE=~/.pi/ds4/server.json
     <div class="signoff">
       <div class="hand">
         <span lang="en-GB">With care,<br>Audrey Tang</span><span lang="zh-TW">敬祝 自由<br>唐鳳</span>
-        <small><span lang="en-GB">20 October 2026 · pi-ds4 v 0.7.0</span><span lang="zh-TW">2026 年 10 月 20 日 · pi-ds4 v 0.7.0</span></small>
+        <small><span lang="en-GB">21 October 2026 · pi-ds4 v 0.7.1</span><span lang="zh-TW">2026 年 10 月 21 日 · pi-ds4 v 0.7.1</span></small>
       </div>
       <div class="seal" aria-label="Seal: 唐鳳" role="img">唐鳳</div>
     </div>
@@ -3637,6 +3653,7 @@ STATE=~/.pi/ds4/server.json
     var ctx = canvas.getContext('2d');
     if (!ctx) return null;
     var W = 1, H = 1, horizon = 0, ink = '53, 52, 49';
+    var sky = hero.querySelector('.hero-above');
     var ROWS = 30, STEP = 3;
     var ripples = [], visible = true, raf = 0, last = 0, t0 = performance.now();
 
@@ -3652,7 +3669,9 @@ STATE=~/.pi/ds4/server.json
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      horizon = Math.round(H * 0.58) + 0.5;
+      // the horizon is where the sky ends: 58% on wide screens, and on phones
+      // wherever the text below leaves it
+      horizon = Math.round(sky ? sky.getBoundingClientRect().bottom - r.top : H * 0.58) + 0.5;
       draw(performance.now());
     }
     function draw(now){
@@ -3734,7 +3753,11 @@ STATE=~/.pi/ds4/server.json
     }
     document.addEventListener('visibilitychange', wake);
     reduced.addEventListener('change', function(){ draw(performance.now()); wake(); });
-    if ('ResizeObserver' in window) new ResizeObserver(resize).observe(hero); else window.addEventListener('resize', resize);
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(resize);
+      ro.observe(hero);
+      if (sky) ro.observe(sky);
+    } else window.addEventListener('resize', resize);
 
     resize();
     recolor();

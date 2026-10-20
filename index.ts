@@ -373,10 +373,12 @@ function selectedModelQuant(): ModelQuant {
 	}
 
 	// A 128 GB Mac reports about 137 GB here; 96 GB Macs report about 103 GB.
+	// Messages print the binary size, the figure Apple sells.
 	const ramGb = totalmem() / 1_000_000_000;
+	const soldGb = Math.round(totalmem() / 2 ** 30);
 	if (ramGb < 128) {
 		throw new Error(
-			`DeepSeek V4.1 Flash Q1 keeps ~106 GiB of weights resident and needs a 128 GB Mac; detected ${ramGb.toFixed(1)} GB RAM. pi-ds4 v0.6.1 runs the smaller V4 Vision-Exp IQ2 on 96 GB Macs.`,
+			`DeepSeek V4.1 Flash Q1 keeps ~106 GiB of weights resident and needs a 128 GB Mac; this Mac has ${soldGb} GB. pi-ds4 v0.6.1 runs the smaller V4 Vision-Exp IQ2 on 96 GB Macs.`,
 		);
 	}
 	// ds4 caps its V4.1 budget at Metal's recommended working set, which a
@@ -386,7 +388,7 @@ function selectedModelQuant(): ModelQuant {
 	const WIRED_LIMIT_MB = 114_688;
 	if (ramGb < 160 && readIogpuWiredLimitMb() < WIRED_LIMIT_MB) {
 		throw new Error(
-			`Detected ${ramGb.toFixed(1)} GB RAM. On a 128 GB Mac the Metal wired-memory ceiling must be raised first so the ~106 GiB V4.1 Flash Q1 and its vision sidecar fit ds4's 112 GiB budget. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=${WIRED_LIMIT_MB}\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=${WIRED_LIMIT_MB}' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command.`,
+			`This Mac has ${soldGb} GB of unified memory. Raise Metal's wired-memory ceiling first so the ~106 GiB V4.1 Flash Q1 and its vision sidecar fit ds4's 112 GiB budget. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=${WIRED_LIMIT_MB}\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=${WIRED_LIMIT_MB}' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command.`,
 		);
 	}
 	return "q1";
@@ -2148,7 +2150,16 @@ async function ensureServerManagedInner(onStatus?: StatusCallback): Promise<void
 		if (state?.pid) await clearState();
 		if (await checkHttpReady()) {
 			const pid = await findListeningDs4ServerPid();
-			if (pid) await writeAdoptedServerStateLocked(pid);
+			// Adopt only a ds4-server. Anything else here would answer the model
+			// request with its own errors, and returning would skip the memory and
+			// model checks in ensureRuntimeReadyLocked.
+			if (!pid) {
+				throw new Error(
+					`Something is already answering at ${API_BASE_URL}, but pi-ds4 could not identify it as a ds4-server. ` +
+						`Find it with \`lsof -nP -iTCP:8000 -sTCP:LISTEN\`, stop it, then retry.`,
+				);
+			}
+			await writeAdoptedServerStateLocked(pid);
 			return;
 		}
 		if (runtimeDisposed || shuttingDown) return;

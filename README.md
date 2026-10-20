@@ -26,15 +26,15 @@ pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream exte
 pi install  https://github.com/audreyt/pi-ds4
 ```
 
-### What GitHub serves today (tag `v0.7.0`)
+### What GitHub serves today (tag `v0.7.1`)
 
 | Item | Value |
 |---|---|
-| Package version | **0.7.0** |
+| Package version | **0.7.1** |
 | `SUPPORT_PIN` | `d3f4cd6` (`audreyt/ds4` main: V4.1 Q1 on Metal, V4.1 context fit, kernelpool `ds41-perf` merge) |
 | Preferred GGUF | DeepSeek V4.1 Flash 1017 abliterated Q1 from [`audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF) plus the 1017 vision sidecar from [`audreyt/deepseek-v4.1-flash-1017-gguf`](https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf) (selector `q1`, alias `preferred`) |
 | Default context | 256 k tokens (`DS4_CONTEXT_KB=256`). Without vision it opens with a 2048-row prefill; with the 0.9 GiB vision sidecar pi-ds4 loads, it opens with a 1024-row prefill (measured) |
-| Guide | **v0.7.0** V4.1 Q1 (~106 GiB resident + vision sidecar) |
+| Guide | **v0.7.1** V4.1 Q1 (~106 GiB resident + vision sidecar) |
 
 `pi install https://github.com/audreyt/pi-ds4` installs exactly this tag.
 
@@ -269,6 +269,16 @@ deterministic tool-call IDs from seeded requests on audreyt/ds4.
   quality upgrade over larger quants.
 
 ## What's new
+
+### Published v0.7.1 (`d3f4cd6` pin, 2026-10-21)
+
+No weight or engine change. If something other than a ds4-server already
+answers on port 8000, the extension now stops with an error that names the
+`lsof` command to find it, instead of treating it as a ready server and
+skipping the memory and model checks. The memory checks print the size Apple
+sells (a 128 GB Mac reads as 128 GB, not 137.4 GB). On phones the guide's
+opening screen sizes its lower half to its text, so the scroll cue clears the
+footer.
 
 ### Published v0.7.0 (`d3f4cd6` pin, 2026-10-20)
 

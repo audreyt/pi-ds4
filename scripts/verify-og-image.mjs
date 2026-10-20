@@ -104,10 +104,10 @@ if (!existsSync(ogHtmlPath)) fail("og-image.html source page is missing");
 
 const ogHtml = readUtf8(ogHtmlPath);
 const ogText = textContent(ogHtml);
-for (const required of ["pi-ds4 Guide", "v 0.7.0", "128 GB", "~106", "V4.1", "37.9 t/s", "d3f4cd6"]) {
+for (const required of ["pi-ds4 Guide", "v 0.7.1", "128 GB", "~106", "V4.1", "37.9 t/s", "d3f4cd6"]) {
   if (!ogText.includes(required)) fail(`og-image.html is missing current fact: ${required}`);
 }
-for (const stale of ["Q2_K", "~99 GB", "87/91", "87/98", "1M", "360 tok/s", "33 tok/s", "xhigh", "99 commits", "152 commits", "239 commits", "265 commits", "275 commits", "545 t/s", "35 t/s", "638 t/s", "37 t/s", "622 t/s", "v 0.5.1", "v 0.5.2", "v 0.5.3", "v 0.5.4", "2026-07", "Headroom128", "Jun–Aug 2026", "v 0.6.1", "96+ GB", "~81", "Vision-Exp", "286 t/s", "45 t/s", "d0c2b43", "⟦"]) {
+for (const stale of ["Q2_K", "~99 GB", "87/91", "87/98", "1M", "360 tok/s", "33 tok/s", "xhigh", "99 commits", "152 commits", "239 commits", "265 commits", "275 commits", "545 t/s", "35 t/s", "638 t/s", "37 t/s", "622 t/s", "v 0.5.1", "v 0.5.2", "v 0.5.3", "v 0.5.4", "v 0.7.0", "2026-07", "Headroom128", "Jun–Aug 2026", "v 0.6.1", "96+ GB", "~81", "Vision-Exp", "286 t/s", "45 t/s", "d0c2b43", "⟦"]) {
   if (ogText.includes(stale)) fail(`og-image.html still contains stale OG text: ${stale}`);
 }
 

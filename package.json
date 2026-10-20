@@ -1,6 +1,6 @@
 {
   "name": "pi-ds4",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4.1 Flash inference on 128 GB Apple Silicon (audreyt/ds4 main + V4.1 Flash 1017 abliterated Q1 GGUF + vision sidecar).",
   "type": "module",
   "license": "MIT",
