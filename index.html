@@ -1471,7 +1471,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <ul lang="en-GB">
       <li><strong>Chapter 0</strong>: why this exists, in the language of civic care.</li>
       <li><strong>Chapters 1 and 2</strong>: the hardware you need, the one-line install, and what actually happens on first launch.</li>
-      <li><strong>Chapters 3 and 4</strong>: the model, including abliteration (a treatment that makes it refuse less) and the Q1 profile, and the fork’s signature feature, directional steering.</li>
+      <li><strong>Chapters 3 and 4</strong>: the model, with abliteration (a treatment that makes it refuse less) and the Q1 profile, then the fork’s signature feature, directional steering.</li>
       <li><strong>Chapters 5 and 6</strong>: every environment variable, then tuning the context window (how much text the model can hold in view at once) and the KV cache (its short-term memory).</li>
       <li><strong>Chapter 7</strong>: day-to-day use, from the API and the log to leases and the native agent.</li>
       <li><strong>Chapter 8</strong>: pi-ds4 as a backend for Codex CLI, Claude Code, OpenClaw and Hermes Agent, including the path for non-Mac hardware.</li>
@@ -3514,7 +3514,7 @@ STATE=~/.pi/ds4/server.json
     <ul lang="en-GB">
       <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong>, the upstream this extension is forked from. Armin Ronacher wrote the whole lifecycle: the leases, the watchdog, the lock. He wrote it so that people could read it.</li>
       <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>, Salvatore Sanfilippo's DeepSeek V4 and V4.1 Flash engine, written in plain C in the same spirit as Redis. The V4 GGUF conversion came from its sibling project, <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>. V4.1 files are built with ds4’s own <code>gguf-tools</code>.</li>
-      <li><strong>The ds4 runtime and backend contributors.</strong> SSD streaming, distributed inference and the ROCm integration were led by antirez. Others: elkaix (server observability and the agent-loop cache, PR #489), MA (DSpark B2 rejection sampling), Nick Parrin (Strix Halo), Andrea Borio (mixed-quant expert streaming), rinaldofesta (the eval grader), kamranjon and fry69 (agent fixes), Andreas Spannagel (the MTP verify fix) and ivanfioravanti (M5 Metal 4 / MPP). pi-ds4 only packages that runtime; it adds no tuning of its own.</li>
+      <li><strong>The ds4 runtime and backend contributors.</strong> SSD streaming, distributed inference and the ROCm integration were led by antirez. Others: elkaix (server observability and the agent-loop cache, PR #489), MA (DSpark B2 rejection sampling), Nick Parrin (Strix Halo), Andrea Borio (mixed-quant expert streaming), rinaldofesta (the eval grader), kamranjon and fry69 (agent fixes), Andreas Spannagel (the MTP verify fix) and ivanfioravanti (M5 Metal 4 / MPP). pi-ds4 only packages that runtime and adds no tuning of its own.</li>
       <li><strong><a href="https://huggingface.co/unsloth">Unsloth</a></strong>, whose UD-IQ1_S quantisation, dense tensors and imatrix make up most of this Q1.</li>
       <li><strong><a href="https://github.com/kernelpool/ds4">kernelpool/ds4</a> and Ivan Fioravanti</strong>, whose V4.1 Metal work is merged into the pinned engine.</li>
       <li><strong>The cyberneurova research project</strong>, whose abliterated GGUF first made running DeepSeek V4 Flash at home a real option.</li>
