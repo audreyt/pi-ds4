@@ -26,15 +26,15 @@ pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream exte
 pi install  https://github.com/audreyt/pi-ds4
 ```
 
-### What GitHub serves today (tag `v0.7.1`)
+### What GitHub serves today (tag `v0.7.2`)
 
 | Item | Value |
 |---|---|
-| Package version | **0.7.1** |
-| `SUPPORT_PIN` | `d3f4cd6` (`audreyt/ds4` main: V4.1 Q1 on Metal, V4.1 context fit, kernelpool `ds41-perf` merge) |
+| Package version | **0.7.2** |
+| `SUPPORT_PIN` | `d6d6320` (`audreyt/ds4` main: V4.1 Q1 on Metal, V4.1 context fit, kernelpool `ds41-perf` merge, bundled V4.1 steering direction) |
 | Preferred GGUF | DeepSeek V4.1 Flash 1017 abliterated Q1 from [`audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF) plus the 1017 vision sidecar from [`audreyt/deepseek-v4.1-flash-1017-gguf`](https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf) (selector `q1`, alias `preferred`) |
 | Default context | 256 k tokens (`DS4_CONTEXT_KB=256`). Without vision it opens with a 2048-row prefill; with the 0.9 GiB vision sidecar pi-ds4 loads, it opens with a 1024-row prefill (measured) |
-| Guide | **v0.7.1** V4.1 Q1 (~106 GiB resident + vision sidecar) |
+| Guide | **v0.7.2** V4.1 Q1 (~106 GiB resident + vision sidecar) |
 
 `pi install https://github.com/audreyt/pi-ds4` installs exactly this tag.
 
@@ -49,8 +49,8 @@ pi install  https://github.com/audreyt/pi-ds4
    `ds4flash.gguf`. `ds4-server` / `ds4-agent` are started with `--vision`.
 3. **No speculative decoding.** On a 128 GB Mac the DSpark drafter does not fit
    next to the Q1, and on V4.1 it measured slower than plain decode anyway.
-   Directional steering stays off: no V4.1 direction ships yet. Opt-in via env
-   (below).
+   Directional steering stays off by default. The engine bundles one V4.1
+   direction, `candor-v41`. Opt-in via env (below).
 
 ### Requirements by platform
 
@@ -210,15 +210,16 @@ Under `~/.pi/ds4`:
 The engine supports runtime
 [directional steering](https://github.com/audreyt/ds4/blob/main/dir-steering/README.md).
 **Default: off.** V4.1 needs one f32 direction per layer at its own width
-(40 × 5120). The historical V4 vectors in `dir-steering/out/` (such as
-`uncertainty_ablit_imatrix.f32`, 43 × 4096) do not fit V4.1, and no V4.1
-direction ships yet, so `DS4_DIR_STEERING_FILE` now defaults to empty.
-
-Opt in for research with your own V4.1 vector:
+(40 × 5120). Historical V4 vectors (such as `uncertainty_ablit_imatrix.f32`,
+43 × 4096) do not fit V4.1. The pinned engine bundles one V4.1 direction,
+`dir-steering/out/candor-v41.f32`, built from contrast prompts on politically
+sensitive history. Its measurements are in the
+[dir-steering README](https://github.com/audreyt/ds4/blob/main/dir-steering/README.md).
+`DS4_DIR_STEERING_FILE` defaults to empty. Opt in:
 
 ```sh
-export DS4_DIR_STEERING_FILE=/path/to/v41-direction.f32   # 40 x 5120 float32
-export DS4_DIR_STEERING_FFN=-0.75
+export DS4_DIR_STEERING_FILE=dir-steering/out/candor-v41.f32   # 40 x 5120 float32
+export DS4_DIR_STEERING_FFN=1
 export DS4_DIR_STEERING_ATTN=0
 ```
 
@@ -268,6 +269,16 @@ deterministic tool-call IDs from seeded requests on audreyt/ds4.
   quality upgrade over larger quants.
 
 ## What's new
+
+### Published v0.7.2 (`d6d6320` pin, 2026-10-21)
+
+Same weights. The engine pin adds a V4.1 activation capture for building
+steering directions and bundles one, `candor-v41`: opt-in, used at FFN 1,
+built from contrast prompts on politically sensitive history. On 48 held-out
+prompts it cut evasive answers from 23 to 9 (3 with the guide's stakeholder
+prompt) and left 20 short quality checks unchanged. The extension no longer
+passes `--dir-steering-policy`, which this engine rejects. On 0.7.0 and 0.7.1
+opting in to steering stopped `ds4-server` from starting.
 
 ### Published v0.7.1 (`d3f4cd6` pin, 2026-10-21)
 

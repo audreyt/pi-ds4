@@ -57,7 +57,7 @@ const BUILD_RECORD_FILE = join(DS4_DIR, "build.json");
 // disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
-const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "d3f4cd6928b20a189da3b68ab5bfcc47bebf7505").trim();
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "d6d6320cb4a7dbec8b42c73e950dded9824d0ee6").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)
@@ -146,9 +146,9 @@ function defaultKvDiskSpaceMb(): string {
 
 const KV_DISK_SPACE_MB = process.env.DS4_KV_DISK_SPACE_MB?.trim() || defaultKvDiskSpaceMb();
 // Directional steering is opt-in. V4.1 needs one f32 direction per layer at
-// its own width (40 x 5120); the V4 vectors in the ds4 checkout
-// (dir-steering/out/*.f32, 43 x 4096) do not fit it. Set DS4_DIR_STEERING_FILE
-// to a V4.1 .f32 and DS4_DIR_STEERING_FFN (optionally ATTN) to enable. The
+// its own width (40 x 5120); V4 vectors (43 x 4096) do not fit it. The pinned
+// engine bundles dir-steering/out/candor-v41.f32, measured at FFN 1. Set
+// DS4_DIR_STEERING_FILE to a V4.1 .f32 and DS4_DIR_STEERING_FFN (optionally ATTN) to enable. The
 // pinned engine edits every token (prompt, thinking, answer and tool calls)
 // and rejects --dir-steering-policy, so server and agent get the same flags.
 //

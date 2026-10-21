@@ -10,14 +10,14 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=81f42dede3e7">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=2840ff2a88fc">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="pi-ds4 guide card: ocean horizon, local inference readout. ~106 GiB of DeepSeek V4.1 Flash abliterated Q1 weights resident plus the vision sidecar, a 256k default window and 37.9 t/s generation on a 128 GB M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=81f42dede3e7">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=2840ff2a88fc">
 <meta name="theme-color" content="#ebe7e4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#161d27" media="(prefers-color-scheme: dark)">
 <link rel="preload" href="fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -1080,7 +1080,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
 
   <dl class="meta" aria-label="Letter header">
     <dt><span lang="en-GB">Date</span><span lang="zh-TW">日期</span></dt>
-    <dd><span lang="en-GB">21 October 2026 (v 0.7.1)</span><span lang="zh-TW">2026 年 10 月 21 日（v 0.7.1）</span></dd>
+    <dd><span lang="en-GB">21 October 2026 (v 0.7.2)</span><span lang="zh-TW">2026 年 10 月 21 日（v 0.7.2）</span></dd>
     <dt><span lang="en-GB">From</span><span lang="zh-TW">寄件人</span></dt>
     <dd><span lang="en-GB">Audrey Tang <span class="zh">唐鳳</span></span><span lang="zh-TW">唐鳳 Audrey Tang</span></dd>
     <dt><span lang="en-GB">To</span><span lang="zh-TW">收件人</span></dt>
@@ -1088,7 +1088,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <dt><span lang="en-GB">Subject</span><span lang="zh-TW">主旨</span></dt>
     <dd><span lang="en-GB">DeepSeek V4.1 Flash on your own Mac, with traces you can contest</span><span lang="zh-TW">在自己的 Mac 上跑 DeepSeek V4.1 Flash，留下可以質疑的軌跡</span></dd>
     <dt><span lang="en-GB">Lineage</span><span lang="zh-TW">源流</span></dt>
-    <dd><span lang="en-GB">Fork of <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>. DwarfStar engine (<a href="https://github.com/antirez/ds4">antirez/ds4</a>) pinned at <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>d3f4cd6</code></span><span lang="zh-TW">分叉自 <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>。引擎 DwarfStar（<a href="https://github.com/antirez/ds4">antirez/ds4</a>）固定於 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>d3f4cd6</code></span></dd>
+    <dd><span lang="en-GB">Fork of <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>. DwarfStar engine (<a href="https://github.com/antirez/ds4">antirez/ds4</a>) pinned at <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>d6d6320</code></span><span lang="zh-TW">分叉自 <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>。引擎 DwarfStar（<a href="https://github.com/antirez/ds4">antirez/ds4</a>）固定於 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>d6d6320</code></span></dd>
   </dl>
 
   <section id="primer" aria-labelledby="primer-h">
@@ -1182,8 +1182,8 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       </div>
       <div>
         <dt><span lang="en-GB">engine</span><span lang="zh-TW">引擎</span></dt>
-        <dd><span class="n">audreyt/ds4 @ d3f4cd6</span>
-          <span class="why"><span lang="en-GB">DwarfStar pinned to one commit: tomorrow’s build matches today’s. Commit adds IQ1_S on Metal, faster single-token Q5_K/Q6_K route, V4.1 context fit. Details in <a href="#whatsnew">What’s new</a>.</span><span lang="zh-TW">DwarfStar 固定一 commit：明天編譯與今天相同。該 commit 在 Metal 加 IQ1_S、更快單 token Q5_K／Q6_K 路徑與 V4.1 context 適配。細節見<a href="#whatsnew">更新誌</a>。</span></span></dd>
+        <dd><span class="n">audreyt/ds4 @ d6d6320</span>
+          <span class="why"><span lang="en-GB">DwarfStar pinned to one commit: tomorrow’s build matches today’s. Commit adds IQ1_S on Metal, faster single-token Q5_K/Q6_K route, V4.1 context fit and a V4.1 steering direction. Details in <a href="#whatsnew">What’s new</a>.</span><span lang="zh-TW">DwarfStar 固定一 commit：明天編譯與今天相同。該 commit 在 Metal 加 IQ1_S、更快單 token Q5_K／Q6_K 路徑與 V4.1 context 適配，另附一個 V4.1 引導方向。細節見<a href="#whatsnew">更新誌</a>。</span></span></dd>
       </div>
       <div>
         <dt><span lang="en-GB">seed</span><span lang="zh-TW">種子</span></dt>
@@ -1242,10 +1242,10 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       0.7.0 換模型。代管下載改抓 DeepSeek V4.1 Flash 1017 abliterated Q1。語言檔 365 713 686 528 位元組，來自 <a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</a>（釘選版本 <code>54ee865</code>）。視覺附屬檔 970 555 552 位元組，來自 <a href="https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf">audreyt/deepseek-v4.1-flash-1017-gguf</a>，版本 <code>5ab6e05</code>。合計 366 684 242 080 位元組（約 341.5 GiB；硬碟標示 366.7 GB）。引擎釘選版本移到 <code>d3f4cd6</code>。provider ID 維持 <code>ds4/deepseek-v4-flash</code>，既有設定照常可用，只有顯示名稱改「DeepSeek V4.1 Flash (ds4.c local)」。代價是機器：需 128 GB 統一記憶體 Mac。
     </p>
     <p lang="en-GB">
-      Three plain warnings. First: Q1 exists to fit a 128 GB Mac, no official continuation-quality score yet. Never read build as quality upgrade over larger quants. Second: steering stays off. V4 direction vectors fit no V4.1, and V4.1 ships no direction yet (<a href="#steering">Chapter 4</a>). Third: no speculative decoding. No room beside Q1 in 128 GB for DSpark drafter, and DSpark measured slower than plain decode on V4.1. 0.6 and 0.5 entries below: history, for previous-weight records.
+      Three plain warnings. First: Q1 exists to fit a 128 GB Mac, no official continuation-quality score yet. Never read build as quality upgrade over larger quants. Second: steering stays off by default. V4 direction vectors fit no V4.1. Since 0.7.2 one V4.1 direction ships, opt-in only (<a href="#steering">Chapter 4</a>). Third: no speculative decoding. No room beside Q1 in 128 GB for DSpark drafter, and DSpark measured slower than plain decode on V4.1. 0.6 and 0.5 entries below: history, for previous-weight records.
     </p>
     <p lang="zh-TW">
-      先說三件實話。第一，Q1 為塞進 128 GB Mac 折衷，還沒有官方續寫品質分數，不要當贏過更大量化版的品質升級。第二，引導維持關閉：V4 方向向量不合 V4.1，V4.1 方向尚未附（<a href="#steering">第四章</a>）。第三，沒有推測解碼：128 GB 裡 Q1 旁放不下 DSpark 草稿模型，DSpark 在 V4.1 也比一般 decode 慢。下面 0.6 與 0.5 是歷史，留給需要上一組權重的人。
+      先說三件實話。第一，Q1 為塞進 128 GB Mac 折衷，還沒有官方續寫品質分數，不要當贏過更大量化版的品質升級。第二，引導預設關閉：V4 方向向量不合 V4.1。0.7.2 起附一個 V4.1 方向，要自己開（<a href="#steering">第四章</a>）。第三，沒有推測解碼：128 GB 裡 Q1 旁放不下 DSpark 草稿模型，DSpark 在 V4.1 也比一般 decode 慢。下面 0.6 與 0.5 是歷史，留給需要上一組權重的人。
     </p>
 
     <h3><span class="no">0.7.0</span><span lang="en-GB">What changed in the extension</span><span lang="zh-TW">擴充套件改了什麼</span></h3>
@@ -1286,6 +1286,19 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       <li><strong>8000 埠只能是 ds4-server。</strong>已有其他程式在 <code>http://127.0.0.1:8000/v1</code> 回應時，擴充套件停下，回報「Something is already answering … could not identify it as a ds4-server」，附找出該程式的 <code>lsof</code> 指令。舊版把任何回應當已就緒伺服器，跳過記憶體與模型檢查，請求送那程式，回不相干錯誤（測試 Mac 是 <code>deepseek-v4-flash</code> 的 404）。</li>
       <li><strong>記憶體容量照 Apple 標示。</strong>檢查把 128 GB Mac 顯示 128 GB，不再 137.4 GB。可鎖定記憶體訊息直寫要執行指令。</li>
       <li><strong>手機。</strong>在窄螢幕上，開頭畫面的下半部會依文字調整高度，「往下捲動」不再被頁尾蓋住。</li>
+    </ul>
+
+    <h3><span class="no">0.7.2</span><span lang="en-GB">A V4.1 steering direction, and a flag fix</span><span lang="zh-TW">V4.1 引導方向與旗標修正</span></h3>
+
+    <ul lang="en-GB">
+      <li><strong>Engine pin <code>d6d6320</code>.</strong> <code>d3f4cd6</code> plus a V4.1 activation capture for building directions, and one bundled direction. Same GGUF pair.</li>
+      <li><strong><code>candor-v41.f32</code>, opt-in.</strong> Built from 30 contrast pairs (zjj1993’s recipe): questions on politically sensitive history beside comparable questions about other places. At FFN 1 it projects that component out instead of pushing the other way. 48 held-out sensitive-history prompts, abliterated Q1, thinking off: evasive answers 23 → 9, calibrated 14 → 25. With the <a href="#4.5">§4.5</a> prompt as well: 3 evasive, 33 calibrated. 20 arithmetic, fact and code checks unchanged. Some former refusals come back one-sided (8 → 13), and memorised one-line answers survive the direction alone (<a href="#steering">Chapter 4</a>).</li>
+      <li><strong>Steering starts again.</strong> Earlier 0.7 versions passed <code>--dir-steering-policy</code>, which this engine rejects, so opting in stopped <code>ds4-server</code> from starting. The flag and <code>DS4_DIR_STEERING_POLICY</code> are gone. Steering applies to every token.</li>
+    </ul>
+    <ul lang="zh-TW">
+      <li><strong>引擎固定 <code>d6d6320</code>。</strong><code>d3f4cd6</code> 加上建方向用的 V4.1 激勵值擷取，另附一個方向。GGUF 不變。</li>
+      <li><strong><code>candor-v41.f32</code>，要自己開。</strong>由 30 組對照提示建成（zjj1993 的做法）：政治敏感歷史的提問，配上其他地方的可比提問。在 FFN 1 把這個分量投影掉，不往反方向推。48 條保留的敏感歷史提示，abliterated Q1、不思考：迴避回答 23 → 9，持平回答 14 → 25。再加 <a href="#4.5">§4.5</a> 提示：迴避 3、持平 33。20 題算術、事實、程式檢查不變。部分原本拒答的變成一面之詞（8 → 13），背好的一句話答案單靠方向仍在（<a href="#steering">第四章</a>）。</li>
+      <li><strong>引導能再啟動。</strong>0.7 早先版本傳 <code>--dir-steering-policy</code>，這個引擎不接受，開引導 <code>ds4-server</code> 就起不來。旗標與 <code>DS4_DIR_STEERING_POLICY</code> 都拿掉了。引導套用到每個 token。</li>
     </ul>
 
     <h3><span class="no">0.6</span><span lang="en-GB">The 0.6 series, for the record</span><span lang="zh-TW">0.6 系列，存檔備查</span></h3>
@@ -1755,10 +1768,10 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
       Mixture-of-Experts（MoE，專家混合）：40 層，384 路由專家加一共用專家，每 token 用 6 路由專家。token 是模型讀寫文字最小單位。隱藏層寬度（帶每 token 穿各層向量大小）5120。官方 context window 1M token。本擴充套件預設開 256k。128 GB Mac 開不了完整 1M（<a href="#6.4">§6.4</a>）。
     </p>
     <p lang="en-GB">
-      Engine: antirez’s <a href="https://github.com/antirez/ds4">ds4</a>, a local inference engine (program running the model on your machine), plain C, Redis tradition. This extension uses the <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> fork <code>main</code> branch, pinned <code>d3f4cd6</code>. That commit adds IQ1_S on Metal, faster single-token Q5_K/Q6_K route, V4.1 context fit, and merges kernelpool’s V4.1 Metal work. Managed launch leaves directional steering off (<a href="#steering">Chapter 4</a>).
+      Engine: antirez’s <a href="https://github.com/antirez/ds4">ds4</a>, a local inference engine (program running the model on your machine), plain C, Redis tradition. This extension uses the <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> fork <code>main</code> branch, pinned <code>d6d6320</code>: IQ1_S on Metal, faster single-token Q5_K/Q6_K route, V4.1 context fit, kernelpool’s V4.1 Metal work and one bundled V4.1 steering direction. Managed launch leaves directional steering off (<a href="#steering">Chapter 4</a>).
     </p>
     <p lang="zh-TW">
-      引擎是 antirez 的 <a href="https://github.com/antirez/ds4">ds4</a>，本機推論引擎（在你電腦跑模型的程式），純 C，延續 Redis 風格。本擴充套件用 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 分叉 <code>main</code>，釘 <code>d3f4cd6</code>。該 commit 在 Metal 加 IQ1_S、更快單 token Q5_K／Q6_K 路徑、V4.1 context 適配，合併 kernelpool V4.1 Metal 工作。代管啟動方向性引導預設關（<a href="#steering">第四章</a>）。
+      引擎是 antirez 的 <a href="https://github.com/antirez/ds4">ds4</a>，本機推論引擎（在你電腦跑模型的程式），純 C，延續 Redis 風格。本擴充套件用 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> 分叉 <code>main</code>，釘 <code>d6d6320</code>：Metal 加 IQ1_S、更快單 token Q5_K／Q6_K 路徑、V4.1 context 適配，合併 kernelpool V4.1 Metal 工作，另附一個 V4.1 引導方向。代管啟動方向性引導預設關（<a href="#steering">第四章</a>）。
     </p>
 
     <p lang="en-GB">
@@ -1844,10 +1857,10 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
       這分叉只留一樣：方向性引導。引導在執行當下調整模型，沿選定方向輕推激勵值（內部訊號）。只動很少方向，稱低秩。不重新訓練，硬碟權重不變。本分叉附帶方向叫<em>不確定性</em>，讓模型把有爭議問題當有爭議對待。
     </p>
     <p lang="en-GB">
-      Status first: steering changed in 0.7.0. V4.1 needs one f32 direction per layer at 40 × 5120 width. V4 vectors in <code>dir-steering/out/</code> (43 × 4096, including <code>uncertainty_ablit_imatrix.f32</code>) cannot fit. No V4.1 direction ships yet. <code>DS4_DIR_STEERING_FILE</code> defaults empty; managed launches leave steering <em>off</em>. Opt-in needs your own V4.1 vector (<a href="#4.6">§4.6</a>). <a href="#advanced">Chapter 11</a> shows the build. Side-by-side outputs and <code>ffn = −0.75</code> guidance below came from V4 weights: V4 evidence for the method, no promise about V4.1.
+      Status first: steering changed in 0.7.0 and again in 0.7.2. V4.1 needs one f32 direction per layer at 40 × 5120 width. V4 vectors (43 × 4096, including <code>uncertainty_ablit_imatrix.f32</code>) cannot fit. Since 0.7.2 the engine ships one V4.1 direction, <code>dir-steering/out/candor-v41.f32</code>. It targets evasion on politically sensitive history, not the uncertainty register below (<a href="#4.6">§4.6</a>). <code>DS4_DIR_STEERING_FILE</code> defaults empty; managed launches leave steering <em>off</em>. <a href="#advanced">Chapter 11</a> shows how to build your own. Side-by-side outputs and <code>ffn = −0.75</code> guidance below came from V4 weights: V4 evidence for the method, no promise about V4.1.
     </p>
     <p lang="zh-TW">
-      先說現況：0.7.0 改了這件事。V4.1 每層需一 f32 方向，寬度 40 × 5120。<code>dir-steering/out/</code> 的 V4 向量（43 × 4096，含 <code>uncertainty_ablit_imatrix.f32</code>）放不進，V4.1 方向尚未附。<code>DS4_DIR_STEERING_FILE</code> 預設空，代管啟動<em>不開啟</em>引導。要開得自備 V4.1 向量（<a href="#4.6">§4.6</a>），做法在<a href="#advanced">第十一章</a>。下面並排輸出與 <code>ffn = −0.75</code> 建議來自 V4 權重：方法在 V4 的證據，不構成對 V4.1 承諾。
+      先說現況：0.7.0 改了這件事，0.7.2 又改一次。V4.1 每層需一 f32 方向，寬度 40 × 5120。V4 向量（43 × 4096，含 <code>uncertainty_ablit_imatrix.f32</code>）放不進。0.7.2 起引擎附一個 V4.1 方向 <code>dir-steering/out/candor-v41.f32</code>，針對政治敏感歷史上的迴避，不是下面講的不確定性語域（<a href="#4.6">§4.6</a>）。<code>DS4_DIR_STEERING_FILE</code> 預設空，代管啟動<em>不開啟</em>引導。自己建方向的做法在<a href="#advanced">第十一章</a>。下面並排輸出與 <code>ffn = −0.75</code> 建議來自 V4 權重：方法在 V4 的證據，不構成對 V4.1 承諾。
     </p>
 
     <h3 id="4.1"><span class="no">4.1</span><span lang="en-GB">The problem it solves</span><span lang="zh-TW">它解決什麼問題</span></h3>
@@ -1953,13 +1966,13 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
 
     <h3 id="4.6"><span class="no">4.6</span><span lang="en-GB">Turn it on and off</span><span lang="zh-TW">開啟與關閉</span></h3>
 
-    <p lang="en-GB">Managed steering off by default. Turn on: own V4.1 direction file plus these variables in shell before starting pi. Strengths below carry V4 measurement. Remeasure for V4.1:</p>
-    <p lang="zh-TW">代管引導預設關。要開自備 V4.1 方向檔，啟動 pi 的 shell 設這幾變數。下面強度 V4 實測。用 V4.1 前重測：</p>
+    <p lang="en-GB">Managed steering off by default. To turn on, set these in shell before starting pi. Bundled V4.1 direction, measured at FFN 1. Pairs best with the <a href="#4.5">§4.5</a> prompt:</p>
+    <p lang="zh-TW">代管引導預設關。要開，啟動 pi 前在 shell 設這幾變數。附帶的 V4.1 方向，在 FFN 1 實測過，與 <a href="#4.5">§4.5</a> 提示搭配最好：</p>
 
     <div class="term">
-      <div class="term-bar"><span><span lang="en-GB">opt in to uncertainty steering</span><span lang="zh-TW">開啟不確定性引導</span></span><button class="copy" aria-label="Copy the commands to enable steering"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
-      <pre><span class="k">export</span> DS4_DIR_STEERING_FILE<span class="k">=</span><span class="v">dir-steering/out/my-v4.1-direction.f32</span>
-<span class="k">export</span> DS4_DIR_STEERING_FFN<span class="k">=</span><span class="v">-0.75</span>
+      <div class="term-bar"><span><span lang="en-GB">opt in to steering</span><span lang="zh-TW">開啟引導</span></span><button class="copy" aria-label="Copy the commands to enable steering"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
+      <pre><span class="k">export</span> DS4_DIR_STEERING_FILE<span class="k">=</span><span class="v">dir-steering/out/candor-v41.f32</span>
+<span class="k">export</span> DS4_DIR_STEERING_FFN<span class="k">=</span><span class="v">1</span>
 <span class="k">export</span> DS4_DIR_STEERING_ATTN<span class="k">=</span><span class="v">0</span></pre>
     </div>
 
@@ -1982,10 +1995,10 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
     <div class="aside">
       <span class="label"><span lang="en-GB">Where the vector comes from</span><span lang="zh-TW">引導向量的來源</span></span>
       <p lang="en-GB">
-        <code>uncertainty_ablit_imatrix.f32</code>: low-rank direction from 120 contested prompts, half English, half Traditional Chinese. Prompts <em>deliberately exclude Taiwan and Hong Kong</em>, so §4.2 test shows generalisation, not memorisation. Current build: same prompts, fair stakeholder framing against direct single-answer framing. Calibration: V4 weights, V4 shape (one direction per layer, 43 × 4096). V4.1 runs 40 × 5120, so v 0.7 cannot use file. File stays in <code>audreyt/ds4</code> under <code>dir-steering/out/</code> for V4 users. Full method: <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>.
+        <code>uncertainty_ablit_imatrix.f32</code>: low-rank direction from 120 contested prompts, half English, half Traditional Chinese. Prompts <em>deliberately exclude Taiwan and Hong Kong</em>, so §4.2 test shows generalisation, not memorisation. Current build: same prompts, fair stakeholder framing against direct single-answer framing. Calibration: V4 weights, V4 shape (one direction per layer, 43 × 4096). V4.1 runs 40 × 5120, so v 0.7 cannot use file, and <code>audreyt/ds4</code> <code>main</code> does not carry it. <code>candor-v41.f32</code>, the V4.1 direction, comes from 30 contrast pairs (zjj1993’s recipe): questions on politically sensitive history beside comparable questions about other places. Captured on unabliterated V4.1, layers 3 to 36. Full method: <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>.
       </p>
       <p lang="zh-TW">
-        <code>uncertainty_ablit_imatrix.f32</code>：120 條有爭議提示建出的低秩方向，英文與繁體中文各半，<em>刻意不含台灣和香港</em>。§4.2 測試因此顯示泛化，非背誦。目前版本以同一批提示比較「公正呈現利害關係人」與「直接給單一答案」。校準在 V4 權重，形狀也是 V4：每層一方向，43 × 4096。V4.1 是 40 × 5120，v 0.7 用不了。檔案仍在 <code>audreyt/ds4</code> 的 <code>dir-steering/out/</code> 給 V4 使用者。完整方法見 <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>。
+        <code>uncertainty_ablit_imatrix.f32</code>：120 條有爭議提示建出的低秩方向，英文與繁體中文各半，<em>刻意不含台灣和香港</em>。§4.2 測試因此顯示泛化，非背誦。目前版本以同一批提示比較「公正呈現利害關係人」與「直接給單一答案」。校準在 V4 權重，形狀也是 V4：每層一方向，43 × 4096。V4.1 是 40 × 5120，v 0.7 用不了，<code>audreyt/ds4</code> 的 <code>main</code> 也不帶這個檔。V4.1 方向 <code>candor-v41.f32</code> 來自 30 組對照提示（zjj1993 的做法）：政治敏感歷史的提問，配上其他地方的可比提問。在未 abliterate 的 V4.1 上擷取，第 3 到 36 層。完整方法見 <a href="https://github.com/audreyt/ds4/blob/main/dir-steering/README.md">dir-steering README</a>。
       </p>
     </div>
   </section>
@@ -2022,10 +2035,10 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
         </dd>
       </div>
       <div>
-        <dt>DS4_SUPPORT_PIN<span class="default"><span lang="en-GB">default: d3f4cd6</span><span lang="zh-TW">預設：d3f4cd6</span></span></dt>
+        <dt>DS4_SUPPORT_PIN<span class="default"><span lang="en-GB">default: d6d6320</span><span lang="zh-TW">預設：d6d6320</span></span></dt>
         <dd>
-          <p lang="en-GB">The exact <code>audreyt/ds4</code> commit enforced at every start. Mismatch triggers fetch, hard reset and deletion of cached <code>ds4-server</code> / <code>ds4-agent</code> binaries for rebuild. Empty string leaves the local checkout alone. v 0.7.1 pins <code>d3f4cd6</code>: IQ1_S on Metal, faster single-token Q5_K/Q6_K route, V4.1 context fit. v 0.6.1 pinned <code>7855b7a</code>.</p>
-          <p lang="zh-TW">每次啟動強制使用的 <code>audreyt/ds4</code> commit。不符時 fetch 該 commit、hard reset checkout、刪快取的 <code>ds4-server</code>／<code>ds4-agent</code> 強制重編。空字串維持本機 checkout。v 0.7.1 釘 <code>d3f4cd6</code>：Metal IQ1_S、更快的單 token Q5_K／Q6_K 路徑、V4.1 context 適配。v 0.6.1 釘 <code>7855b7a</code>。</p>
+          <p lang="en-GB">The exact <code>audreyt/ds4</code> commit enforced at every start. Mismatch triggers fetch, hard reset and deletion of cached <code>ds4-server</code> / <code>ds4-agent</code> binaries for rebuild. Empty string leaves the local checkout alone. v 0.7.2 pins <code>d6d6320</code>: IQ1_S on Metal, faster single-token Q5_K/Q6_K route, V4.1 context fit, bundled V4.1 steering direction. v 0.6.1 pinned <code>7855b7a</code>.</p>
+          <p lang="zh-TW">每次啟動強制使用的 <code>audreyt/ds4</code> commit。不符時 fetch 該 commit、hard reset checkout、刪快取的 <code>ds4-server</code>／<code>ds4-agent</code> 強制重編。空字串維持本機 checkout。v 0.7.2 釘 <code>d6d6320</code>：Metal IQ1_S、更快的單 token Q5_K／Q6_K 路徑、V4.1 context 適配、附帶的 V4.1 引導方向。v 0.6.1 釘 <code>7855b7a</code>。</p>
         </dd>
       </div>
       <div>
@@ -2169,15 +2182,15 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
       <div>
         <dt>DS4_DIR_STEERING_FILE<span class="default"><span lang="en-GB">default: empty (steering off)</span><span lang="zh-TW">預設：空（引導關閉）</span></span></dt>
         <dd>
-          <p lang="en-GB">Steering vector path relative to ds4 checkout root. Default empty: steering off. V4.1 needs its own direction at 40 × 5120, none ships yet. V4 vectors in <code>dir-steering/out/</code> cannot fit. Point variable at own direction (<a href="#advanced">Chapter 11</a>).</p>
-          <p lang="zh-TW">引導向量路徑，從 ds4 checkout 根起算。預設空，引導關。V4.1 需自己方向：40 × 5120，尚未附。<code>dir-steering/out/</code> V4 向量放不進。請指自己建立方向（<a href="#advanced">第十一章</a>）。</p>
+          <p lang="en-GB">Steering vector path relative to ds4 checkout root. Default empty: steering off. V4.1 needs its own direction at 40 × 5120. The bundled one is <code>dir-steering/out/candor-v41.f32</code> (<a href="#4.6">§4.6</a>). V4 vectors cannot fit. Or point at your own (<a href="#advanced">Chapter 11</a>).</p>
+          <p lang="zh-TW">引導向量路徑，從 ds4 checkout 根起算。預設空，引導關。V4.1 需自己方向：40 × 5120，附帶的是 <code>dir-steering/out/candor-v41.f32</code>（<a href="#4.6">§4.6</a>）。V4 向量放不進。也可指向自己建立的方向（<a href="#advanced">第十一章</a>）。</p>
         </dd>
       </div>
       <div>
         <dt>DS4_DIR_STEERING_FFN<span class="default"><span lang="en-GB">default: off (unset) · V4 measurement: −0.75</span><span lang="zh-TW">預設：關（未設）· V4 的實測值：−0.75</span></span></dt>
         <dd>
-          <p lang="en-GB">Steering strength at FFN output. Negative values strengthen the vector’s direction. Positive values reverse the direction. <code>0</code> turns the FFN side off. <code>−0.75</code> kept tool calls intact on V4 (Headroom128). Nobody has measured that strength on V4.1 (<a href="#4.4">§4.4</a>).</p>
-          <p lang="zh-TW">FFN 輸出端的引導強度。負值加強向量方向，正值反轉方向。<code>0</code> 關閉 FFN 端。<code>−0.75</code> 在 V4（Headroom128）上能保住工具呼叫，還沒在 V4.1 上量過（<a href="#4.4">§4.4</a>）。</p>
+          <p lang="en-GB">Steering strength at FFN output. Negative values strengthen the vector’s direction. Positive values reverse the direction. <code>0</code> turns the FFN side off. <code>−0.75</code> kept tool calls intact on V4 (Headroom128). Nobody has measured that strength on V4.1 (<a href="#4.4">§4.4</a>). Bundled <code>candor-v41.f32</code>: measured at <code>1</code>, which removes its component.</p>
+          <p lang="zh-TW">FFN 輸出端的引導強度。負值加強向量方向，正值反轉方向。<code>0</code> 關閉 FFN 端。<code>−0.75</code> 在 V4（Headroom128）上能保住工具呼叫，還沒在 V4.1 上量過（<a href="#4.4">§4.4</a>）。附帶的 <code>candor-v41.f32</code>：實測用 <code>1</code>，把該分量移除。</p>
         </dd>
       </div>
       <div>
@@ -2830,8 +2843,8 @@ resp = client.responses.create(
   --kv-disk-dir ~/.pi/ds4/kv \
   --kv-disk-space-mb <span class="v">65536</span> \
   --vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf \
-  --dir-steering-file <span class="v">your-v4.1-direction.f32</span> \
-  --dir-steering-ffn <span class="v">-0.75</span> \
+  --dir-steering-file <span class="v">dir-steering/out/candor-v41.f32</span> \
+  --dir-steering-ffn <span class="v">1</span> \
   --dir-steering-attn <span class="v">0</span></pre>
     </div>
 
@@ -2855,7 +2868,7 @@ resp = client.responses.create(
       <pre><span class="c"># <span lang="en-GB">1. Fetch and build the engine at this release’s pin (Metal only for this model, see §8.7)</span><span lang="zh-TW">1. 取得並依這個版本的釘版編譯引擎（這顆模型只走 Metal，見 §8.7）</span></span>
 git clone https://github.com/audreyt/ds4
 <span class="k">cd</span> ds4
-git checkout d3f4cd6
+git checkout d6d6320
 make ds4-server
 
 <span class="c"># <span lang="en-GB">2. The V4.1 Q1 download script from pi-ds4, not ds4's own stock-recipe one</span><span lang="zh-TW">2. 用 pi-ds4 的 V4.1 Q1 下載腳本，不是 ds4 自帶的原版配方那支</span></span>
@@ -3550,10 +3563,10 @@ STATE=~/.pi/ds4/server.json
     <h3 id="afterword"><span lang="en-GB">Afterword</span><span lang="zh-TW">後話</span></h3>
 
     <p lang="en-GB">
-      Technically, running a frontier model on your machine moves computation. Politically, the move retakes the steering wheel. This fork ships <em>uncertainty steering</em> as a switch (on V4 today; V4.1 still needs its own direction). Steering decides no question for you. Steering returns discussion room on questions training sealed shut. A choice, no default, for the same reason managed launch passes nothing unrequested: a chosen nudge has a name, a measurable size and an off switch.
+      Technically, running a frontier model on your machine moves computation. Politically, the move retakes the steering wheel. This fork ships steering as a switch: <em>uncertainty</em> on V4, <em>candor</em> on V4.1. Steering decides no question for you. Steering returns discussion room on questions training sealed shut. A choice, no default, for the same reason managed launch passes nothing unrequested: a chosen nudge has a name, a measurable size and an off switch.
     </p>
     <p lang="zh-TW">
-      把最前沿模型放在自己的機器跑，技術上只是把運算搬個地方。政治上，是把方向盤拿回自己手裡。這個分叉把<em>不確定性引導</em>做成可開的選項（目前在 V4，V4.1 還需要自己的方向）。它不替你決定答案，只在被訓練封死的問題前把討論空間還給你。它是選項不是預設，道理與代管啟動不傳未要求的參數相同：自己選的推力，說得出名字、量得出大小、拿得掉。
+      把最前沿模型放在自己的機器跑，技術上只是把運算搬個地方。政治上，是把方向盤拿回自己手裡。這個分叉把引導做成可開的選項：V4 是<em>不確定性</em>，V4.1 是<em>坦率</em>。它不替你決定答案，只在被訓練封死的問題前把討論空間還給你。它是選項不是預設，道理與代管啟動不傳未要求的參數相同：自己選的推力，說得出名字、量得出大小、拿得掉。
     </p>
 
     <p class="pull q" lang="en-GB">A model can close a question on an answer. The user can open it back into a discussion. This guide has done its job when you no longer need it.</p>
@@ -3562,7 +3575,7 @@ STATE=~/.pi/ds4/server.json
     <div class="signoff">
       <div class="hand">
         <span lang="en-GB">With care,<br>Audrey Tang</span><span lang="zh-TW">敬祝 自由<br>唐鳳</span>
-        <small><span lang="en-GB">21 October 2026 · pi-ds4 v 0.7.1</span><span lang="zh-TW">2026 年 10 月 21 日 · pi-ds4 v 0.7.1</span></small>
+        <small><span lang="en-GB">21 October 2026 · pi-ds4 v 0.7.2</span><span lang="zh-TW">2026 年 10 月 21 日 · pi-ds4 v 0.7.2</span></small>
       </div>
       <div class="seal" aria-label="Seal: 唐鳳" role="img">唐鳳</div>
     </div>
