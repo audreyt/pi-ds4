@@ -147,9 +147,10 @@ function defaultKvDiskSpaceMb(): string {
 const KV_DISK_SPACE_MB = process.env.DS4_KV_DISK_SPACE_MB?.trim() || defaultKvDiskSpaceMb();
 // Directional steering is opt-in. V4.1 needs one f32 direction per layer at
 // its own width (40 x 5120); the V4 vectors in the ds4 checkout
-// (dir-steering/out/*.f32, 43 x 4096) do not fit it, and no V4.1 direction
-// ships yet. Set DS4_DIR_STEERING_FILE to a V4.1 .f32 and DS4_DIR_STEERING_FFN
-// (optionally ATTN) to enable.
+// (dir-steering/out/*.f32, 43 x 4096) do not fit it. Set DS4_DIR_STEERING_FILE
+// to a V4.1 .f32 and DS4_DIR_STEERING_FFN (optionally ATTN) to enable. The
+// pinned engine edits every token (prompt, thinking, answer and tool calls)
+// and rejects --dir-steering-policy, so server and agent get the same flags.
 //
 // When enabled, keep FFN-only for tool-enabled agent runs. On V4, seeded
 // OpenClaw/Codex-harness replays showed ffn=-2, attn=-0.5 can over-amplify the
@@ -157,16 +158,7 @@ const KV_DISK_SPACE_MB = process.env.DS4_KV_DISK_SPACE_MB?.trim() || defaultKvDi
 const STEERING_FILE = process.env.DS4_DIR_STEERING_FILE ?? "";
 const STEERING_FFN = process.env.DS4_DIR_STEERING_FFN ?? "0";
 const STEERING_ATTN = process.env.DS4_DIR_STEERING_ATTN ?? "0";
-const STEERING_POLICY = process.env.DS4_DIR_STEERING_POLICY ?? "final-answer";
 const STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
-	? [
-		"--dir-steering-file", STEERING_FILE,
-		"--dir-steering-ffn", STEERING_FFN,
-		"--dir-steering-attn", STEERING_ATTN,
-		"--dir-steering-policy", STEERING_POLICY,
-	]
-	: [];
-const AGENT_STEERING_ARGS = STEERING_FILE && (Number(STEERING_FFN) !== 0 || Number(STEERING_ATTN) !== 0)
 	? [
 		"--dir-steering-file", STEERING_FILE,
 		"--dir-steering-ffn", STEERING_FFN,
@@ -1725,7 +1717,7 @@ function buildAgentArgs(initialPrompt: string): string[] {
 		"--tokens", AGENT_TOKENS,
 		"--vision", VISION_ENCODER_REL,
 		...selectedAgentThinkingArgs(),
-		...AGENT_STEERING_ARGS,
+		...STEERING_ARGS,
 	];
 	const traceFile = selectedAgentTraceFile();
 	if (REPRODUCIBLE) args.push("--seed", String(REPRODUCIBLE_SEED));

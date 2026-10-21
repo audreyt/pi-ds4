@@ -1687,7 +1687,7 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
 <span class="c"># 65536 is the default on a 128 GB Mac
 # steering is off unless you opt in with your own V4.1 direction (Chapter 4):
 #   --dir-steering-file &lt;your 40 × 5120 direction file&gt;
-#   --dir-steering-ffn &lt;strength&gt; --dir-steering-attn 0 --dir-steering-policy final-answer</span></code>
+#   --dir-steering-ffn &lt;strength&gt; --dir-steering-attn 0</span></code>
         </div>
       </li>
       <li>
@@ -1960,8 +1960,7 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
       <div class="term-bar"><span><span lang="en-GB">opt in to uncertainty steering</span><span lang="zh-TW">開啟不確定性引導</span></span><button class="copy" aria-label="Copy the commands to enable steering"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
       <pre><span class="k">export</span> DS4_DIR_STEERING_FILE<span class="k">=</span><span class="v">dir-steering/out/my-v4.1-direction.f32</span>
 <span class="k">export</span> DS4_DIR_STEERING_FFN<span class="k">=</span><span class="v">-0.75</span>
-<span class="k">export</span> DS4_DIR_STEERING_ATTN<span class="k">=</span><span class="v">0</span>
-<span class="k">export</span> DS4_DIR_STEERING_POLICY<span class="k">=</span><span class="v">final-answer</span></pre>
+<span class="k">export</span> DS4_DIR_STEERING_ATTN<span class="k">=</span><span class="v">0</span></pre>
     </div>
 
     <p lang="en-GB">Raw answers again (evaluation, regression test): both strengths zero. Launch omits <code>--dir-steering-*</code> arguments:</p>
@@ -1974,10 +1973,10 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
     </div>
 
     <p lang="en-GB">
-      Either way restart pi or run <code>/reload</code> inside pi. Next <code>ds4-server</code> launch uses new setting. Keep file and strengths configured, pause change: one variable, <code>DS4_DIR_STEERING_POLICY=off</code>.
+      Either way restart pi or run <code>/reload</code> inside pi. Next <code>ds4-server</code> launch uses new setting. Steering applies to every token: prompt, thinking, reply and tool calls. Pause it with both strengths at zero. The file setting can stay.
     </p>
     <p lang="zh-TW">
-      任一設定重啟 pi 或在 pi 執行 <code>/reload</code>。下次 <code>ds4-server</code> 啟動採新設定。保留檔與強度只暫停套用設一變數：<code>DS4_DIR_STEERING_POLICY=off</code>。
+      任一設定重啟 pi 或在 pi 執行 <code>/reload</code>。下次 <code>ds4-server</code> 啟動採新設定。引導套用到每個 token：提示、思考、回答與工具呼叫。要暫停就把兩強度設零，檔案設定可以留著。
     </p>
 
     <div class="aside">
@@ -2188,13 +2187,6 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
           <p lang="zh-TW">注意力輸出端的引導強度。有開工具就維持 <code>0</code>。非零注意力引導只用於隔離評估掃描。</p>
         </dd>
       </div>
-      <div>
-        <dt>DS4_DIR_STEERING_POLICY<span class="default"><span lang="en-GB">default: final-answer</span><span lang="zh-TW">預設：final-answer</span></span></dt>
-        <dd>
-          <p lang="en-GB">Scope passed to <code>ds4-server --dir-steering-policy</code>. pi-ds4 uses <code>final-answer</code>: prefill (reading the whole prompt first), thinking and DSML tool-call grammar stay unsteered. Only the final natural-language reply receives steering. Server built-in default stays <code>always</code>. <code>off</code> keeps file and strengths set, applying nothing.</p>
-          <p lang="zh-TW">傳給 <code>ds4-server --dir-steering-policy</code> 的套用範圍。pi-ds4 用 <code>final-answer</code>：prefill（先讀完整段提示）、思考、DSML 工具呼叫語法不引導，只有最後自然語言回答引導。伺服器內建預設仍 <code>always</code>。<code>off</code> 保留檔案與強度，不套用。</p>
-        </dd>
-      </div>
     </dl>
 
     <div class="aside">
@@ -2265,10 +2257,10 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-Abliterated-Q1.gguf <span class="hi">ds4flash.g
     </dl>
 
     <p lang="en-GB">
-      <code>/ds4-agent</code> shares <code>DS4_REPRODUCIBLE_SEED</code>, <code>DS4_CONTEXT_KB</code>, <code>DS4_DIR_STEERING_FILE</code>, <code>FFN</code> and <code>ATTN</code>. The native agent ignores <code>DS4_DIR_STEERING_POLICY</code>: no such flag exists there yet. The native agent also ignores server-only <code>DS4_KV_DISK_SPACE_MB</code>.
+      <code>/ds4-agent</code> shares <code>DS4_REPRODUCIBLE_SEED</code>, <code>DS4_CONTEXT_KB</code>, <code>DS4_DIR_STEERING_FILE</code>, <code>FFN</code> and <code>ATTN</code>. The native agent ignores server-only <code>DS4_KV_DISK_SPACE_MB</code>.
     </p>
     <p lang="zh-TW">
-      <code>/ds4-agent</code> 共用 <code>DS4_REPRODUCIBLE_SEED</code>、<code>DS4_CONTEXT_KB</code>、<code>DS4_DIR_STEERING_FILE</code>、<code>FFN</code>、<code>ATTN</code>。原生智慧體不用 <code>DS4_DIR_STEERING_POLICY</code>，因為那邊還沒有這個旗標，也不用只限伺服器的 <code>DS4_KV_DISK_SPACE_MB</code>。
+      <code>/ds4-agent</code> 共用 <code>DS4_REPRODUCIBLE_SEED</code>、<code>DS4_CONTEXT_KB</code>、<code>DS4_DIR_STEERING_FILE</code>、<code>FFN</code>、<code>ATTN</code>。原生智慧體不用只限伺服器的 <code>DS4_KV_DISK_SPACE_MB</code>。
     </p>
   </section>
 
@@ -2731,10 +2723,10 @@ enabled = <span class="v">true</span></pre>
     </div>
 
     <p lang="en-GB">
-      OpenClaw in Docker or OrbStack sees the container at <code>127.0.0.1</code>. Use <code>host.docker.internal:8000</code>. Or passthrough <code>api-proxy</code>: <code>http://api-proxy:1234/v1</code> forwards to host <code>http://127.0.0.1:8000/v1</code>. First Codex-harness turns often carry 50,000+ token tool prompts. ds4-server disk KV cache (<a href="#6.4">§6.4</a>) speeds retries and nearby sessions sharply. Steering here keeps calibrated FFN-only settings: <code>DS4_DIR_STEERING_FFN=-0.75</code>, <code>DS4_DIR_STEERING_ATTN=0</code>, <code>DS4_DIR_STEERING_POLICY=final-answer</code>. Older <code>ffn=-2, attn=-0.5</code> acid-test settings can leak into DSML and tool-call syntax at this prompt length.
+      OpenClaw in Docker or OrbStack sees the container at <code>127.0.0.1</code>. Use <code>host.docker.internal:8000</code>. Or passthrough <code>api-proxy</code>: <code>http://api-proxy:1234/v1</code> forwards to host <code>http://127.0.0.1:8000/v1</code>. First Codex-harness turns often carry 50,000+ token tool prompts. ds4-server disk KV cache (<a href="#6.4">§6.4</a>) speeds retries and nearby sessions sharply. Steering here keeps calibrated FFN-only settings: <code>DS4_DIR_STEERING_FFN=-0.75</code> and <code>DS4_DIR_STEERING_ATTN=0</code>. Older <code>ffn=-2, attn=-0.5</code> acid-test settings can leak into DSML and tool-call syntax at this prompt length.
     </p>
     <p lang="zh-TW">
-      OpenClaw 跑 Docker 或 OrbStack 時，容器內 <code>127.0.0.1</code> 是容器自己。用 <code>host.docker.internal:8000</code>，或如範例直通 <code>api-proxy</code>：<code>http://api-proxy:1234/v1</code> 轉送主機 <code>http://127.0.0.1:8000/v1</code>。Codex harness 第一回合常有 50,000 token 以上工具 prompt。ds4-server 磁碟 KV cache（<a href="#6.4">§6.4</a>）讓重試與相近對話快很多。此路開引導保留校準 FFN-only 設定：<code>DS4_DIR_STEERING_FFN=-0.75</code>、<code>DS4_DIR_STEERING_ATTN=0</code>、<code>DS4_DIR_STEERING_POLICY=final-answer</code>。舊 <code>ffn=-2, attn=-0.5</code> 壓力測試設定在這麼長 prompt 可能滲進 DSML 與工具呼叫語法。
+      OpenClaw 跑 Docker 或 OrbStack 時，容器內 <code>127.0.0.1</code> 是容器自己。用 <code>host.docker.internal:8000</code>，或如範例直通 <code>api-proxy</code>：<code>http://api-proxy:1234/v1</code> 轉送主機 <code>http://127.0.0.1:8000/v1</code>。Codex harness 第一回合常有 50,000 token 以上工具 prompt。ds4-server 磁碟 KV cache（<a href="#6.4">§6.4</a>）讓重試與相近對話快很多。此路開引導保留校準 FFN-only 設定：<code>DS4_DIR_STEERING_FFN=-0.75</code>、<code>DS4_DIR_STEERING_ATTN=0</code>。舊 <code>ffn=-2, attn=-0.5</code> 壓力測試設定在這麼長 prompt 可能滲進 DSML 與工具呼叫語法。
     </p>
 
     <h3 id="8.4"><span class="no">8.4</span><span lang="en-GB">Hermes Agent</span><span lang="zh-TW">Hermes Agent</span></h3>
@@ -2840,8 +2832,7 @@ resp = client.responses.create(
   --vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf \
   --dir-steering-file <span class="v">your-v4.1-direction.f32</span> \
   --dir-steering-ffn <span class="v">-0.75</span> \
-  --dir-steering-attn <span class="v">0</span> \
-  --dir-steering-policy <span class="v">final-answer</span></pre>
+  --dir-steering-attn <span class="v">0</span></pre>
     </div>
 
     <p lang="en-GB">
@@ -3168,7 +3159,6 @@ STATE=~/.pi/ds4/server.json
           <li><code>DS4_DIR_STEERING_FILE=dir-steering/out/my-direction.f32</code></li>
           <li><code>DS4_DIR_STEERING_FFN=-0.75</code>, or the magnitude your own testing settles on</li>
           <li><code>DS4_DIR_STEERING_ATTN=0</code>: keep at 0 whenever tools run</li>
-          <li><code>DS4_DIR_STEERING_POLICY=final-answer</code>: same rule here</li>
         </ul>
       </li>
       <li>Restart ds4-server and test: first with build prompts, then with fresh prompts.</li>
@@ -3183,7 +3173,6 @@ STATE=~/.pi/ds4/server.json
           <li><code>DS4_DIR_STEERING_FILE=dir-steering/out/my-direction.f32</code></li>
           <li><code>DS4_DIR_STEERING_FFN=-0.75</code>，或你自己測出的強度</li>
           <li><code>DS4_DIR_STEERING_ATTN=0</code>：有用到工具就維持 0</li>
-          <li><code>DS4_DIR_STEERING_POLICY=final-answer</code>：同理</li>
         </ul>
       </li>
       <li>重新啟動 ds4-server 測試：先用建向量時的提示，再用沒用過的提示。</li>

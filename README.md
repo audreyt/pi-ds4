@@ -220,7 +220,6 @@ Opt in for research with your own V4.1 vector:
 export DS4_DIR_STEERING_FILE=/path/to/v41-direction.f32   # 40 x 5120 float32
 export DS4_DIR_STEERING_FFN=-0.75
 export DS4_DIR_STEERING_ATTN=0
-export DS4_DIR_STEERING_POLICY=final-answer
 ```
 
 ![uncertainty demo](uncertainty.gif)
@@ -246,7 +245,7 @@ deterministic tool-call IDs from seeded requests on audreyt/ds4.
 * `DS4_REPRODUCIBLE` / `DS4_REPRODUCIBLE_SEED` — seed injection (default on / `42`)
 * `DS4_CONTEXT_KB` — context kilotokens (default `256`; `100` is a tight override and caps advertised `maxTokens`)
 * `DS4_KV_DISK_SPACE_MB` — KV disk budget (RAM-tiered default when unset)
-* `DS4_DIR_STEERING_FILE` / `_FFN` / `_ATTN` / `_POLICY` — steering controls (file defaults to empty; needs a V4.1-shaped vector)
+* `DS4_DIR_STEERING_FILE` / `_FFN` / `_ATTN` — steering controls (file defaults to empty; needs a V4.1-shaped vector; applied to every token)
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout; do not clobber its binaries
 * `DS4_SERVER_BINARY` / `DS4_AGENT_BINARY` — custom binary paths
 * `DS4_AGENT_TOKENS` / `DS4_AGENT_THINK` / `DS4_AGENT_SYSTEM` / `DS4_AGENT_TRACE`
