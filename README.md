@@ -12,8 +12,8 @@ on-demand server UX, different engine pin, preferred GGUF, and steering defaults
 
 **Managed path today: Apple Silicon (Metal) with 128 GB unified RAM, with
 Metal's wired-memory ceiling raised (`sudo sysctl iogpu.wired_limit_mb=114688`).** The
-managed model is DeepSeek V4.1 Flash 1017 abliterated Q1, and ds4 runs its
-IQ1_S experts and Q5_K/Q6_K dense weights only on Metal: CUDA and ROCm refuse
+managed model is DeepSeek V4.1 Flash 1017 Maya-XS abliterated. This build uses
+IQ1_S experts and Q8 dense weights on Metal: CUDA and ROCm refuse
 the file at open, so the extension refuses non-macOS hosts before downloading.
 On Linux CUDA/ROCm, or on a 96 GB Mac, stay on `v0.6.1` (V4 Vision-Exp IQ2) or
 bring your own GGUF and binary (see below). The build-target selection for
@@ -26,15 +26,17 @@ pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream exte
 pi install  https://github.com/audreyt/pi-ds4
 ```
 
-### What GitHub serves today (tag `v0.7.2`)
+### What this release serves (tag `v0.7.3`)
 
 | Item | Value |
 |---|---|
-| Package version | **0.7.2** |
-| `SUPPORT_PIN` | `d6d6320` (`audreyt/ds4` main: V4.1 Q1 on Metal, V4.1 context fit, kernelpool `ds41-perf` merge, bundled V4.1 steering direction) |
-| Preferred GGUF | DeepSeek V4.1 Flash 1017 abliterated Q1 from [`audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF) plus the 1017 vision sidecar from [`audreyt/deepseek-v4.1-flash-1017-gguf`](https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf) (selector `q1`, alias `preferred`) |
-| Default context | 256 k tokens (`DS4_CONTEXT_KB=256`). Without vision it opens with a 2048-row prefill; with the 0.9 GiB vision sidecar pi-ds4 loads, it opens with a 1024-row prefill (measured) |
-| Guide | **v0.7.2** V4.1 Q1 (~106 GiB resident + vision sidecar) |
+| Package version | **0.7.3** |
+| `SUPPORT_PIN` | `0dff39f` (`audreyt/ds4`: Q8 embedding, compressor and indexer support for Maya-XS) |
+| Preferred GGUF | DeepSeek V4.1 Flash 1017 Maya-XS abliterated from [`audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF) plus the 1017 vision sidecar from [`audreyt/deepseek-v4.1-flash-1017-gguf`](https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf) (selector `maya-xs`, aliases `q1` and `preferred`) |
+| Language revision | `89cba799fcddca88bde8c8cfa8006d28dbf8dc79` |
+| Language SHA-256 | `f414995b3797f77009634fac995f50834e70393771f9423fca984c892503b42a` |
+| Default context | 128 k tokens (`DS4_CONTEXT_KB=128`). The managed vision path fits with 512-row prefill on a 128 GB M5 Max |
+| Guide | **v0.7.3** Maya-XS (~107.35 GiB resident + vision sidecar) |
 
 `pi install https://github.com/audreyt/pi-ds4` installs exactly this tag.
 
@@ -43,12 +45,12 @@ pi install  https://github.com/audreyt/pi-ds4
 1. **Pulls [`audreyt/ds4`](https://github.com/audreyt/ds4) at a pinned commit**
    (`SUPPORT_PIN`), not floating `antirez/ds4` `main`. The pin is enforced on
    launch: mismatch → fetch + hard reset + delete cached binaries so they rebuild.
-2. **Ships its own `download_model.sh`** for the V4.1 Flash 1017 abliterated Q1
-   (365.7 GB file, ~106 GiB of it resident; the Engram tables stay on disk)
+2. **Ships its own `download_model.sh`** for V4.1 Flash 1017 Maya-XS abliterated
+   (365.7 GB file, ~107.35 GiB resident, with the Engram tables on disk)
    plus the 926 MiB vision sidecar, language file symlinked as
    `ds4flash.gguf`. `ds4-server` / `ds4-agent` are started with `--vision`.
 3. **No speculative decoding.** On a 128 GB Mac the DSpark drafter does not fit
-   next to the Q1, and on V4.1 it measured slower than plain decode anyway.
+   next to this model, and on V4.1 it measured slower than plain decode anyway.
    Directional steering stays off by default. The engine bundles one V4.1
    direction, `candor-v41`. Opt-in via env (below).
 
@@ -56,13 +58,13 @@ pi install  https://github.com/audreyt/pi-ds4
 
 | Platform | Managed `pi install` | Notes |
 |---|---|---|
-| Apple Silicon, 128 GB | Yes, after a wired-limit raise | macOS leaves Metal about 107.5 GiB by default, less than the Q1 plus vision sidecar need under ds4's 112 GiB budget. Run `sudo sysctl iogpu.wired_limit_mb=114688` (persist via `/etc/sysctl.conf`); the extension checks it before the model download and prints the command. |
+| Apple Silicon, 128 GB | Yes, after a wired-limit raise | macOS leaves Metal about 107.5 GiB by default, less than Maya-XS plus vision needs under ds4's 112 GiB budget. Run `sudo sysctl iogpu.wired_limit_mb=114688` (persist via `/etc/sysctl.conf`); the extension checks it before the model download and prints the command. |
 | Apple Silicon, more than 128 GB | Yes | The extension does not check the wired limit here; if ds4 refuses the model at open, raise it the same way. |
-| Apple Silicon, &lt;128 GB | No | Extension refuses: ~106 GiB stays resident. Use `v0.6.1`. |
-| Linux + NVIDIA / AMD | No managed model | ds4 refuses IQ1_S and Q5_K/Q6_K weights on CUDA and ROCm. Use `v0.6.1`, or bring your own GGUF and binary; the Makefile CUDA/ROCm targets below still apply there. |
+| Apple Silicon, &lt;128 GB | No | Extension refuses: ~107.35 GiB stays resident. Use `v0.6.1`. |
+| Linux + NVIDIA / AMD | No managed model | ds4 refuses these IQ1_S weights on CUDA and ROCm. Use `v0.6.1`, or bring your own GGUF and binary; the Makefile CUDA/ROCm targets below still apply there. |
 | CPU-only | Opt-in only | `DS4_ALLOW_CPU=1` or `DS4_BACKEND=cpu`. Reference/debug only. |
 
-**Disk (managed V4.1 Q1):** language 365713686528 B + vision sidecar 970555552 B = 366684242080 B (~341.5 GiB / 366.7 GB). The Engram tables (~189 GiB of that) are read from disk, so an internal SSD helps. A v0.6.x upgrade keeps the Vision-Exp language GGUF (~81 GiB) and V4 encoder until the new pair passes size checks and *then* `ds4flash.gguf` is switched, so peak occupancy is about 455 GB; `download_model.sh` checks free space first and deletes the v0.6 files after the switch. To free space *before* the fetch (this removes the working v0.6 model):
+**Disk (managed Maya-XS):** language 365713686528 B + vision sidecar 970555552 B = 366684242080 B (~341.5 GiB / 366.7 GB). The Engram tables (~189 GiB of that) stay on disk, so an internal SSD helps. The downloader retains the old model while fetching the new pair. A Q1 upgrade therefore needs another ~341 GiB free. It removes obsolete v0.6 files only after the new pair verifies and the symlink switches. To free space before a v0.6 upgrade (this removes the working v0.6 model):
 
 ```sh
 rm -f ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8.gguf \
@@ -74,7 +76,7 @@ rm -f ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q
 1. Clone `audreyt/ds4` at `SUPPORT_PIN` into `~/.pi/ds4/support/` (or hard-reset an
    existing checkout to the pin and delete cached `ds4-server` / `ds4-agent`).
 2. **Select a build plan and run the matching `make` target** (see table below).
-3. Run bundled `download_model.sh` for the V4.1 Q1 language GGUF + vision sidecar.
+3. Run bundled `download_model.sh` for Maya-XS abliterated and the vision sidecar.
 4. On non-Metal backends, run a **generation smoke test** (asserts non-empty
    `choices[0].message.content` — not merely HTTP 200) with `--vision`.
 5. Spawn `ds4-server --vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf` on
@@ -244,13 +246,13 @@ deterministic tool-call IDs from seeded requests on audreyt/ds4.
 * `DS4_SKIP_BUILD_SMOKE` — skip post-build generation smoke (dev only; default off)
 * `DS4_DOWNLOAD_SCRIPT` — absolute path to model download script
 * `DS4_REPRODUCIBLE` / `DS4_REPRODUCIBLE_SEED` — seed injection (default on / `42`)
-* `DS4_CONTEXT_KB` — context kilotokens (default `256`; `100` is a tight override and caps advertised `maxTokens`)
+* `DS4_CONTEXT_KB` — context kilotokens (default `128`; `100` is a tight override and caps advertised `maxTokens`)
 * `DS4_KV_DISK_SPACE_MB` — KV disk budget (RAM-tiered default when unset)
 * `DS4_DIR_STEERING_FILE` / `_FFN` / `_ATTN` — steering controls (file defaults to empty; needs a V4.1-shaped vector; applied to every token)
 * `DS4_RUNTIME_DIR` — use an existing ds4 checkout; do not clobber its binaries
 * `DS4_SERVER_BINARY` / `DS4_AGENT_BINARY` — custom binary paths
 * `DS4_AGENT_TOKENS` / `DS4_AGENT_THINK` / `DS4_AGENT_SYSTEM` / `DS4_AGENT_TRACE`
-* `DS4_MODEL_QUANT` — must be `q1`, `preferred` (alias) or unset; both select the V4.1 Flash 1017 abliterated Q1 + vision sidecar. `q2` (v0.6.x Vision-Exp) now errors with a pointer to `v0.6.1`
+* `DS4_MODEL_QUANT` — `maya-xs`, `q1`, `preferred` or unset all select Maya-XS abliterated and the 1017 vision sidecar. `q1` remains accepted for existing configurations
 * `DS4_READY_TIMEOUT_MS` — server ready timeout
 * `DS4_WATCHDOG_SCRIPT` — absolute path to the watchdog; default bundled `ds4-watchdog.sh`
 * `HF_TOKEN` — passed through for HuggingFace downloads
@@ -263,12 +265,26 @@ deterministic tool-call IDs from seeded requests on audreyt/ds4.
   only checks short non-empty prose on non-Metal backends.
 * **CUDA and DSpark performance** are not claimed here until measured on a
   correctly targeted binary (both require `make cuda-spark` / correct arch).
-* **The Q1's routed experts are Unsloth's UD-IQ1_S**, 32 of them requantized
-  from Unsloth's IQ2_XXS to fit the 112 GiB V4.1 budget. No official-continuation
-  quality score has been run for it yet; it is a 128 GB-Mac compromise, not a
-  quality upgrade over larger quants.
+* **The quality comparison precedes abliteration.** On 100 prompts and 6160
+  continuation tokens, stock Maya-XS scored mean NLL 0.51923 against the old
+  stock Q1's 0.62063 (16.34% lower). These September fixtures support a paired
+  comparison, not a claim of fidelity to the original 1017 weights. The
+  abliterated artifact passed English, Traditional Chinese and retrieval
+  smoke tests, but has not run that full scoring suite.
+* **Context headroom is lower.** Text-only Maya-XS admitted a 262144-token
+  allocation and retrieved a key from 10237 input tokens. It refused 393216
+  under the 112 GiB guard. The managed vision default is 128000.
 
 ## What's new
+
+### v0.7.3 (Maya-XS)
+
+- Pin the native Maya-XS abliterated model and engine `0dff39f`.
+- Use a 128000-token vision context by default, with 64000 advertised output
+  tokens so the agent's start budget fits.
+- Preserve the `q1` selector as an alias for the new preferred model.
+- Back-to-back text decode on a 128 GB M5 Max measured 37.24 tokens/s for
+  Maya-XS against 37.99 for the old Q1. This is one paired CLI sample.
 
 ### Published v0.7.2 (`d6d6320` pin, 2026-10-21)
 

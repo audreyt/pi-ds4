@@ -1,14 +1,15 @@
 {
   "name": "pi-ds4",
-  "version": "0.7.2",
-  "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4.1 Flash inference on 128 GB Apple Silicon (audreyt/ds4 main + V4.1 Flash 1017 abliterated Q1 GGUF + vision sidecar).",
+  "version": "0.7.3",
+  "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4.1 Flash inference on 128 GB Apple Silicon (pinned Maya-XS abliterated GGUF and vision sidecar).",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "og:render": "node scripts/render-og-image.mjs",
     "og:check-render": "node scripts/render-og-image.mjs --check",
     "og:verify": "node scripts/verify-og-image.mjs",
-    "provider:verify": "bun scripts/verify-provider.mjs"
+    "provider:verify": "bun scripts/verify-provider.mjs",
+    "download:verify": "bun scripts/verify-download.mjs"
   },
   "keywords": [
     "pi-package",

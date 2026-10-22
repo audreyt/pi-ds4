@@ -45,8 +45,8 @@ assert.deepEqual(model.thinkingLevelMap, {
   xhigh: null,
   max: "max",
 });
-assert.equal(model.contextWindow, 256_000, "the default context changed");
-assert.equal(model.maxTokens, 65_536, "advertised maxTokens must stay under senpi's half-window reserve");
+assert.equal(model.contextWindow, 128_000, "the managed Maya vision context must fit a 128 GB Mac");
+assert.equal(model.maxTokens, 64_000, "advertised maxTokens must stay under senpi's half-window reserve");
 assert.ok(
   startBudget(model.contextWindow, model.maxTokens) <= model.contextWindow,
   "default window must host omo's 2026-09-27 start budget",
@@ -73,4 +73,4 @@ assert.ok(
   `100k override must still admit (maxTokens=${overridden.maxTokens})`,
 );
 
-console.log("Provider verified: off=none, high=high, max=max; default context=256000; maxTokens=65536; input=text+image");
+console.log("Provider verified: off=none, high=high, max=max; default context=128000; maxTokens=64000; input=text+image");

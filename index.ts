@@ -57,7 +57,7 @@ const BUILD_RECORD_FILE = join(DS4_DIR, "build.json");
 // disable the pin and freeze the local checkout where it is.
 const SUPPORT_REPO = process.env.DS4_SUPPORT_REPO ?? "https://github.com/audreyt/ds4";
 const SUPPORT_BRANCH = process.env.DS4_SUPPORT_BRANCH ?? "main";
-const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "d6d6320cb4a7dbec8b42c73e950dded9824d0ee6").trim();
+const SUPPORT_PIN = (process.env.DS4_SUPPORT_PIN ?? "0dff39f91721bcf3472813c6d2bebf9353df2a1a").trim();
 
 const DOWNLOAD_SCRIPT = process.env.DS4_DOWNLOAD_SCRIPT
 	? resolve(process.env.DS4_DOWNLOAD_SCRIPT)
@@ -97,22 +97,15 @@ const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API
 // DS4_CONTEXT_KB sets the server context window in *kilotokens* (the only
 // supported knob for context size).
 //
-//   Default: 256  → 256 000 tokens.
+//   Default: 128  → 128 000 tokens.
 //   100 k cannot host senpi/omo's start budget: with maxTokens ≥ half the
 //   window, admission reserves output 50k + compaction 16k + speculation 8k
 //   + DeepSeek safety 12k + system/tools (~25k on a full omo prompt) = 112k
 //   (reproduced 2026-09-27: ModelUsabilityBudgetError, 12174 short of 112174).
-//   The V4.1 Flash Q1 keeps ~106 GiB of weights resident under ds4's 112 GiB
-//   V4.1 budget, so a long window opens with a narrower prefill batch
-//   instead of being refused. Measured on a 128 GB M5 Max without the vision
-//   sidecar:
-//     128   → 128 k  (tight: also cap advertised maxTokens)
-//     256   → 256 k  (2048-row prefill)
-//     384   → 384 k  (1024-row prefill)
-//     512+  → refused at open: it does not fit next to the weights
-//   pi-ds4 always loads the 0.9 GiB sidecar, which costs about one batch
-//   step: 256 k opens with a 1024-row prefill (measured), and 384 k is
-//   estimated not to fit.
+//   Maya-XS keeps ~107.35 GiB of weights resident under ds4's 112 GiB budget.
+//   The managed path always loads the 0.9 GiB vision sidecar: 128 k fits with
+//   512-row prefill on a 128 GB M5 Max. A text-only CLI can allocate 262144,
+//   but that does not establish that the same window fits with vision.
 //
 // When raising DS4_CONTEXT_KB you should normally also raise
 // DS4_KV_DISK_SPACE_MB so the on-disk KV cache can hold a full working set.
@@ -124,10 +117,10 @@ const PROVIDER_BASE_URL = PROVIDER_API === "anthropic-messages" ? BASE_URL : API
 //   96–127 GB → 32768 MiB (32 GB)
 //   else      → 8192 MiB (legacy 8 GB floor)
 //
-const CONTEXT_KB = (process.env.DS4_CONTEXT_KB ?? "256").trim();
+const CONTEXT_KB = (process.env.DS4_CONTEXT_KB ?? "128").trim();
 const CTX_SIZE = /^\d+$/.test(CONTEXT_KB)
 	? String(Number(CONTEXT_KB) * 1000)
-	: "256000";
+	: "128000";
 
 /** Senpi/omo start-budget: min(maxTokens, floor(ctx/2)) plus ~62k of prompt/tools/reserves. */
 function advertisedMaxTokens(contextWindow: number): number {
@@ -188,11 +181,11 @@ const WATCHDOG_POLL_MS = 2_000;
 const PROGRESS_NOTIFY_MS = 750;
 const PROGRESS_MAX_CHARS = 160;
 
-// pi-ds4 runs the DeepSeek V4.1 Flash 1017 abliterated Q1 from
-// audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF (365.7 GB file: ~106 GiB of
+// pi-ds4 runs DeepSeek V4.1 Flash 1017 Maya-XS abliterated from
+// audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF (365.7 GB file: ~107.35 GiB of
 // weights resident on Metal, Engram tables read from disk) with the 1017
-// vision sidecar. "q1" is the selector; "preferred" is an alias.
-type ModelQuant = "q1";
+// vision sidecar. Historical "q1" selectors also resolve to this release's pin.
+type ModelQuant = "maya-xs";
 
 type ServerState = {
 	managedBy: string;
@@ -349,18 +342,18 @@ function truncateText(value: string, width: number, ellipsis = "", pad = false):
 
 function selectedModelQuant(): ModelQuant {
 	const forcedRaw = process.env.DS4_MODEL_QUANT?.toLowerCase();
-	const forced = forcedRaw === "preferred" || forcedRaw === "ds41f-q1-abliterated" ? "q1" : forcedRaw;
-	if (forced && forced !== "q1") {
+	const forced = forcedRaw === "preferred" || forcedRaw === "q1" || forcedRaw === "ds41f-q1-abliterated" ? "maya-xs" : forcedRaw;
+	if (forced && forced !== "maya-xs") {
 		throw new Error(
-			`DS4_MODEL_QUANT=${forcedRaw} not supported; this extension only automates the DeepSeek V4.1 Flash 1017 abliterated Q1 (audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF, selector q1 or preferred) plus its vision sidecar. The V4 Vision-Exp IQ2 (selector q2) was pi-ds4 v0.6.x. Unset DS4_MODEL_QUANT or set it to q1. (To run another GGUF, bypass this extension and start ds4-server directly.)`,
+			`DS4_MODEL_QUANT=${forcedRaw} not supported; this extension automates DeepSeek V4.1 Flash 1017 Maya-XS abliterated (selector maya-xs, aliases q1 and preferred) plus its vision sidecar. Unset DS4_MODEL_QUANT or set it to maya-xs. To run another GGUF, start ds4-server directly.`,
 		);
 	}
 
-	// ds4 runs IQ1_S experts and Q5_K/Q6_K dense weights only on Metal; CUDA and
+	// ds4 runs these IQ1_S experts only on Metal; CUDA and
 	// ROCm refuse the file at open, after a 366 GB download.
 	if (process.platform !== "darwin") {
 		throw new Error(
-			"DeepSeek V4.1 Flash Q1 runs only on Apple Silicon (Metal). On Linux CUDA/ROCm hosts use pi-ds4 v0.6.1, or bring your own GGUF and ds4-server via DS4_RUNTIME_DIR.",
+			"DeepSeek V4.1 Flash Maya-XS runs only on Apple Silicon (Metal). On Linux CUDA/ROCm hosts use pi-ds4 v0.6.1, or bring your own GGUF and ds4-server via DS4_RUNTIME_DIR.",
 		);
 	}
 
@@ -370,20 +363,20 @@ function selectedModelQuant(): ModelQuant {
 	const soldGb = Math.round(totalmem() / 2 ** 30);
 	if (ramGb < 128) {
 		throw new Error(
-			`DeepSeek V4.1 Flash Q1 keeps ~106 GiB of weights resident and needs a 128 GB Mac; this Mac has ${soldGb} GB. pi-ds4 v0.6.1 runs the smaller V4 Vision-Exp IQ2 on 96 GB Macs.`,
+			`DeepSeek V4.1 Flash Maya-XS keeps ~107.35 GiB of weights resident and needs a 128 GB Mac; this Mac has ${soldGb} GB. pi-ds4 v0.6.1 runs the smaller V4 Vision-Exp IQ2 on 96 GB Macs.`,
 		);
 	}
 	// ds4 caps its V4.1 budget at Metal's recommended working set, which a
 	// 128 GB Mac leaves at about 107.5 GiB unless iogpu.wired_limit_mb is set:
-	// less than the Q1 plus the vision sidecar need. 114688 MiB matches ds4's own
+	// less than Maya-XS plus the vision sidecar need. 114688 MiB matches ds4's own
 	// 112 GiB cap. Macs with more memory default above that.
 	const WIRED_LIMIT_MB = 114_688;
 	if (ramGb < 160 && readIogpuWiredLimitMb() < WIRED_LIMIT_MB) {
 		throw new Error(
-			`This Mac has ${soldGb} GB of unified memory. Raise Metal's wired-memory ceiling first so the ~106 GiB V4.1 Flash Q1 and its vision sidecar fit ds4's 112 GiB budget. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=${WIRED_LIMIT_MB}\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=${WIRED_LIMIT_MB}' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command.`,
+			`This Mac has ${soldGb} GB of unified memory. Raise Metal's wired-memory ceiling first so the ~107.35 GiB V4.1 Flash Maya-XS and its vision sidecar fit ds4's 112 GiB budget. Run:\n\n  sudo sysctl iogpu.wired_limit_mb=${WIRED_LIMIT_MB}\n\nTo persist across reboots:\n\n  echo 'iogpu.wired_limit_mb=${WIRED_LIMIT_MB}' | sudo tee -a /etc/sysctl.conf\n\nThen re-run this command.`,
 		);
 	}
-	return "q1";
+	return "maya-xs";
 }
 
 function readIogpuWiredLimitMb(): number {
@@ -1729,9 +1722,9 @@ function buildAgentArgs(initialPrompt: string): string[] {
 
 async function ensureModel(runtimeDir: string, onStatus?: StatusCallback): Promise<void> {
 	const quant = selectedModelQuant();
-	onStatus?.(`ensuring ${quant} model (V4.1 Flash abliterated Q1 + vision sidecar)`);
+	onStatus?.(`ensuring ${quant} model (V4.1 Flash Maya-XS abliterated + vision sidecar)`);
 	// audreyt/pi-ds4 fork: shadow the antirez/ds4 download_model.sh with our
-	// own copy that fetches the V4.1 Flash 1017 abliterated Q1 from
+	// own copy that fetches V4.1 Flash 1017 Maya-XS abliterated from
 	// audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF and the 1017 vision sidecar
 	// from audreyt/deepseek-v4.1-flash-1017-gguf. Idempotent.
 	await runLogged(DOWNLOAD_SCRIPT, [quant], runtimeDir, `download ${quant} model`, {
