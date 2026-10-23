@@ -363,7 +363,7 @@ function selectedModelQuant(): ModelQuant {
 	const soldGb = Math.round(totalmem() / 2 ** 30);
 	if (ramGb < 128) {
 		throw new Error(
-			`DeepSeek V4.1 Flash Maya-XS keeps ~107.35 GiB of weights resident and needs a 128 GB Mac; this Mac has ${soldGb} GB. pi-ds4 v0.6.1 runs the smaller V4 Vision-Exp IQ2 on 96 GB Macs.`,
+			`DeepSeek V4.1 Flash Maya-XS keeps ~107.35 GiB of weights resident and needs a 128 GB Mac; this Mac has ${soldGb} GB. ${smallMacAlternative() || "Use"} pi-ds4 v0.6.1 for the smaller V4 Vision-Exp IQ2 on 96 GB Macs.`,
 		);
 	}
 	// ds4 caps its V4.1 budget at Metal's recommended working set, which a
@@ -1997,7 +1997,7 @@ async function stopManagedServerForAgent(onStatus?: StatusCallback): Promise<voi
 		if (!serverPid) {
 			if (httpReady) {
 				throw new Error(
-					`Something is already answering at ${API_BASE_URL}, but pi-ds4 could not identify it as a managed ds4-server. ` +
+					`Something is already answering at ${API_BASE_URL}, but pi-kami could not identify it as a managed ds4-server. ` +
 						`Stop it before running /ds4-agent.`,
 				);
 			}
@@ -2140,7 +2140,7 @@ async function ensureServerManagedInner(onStatus?: StatusCallback): Promise<void
 			// model checks in ensureRuntimeReadyLocked.
 			if (!pid) {
 				throw new Error(
-					`Something is already answering at ${API_BASE_URL}, but pi-ds4 could not identify it as a ds4-server. ` +
+					`Something is already answering at ${API_BASE_URL}, but pi-kami could not identify it as a ds4-server. ` +
 						`Find it with \`lsof -nP -iTCP:8000 -sTCP:LISTEN\`, stop it, then retry.`,
 				);
 			}
@@ -2352,7 +2352,325 @@ function registerDs4Provider(pi: ExtensionAPI): void {
 	} as any);
 }
 
+// pi-kami's engines beside ds4 share one state directory and one lock, so that
+// starting one engine can make room by stopping another that pi-kami started.
+const KAMI_DIR = join(homedir(), ".pi", "kami");
+const KAMI_LOCK_DIR = join(KAMI_DIR, "lock");
+
+type EngineServerState = { pid: number; processStart?: string; startedAt: number; startedAtIso: string };
+type EngineLease = { pid: number; processStart: string; updatedAt: number };
+
+function macChip(): string {
+	try {
+		return execSync("sysctl -n machdep.cpu.brand_string", { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+	} catch {
+		return "";
+	}
+}
+
+function soldMemoryGb(): number {
+	return Math.round(totalmem() / 2 ** 30);
+}
+
+async function withKamiLock<T>(fn: () => Promise<T>, cancellable = true): Promise<T> {
+	await mkdir(KAMI_DIR, { recursive: true });
+	const ownerFile = join(KAMI_LOCK_DIR, "pid");
+	for (;;) {
+		try {
+			await mkdir(KAMI_LOCK_DIR);
+			break;
+		} catch (error: any) {
+			if (error?.code !== "EEXIST") throw error;
+		}
+		const owner = Number((await readFile(ownerFile, "utf8").catch(() => "")).trim());
+		const created = await stat(KAMI_LOCK_DIR).then((info) => info.mtimeMs, () => 0);
+		// A missing owner file is normal for the moment between mkdir and writeFile.
+		const ownerGone = owner ? !isPidAlive(owner) : Date.now() - created > 10_000;
+		if (ownerGone) {
+			await rm(KAMI_LOCK_DIR, { recursive: true, force: true });
+			continue;
+		}
+		if (cancellable && (runtimeDisposed || shuttingDown)) throw new Error("engine setup cancelled");
+		await sleep(500);
+	}
+	await writeFile(ownerFile, String(process.pid), "utf8");
+	try {
+		return await fn();
+	} finally {
+		await rm(KAMI_LOCK_DIR, { recursive: true, force: true });
+	}
+}
+
+async function writeEngineLease(file: string): Promise<void> {
+	const lease: EngineLease = { pid: process.pid, processStart: await getOwnProcessStart(), updatedAt: Date.now() };
+	await writeJsonAtomic(file, lease);
+}
+
+async function otherLiveLeases(clientDir: string): Promise<number> {
+	let entries: string[] = [];
+	try {
+		entries = await readdir(clientDir);
+	} catch {
+		return 0;
+	}
+	let live = 0;
+	for (const entry of entries) {
+		if (!entry.endsWith(".json")) continue;
+		const file = join(clientDir, entry);
+		const lease = await readJson<EngineLease>(file);
+		if (!lease || lease.pid === process.pid) continue;
+		if (isPidAlive(lease.pid) && (await processStart(lease.pid)) === lease.processStart) live++;
+		else await removeFile(file);
+	}
+	return live;
+}
+
+// The server pi-kami started, if it is still running; otherwise the stale record is removed.
+async function ownedServer(stateFile: string): Promise<EngineServerState | undefined> {
+	const state = await readJson<EngineServerState>(stateFile);
+	if (!state) return undefined;
+	if (isPidAlive(state.pid) && (await processStart(state.pid)) === state.processStart) return state;
+	await removeFile(stateFile);
+	return undefined;
+}
+
+async function recordStartedServer(stateFile: string, child: ChildProcess): Promise<void> {
+	if (!child.pid) throw new Error("the engine server did not start");
+	const state: EngineServerState = {
+		pid: child.pid,
+		processStart: await processStart(child.pid),
+		startedAt: Date.now(),
+		startedAtIso: new Date().toISOString(),
+	};
+	await writeJsonAtomic(stateFile, state);
+}
+
+// Flint plans its memory as if it ran alone, so pi-kami refuses to start it
+// next to ds4-server where both would not fit.
+async function makeRoomForRec(): Promise<void> {
+	if (soldMemoryGb() < 192 && (await findListeningDs4ServerPid())) {
+		throw new Error(
+			"ds4-server is running, and DeepSeek V4.1 keeps about 107 GiB resident, so Flint would not fit beside it. Quit the pi windows using ds4/deepseek-v4-flash, then try again.",
+		);
+	}
+}
+
+// Flint tier: Recursive's rec engine runs Flint (40B MoE, 2.5B active, about
+// 23 GB) on the 48-96 GB Macs that ds4's V4.1 Maya-XS refuses. Picking the
+// rec/flint model picks this engine, so a 128 GB Mac can opt in the same way.
+// rec owns its server (rec serve on :11500); pi-kami installs the tested
+// release, starts the server when none is running, and stops it after the
+// last pi-kami client quits only if pi-kami started it. A server someone else
+// started (another harness, rec launch) is reused and left running.
+const REC_PROVIDER_ID = "rec";
+const REC_MODEL_ID = "flint";
+const REC_VERSION = "0.1.0";
+const REC_RUNTIME_SHA256 = "09063110dfe90c36bc40a518a64c3e9110387d449adf000be85023cfc8d46de1";
+const REC_INSTALL_URL = `https://raw.githubusercontent.com/recursive-oss/rec/v${REC_VERSION}/install.sh`;
+const REC_BIN = join(homedir(), ".local", "bin", "rec");
+const REC_BASE_URL = "http://127.0.0.1:11500/v1";
+const REC_CONTEXT = 262_144;
+// pi runs a "!command" apiKey on every request, after before_agent_start has
+// installed rec, and counts it as configured without running it. pi 0.73 and
+// 1.x both read this form; 1.x reads a bare name as a literal, not a variable.
+const REC_API_KEY = `!${shellQuote(REC_BIN)} auth token`;
+const REC_UNPINNED = envFlagEnabled(process.env.PI_KAMI_REC_UNPINNED, false);
+const REC_DIR = join(KAMI_DIR, "rec");
+const REC_CLIENT_DIR = join(REC_DIR, "clients");
+const REC_STATE_FILE = join(REC_DIR, "server.json");
+const REC_LOG_FILE = join(REC_DIR, "server.log");
+const REC_LEASE_FILE = join(REC_CLIENT_DIR, `${process.pid}.json`);
+// rec 0.1.0 supports these chips with at least 48 GB of unified memory.
+const REC_CHIPS = /^Apple M(?:4 Pro|5 Pro|5 Max)$/;
+const REC_MIN_RAM_GB = 48;
+
+type RecStatus = { ready?: boolean; version?: string; revision?: string; runtime_sha256?: string };
+
+let recLeaseHeld = false;
+
+function isRecModel(model: { provider?: string; id?: string } | undefined): boolean {
+	return model?.provider === REC_PROVIDER_ID && model?.id === REC_MODEL_ID;
+}
+
+function recHardwareProblem(): string | undefined {
+	if (process.platform !== "darwin" || process.arch !== "arm64") {
+		return "Flint through rec runs only on Apple Silicon Macs.";
+	}
+	const chip = macChip();
+	if (!REC_CHIPS.test(chip)) {
+		return `rec ${REC_VERSION} supports the M4 Pro, M5 Pro and M5 Max; this Mac reports ${chip || "an unknown chip"}.`;
+	}
+	const soldGb = soldMemoryGb();
+	if (soldGb < REC_MIN_RAM_GB) {
+		return `rec needs at least ${REC_MIN_RAM_GB} GB of unified memory; this Mac has ${soldGb} GB.`;
+	}
+	return undefined;
+}
+
+async function recStatus(): Promise<RecStatus | undefined> {
+	const out = await execCapture(REC_BIN, ["status"], 5_000);
+	if (!out) return undefined;
+	try {
+		return JSON.parse(out) as RecStatus;
+	} catch {
+		return undefined;
+	}
+}
+
+async function ensureRecInstalled(onStatus?: StatusCallback): Promise<void> {
+	const reported = (await execCapture(REC_BIN, ["--version"], 5_000))?.trim();
+	if (reported === `rec ${REC_VERSION}`) return;
+	if (reported) {
+		if (REC_UNPINNED) return;
+		throw new Error(
+			`pi-kami is tested with rec ${REC_VERSION}, but ${REC_BIN} reports "${reported}". Reinstall the tested release:\n\n  curl -fsSL ${REC_INSTALL_URL} | REC_VERSION=${REC_VERSION} bash\n\nor set PI_KAMI_REC_UNPINNED=1 to use the installed rec anyway.`,
+		);
+	}
+	onStatus?.(`installing rec ${REC_VERSION}`);
+	await runLogged(
+		"/bin/sh",
+		["-c", `curl -fsSL ${shellQuote(REC_INSTALL_URL)} | REC_VERSION=${REC_VERSION} bash`],
+		homedir(),
+		`install rec ${REC_VERSION}`,
+		{ onStatus },
+	);
+	const installed = (await execCapture(REC_BIN, ["--version"], 5_000))?.trim();
+	if (installed !== `rec ${REC_VERSION}`) {
+		throw new Error(`rec install finished, but ${REC_BIN} reports "${installed ?? "nothing"}"; see ${LOG_FILE}`);
+	}
+}
+
+async function waitForRecReady(child: ChildProcess): Promise<RecStatus> {
+	const deadline = Date.now() + READY_TIMEOUT_MS;
+	while (Date.now() < deadline) {
+		const status = await recStatus();
+		if (status?.ready) return status;
+		if (child.exitCode !== null || child.signalCode !== null) {
+			throw new Error(`rec serve exited before it was ready; see ${REC_LOG_FILE}`);
+		}
+		if (runtimeDisposed || shuttingDown) throw new Error("rec startup cancelled");
+		await sleep(LOG_POLL_MS);
+	}
+	throw new Error(`rec serve was not ready after ${Math.round(READY_TIMEOUT_MS / 1000)}s; see ${REC_LOG_FILE}`);
+}
+
+async function startRecServer(onStatus?: StatusCallback): Promise<RecStatus> {
+	onStatus?.("downloading Flint if needed");
+	await runLogged(REC_BIN, ["pull"], homedir(), "rec pull", { onStatus });
+	onStatus?.("starting rec");
+	await mkdir(REC_DIR, { recursive: true });
+	const logFd = openSync(REC_LOG_FILE, "a");
+	let child: ChildProcess;
+	try {
+		child = spawn(REC_BIN, ["serve"], { cwd: homedir(), detached: true, stdio: ["ignore", logFd, logFd], env: process.env });
+	} finally {
+		closeSync(logFd);
+	}
+	child.unref();
+	await recordStartedServer(REC_STATE_FILE, child);
+	return waitForRecReady(child);
+}
+
+async function stopOwnedRec(): Promise<void> {
+	if (await ownedServer(REC_STATE_FILE)) await execCapture(REC_BIN, ["stop"], 30_000);
+	await removeFile(REC_STATE_FILE);
+}
+
+async function ensureRecReady(onStatus?: StatusCallback): Promise<void> {
+	const problem = REC_UNPINNED ? undefined : recHardwareProblem();
+	if (problem) throw new Error(problem);
+	await withKamiLock(async () => {
+		await ensureRecInstalled(onStatus);
+		let status = await recStatus();
+		if (!status?.ready) {
+			await makeRoomForRec();
+			status = await startRecServer(onStatus);
+		}
+		if (!REC_UNPINNED && status.runtime_sha256 !== REC_RUNTIME_SHA256) {
+			throw new Error(
+				`The running rec server is not the tested ${REC_VERSION} runtime (runtime_sha256 ${status.runtime_sha256 ?? "unknown"}). Stop it with rec stop, or set PI_KAMI_REC_UNPINNED=1.`,
+			);
+		}
+		await writeEngineLease(REC_LEASE_FILE);
+		recLeaseHeld = true;
+	});
+}
+
+// Mirrors rec's own pi transport: rec applies Flint's tuned sampling, so drop
+// pi's sampling fields and let generation run to the end of the context.
+function recPayload(payload: unknown): unknown | undefined {
+	if (!isProviderPayload(payload)) return undefined;
+	const seeded = withReproducibleSeed(payload);
+	const result: Record<string, unknown> = { ...((seeded as Record<string, unknown> | undefined) ?? payload), max_tokens: REC_CONTEXT };
+	for (const field of ["max_completion_tokens", "temperature", "top_p", "top_k"]) delete result[field];
+	return result;
+}
+
+async function releaseRec(): Promise<void> {
+	if (!recLeaseHeld) return;
+	recLeaseHeld = false;
+	await withKamiLock(async () => {
+		await removeFile(REC_LEASE_FILE);
+		if ((await otherLiveLeases(REC_CLIENT_DIR)) > 0) return;
+		await stopOwnedRec();
+	}, false);
+}
+
+// The engine a smaller Mac can use instead of ds4, for ds4's refusal message.
+function smallMacAlternative(): string {
+	if (!recHardwareProblem()) return "Choose the rec/flint model to run Flint through rec instead, or use";
+	return "";
+}
+
+function registerRecProvider(pi: ExtensionAPI): void {
+	// Offer rec/flint only where rec 0.1.0 runs. PI_KAMI_REC_UNPINNED leaves the
+	// chip check to a newer rec's own installer.
+	if (process.platform !== "darwin" || (!REC_UNPINNED && recHardwareProblem())) return;
+	pi.registerProvider(REC_PROVIDER_ID, {
+		name: "Flint (rec local, experimental)",
+		baseUrl: REC_BASE_URL,
+		api: "openai-completions",
+		apiKey: REC_API_KEY,
+		models: [
+			{
+				id: REC_MODEL_ID,
+				name: "Flint (rec local, experimental)",
+				reasoning: false,
+				input: ["text"],
+				contextWindow: REC_CONTEXT,
+				maxTokens: REC_CONTEXT,
+				cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+				compat: {
+					supportsStore: false,
+					supportsDeveloperRole: false,
+					supportsReasoningEffort: false,
+					supportsStrictMode: false,
+					maxTokensField: "max_tokens",
+				},
+			},
+		],
+	} as any);
+}
+
+// pi identifies git packages by URL, so installing from both the old pi-ds4
+// URL and the pi-kami URL loads two copies. The first copy stays active; a copy
+// from another directory only explains how to remove the duplicate. /reload
+// loads the same directory again, so it is not affected.
+const LOADED_FROM = Symbol.for("pi-kami.extension-dir");
+
 export default function (pi: ExtensionAPI) {
+	const loaded = globalThis as Record<symbol, unknown>;
+	const loadedFrom = loaded[LOADED_FROM];
+	if (typeof loadedFrom === "string" && loadedFrom !== EXTENSION_DIR) {
+		pi.on("session_start", async (_event, ctx) => {
+			ctx.ui.notify(
+				`pi-kami is installed twice. The copy in ${EXTENSION_DIR} is inactive; ${loadedFrom} is in use. Remove one with pi remove.`,
+				"warning",
+			);
+		});
+		return;
+	}
+	loaded[LOADED_FROM] = EXTENSION_DIR;
 	runtimeDisposed = false;
 	shuttingDown = false;
 	leaseStartedAt = Date.now();
@@ -2363,8 +2681,30 @@ export default function (pi: ExtensionAPI) {
 	resolvedRuntimeDir = undefined;
 
 	registerDs4Provider(pi);
+	registerRecProvider(pi);
 	registerDs4Command(pi);
 	registerDs4AgentCommand(pi);
+
+	pi.on("before_agent_start", async (_event, ctx) => {
+		const notify = (message: string | undefined) => {
+			if (message) ctx.ui.notify(message, "info");
+		};
+		if (isRecModel(ctx.model)) {
+			// After the first turn, one status call confirms the server is still up.
+			if (recLeaseHeld && (await recStatus())?.ready === true) return;
+			try {
+				await ensureRecReady(notify);
+				ctx.ui.notify("Flint ready", "info");
+			} catch (error) {
+				ctx.ui.notify(`Flint startup failed: ${describeError(error)}`, "error");
+				throw error;
+			}
+		}
+	});
+
+	pi.on("before_provider_request", (event, ctx) => {
+		if (isRecModel(ctx.model)) return recPayload(event.payload);
+	});
 
 	pi.on("before_provider_request", async (event, ctx) => {
 		if (ctx.model?.provider !== PROVIDER_ID || ctx.model?.id !== MODEL_ID) return;
@@ -2411,6 +2751,11 @@ export default function (pi: ExtensionAPI) {
 			await stopServerIfUnused();
 		} catch (error) {
 			if (!isLockTimeout(error)) ctx.ui.notify(`ds4-server shutdown failed: ${describeError(error)}`, "error");
+		}
+		try {
+			await releaseRec();
+		} catch (error) {
+			ctx.ui.notify(`rec shutdown failed: ${describeError(error)}`, "error");
 		}
 	});
 }

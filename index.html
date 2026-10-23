@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>pi-ds4 — a frontier model on your own Mac, with traces you can contest</title>
-<meta name="description" content="Audrey Tang's guide to pi-ds4: run DeepSeek V4.1 Flash on a 128 GB Apple Silicon Mac, vision included. Reproducible decision traces, opt-in steering and a repair path in your hands.">
-<meta property="og:title" content="pi-ds4 · Audrey Tang">
+<title>pi-kami — a frontier model on your own Mac, with traces you can contest</title>
+<meta name="description" content="Audrey Tang's guide to pi-kami (formerly pi-ds4): run DeepSeek V4.1 Flash on a 128 GB Apple Silicon Mac with vision, or Flint on an M4 Pro, M5 Pro or M5 Max with 48 GB. Reproducible decision traces, opt-in steering and a repair path in your hands.">
+<meta property="og:title" content="pi-kami · Audrey Tang">
 <meta property="og:description" content="Run a frontier model on your own machine. Keep the decision trace and the steering wheel. Install, reproducibility, steering, tuning and four AI shells, in English and 華文.">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_GB">
 <meta property="og:locale:alternate" content="zh_TW">
-<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=5134af0a12b2">
+<meta property="og:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=0e1f17be34bf">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="pi-ds4 guide card: ocean horizon, local inference readout. ~107.35 GiB of DeepSeek V4.1 Flash Maya-XS abliterated weights resident plus the vision sidecar, a 128k default window and 37.2 t/s generation on a 128 GB M5 Max.">
+<meta property="og:image:alt" content="pi-kami guide card: ocean horizon, local inference readout. ~107.35 GiB of DeepSeek V4.1 Flash Maya-XS abliterated weights resident plus the vision sidecar, a 128k default window and 37.2 t/s generation on a 128 GB M5 Max.">
 <meta property="og:url" content="https://pi.audreyt.org/">
 <link rel="canonical" href="https://pi.audreyt.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=5134af0a12b2">
+<meta name="twitter:image" content="https://pi.audreyt.org/og-pi-ds4.jpg?v=0e1f17be34bf">
 <meta name="theme-color" content="#ebe7e4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#161d27" media="(prefers-color-scheme: dark)">
 <link rel="preload" href="fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -28,7 +28,7 @@
 
 <style>
 /* ──────────────────────────────────────────────────────────────────
-   pi-ds4 · a letter on paper
+   pi-kami · a letter on paper
    Ink on warm paper, one red seal. Serif for reading, mono for the
    terminal and the letterhead, Iansui for 華文. Nothing moves unless
    the reader moves it — except the sea.
@@ -151,6 +151,28 @@ body {
 
 ::selection { background: color-mix(in srgb, var(--accent) 28%, transparent); color: var(--ink); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 1px; }
+
+/* ── folded history: closed by default, opened by a click, a link or print ── */
+details.fold { margin: 2rem 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+details.fold > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  gap: 0.7rem;
+  align-items: baseline;
+  padding: 0.9rem 0;
+  font-family: var(--label);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary::before { content: "+"; font-family: var(--mono); color: var(--ink-3); }
+details.fold[open] > summary::before { content: "−"; }
+details.fold > summary:hover { color: var(--ink); }
+details.fold[open] > summary { border-bottom: 1px solid var(--rule); margin-bottom: 1.2rem; }
+html:has(#lang-zh:checked) details.fold > summary { font-family: var(--cjk); font-size: 0.82rem; letter-spacing: 0.3em; }
 
 /* ── language: EN ⇄ 華文 ─────────────────────────────────────────── */
 html:not(:has(#lang-zh:checked)) [lang="zh-TW"] { display: none; }
@@ -824,25 +846,6 @@ html:has(#lang-zh:checked) .qa .q { font-style: normal; font-family: var(--kai);
 .signoff .hand { font-family: var(--display); font-style: italic; font-size: 1.15em; line-height: 1.5; }
 html:has(#lang-zh:checked) .signoff .hand { font-style: normal; font-family: var(--kai); }
 .signoff .hand small { display: block; font-family: var(--mono); font-style: normal; font-size: 0.76rem; color: var(--ink-2); margin-top: 0.3rem; }
-.seal {
-  width: 3.4rem; height: 3.4rem;
-  flex: 0 0 auto;
-  border: 2px solid var(--seal);
-  border-radius: 4px;
-  display: grid;
-  place-items: center;
-  position: relative;
-  transform: rotate(-3deg);
-  color: var(--seal);
-  font-family: var(--kai);
-  font-size: 1.15rem;
-  line-height: 1;
-  letter-spacing: 0.05em;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  user-select: none;
-}
-.seal::after { content: ''; position: absolute; inset: 3px; border: 1px solid var(--seal); border-radius: 2px; opacity: 0.55; }
 
 /* ── end of the letter ───────────────────────────────────────────── */
 .colophon {
@@ -991,8 +994,8 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     try { s = localStorage.getItem('lang'); } catch (x) {}
     z = s ? s === 'zh' : (navigator.languages || []).some(function(l){ return l.indexOf('zh') === 0; });
   }
-  var TITLE_EN = 'pi-ds4 — a frontier model on your own Mac, with traces you can contest';
-  var TITLE_ZH = 'pi-ds4 指南 — 在自己的 Mac 上跑 DeepSeek V4.1 Flash';
+  var TITLE_EN = 'pi-kami — a frontier model on your own Mac, with traces you can contest';
+  var TITLE_ZH = 'pi-kami 指南 — 在自己的 Mac 上跑 DeepSeek V4.1 Flash';
   function apply(zh){
     document.documentElement.setAttribute('lang', zh ? 'zh-TW' : 'en-GB');
     document.title = zh ? TITLE_ZH : TITLE_EN;
@@ -1030,9 +1033,9 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
 <div id="live" class="sr" aria-live="polite" aria-atomic="true"></div>
 
 <header class="chrome chrome-top" id="chrome-top">
-  <a class="mark" href="./" aria-label="pi-ds4 home">
+  <a class="mark" href="./" aria-label="pi-kami home">
     <svg aria-hidden="true"><use href="#pi-mark"/></svg>
-    <span>pi / ds4</span>
+    <span>pi / kami</span>
   </a>
   <nav aria-label="Site">
     <a href="#contents"><span lang="en-GB">Contents</span><span lang="zh-TW" class="zh">目錄</span></a>
@@ -1060,16 +1063,20 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
   </div>
   <div class="hero-below">
     <p class="hero-stand">
-      <span lang="en-GB">pi-ds4 runs DeepSeek V4.1 Flash (reads images and text) on one 128 GB Apple Silicon Mac. No cloud, meter or rate limit. Every decision leaves a replayable trace to compare and argue with.</span>
-      <span lang="zh-TW">pi-ds4 在 128&nbsp;GB Apple Silicon Mac 跑 DeepSeek V4.1 Flash。模型懂圖片也懂文字。不用雲端不計費不限速。每決策留軌跡，可重跑比對質疑。</span>
+      <span lang="en-GB">pi-kami runs DeepSeek V4.1 Flash (reads images and text) on one 128 GB Apple Silicon Mac. No cloud, meter or rate limit. Every decision leaves a replayable trace to compare and argue with.</span>
+      <span lang="zh-TW">pi-kami 在 128&nbsp;GB Apple Silicon Mac 跑 DeepSeek V4.1 Flash。模型懂圖片也懂文字。不用雲端不計費不限速。每決策留軌跡，可重跑比對質疑。</span>
     </p>
     <div class="install" role="group" aria-label="Install command">
-      <code><span class="prompt">$</span>pi install https://github.com/audreyt/pi-ds4</code>
-      <button class="copy" data-copy="pi install https://github.com/audreyt/pi-ds4" aria-label="Copy the install command"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button>
+      <code><span class="prompt">$</span>pi install https://github.com/audreyt/pi-kami</code>
+      <button class="copy" data-copy="pi install https://github.com/audreyt/pi-kami" aria-label="Copy the install command"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button>
     </div>
     <p class="hero-note">
-      <span lang="en-GB">First launch downloads about 367 GB. Before it, install <a href="https://github.com/earendil-works/pi">pi</a> and raise the wired-memory limit once on your 128 GB Mac.</span>
-      <span lang="zh-TW">首次啟動下載約 367 GB。先裝 <a href="https://github.com/earendil-works/pi">pi</a>，把 128 GB Mac 可鎖定記憶體上限調高一次。</span>
+      <span lang="en-GB">This used to be pi-ds4. The old URL still works through GitHub’s redirect, but install from only one of them. pi treats the two URLs as separate packages, and the second copy stays inactive and shows a warning.</span>
+      <span lang="zh-TW">前身是 pi-ds4。舊網址透過 GitHub 轉址仍然可用，但請只用其中一個安裝。pi 會把兩個網址當成兩個套件，第二份不會啟用，還會跳出警告。</span>
+    </p>
+    <p class="hero-note">
+      <span lang="en-GB">The first launch downloads about 367 GB. Before that, install <a href="https://github.com/earendil-works/pi">pi</a> and raise the wired-memory limit once on your 128 GB Mac. On an M4 Pro, M5 Pro or M5 Max with 48 GB or more, choose <code>rec/flint</code> instead (<a href="#flint">§1.1a</a>).</span>
+      <span lang="zh-TW">第一次啟動會下載約 367 GB。開始前，先裝好 <a href="https://github.com/earendil-works/pi">pi</a>，並在 128 GB 的 Mac 上調高一次可鎖定記憶體上限。48 GB 以上的 M4 Pro、M5 Pro 或 M5 Max，改選 <code>rec/flint</code>（<a href="#flint">§1.1a</a>）。</span>
     </p>
     <a class="cue" href="#letter"><span lang="en-GB">$ scroll to continue</span><span lang="zh-TW">$ 往下捲動</span><span class="caret">▌</span></a>
   </div>
@@ -1080,7 +1087,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
 
   <dl class="meta" aria-label="Letter header">
     <dt><span lang="en-GB">Date</span><span lang="zh-TW">日期</span></dt>
-    <dd><span lang="en-GB">21 October 2026 (v 0.7.2)</span><span lang="zh-TW">2026 年 10 月 21 日（v 0.7.2）</span></dd>
+    <dd><span lang="en-GB">23 October 2026 (v 0.8.0)</span><span lang="zh-TW">2026 年 10 月 23 日（v 0.8.0）</span></dd>
     <dt><span lang="en-GB">From</span><span lang="zh-TW">寄件人</span></dt>
     <dd><span lang="en-GB">Audrey Tang <span class="zh">唐鳳</span></span><span lang="zh-TW">唐鳳 Audrey Tang</span></dd>
     <dt><span lang="en-GB">To</span><span lang="zh-TW">收件人</span></dt>
@@ -1088,41 +1095,41 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <dt><span lang="en-GB">Subject</span><span lang="zh-TW">主旨</span></dt>
     <dd><span lang="en-GB">DeepSeek V4.1 Flash on your own Mac, with traces you can contest</span><span lang="zh-TW">在自己的 Mac 上跑 DeepSeek V4.1 Flash，留下可以質疑的軌跡</span></dd>
     <dt><span lang="en-GB">Lineage</span><span lang="zh-TW">源流</span></dt>
-    <dd><span lang="en-GB">Fork of <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>. DwarfStar engine (<a href="https://github.com/antirez/ds4">antirez/ds4</a>) pinned at <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>0dff39f</code></span><span lang="zh-TW">分叉自 <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>。引擎 DwarfStar（<a href="https://github.com/antirez/ds4">antirez/ds4</a>）固定於 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>0dff39f</code></span></dd>
+    <dd><span lang="en-GB">Fork of <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>, called pi-ds4 until 0.8.0. DwarfStar engine (<a href="https://github.com/antirez/ds4">antirez/ds4</a>) pinned at <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>0dff39f</code></span><span lang="zh-TW">分叉自 <a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a>，0.8.0 前叫 pi-ds4。引擎 DwarfStar（<a href="https://github.com/antirez/ds4">antirez/ds4</a>）固定於 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> <code>0dff39f</code></span></dd>
   </dl>
 
   <section id="primer" aria-labelledby="primer-h">
     <h2 class="sr" id="primer-h"><span lang="en-GB">Opening</span><span lang="zh-TW">開場</span></h2>
 
     <p class="lead" lang="en-GB">
-      This letter is a field guide opening with a question. Suppose an AI system fails: memorised answer when you needed discussion, forgotten decisions, host switch-off. Can people depending on that system still open the system and fix what broke? Every pi-ds4 choice works toward one answer: <em>yes</em>.
+      This letter is a field guide opening with a question. Suppose an AI system fails: memorised answer when you needed discussion, forgotten decisions, host switch-off. Can people depending on that system still open the system and fix what broke? Every pi-kami choice works toward one answer: <em>yes</em>.
     </p>
     <p class="lead" lang="zh-TW">
-      這封信是操作指南，開頭問一問題。假設 AI 系統出狀況：該討論給背好答案、忘了自己決定、託管者關掉。依賴它的人還能自己打開修嗎？pi-ds4 每選擇都為讓答案是<em>能</em>。
+      這封信是操作指南，開頭問一問題。假設 AI 系統出狀況：該討論給背好答案、忘了自己決定、託管者關掉。依賴它的人還能自己打開修嗎？pi-kami 每選擇都為讓答案是<em>能</em>。
     </p>
 
     <h2 class="runin"><span lang="en-GB">What this is</span><span lang="zh-TW">這是什麼</span></h2>
 
     <p lang="en-GB">
-      pi-ds4 runs <code>ds4-server</code> on your Mac: local inference server (program running the model, answering requests). DeepSeek V4.1 Flash loads once, serves OpenAI API <em>and</em> Anthropic API at <code>127.0.0.1:8000</code>. Nothing typed leaves the machine. No account, no meter, none of the “sorry, I can’t help with that” gates a hosted service sets.
+      pi-kami runs <code>ds4-server</code> on your Mac: local inference server (program running the model, answering requests). DeepSeek V4.1 Flash loads once, serves OpenAI API <em>and</em> Anthropic API at <code>127.0.0.1:8000</code>. Nothing typed leaves the machine. No account, no meter, none of the “sorry, I can’t help with that” gates a hosted service sets.
     </p>
     <p lang="zh-TW">
-      pi-ds4 在你 Mac 跑本機推論伺服器 <code>ds4-server</code>（跑模型、回請求程式）。載 DeepSeek V4.1 Flash，在 <code>127.0.0.1:8000</code> <em>同時</em>支援 OpenAI 與 Anthropic API。你打每字不離機。不用帳號不計費，沒託管服務替你設的「抱歉，我無法協助」。
+      pi-kami 在你 Mac 跑本機推論伺服器 <code>ds4-server</code>（跑模型、回請求程式）。載 DeepSeek V4.1 Flash，在 <code>127.0.0.1:8000</code> <em>同時</em>支援 OpenAI 與 Anthropic API。你打每字不離機。不用帳號不計費，沒託管服務替你設的「抱歉，我無法協助」。
     </p>
     <p lang="en-GB">
-      pi is the easiest way in (hence the name) and only one door. Codex CLI, Claude Code, OpenClaw, Hermes Agent: all point at the same server. Each needs one environment variable (startup setting) or a short config block. <a href="#shells">Chapter 8</a> shows each setup. Or use pi only as package manager (software installer) and talk to ds4’s native agent: <code>/ds4-agent</code> hands that agent your terminal, returning the terminal when you leave.
+      pi is the easiest way in, and only one door. Codex CLI, Claude Code, OpenClaw, Hermes Agent: all point at the same server. Each needs one environment variable (startup setting) or a short config block. <a href="#shells">Chapter 8</a> shows each setup. Or use pi only as package manager (software installer) and talk to ds4’s native agent: <code>/ds4-agent</code> hands that agent your terminal, returning the terminal when you leave.
     </p>
     <p lang="zh-TW">
-      pi 是最方便入口，pi-ds4 名字由此來，只是其中一扇門。Codex CLI、Claude Code、OpenClaw、Hermes Agent 都連同伺服器，每個只要一環境變數（啟動設定值）或一小段設定，<a href="#shells">第八章</a>逐一示範。也可只把 pi 當套件管理員（裝軟體工具），改用 ds4 原生智慧體：<code>/ds4-agent</code> 把終端機交智慧體，離開交還 pi。
+      pi 是最方便入口，只是其中一扇門。Codex CLI、Claude Code、OpenClaw、Hermes Agent 都連同伺服器，每個只要一環境變數（啟動設定值）或一小段設定，<a href="#shells">第八章</a>逐一示範。也可只把 pi 當套件管理員（裝軟體工具），改用 ds4 原生智慧體：<code>/ds4-agent</code> 把終端機交智慧體，離開交還 pi。
     </p>
 
     <h2 class="runin"><span lang="en-GB">Why one machine, one stream</span><span lang="zh-TW">為什麼是一台機器、一條串流</span></h2>
 
     <p lang="en-GB">
-      Hosted services draw speed from batching: one accelerator answers many people at once. Efficiency arrives, audit trail goes. Routing, scheduling, hidden random seeds (starting numbers behind model random choices), tool-call IDs: invisible from outside. pi-ds4 trades the other way: one machine, one user, one stream. <code>DS4_REPRODUCIBLE=1</code> sets seed <code>42</code> by default; audreyt/ds4 derives tool-call IDs from that seed. A seeded request returns stable <code>call_…</code> and <code>toolu_…</code> identifiers.
+      Hosted services draw speed from batching: one accelerator answers many people at once. Efficiency arrives, audit trail goes. Routing, scheduling, hidden random seeds (starting numbers behind model random choices), tool-call IDs: invisible from outside. pi-kami trades the other way: one machine, one user, one stream. <code>DS4_REPRODUCIBLE=1</code> sets seed <code>42</code> by default, and audreyt/ds4 derives tool-call IDs from that seed. A seeded request returns stable <code>call_…</code> and <code>toolu_…</code> identifiers.
     </p>
     <p lang="zh-TW">
-      託管服務靠批次換速度：一顆加速器同時答很多人。效率有了，稽核軌跡沒了。路由、排程、藏起的隨機種子（模型隨機選擇起始數字）、工具呼叫 ID，外面都看不見。pi-ds4 反取捨：一機、一使用者、一串流。<code>DS4_REPRODUCIBLE=1</code> 預設種子 <code>42</code>，audreyt/ds4 用同種子產工具呼叫 ID，帶種子請求每次回一樣 <code>call_…</code> 與 <code>toolu_…</code>。
+      託管服務靠批次換速度：一顆加速器同時答很多人。效率有了，稽核軌跡沒了。路由、排程、藏起的隨機種子（模型隨機選擇起始數字）、工具呼叫 ID，外面都看不見。pi-kami 反取捨：一機、一使用者、一串流。<code>DS4_REPRODUCIBLE=1</code> 預設種子 <code>42</code>，audreyt/ds4 用同種子產工具呼叫 ID，帶種子請求每次回一樣 <code>call_…</code> 與 <code>toolu_…</code>。
     </p>
     <p lang="en-GB">
       Replayable record over right answer. Rerun same input. Diff changed trace (compare two records line by line). Point to one exact tool call. Public decisions, research interviews, procurement, anything surviving contest needs this record kind.
@@ -1134,14 +1141,14 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <h2 class="runin"><span lang="en-GB">What it will cost you</span><span lang="zh-TW">你要付出什麼</span></h2>
 
     <ul lang="en-GB">
-      <li><strong>A machine.</strong> Apple Silicon Mac, 128 GB unified memory (CPU-GPU shared memory), Metal only. Smaller Macs: refused at startup. Linux CUDA and ROCm hosts such as DGX Spark and Strix Halo: refused before download. ds4 runs this model’s IQ1_S experts (the many small expert networks) only on Metal. Those readers stay on v 0.6.1: V4 Vision-Exp IQ2 build on 96 GB (<a href="#otherhw">§8.7</a>). About 107.35 GiB weights stay resident.</li>
+      <li><strong>A machine.</strong> Apple Silicon Mac, 128 GB unified memory (CPU-GPU shared memory), Metal only. Smaller Macs: the ds4 tier refuses them at startup. An M4 Pro, M5 Pro or M5 Max with 48 GB or more can choose <code>rec/flint</code> (<a href="#flint">§1.1a</a>). Linux CUDA and ROCm hosts such as DGX Spark and Strix Halo: refused before download. ds4 runs this model’s IQ1_S experts (the many small expert networks) only on Metal. Linux hosts and the other Macs under 128 GB stay on v 0.6.1: V4 Vision-Exp IQ2 build on 96 GB (<a href="#otherhw">§8.7</a>). About 107.35 GiB weights stay resident.</li>
       <li><strong>Disk.</strong> About 367 GB model pair, plus KV disk cache (64 GB default on 128 GB Mac) and build space. Internal SSD: two Engram tables (about 189 GiB lookup tables; V4.1 reads a few rows per token) stay on disk. Upgrade from v 0.6.x keeps old 81.63 GiB pair until new pair passes size checks: peak near 455 GB.</li>
       <li><strong>Time.</strong> First launch: about 341.5 GiB (language file + vision sidecar, the image-reading companion file). Home connection: many hours. Drops resume. Then engine compiles.</li>
       <li><strong>Two settings.</strong> Raise Metal’s wired-memory ceiling (cap on GPU-lockable memory) once: <code>sudo sysctl iogpu.wired_limit_mb=114688</code>. macOS allows a 128 GB Mac about 107.5 GiB, short of what Maya-XS plus the vision sidecar need (<a href="#install">Chapter 1</a>). Then Energy Mode: High Power while running. The M5 Max behind this letter generated about 37.2 t/s in High Power. Earlier engine builds in Low Power decoded under half that rate.</li>
       <li><strong>Not needed.</strong> A graphics card, a paid API, an account or any byte sent to the cloud.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>一台機器。</strong>128 GB 統一記憶體（CPU 與 GPU 共用）Apple Silicon Mac，只支援 Metal。記憶體更少 Mac 啟動被拒。Linux CUDA、ROCm 主機（DGX Spark、Strix Halo）下載前被拒，因 ds4 只在 Metal 跑這模型 IQ1_S 專家（許多專家小網路）。這些讀者留 v 0.6.1，在 96 GB 跑 V4 Vision-Exp IQ2（<a href="#otherhw">§8.7</a>）。約 107.35 GiB 常駐。</li>
+      <li><strong>一台機器。</strong>128 GB 統一記憶體（CPU 與 GPU 共用）Apple Silicon Mac，只支援 Metal。記憶體更少的 Mac，ds4 這層會在啟動時拒絕。48 GB 以上的 M4 Pro、M5 Pro 或 M5 Max 可選 <code>rec/flint</code>（<a href="#flint">§1.1a</a>）。Linux CUDA、ROCm 主機（DGX Spark、Strix Halo）下載前被拒，因 ds4 只在 Metal 跑這模型 IQ1_S 專家（許多專家小網路）。Linux 主機與其他不到 128 GB 的 Mac 留 v 0.6.1，在 96 GB 跑 V4 Vision-Exp IQ2（<a href="#otherhw">§8.7</a>）。約 107.35 GiB 常駐。</li>
       <li><strong>硬碟。</strong>模型一對約 367 GB，另 KV 磁碟快取（128 GB Mac 預設 64 GB）與編譯空間。用內建 SSD：兩 Engram 表（約 189 GiB 查找表，V4.1 每 token 讀幾列）留硬碟。v 0.6.x 升級留舊 81.63 GiB 到新檔通過大小檢查，用量最高約 455 GB。</li>
       <li><strong>時間。</strong>首次啟動下載約 341.5 GiB（語言檔加視覺附屬檔，讀圖片配套檔）。家用網路數小時，斷線續傳。接著編引擎。</li>
       <li><strong>兩項設定。</strong>執行一次 <code>sudo sysctl iogpu.wired_limit_mb=114688</code> 調高 Metal 可鎖定記憶體上限（GPU 最多鎖住的記憶體）。macOS 預設給 128 GB Mac 約 107.5 GiB，不夠 Maya-XS 加視覺附屬檔（<a href="#install">第一章</a>）。執行時能源模式設「高功率」。寫信的 M5 Max 高功率生成約 37.2 t/s，早版引擎低耗電 decode 不到一半。</li>
@@ -1152,15 +1159,15 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
 
     <ul class="paths" lang="en-GB">
       <li><span class="who">A journalist or researcher</span><span><a href="#motivation">Chapter 0</a>: reasons. <a href="#steering">Chapter 4</a>: outputs side by side. Whole argument there.</span></li>
-      <li><span class="who">Already use another AI tool</span><span><a href="#shells">Chapter 8</a> makes pi-ds4 backend for Codex CLI, Claude Code, OpenClaw, Hermes. You may never open pi.</span></li>
+      <li><span class="who">Already use another AI tool</span><span><a href="#shells">Chapter 8</a> makes pi-kami backend for Codex CLI, Claude Code, OpenClaw, Hermes. You may never open pi.</span></li>
       <li><span class="who">Want to understand every setting</span><span>Read from Chapter 0 in order: about twenty minutes, every default reason included.</span></li>
-      <li><span class="who">Not on a 128 GB Mac</span><span>See <a href="#otherhw">§8.7</a>. Mac under 128 GB, DGX Spark (CUDA), AMD Strix Halo (ROCm): stay v 0.6.1 or bring own GGUF and binary.</span></li>
+      <li><span class="who">Not on a 128 GB Mac</span><span>M4 Pro, M5 Pro or M5 Max with 48 GB or more: choose <code>rec/flint</code> (<a href="#flint">§1.1a</a>). Other Macs under 128 GB, DGX Spark (CUDA), AMD Strix Halo (ROCm): see <a href="#otherhw">§8.7</a>. Stay v 0.6.1 or bring own GGUF and binary.</span></li>
     </ul>
     <ul class="paths" lang="zh-TW">
       <li><span class="who">記者、研究者</span><span>先讀<a href="#motivation">第零章</a>理由，再看<a href="#steering">第四章</a>並列輸出。論證全在那。</span></li>
-      <li><span class="who">已經有慣用的 AI 工具</span><span><a href="#shells">第八章</a>把 pi-ds4 接 Codex CLI、Claude Code、OpenClaw、Hermes 後端。可以完全不開 pi。</span></li>
+      <li><span class="who">已經有慣用的 AI 工具</span><span><a href="#shells">第八章</a>把 pi-kami 接 Codex CLI、Claude Code、OpenClaw、Hermes 後端。可以完全不開 pi。</span></li>
       <li><span class="who">想搞懂每個設定</span><span>從第零章依序讀約二十分鐘，每預設理由都在文。</span></li>
-      <li><span class="who">手邊沒有 128 GB 的 Mac</span><span>見 <a href="#otherhw">§8.7</a>。不到 128 GB Mac、DGX Spark（CUDA）、AMD Strix Halo（ROCm）留 v 0.6.1 或自備 GGUF 與執行檔。</span></li>
+      <li><span class="who">手邊沒有 128 GB 的 Mac</span><span>M4 Pro、M5 Pro 或 M5 Max 搭 48 GB 以上：選 <code>rec/flint</code>（<a href="#flint">§1.1a</a>）。其他不到 128 GB 的 Mac、DGX Spark（CUDA）、AMD Strix Halo（ROCm）見 <a href="#otherhw">§8.7</a>。留 v 0.6.1 或自備 GGUF 與執行檔。</span></li>
     </ul>
   </section>
 
@@ -1208,7 +1215,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <ol>
       <li><span class="no">00</span><a href="#motivation"><span lang="en-GB">Why bring a model home</span><span lang="zh-TW">為什麼把模型帶回家</span></a></li>
       <li><span class="no">—</span><a href="#preface"><span lang="en-GB">Who this letter is for</span><span lang="zh-TW">這封信寫給誰</span></a></li>
-      <li><span class="no">01</span><a href="#install"><span lang="en-GB">What hardware you need and the one-line install</span><span lang="zh-TW">需要什麼硬體，以及一行安裝</span></a></li>
+      <li><span class="no">01</span><a href="#install"><span lang="en-GB">What hardware you need, the two engine tiers and the one-line install</span><span lang="zh-TW">需要什麼硬體、兩層引擎，以及一行安裝</span></a></li>
       <li><span class="no">02</span><a href="#firstrun"><span lang="en-GB">What happens on first launch</span><span lang="zh-TW">首次啟動會發生什麼事</span></a></li>
       <li><span class="no">03</span><a href="#model"><span lang="en-GB">The model: DeepSeek V4.1 Flash, the Maya-XS build and the vision sidecar</span><span lang="zh-TW">這顆模型：DeepSeek V4.1 Flash、Maya-XS 版本與視覺附屬檔</span></a></li>
       <li><span class="no">04</span><a href="#steering"><span lang="en-GB">Directional steering: why this fork exists</span><span lang="zh-TW">方向性引導：這個分叉最重要的功能</span></a></li>
@@ -1233,7 +1240,36 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
 
   <section class="chapter" id="whatsnew">
     <span class="chapter-no"><span lang="en-GB">What’s new, October 2026</span><span lang="zh-TW">更新誌　二〇二六年十月</span></span>
-    <h2 class="chapter-title"><span lang="en-GB">v 0.7: a bigger model fits the Mac. The 0.6 and 0.5 series stay on the record.</span><span lang="zh-TW">v 0.7：更大的模型塞進了這台 Mac，0.6 與 0.5 系列留作紀錄</span></h2>
+    <h2 class="chapter-title"><span lang="en-GB">v 0.8: a second engine, with earlier releases kept for the record</span><span lang="zh-TW">v 0.8：多一個引擎，舊版紀錄留在後面</span></h2>
+
+    <p class="lead" lang="en-GB">
+      Version 0.8.0 renames the extension to pi-kami and adds a second engine. Choose <code>rec/flint</code> in pi and pi-kami runs Flint, Recursive’s open-weight model, on Recursive’s own engine rec, pinned at 0.1.0. <code>ds4/deepseek-v4-flash</code> is still the DeepSeek tier, with the Maya-XS weights from 0.7.3. The runtime names stay as they were: <code>~/.pi/ds4/</code> and every <code>DS4_*</code> variable keep their spelling.
+    </p>
+    <p class="lead" lang="zh-TW">
+      0.8.0 把擴充套件改名為 pi-kami，並多了一個引擎。在 pi 裡選 <code>rec/flint</code>，pi-kami 會用 Recursive 自家的引擎 rec（固定在 0.1.0）來跑 Recursive 的開放權重模型 Flint。<code>ds4/deepseek-v4-flash</code> 仍是 DeepSeek 這一層，沿用 0.7.3 的 Maya-XS 權重。執行期的名稱都沒變：<code>~/.pi/ds4/</code> 和所有 <code>DS4_*</code> 變數照舊。
+    </p>
+
+    <h3><span class="no">0.8.0</span><span lang="en-GB">What changed in the extension</span><span lang="zh-TW">擴充套件改了什麼</span></h3>
+
+    <ul lang="en-GB">
+      <li><strong>A new name.</strong> pi-ds4 is now pi-kami: <code>pi install https://github.com/audreyt/pi-kami</code>. The old URL still works through GitHub’s redirect. Install from one of them only. pi sees two packages, and the second copy stays inactive and shows a warning.</li>
+      <li><strong>Flint through rec, experimental.</strong> For an M4 Pro, M5 Pro or M5 Max with 48 GB or more. The first use installs rec 0.1.0, downloads about 23 GB and starts <code>rec serve</code> on <code>127.0.0.1:11500</code>. Details in <a href="#flint">§1.1a</a>.</li>
+      <li><strong>Replay still works.</strong> Flint gets seed <code>42</code> by default too. rec 0.1.0 gives tool calls random IDs, so Flint traces differ in those IDs and nowhere else.</li>
+      <li><strong>What Flint leaves out.</strong> Flint has no vision, no directional steering, no <code>ds4-agent</code> and no Anthropic protocol. Those features stay with the ds4 tier.</li>
+      <li><strong>Unchanged.</strong> Linux CUDA and ROCm hosts and the other Macs under 128 GB still have no managed model. The v 0.6.1 advice for them stands.</li>
+    </ul>
+    <ul lang="zh-TW">
+      <li><strong>新名字。</strong>pi-ds4 改名為 pi-kami：<code>pi install https://github.com/audreyt/pi-kami</code>。舊網址透過 GitHub 轉址仍然可用。兩個網址只能擇一安裝，否則 pi 會當成兩個套件，第二份不會啟用，還會跳出警告。</li>
+      <li><strong>Flint 搭 rec（實驗性質）。</strong>適用 48 GB 以上的 M4 Pro、M5 Pro 或 M5 Max。第一次使用時會安裝 rec 0.1.0、下載約 23 GB，並在 <code>127.0.0.1:11500</code> 啟動 <code>rec serve</code>。細節見 <a href="#flint">§1.1a</a>。</li>
+      <li><strong>重播照樣成立。</strong>Flint 預設也送種子 <code>42</code>。rec 0.1.0 給工具呼叫的 ID 是隨機的，所以 Flint 的軌跡只有這些 ID 不同。</li>
+      <li><strong>Flint 少了什麼。</strong>Flint 沒有視覺、方向性引導、<code>ds4-agent</code>，也不支援 Anthropic 協定。這些功能都留在 ds4 這一層。</li>
+      <li><strong>沒變的。</strong>Linux CUDA、ROCm 主機，以及其他不到 128 GB 的 Mac，仍然沒有代管模型，照舊參考 v 0.6.1 的建議。</li>
+    </ul>
+
+    <details class="fold">
+      <summary><span lang="en-GB">Earlier releases: 0.7, 0.6 and 0.5</span><span lang="zh-TW">舊版紀錄：0.7、0.6 與 0.5</span></summary>
+
+    <h3><span class="no">0.7</span><span lang="en-GB">The 0.7 series, for the record</span><span lang="zh-TW">0.7 系列，存檔備查</span></h3>
 
     <p class="lead" lang="en-GB">
       Version 0.7.0 changes the model. Managed download now fetches DeepSeek V4.1 Flash 1017, abliterated, Q1 build. Language file: 365 713 686 528 bytes from <a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</a> (pinned revision <code>54ee865</code>). Vision sidecar: 970 555 552 bytes from <a href="https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf">audreyt/deepseek-v4.1-flash-1017-gguf</a> at revision <code>5ab6e05</code>. Total 366 684 242 080 bytes (about 341.5 GiB; 366.7 GB as disks count). Engine pin moves to <code>d3f4cd6</code>. Provider ID stays <code>ds4/deepseek-v4-flash</code>: existing settings keep working. Only display name changes, to “DeepSeek V4.1 Flash (ds4.c local)”. Cost: a 128 GB unified-memory Mac.
@@ -1324,8 +1360,8 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
 
     <h3><span class="no">0.6</span><span lang="en-GB">The 0.6 series, for the record</span><span lang="zh-TW">0.6 系列，存檔備查</span></h3>
 
-    <p lang="en-GB">Macs with 96 GB and Linux CUDA or ROCm hosts stay on v 0.6.1. The release notes below are history.</p>
-    <p lang="zh-TW">96 GB 的 Mac 與 Linux CUDA、ROCm 主機請續用 v 0.6.1。下面是歷史說明。</p>
+    <p lang="en-GB">Linux CUDA or ROCm hosts and the other Macs under 128 GB stay on v 0.6.1. An M4 Pro, M5 Pro or M5 Max with 48 GB or more can choose <code>rec/flint</code> instead (<a href="#flint">§1.1a</a>). The release notes below are history.</p>
+    <p lang="zh-TW">Linux CUDA、ROCm 主機，以及其他不到 128 GB 的 Mac 請續用 v 0.6.1。M4 Pro、M5 Pro 或 M5 Max 搭 48 GB 以上可改選 <code>rec/flint</code>（<a href="#flint">§1.1a</a>）。下面是歷史說明。</p>
 
     <p lang="en-GB">
       Version 0.6.0 changed the managed download. From 0.6.0: the <a href="https://huggingface.co/audreyt/DeepSeek-V4-Flash-Vision-Exp-Abliterated-GGUF">Vision-Exp abliterated IQ2</a> pair instead of Headroom128 0731 Flash weights. Language file 86 720 111 776 bytes. Vision encoder (part letting the model read pictures) 932 857 760 bytes. Total 87 652 969 536 bytes (about 81.63 GiB; 87.653 GB as disks count). Engine pin (exact fixed engine version): <code>d0c2b43</code>. <code>ds4-server</code> and <code>ds4-agent</code> started with <code>--vision</code>, advertising <code>input: text+image</code>. A model reading your screenshot, chart or scanned page can be repaired in more situations.
@@ -1462,6 +1498,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <p lang="zh-TW">
       <strong>這一輪背後的人。</strong>SSD 串流、分散式推論、ROCm 整合：Salvatore Sanfilippo（antirez）主導。elkaix：伺服器可觀測性、智慧體迴圈快取（PR #489）。MA：DSpark B2 拒絕取樣、自適應區塊。Nick Parrin：移植 Strix Halo。Andrea Borio：混合量化專家串流。rinaldofesta：修評分器。kamranjon、fry69：智慧體 edit 工具與終端機還原。Andreas Spannagel：MTP 推測驗證修正。
     </p>
+    </details>
   </section>
 
   <!-- ═══════════ CHAPTER 0 — WHY ═══════════ -->
@@ -1524,7 +1561,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       <li><strong>Chapters 3 and 4</strong>: the model (abliteration: refuse-less treatment; Maya-XS profile) and signature directional steering.</li>
       <li><strong>Chapters 5 and 6</strong>: every environment variable, then context-window and KV-cache tuning.</li>
       <li><strong>Chapter 7</strong>: day-to-day use: API, log, leases, native agent.</li>
-      <li><strong>Chapter 8</strong>: pi-ds4 as backend for Codex CLI, Claude Code, OpenClaw, Hermes Agent, plus non-Mac hardware path.</li>
+      <li><strong>Chapter 8</strong>: pi-kami as backend for Codex CLI, Claude Code, OpenClaw, Hermes Agent, plus non-Mac hardware path.</li>
       <li><strong>Chapters 9 to 11</strong>: troubleshooting, local development install and your own steering direction.</li>
     </ul>
     <ul lang="zh-TW">
@@ -1533,7 +1570,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       <li><strong>第三、四章</strong>：這模型（abliteration，去除拒答處理；Q1 配方）與招牌方向性引導。</li>
       <li><strong>第五、六章</strong>：每環境變數，以及 context 與 KV cache 調校。</li>
       <li><strong>第七章</strong>：日常使用：API、log、租約、原生智慧體。</li>
-      <li><strong>第八章</strong>：把 pi-ds4 當 Codex CLI、Claude Code、OpenClaw、Hermes Agent 的後端，含非 Mac 硬體做法。</li>
+      <li><strong>第八章</strong>：把 pi-kami 當 Codex CLI、Claude Code、OpenClaw、Hermes Agent 的後端，含非 Mac 硬體做法。</li>
       <li><strong>第九到十一章</strong>：故障排除、本機開發安裝、自己建引導方向。</li>
     </ul>
 
@@ -1565,7 +1602,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     <h3 id="1.1"><span class="no">1.1</span><span lang="en-GB">Minimum hardware</span><span lang="zh-TW">最低硬體需求</span></h3>
 
     <ul lang="en-GB">
-      <li><strong>Memory: 128 GB, on Apple Silicon.</strong> Smaller Macs are refused at startup. ds4 budgets 112 GiB for V4.1, with about 107.35 GiB of weights resident. Macs under 128 GB stay on v 0.6.1, which runs the V4 Vision-Exp IQ2 build on 96 GB.</li>
+      <li><strong>Memory: 128 GB, on Apple Silicon.</strong> For the ds4 tier, smaller Macs are refused at startup. ds4 budgets 112 GiB for V4.1, with about 107.35 GiB of weights resident. An M4 Pro, M5 Pro or M5 Max with 48 GB or more can choose <code>rec/flint</code> instead (<a href="#flint">§1.1a</a>). Other Macs under 128 GB stay on v 0.6.1, which runs the V4 Vision-Exp IQ2 build on 96 GB.</li>
       <li><strong>Wired-memory ceiling.</strong> Default macOS lets Metal lock only about 107.5 GiB of a 128 GB Mac. Maya-XS plus vision sidecar needs more, up to ds4’s 112 GiB budget. Raise once with <code>sudo sysctl iogpu.wired_limit_mb=114688</code> (matches budget). Add <code>iogpu.wired_limit_mb=114688</code> to <code>/etc/sysctl.conf</code> to survive reboots. Before model download, the extension checks the ceiling and prints the command when missing.</li>
       <li><strong>Disk.</strong> Language file plus sidecar: 366 684 242 080 bytes (about 341.5 GiB, or 366.7 GB). KV disk cache: 64 GB default on a 128 GB Mac with <code>DS4_KV_DISK_SPACE_MB</code> unset. Plus ds4 source tree, build, logs. Fresh install: about 367 GB plus KV cache. Upgrade from v 0.6.x keeps the old 81.63 GiB pair until new-pair size checks pass: peak near 455 GB. <code>download_model.sh</code> checks free space first. Internal SSD: two Engram tables (about 189 GiB) stay on disk.</li>
       <li><strong>Chip.</strong> Apple Silicon, Metal only. The extension refuses Linux CUDA and ROCm hosts before any download, as ds4 runs the IQ1_S experts only on Metal. Linux readers can stay on v 0.6.1 or bring a GGUF and binary through <code>DS4_RUNTIME_DIR</code> (<a href="#otherhw">§8.7</a>).</li>
@@ -1573,7 +1610,7 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
       <li><strong>Network.</strong> First download: 341.5 GiB. Expect many hours on a home connection. Resume with <code>curl -C -</code>. Set <code>HF_TOKEN</code> when your Hugging Face account gets faster downloads.</li>
     </ul>
     <ul lang="zh-TW">
-      <li><strong>記憶體：128 GB，而且要是 Apple Silicon。</strong>記憶體更少的 Mac 啟動時被拒絕。ds4 給 V4.1 的記憶體預算為 112 GiB，約 107.35 GiB 權重常駐。不到 128 GB 的 Mac 請留用 v 0.6.1，它在 96 GB 上跑 V4 Vision-Exp IQ2 版。</li>
+      <li><strong>記憶體：128 GB，而且要是 Apple Silicon。</strong>ds4 這一層對記憶體更少的 Mac 啟動時拒絕。ds4 給 V4.1 的記憶體預算為 112 GiB，約 107.35 GiB 權重常駐。M4 Pro、M5 Pro 或 M5 Max 搭 48 GB 以上可改選 <code>rec/flint</code>（<a href="#flint">§1.1a</a>）。其他不到 128 GB 的 Mac 請留用 v 0.6.1，它在 96 GB 上跑 V4 Vision-Exp IQ2 版。</li>
       <li><strong>可鎖定記憶體上限。</strong>macOS 預設只讓 Metal 鎖 128 GB Mac 約 107.5 GiB。Maya-XS 加視覺附屬檔在 ds4 的 112 GiB 預算下要更多。執行一次 <code>sudo sysctl iogpu.wired_limit_mb=114688</code> 調高（正對應預算）。重開機保留：把 <code>iogpu.wired_limit_mb=114688</code> 加 <code>/etc/sysctl.conf</code>。擴充套件下載前檢查，未設印指令。</li>
       <li><strong>硬碟。</strong>語言檔加視覺附屬檔共 366 684 242 080 位元組（約 341.5 GiB，即 366.7 GB）。再加 KV 磁碟快取：未設 <code>DS4_KV_DISK_SPACE_MB</code> 時 128 GB Mac 預設 64 GB。另加 ds4 原始碼、編譯產物、log。全新安裝預留約 367 GB 外加 KV 快取。v 0.6.x 升級留舊 81.63 GiB 檔到新檔通過大小檢查，用量最高約 455 GB。<code>download_model.sh</code> 開始前查剩餘空間。用內建 SSD：兩張 Engram 表（約 189 GiB）留硬碟。</li>
       <li><strong>晶片。</strong>Apple Silicon，只支援 Metal。Linux CUDA、ROCm 主機在下載前就被拒絕，因為 ds4 只在 Metal 上執行 IQ1_S 專家。Linux 讀者可留用 v 0.6.1，或透過 <code>DS4_RUNTIME_DIR</code> 自備 GGUF 與執行檔（<a href="#otherhw">§8.7</a>）。</li>
@@ -1582,9 +1619,64 @@ a.gl:hover, a.gl.hot { text-decoration-style: solid; }
     </ul>
 
     <div class="aside" id="v061">
-      <span class="label"><span lang="en-GB">Under 128 GB? Stay on v 0.6.1</span><span lang="zh-TW">不到 128 GB？請留在 v 0.6.1</span></span>
-      <p lang="en-GB">The 96 GB route belongs to the previous release. v 0.6.1 runs the V4 Vision-Exp IQ2 build (81.63 GiB) on a 96 GB Mac after a raised Metal wired-memory ceiling (cap on GPU-lockable memory). This release uses no such ceiling. Managed launch refuses every Mac under 128 GB. This letter drops those instructions.</p>
-      <p lang="zh-TW">96 GB 路線屬上版。v 0.6.1 在 96 GB Mac 跑 V4 Vision-Exp IQ2（81.63 GiB），前提調高 Metal 可鎖定記憶體上限（GPU 最多鎖住的記憶體）。這個版本不用那個上限。代管路徑拒絕不到 128 GB 的 Mac，本信不附那些步驟。</p>
+      <span class="label"><span lang="en-GB">Under 128 GB? Pick Flint or v 0.6.1</span><span lang="zh-TW">不到 128 GB？可選 Flint，或留在 v 0.6.1</span></span>
+      <p lang="en-GB">With an M4 Pro, M5 Pro or M5 Max and 48 GB or more, choose <code>rec/flint</code> (<a href="#flint">§1.1a</a>). Other Macs under 128 GB stay on v 0.6.1. Once you raise Metal’s wired-memory ceiling (the cap on memory the GPU can lock), it runs the V4 Vision-Exp IQ2 build (81.63 GiB) on a 96 GB Mac. Its setup steps live with that release. The ds4 tier here turns away every Mac under 128 GB, so this letter leaves them out.</p>
+      <p lang="zh-TW">M4 Pro、M5 Pro 或 M5 Max 有 48 GB 以上，選 <code>rec/flint</code>（<a href="#flint">§1.1a</a>）。其他不到 128 GB 的 Mac 請留在 v 0.6.1：調高 Metal 可鎖定記憶體上限（GPU 最多能鎖住的記憶體）之後，它能在 96 GB 的 Mac 上跑 V4 Vision-Exp IQ2（81.63 GiB），設定步驟請看那一版。這裡的 ds4 層不接受 128 GB 以下的 Mac，本信就不重複那些步驟。</p>
+    </div>
+
+    <h3 id="flint"><span class="no">1.1a</span><span lang="en-GB">Flint through rec: the 48 to 96 GB route</span><span lang="zh-TW">Flint 搭 rec：48 到 96 GB 的選項</span></h3>
+
+    <div class="aside">
+      <span class="label"><span lang="en-GB">Experimental</span><span lang="zh-TW">實驗性質</span></span>
+      <p lang="en-GB">Treat this tier as an experiment. Flint is not abliterated and has no directional steering yet. Early community reports find it weaker than Qwen3.8 27B at agentic coding, with invented tool calls and long overthinking (<a href="https://www.reddit.com/r/LocalLLaMA/comments/1xc23iq/recursive_flint_the_qwen38_35b_weve_all_been/">r/LocalLLaMA</a>). One short read-and-fix task through rec worked here, but this guide has not measured longer work.</p>
+      <p lang="zh-TW">這一層請當成實驗。Flint 沒有經過 abliteration，也還沒有方向性引導。社群初期回報指出，它做智慧體寫程式不如 Qwen3.8 27B，常呼叫不存在的工具，也容易想太久（<a href="https://www.reddit.com/r/LocalLLaMA/comments/1xc23iq/recursive_flint_the_qwen38_35b_weve_all_been/">r/LocalLLaMA</a>）。這裡用 rec 跑過一個簡短的讀檔修錯任務，結果正常，但本信還沒量過較長的工作。</p>
+    </div>
+
+    <p lang="en-GB">
+      Version 0.8 adds an engine for the Macs the ds4 tier turns away. rec 0.1.0 supports only the M4 Pro, M5 Pro and M5 Max, so this route is for those chips with 48 to 96 GB of unified memory. A 128 GB Mac can use it too. Pick <code>rec/flint</code> as the model in pi. <code>ds4/deepseek-v4-flash</code> stays the DeepSeek tier.
+    </p>
+    <p lang="zh-TW">
+      0.8 版替 ds4 層擋下的 Mac 多加了一個引擎。rec 0.1.0 只支援 M4 Pro、M5 Pro 和 M5 Max，所以這個選項給統一記憶體 48 到 96 GB 的這幾款晶片。128 GB 的 Mac 也能用。在 pi 裡把模型選成 <code>rec/flint</code> 即可，<code>ds4/deepseek-v4-flash</code> 仍是 DeepSeek 那一層。
+    </p>
+
+    <p lang="en-GB">
+      Flint is Recursive’s open-weight model (Apache 2.0). It is a 40B-parameter Mixture-of-Experts that uses 2.5B parameters per token and takes about 23 GB at 4-bit. It reads text only and is not abliterated. rec is Recursive’s engine (also Apache 2.0), and pi-kami pins it at 0.1.0. Recursive reports more than 125 tokens/s on an M4 Pro. This guide has not measured Flint’s speed, so treat that figure as Recursive’s.
+    </p>
+    <p lang="zh-TW">
+      Flint 是 Recursive 的開放權重模型（Apache 2.0），400 億參數的 Mixture-of-Experts，每個 token 只動用 25 億，4-bit 約 23 GB。它只讀文字，也沒有經過 abliteration。rec 是 Recursive 的引擎（同樣是 Apache 2.0），pi-kami 把它固定在 0.1.0。Recursive 說 M4 Pro 上每秒超過 125 個 token。本信沒有自己量過，這個數字請當作 Recursive 的說法。
+    </p>
+
+    <p lang="en-GB">The first time you use it, pi-kami does three things:</p>
+    <p lang="zh-TW">第一次使用時，pi-kami 會做三件事：</p>
+    <ul lang="en-GB">
+      <li>It installs rec 0.1.0 with Recursive’s installer. The installer adds <code>~/.local/bin</code> to PATH in your shell profile.</li>
+      <li>It downloads about 23 GB.</li>
+      <li>It starts <code>rec serve</code> on <code>127.0.0.1:11500</code>, or reuses a rec server that is already running. When the last pi-kami window quits, it stops the server only if pi-kami started it.</li>
+    </ul>
+    <ul lang="zh-TW">
+      <li>用 Recursive 的安裝程式裝好 rec 0.1.0。安裝程式會在你的 shell 設定檔裡把 <code>~/.local/bin</code> 加進 PATH。</li>
+      <li>下載約 23 GB。</li>
+      <li>在 <code>127.0.0.1:11500</code> 啟動 <code>rec serve</code>，若已有 rec 伺服器在跑就直接沿用。最後一個 pi-kami 視窗關掉時，只有 pi-kami 自己啟動的伺服器才會被停掉。</li>
+    </ul>
+
+    <p lang="en-GB">
+      Replay and pinning carry over. pi-kami sends seed <code>42</code> by default, and the same <code>DS4_REPRODUCIBLE</code> and <code>DS4_REPRODUCIBLE_SEED</code> settings apply. Two identical runs through stock pi 1.3.0 gave byte-identical output, and a different seed gave different output. One gap remains. rec 0.1.0 still gives tool calls random IDs, so two traces differ in those IDs and nowhere else. A fix is waiting upstream as recursive-oss/rec pull request #3.
+    </p>
+    <p lang="zh-TW">
+      重播與釘版都沿用。pi-kami 預設送種子 <code>42</code>，<code>DS4_REPRODUCIBLE</code> 和 <code>DS4_REPRODUCIBLE_SEED</code> 照樣有效。用原版 pi 1.3.0 跑兩次相同輸入，輸出逐位元組相同，換個種子輸出就不同。還有一個缺口：rec 0.1.0 給工具呼叫的 ID 仍是隨機的，所以兩份軌跡只差在這些 ID。修正已提交上游，是 recursive-oss/rec 的 pull request #3。
+    </p>
+
+    <p lang="en-GB">
+      Flint has no image input, no directional steering, no <code>ds4-agent</code> and no Anthropic protocol. Chapter 4 and the vision sidecar details in Chapter 3 apply only to the ds4 tier.
+    </p>
+    <p lang="zh-TW">
+      Flint 沒有圖片輸入、方向性引導、<code>ds4-agent</code>，也不支援 Anthropic 協定。第四章，以及第三章關於視覺附屬檔的部分，都只適用 ds4 那一層。
+    </p>
+
+    <div class="aside">
+      <span class="label"><span lang="en-GB">One engine at a time</span><span lang="zh-TW">一次只跑一個引擎</span></span>
+      <p lang="en-GB">Flint plans its memory as if it had the Mac to itself. On a Mac under 192 GB, pi-kami won’t start it next to a running <code>ds4-server</code>.</p>
+      <p lang="zh-TW">Flint 規劃記憶體時，假設整台 Mac 只有自己在用。在不到 192 GB 的 Mac 上，只要 <code>ds4-server</code> 還在跑，pi-kami 就不會啟動 Flint。</p>
     </div>
 
     <h3 id="1.2"><span class="no">1.2</span><span lang="en-GB">If you installed the upstream extension before</span><span lang="zh-TW">如果你之前裝過上游版本</span></h3>
@@ -1618,9 +1710,12 @@ pi --version</pre>
     </div>
 
     <div class="term">
-      <div class="term-bar"><span><span lang="en-GB">install this fork</span><span lang="zh-TW">安裝這個分叉</span></span><button class="copy" data-copy="pi install https://github.com/audreyt/pi-ds4" aria-label="Copy the install command"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
-      <pre>pi install https://github.com/audreyt/pi-ds4</pre>
+      <div class="term-bar"><span><span lang="en-GB">install this fork</span><span lang="zh-TW">安裝這個分叉</span></span><button class="copy" data-copy="pi install https://github.com/audreyt/pi-kami" aria-label="Copy the install command"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
+      <pre>pi install https://github.com/audreyt/pi-kami</pre>
     </div>
+
+    <p lang="en-GB">This used to be pi-ds4. The old URL, <code>https://github.com/audreyt/pi-ds4</code>, still works through GitHub’s redirect, but install from only one of them. pi treats the two URLs as separate packages, and the second copy stays inactive and shows a warning.</p>
+    <p lang="zh-TW">前身是 pi-ds4。舊網址 <code>https://github.com/audreyt/pi-ds4</code> 透過 GitHub 轉址仍然可用，但請只用其中一個安裝。pi 會把兩個網址當成兩個套件，第二份不會啟用，還會跳出警告。</p>
 
     <p lang="en-GB">
       Whole command. Background: pi clones engine source, builds <code>ds4-server</code>, downloads 366.7 GB language-and-sidecar pair, starts server, registers provider. Every step lands in log.
@@ -1842,17 +1937,20 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf <span class="hi">
     <h3 id="3.3"><span class="no">3.3</span><span lang="en-GB">The Maya-XS profile and what it costs</span><span lang="zh-TW">Maya-XS 版本與它的代價</span></h3>
 
     <p lang="en-GB">
-      In 0.7.3 this fork’s managed download fetches <strong>DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf</strong> (365 713 686 528 bytes, a ds4-native GGUF) from <code>audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</code>, plus the vision sidecar. The <a href="https://huggingface.co/peasantsmith/DeepSeek-V4.1-Flash-1017-Maya-GGUF">Project Maya quantization</a> supplies 120 IQ1_S expert tensors and 339 Q8 tensors without requantization. Native metadata and Engram stay intact. About 107.35 GiB stays resident on Metal and the two Engram tables stay on disk. The engine pin adds Q8 admission for the embedding, compressor and indexer, using execution paths ds4 already had.
+      This fork’s managed download fetches <strong>DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf</strong> (365 713 686 528 bytes, a ds4-native GGUF) from <code>audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</code>, plus the vision sidecar. The <a href="https://huggingface.co/peasantsmith/DeepSeek-V4.1-Flash-1017-Maya-GGUF">Project Maya quantization</a> supplies 120 IQ1_S expert tensors and 339 Q8 tensors without requantization. Native metadata and Engram stay intact. About 107.35 GiB stays resident on Metal and the two Engram tables stay on disk. The engine pin adds Q8 admission for the embedding, compressor and indexer, using execution paths ds4 already had.
     </p>
+    <p lang="zh-TW">
+      本分叉代管下載從 <code>audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</code> 抓 <strong>DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf</strong>（365 713 686 528 位元組，ds4 原生 GGUF），再加視覺附屬檔。<a href="https://huggingface.co/peasantsmith/DeepSeek-V4.1-Flash-1017-Maya-GGUF">Project Maya 量化版本</a>提供 120 個 IQ1_S 專家張量與 339 個 Q8 張量，不再重量化，並保留原生中繼資料與 Engram。約 107.35 GiB 常駐 Metal，兩張 Engram 表留硬碟。引擎釘選版本加了 embedding、compressor、indexer 的 Q8 接受，走 ds4 原有執行路徑。
+    </p>
+    <details class="fold">
+      <summary><span lang="en-GB">How the earlier Q1 build was assembled</span><span lang="zh-TW">先前的 Q1 版本怎麼組成</span></summary>
     <p lang="en-GB">
       The earlier Q1 build (0.7.0 to 0.7.2, file <strong>DeepSeek-V4.1-Flash-Abliterated-Q1.gguf</strong>) was assembled like this. <strong>IQ1_S</strong>: among the family’s lowest-bit formats. Routed experts come from <a href="https://huggingface.co/unsloth">Unsloth</a>’s UD-IQ1_S: 88 expert tensors as published; 32 requantised from Unsloth IQ2_XXS down to IQ1_S with Unsloth’s imatrix (calibration file naming weights that matter most), to fit budget. Nine dense roles use Unsloth tensors, mostly Q6_K and Q5_K: attention q_a, q_b, kv; shared-expert gate, up, down; output head; token embedding; Engram projection. Attention output projections stay Q8_0. The rest comes from ds4-native 1017 Q2.
     </p>
     <p lang="zh-TW">
-      0.7.3 起本分叉代管下載從 <code>audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF</code> 抓 <strong>DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf</strong>（365 713 686 528 位元組，ds4 原生 GGUF），再加視覺附屬檔。<a href="https://huggingface.co/peasantsmith/DeepSeek-V4.1-Flash-1017-Maya-GGUF">Project Maya 量化版本</a>提供 120 個 IQ1_S 專家張量與 339 個 Q8 張量，不再重量化，並保留原生中繼資料與 Engram。約 107.35 GiB 常駐 Metal，兩張 Engram 表留硬碟。引擎釘選版本加了 embedding、compressor、indexer 的 Q8 接受，走 ds4 原有執行路徑。
-    </p>
-    <p lang="zh-TW">
       先前的 Q1 版本（0.7.0 至 0.7.2，檔名 <strong>DeepSeek-V4.1-Flash-Abliterated-Q1.gguf</strong>）是這樣組的。<strong>IQ1_S</strong> 是這族最低位元格式之一。路由專家來自 <a href="https://huggingface.co/unsloth">Unsloth</a> UD-IQ1_S：88 專家張量照原樣，32 個為合預算以 Unsloth imatrix 從 Unsloth IQ2_XXS 重量化為 IQ1_S。九稠密角色用 Unsloth 張量，多半 Q6_K、Q5_K：注意力 q_a、q_b、kv，共用專家 gate、up、down，輸出頭，token embedding，Engram 投影。注意力輸出投影維持 Q8_0。其餘來自 ds4 原生 1017 Q2。
     </p>
+    </details>
     <p lang="en-GB">
       That shape makes the model fit. Routed experts hold most bytes: quantisation squeezes experts hardest. The dense path <em>every</em> token walks (attention, shared experts, output head) keeps heavier formats: an error there charges every step. Leftover space gives a 128 GB machine runtime and KV headroom. KV cache: the model’s short-term memory of text so far.
     </p>
@@ -1874,6 +1972,13 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf <span class="hi">
     <p lang="zh-TW">
       第二檔：<code>DeepSeek-V4.1-Flash-1017-Vision.gguf</code>。附屬檔（sidecar）承載模型一部分，這份是讀圖片部分。970 555 552 位元組，取自 <code>audreyt/deepseek-v4.1-flash-1017-gguf</code> 的 <code>5ab6e05</code>。有了它，代管伺服器與智慧體能以 <code>--vision gguf/DeepSeek-V4.1-Flash-1017-Vision.gguf</code> 啟動並宣告 <code>input: text+image</code>。原生智慧體裡 <code>/read earth.jpg</code> 把圖放進回合。特意獨立成檔：可單獨更新、檢查、拿掉，不必重下載語言權重。
     </p>
+
+
+    <div class="aside">
+      <span class="label"><span lang="en-GB">Which tiers read images</span><span lang="zh-TW">哪幾層能讀圖片</span></span>
+      <p lang="en-GB">The sidecar and <code>/read</code> details in this chapter apply to the ds4 tier only. Flint reads text only (<a href="#flint">§1.1a</a>).</p>
+      <p lang="zh-TW">本章關於附屬檔和 <code>/read</code> 的說明，只適用 ds4 那一層。Flint 只讀文字（<a href="#flint">§1.1a</a>）。</p>
+    </div>
   </section>
 
   <!-- ═══════════ CHAPTER 4 — STEERING ═══════════ -->
@@ -1882,6 +1987,13 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf <span class="hi">
   <section class="chapter" id="steering">
     <span class="chapter-no"><span lang="en-GB">Chapter 4</span><span lang="zh-TW">第四章</span></span>
     <h2 class="chapter-title"><span lang="en-GB">Directional steering: why this fork exists</span><span lang="zh-TW">方向性引導：這個分叉最重要的功能</span></h2>
+
+    <div class="aside">
+      <span class="label"><span lang="en-GB">ds4 tier only</span><span lang="zh-TW">只適用 ds4 層</span></span>
+      <p lang="en-GB">This chapter applies to the ds4 tier only. Flint has no directional steering and is not abliterated (<a href="#flint">§1.1a</a>).</p>
+      <p lang="zh-TW">本章只適用 ds4 那一層。Flint 沒有方向性引導，也沒有經過 abliteration（<a href="#flint">§1.1a</a>）。</p>
+    </div>
+
 
     <p class="lead" lang="en-GB">
       Keep one thing from this fork: directional steering. Steering changes the model during a run: small push to activations (internal signals) in one chosen direction. Few directions move: low-rank. No retraining. Disk weights unchanged. This fork ships <em>uncertainty</em>: a direction letting the model treat contested questions as contested.
@@ -1971,10 +2083,10 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf <span class="hi">
     <h3 id="4.5"><span class="no">4.5</span><span lang="en-GB">The prompt to pair with it (an example, not a default)</span><span lang="zh-TW">和它搭配的提示，範例而非預設</span></h3>
 
     <p lang="en-GB">
-      pi-ds4 ships no system prompt. Extension starts server, adds steering arguments on request. Your pi or external shell frames answers. Below: text this letter’s author keeps in <code>~/.pi/agent/SYSTEM.md</code>. Example pairs well with uncertainty steering. No install receives example automatically. Treat no example as recommended default.
+      pi-kami ships no system prompt. Extension starts server, adds steering arguments on request. Your pi or external shell frames answers. Below: text this letter’s author keeps in <code>~/.pi/agent/SYSTEM.md</code>. Example pairs well with uncertainty steering. No install receives example automatically. Treat no example as recommended default.
     </p>
     <p lang="zh-TW">
-      pi-ds4 不附 system prompt。擴充套件只啟動伺服器、要求時加引導參數。框架由你的 pi 或外部 shell 提供。下面是本信作者放 <code>~/.pi/agent/SYSTEM.md</code> 文字，與不確定性引導搭配良好。範例不套用任何安裝，不是建議預設。
+      pi-kami 不附 system prompt。擴充套件只啟動伺服器、要求時加引導參數。框架由你的 pi 或外部 shell 提供。下面是本信作者放 <code>~/.pi/agent/SYSTEM.md</code> 文字，與不確定性引導搭配良好。範例不套用任何安裝，不是建議預設。
     </p>
 
     <div class="term">
@@ -1993,8 +2105,8 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf <span class="hi">
 
     <div class="aside">
       <span class="label"><span lang="en-GB">To use it yourself</span><span lang="zh-TW">自己要用的話</span></span>
-      <p lang="en-GB">Save block to <code>~/.pi/agent/SYSTEM.md</code>. Create file when missing. Next launch: pi adds block to system prompt. External shell from Chapter 8: use that shell’s own system-prompt setting. pi-ds4 manages none.</p>
-      <p lang="zh-TW">段落存 <code>~/.pi/agent/SYSTEM.md</code>。檔不存在新增。pi 下次啟動放進 system prompt。第八章外部 shell 用它自己 system prompt 設定。pi-ds4 不管理。</p>
+      <p lang="en-GB">Save block to <code>~/.pi/agent/SYSTEM.md</code>. Create file when missing. Next launch: pi adds block to system prompt. External shell from Chapter 8: use that shell’s own system-prompt setting. pi-kami manages none.</p>
+      <p lang="zh-TW">段落存 <code>~/.pi/agent/SYSTEM.md</code>。檔不存在新增。pi 下次啟動放進 system prompt。第八章外部 shell 用它自己 system prompt 設定。pi-kami 不管理。</p>
     </div>
 
     <h3 id="4.6"><span class="no">4.6</span><span lang="en-GB">Turn it on and off</span><span lang="zh-TW">開啟與關閉</span></h3>
@@ -2264,6 +2376,13 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf <span class="hi">
 
     <h3 id="5.6"><span class="no">5.6</span><span lang="en-GB">The native <code>ds4-agent</code> in the foreground</span><span lang="zh-TW">前景的原生 <code>ds4-agent</code></span></h3>
 
+    <div class="aside">
+      <span class="label"><span lang="en-GB">ds4 tier only</span><span lang="zh-TW">只適用 ds4 層</span></span>
+      <p lang="en-GB"><code>ds4-agent</code> belongs to the ds4 tier. With <code>rec/flint</code> there is no native agent to hand the terminal to (<a href="#flint">§1.1a</a>).</p>
+      <p lang="zh-TW"><code>ds4-agent</code> 只屬於 ds4 那一層。選 <code>rec/flint</code> 時，沒有原生智慧體可以接手終端機（<a href="#flint">§1.1a</a>）。</p>
+    </div>
+
+
     <dl class="vars">
       <div>
         <dt>DS4_AGENT_BINARY<span class="default"><span lang="en-GB">default: runtime/ds4-agent</span><span lang="zh-TW">預設：runtime/ds4-agent</span></span></dt>
@@ -2317,10 +2436,10 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf <span class="hi">
     <h2 class="chapter-title"><span lang="en-GB">Runtime tuning: context and KV cache</span><span lang="zh-TW">執行期調整：context 和 KV cache</span></h2>
 
     <p class="lead" lang="en-GB">
-      This chapter never promises a faster machine. Engine and pinned build decide backend speed. The pi-ds4 managed start controls two long-session essentials: how much context you allow, and where the KV cache spills when memory runs short.
+      This chapter never promises a faster machine. Engine and pinned build decide backend speed. The pi-kami managed start controls two long-session essentials: how much context you allow, and where the KV cache spills when memory runs short.
     </p>
     <p class="lead" lang="zh-TW">
-      這章不承諾機器變快。後端速度由引擎與釘選的建置決定。pi-ds4 的代管啟動只控制影響長對話的兩件事：你允許的 context 大小，還有記憶體不足時 KV cache 寫到哪裡。
+      這章不承諾機器變快。後端速度由引擎與釘選的建置決定。pi-kami 的代管啟動只控制影響長對話的兩件事：你允許的 context 大小，還有記憶體不足時 KV cache 寫到哪裡。
     </p>
 
     <h3 id="6.1"><span class="no">6.1</span><span lang="en-GB">What the managed launch controls</span><span lang="zh-TW">代管啟動掌握什麼</span></h3>
@@ -2335,10 +2454,10 @@ ln -sfn gguf/DeepSeek-V4.1-Flash-1017-Maya-XS-Abliterated.gguf <span class="hi">
     <h3 id="6.2"><span class="no">6.2</span><span lang="en-GB">Backend choice belongs to ds4</span><span lang="zh-TW">後端的選擇屬於 ds4</span></h3>
 
     <p lang="en-GB">
-      Metal on Apple Silicon, CUDA on Linux, ROCm on AMD Strix Halo since the 2026-07 pin, future upstream backends: all live in the ds4 build. pi-ds4 pins a known commit, builds the commit, fetches matching weights, starts with consistent arguments. This release: only Metal runs V4.1 Maya-XS weights. Managed launch refuses CUDA and ROCm hosts (<a href="#otherhw">§8.7</a>).
+      Metal on Apple Silicon, CUDA on Linux, ROCm on AMD Strix Halo since the 2026-07 pin, future upstream backends: all live in the ds4 build. pi-kami pins a known commit, builds the commit, fetches matching weights, starts with consistent arguments. This release: only Metal runs V4.1 Maya-XS weights. Managed launch refuses CUDA and ROCm hosts (<a href="#otherhw">§8.7</a>).
     </p>
     <p lang="zh-TW">
-      Apple Silicon Metal、Linux CUDA、2026-07 釘版起 AMD Strix Halo ROCm、上游未來後端，都在 ds4 建置。pi-ds4 釘已知 commit、編譯、下載對應權重、一致參數啟動。本版只有 Metal 跑 V4.1 Maya-XS 權重，代管拒 CUDA 與 ROCm 主機（<a href="#otherhw">§8.7</a>）。
+      Apple Silicon Metal、Linux CUDA、2026-07 釘版起 AMD Strix Halo ROCm、上游未來後端，都在 ds4 建置。pi-kami 釘已知 commit、編譯、下載對應權重、一致參數啟動。本版只有 Metal 跑 V4.1 Maya-XS 權重，代管拒 CUDA 與 ROCm 主機（<a href="#otherhw">§8.7</a>）。
     </p>
 
     <h3 id="6.3"><span class="no">6.3</span><span lang="en-GB">When to run it by hand</span><span lang="zh-TW">什麼時候手動跑</span></h3>
@@ -2523,6 +2642,13 @@ curl -s http://127.0.0.1:8000/stats
 
     <h3 id="7.5"><span class="no">7.5</span><span lang="en-GB">The native <code>ds4-agent</code> in pi</span><span lang="zh-TW">從 pi 啟動原生 <code>ds4-agent</code></span></h3>
 
+    <div class="aside">
+      <span class="label"><span lang="en-GB">ds4 tier only</span><span lang="zh-TW">只適用 ds4 層</span></span>
+      <p lang="en-GB"><code>ds4-agent</code> belongs to the ds4 tier. With <code>rec/flint</code> there is no native agent to hand the terminal to (<a href="#flint">§1.1a</a>).</p>
+      <p lang="zh-TW"><code>ds4-agent</code> 只屬於 ds4 那一層。選 <code>rec/flint</code> 時，沒有原生智慧體可以接手終端機（<a href="#flint">§1.1a</a>）。</p>
+    </div>
+
+
     <p lang="en-GB">
       Second way in: pi installs, updates, removes, prepares runtime. Conversation then goes to native agent in ds4 checkout:
     </p>
@@ -2562,25 +2688,25 @@ curl -s http://127.0.0.1:8000/stats
 
   <section class="chapter" id="shells">
     <span class="chapter-no"><span lang="en-GB">Chapter 8</span><span lang="zh-TW">第八章</span></span>
-    <h2 class="chapter-title"><span lang="en-GB">pi-ds4 as a backend for Codex, Claude Code, OpenClaw and Hermes</span><span lang="zh-TW">把 pi-ds4 當作 Codex、Claude Code、OpenClaw、Hermes 的後端</span></h2>
+    <h2 class="chapter-title"><span lang="en-GB">pi-kami as a backend for Codex, Claude Code, OpenClaw and Hermes</span><span lang="zh-TW">把 pi-kami 當作 Codex、Claude Code、OpenClaw、Hermes 的後端</span></h2>
 
     <p class="lead" lang="en-GB">
-      pi is one front door. Your door can differ. pi-ds4 prepares engine, weights, lifecycle, then exposes a plain HTTP server at <code>127.0.0.1:8000</code> speaking OpenAI and Anthropic formats. Almost any coding agent you use can point there. Your favourite shell then runs the model on your disk: no metering, no rate limit, no context leaving the machine.
+      pi is one front door. Your door can differ. pi-kami prepares engine, weights, lifecycle, then exposes a plain HTTP server at <code>127.0.0.1:8000</code> speaking OpenAI and Anthropic formats. Almost any coding agent you use can point there. Your favourite shell then runs the model on your disk: no metering, no rate limit, no context leaving the machine.
     </p>
     <p class="lead" lang="zh-TW">
-      pi 是一扇前門，不必是你的。pi-ds4 備妥引擎、權重、生命週期，在 <code>127.0.0.1:8000</code> 開普通 HTTP 伺服器，同時說 OpenAI 與 Anthropic 格式。你常用的程式開發智慧體幾乎都能指向它。慣用 shell 底下就跑你硬碟的模型：不計費不限速，上下文不離機。
+      pi 是一扇前門，不必是你的。pi-kami 備妥引擎、權重、生命週期，在 <code>127.0.0.1:8000</code> 開普通 HTTP 伺服器，同時說 OpenAI 與 Anthropic 格式。你常用的程式開發智慧體幾乎都能指向它。慣用 shell 底下就跑你硬碟的模型：不計費不限速，上下文不離機。
     </p>
 
     <div class="aside">
       <span class="label"><span lang="en-GB">The key point</span><span lang="zh-TW">最重要的一句話</span></span>
-      <p lang="en-GB"><strong>The pi-ds4 server path is an inference server (the program running the model) speaking OpenAI and Anthropic formats, for as long as you want. Listening stays on your machine. Weights stay on your disk. Context goes nowhere.</strong> Top shell: Codex CLI, Claude Code, OpenClaw, Hermes Agent or your own script. Switching means one base-URL change.</p>
-      <p lang="zh-TW"><strong>pi-ds4 伺服器路徑是一台推論伺服器（負責執行模型），同時說 OpenAI 與 Anthropic 協定，想開多久都行：只在你的機器監聽，權重留硬碟，上下文哪裡都不送。</strong>上層 shell 可用 Codex CLI、Claude Code、OpenClaw、Hermes Agent 或你自己的腳本。切換只要改一個 base URL。</p>
+      <p lang="en-GB"><strong>The pi-kami server path is an inference server (the program running the model) speaking OpenAI and Anthropic formats, for as long as you want. Listening stays on your machine. Weights stay on your disk. Context goes nowhere.</strong> Top shell: Codex CLI, Claude Code, OpenClaw, Hermes Agent or your own script. Switching means one base-URL change.</p>
+      <p lang="zh-TW"><strong>pi-kami 伺服器路徑是一台推論伺服器（負責執行模型），同時說 OpenAI 與 Anthropic 協定，想開多久都行：只在你的機器監聽，權重留硬碟，上下文哪裡都不送。</strong>上層 shell 可用 Codex CLI、Claude Code、OpenClaw、Hermes Agent 或你自己的腳本。切換只要改一個 base URL。</p>
     </div>
 
     <div class="aside">
       <span class="label"><span lang="en-GB">The engine has its own agent too</span><span lang="zh-TW">引擎也有自己的智慧體</span></span>
-      <p lang="en-GB">antirez’s DwarfStar includes <code>ds4-agent</code>: native coding agent inside engine process, no HTTP. Upstream recently added browser and web tools. pi-ds4 does not manage agent. Any <code>audreyt/ds4</code> checkout runs <code>./ds4-agent</code> directly. In pi, <a href="#7.5">§7.5</a> handoff adds memory protection to same job. See Native agent section of <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> README.</p>
-      <p lang="zh-TW">antirez 的 DwarfStar 內建 <code>ds4-agent</code>：原生程式開發智慧體，在引擎程序跑，不走 HTTP。上游最近加瀏覽器與網頁工具。pi-ds4 不管理它。任何 <code>audreyt/ds4</code> checkout 直接跑 <code>./ds4-agent</code>。pi 裡 <a href="#7.5">§7.5</a> 交接做同一事並加記憶體保護。細節見 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> README Native agent 段。</p>
+      <p lang="en-GB">antirez’s DwarfStar includes <code>ds4-agent</code>: native coding agent inside engine process, no HTTP. Upstream recently added browser and web tools. pi-kami does not manage agent. Any <code>audreyt/ds4</code> checkout runs <code>./ds4-agent</code> directly. In pi, <a href="#7.5">§7.5</a> handoff adds memory protection to same job. See Native agent section of <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> README.</p>
+      <p lang="zh-TW">antirez 的 DwarfStar 內建 <code>ds4-agent</code>：原生程式開發智慧體，在引擎程序跑，不走 HTTP。上游最近加瀏覽器與網頁工具。pi-kami 不管理它。任何 <code>audreyt/ds4</code> checkout 直接跑 <code>./ds4-agent</code>。pi 裡 <a href="#7.5">§7.5</a> 交接做同一事並加記憶體保護。細節見 <a href="https://github.com/audreyt/ds4">audreyt/ds4</a> README Native agent 段。</p>
     </div>
 
     <p lang="en-GB">Every setup below uses four settings:</p>
@@ -2610,14 +2736,14 @@ curl -s http://127.0.0.1:8000/stats
 model_provider = <span class="s">"ds4"</span>
 
 [model_providers.ds4]
-name = <span class="s">"Local pi-ds4"</span>
+name = <span class="s">"Local pi-kami"</span>
 base_url = <span class="s">"http://127.0.0.1:8000/v1"</span>
 wire_api = <span class="s">"responses"</span>
 <span class="c"># <span lang="en-GB">env_key omitted: ds4-server does not check the API key</span><span lang="zh-TW">env_key 省略：ds4-server 不檢查 API key</span></span></pre>
     </div>
 
-    <p lang="en-GB">A plain <code>codex</code> now goes through pi-ds4. Keep the cloud as default and use local inference only sometimes? Leave <code>model_provider</code> alone. Switch one run with <code>codex --config model_provider=ds4 --config model=deepseek-v4-flash</code>.</p>
-    <p lang="zh-TW">之後直接打 <code>codex</code> 就走 pi-ds4。想保留雲端預設、偶爾用本機推論，就別動 <code>model_provider</code>，單次執行切換：<code>codex --config model_provider=ds4 --config model=deepseek-v4-flash</code>。</p>
+    <p lang="en-GB">A plain <code>codex</code> now goes through pi-kami. Keep the cloud as default and use local inference only sometimes? Leave <code>model_provider</code> alone. Switch one run with <code>codex --config model_provider=ds4 --config model=deepseek-v4-flash</code>.</p>
+    <p lang="zh-TW">之後直接打 <code>codex</code> 就走 pi-kami。想保留雲端預設、偶爾用本機推論，就別動 <code>model_provider</code>，單次執行切換：<code>codex --config model_provider=ds4 --config model=deepseek-v4-flash</code>。</p>
 
     <div class="aside">
       <span class="label"><span lang="en-GB">One harmless line on startup</span><span lang="zh-TW">啟動時一行無害的訊息</span></span>
@@ -2627,8 +2753,8 @@ wire_api = <span class="s">"responses"</span>
 
     <div class="aside">
       <span class="label"><span lang="en-GB">On the <code>--oss</code> flag</span><span lang="zh-TW">關於 <code>--oss</code> 旗標</span></span>
-      <p lang="en-GB">Codex includes <code>--oss</code>: shortcut for open-weight providers (public-weight models). Defaults: Ollama or LM Studio. pi-ds4 is another option. Set <code>oss_provider = "ds4"</code> to send <code>--oss</code> here. One local backend rarely needs extra line.</p>
-      <p lang="zh-TW">Codex 內建 <code>--oss</code>：開放權重（權重公開模型）provider 捷徑，預設指 Ollama 或 LM Studio。pi-ds4 也是選項。設 <code>oss_provider = "ds4"</code> 讓 <code>--oss</code> 指這裡。一本機後端通常不必多這行。</p>
+      <p lang="en-GB">Codex includes <code>--oss</code>: shortcut for open-weight providers (public-weight models). Defaults: Ollama or LM Studio. pi-kami is another option. Set <code>oss_provider = "ds4"</code> to send <code>--oss</code> here. One local backend rarely needs extra line.</p>
+      <p lang="zh-TW">Codex 內建 <code>--oss</code>：開放權重（權重公開模型）provider 捷徑，預設指 Ollama 或 LM Studio。pi-kami 也是選項。設 <code>oss_provider = "ds4"</code> 讓 <code>--oss</code> 指這裡。一本機後端通常不必多這行。</p>
     </div>
 
     <h3 id="8.2"><span class="no">8.2</span><span lang="en-GB">Claude Code, directly</span><span lang="zh-TW">Claude Code，直連</span></h3>
@@ -2637,7 +2763,7 @@ wire_api = <span class="s">"responses"</span>
     <p lang="zh-TW">ds4-server 原生支援 Anthropic <code>/v1/messages</code>。<a href="https://github.com/audreyt/ds4/blob/main/ds4_server.c"><code>ds4_server.c</code></a> 開頭自稱 <code>"OpenAI/Anthropic compatible local server"</code>。Claude Code 不需 router 或 proxy。設三環境變數後啟動：</p>
 
     <div class="term">
-      <div class="term-bar"><span><span lang="en-GB">point Claude Code at pi-ds4</span><span lang="zh-TW">讓 Claude Code 指向 pi-ds4</span></span><button class="copy" aria-label="Copy the Claude Code environment"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
+      <div class="term-bar"><span><span lang="en-GB">point Claude Code at pi-kami</span><span lang="zh-TW">讓 Claude Code 指向 pi-kami</span></span><button class="copy" aria-label="Copy the Claude Code environment"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
       <pre><span class="k">export</span> ANTHROPIC_BASE_URL<span class="k">=</span><span class="v">http://127.0.0.1:8000</span>
 <span class="k">export</span> ANTHROPIC_AUTH_TOKEN<span class="k">=</span><span class="v">sk-local</span>   <span class="c"># <span lang="en-GB">any string; ds4-server does not check it</span><span lang="zh-TW">任意字串，ds4-server 不檢查</span></span>
 <span class="k">export</span> ANTHROPIC_MODEL<span class="k">=</span><span class="v">deepseek-v4-flash</span>
@@ -2654,8 +2780,8 @@ claude</pre>
 
     <div class="aside">
       <span class="label"><span lang="en-GB">If you still want a router</span><span lang="zh-TW">如果你還是想要 router</span></span>
-      <p lang="en-GB"><a href="https://github.com/musistudio/claude-code-router"><code>claude-code-router</code></a> stays optional. The router sends traffic to several backends (code edits to pi-ds4, prose to cloud, for example). One local backend: nothing to route.</p>
-      <p lang="zh-TW"><a href="https://github.com/musistudio/claude-code-router"><code>claude-code-router</code></a> 可選。它分流多後端（改程式走 pi-ds4、寫文章走雲端）。一本機後端無須分流。</p>
+      <p lang="en-GB"><a href="https://github.com/musistudio/claude-code-router"><code>claude-code-router</code></a> stays optional. The router sends traffic to several backends (code edits to pi-kami, prose to cloud, for example). One local backend: nothing to route.</p>
+      <p lang="zh-TW"><a href="https://github.com/musistudio/claude-code-router"><code>claude-code-router</code></a> 可選。它分流多後端（改程式走 pi-kami、寫文章走雲端）。一本機後端無須分流。</p>
     </div>
 
     <h3 id="8.3"><span class="no">8.3</span><span lang="en-GB">OpenClaw</span><span lang="zh-TW">OpenClaw</span></h3>
@@ -2890,10 +3016,10 @@ resp = client.responses.create(
 
     <h4><span lang="en-GB">C. No pi at all</span><span lang="zh-TW">C. 完全沒有 pi</span></h4>
     <p lang="en-GB">
-      Bootstrap directly from two repositories. Neither pi nor <code>~/.pi/ds4/</code> needed. Two repositories matter: <code>ds4</code>’s <code>download_model.sh</code> fetches antirez’s upstream stock recipe. The identically named <code>pi-ds4</code> script fetches this letter’s V4.1 Maya-XS pair.
+      Bootstrap directly from two repositories. Neither pi nor <code>~/.pi/ds4/</code> needed. Two repositories matter: <code>ds4</code>’s <code>download_model.sh</code> fetches antirez’s upstream stock recipe. The identically named <code>pi-kami</code> script fetches this letter’s V4.1 Maya-XS pair.
     </p>
     <p lang="zh-TW">
-      直接從兩 repo 開始，不需 pi，也不需 <code>~/.pi/ds4/</code>。兩 repo 都要：<code>ds4</code> 的 <code>download_model.sh</code> 抓 antirez 上游原版配方，<code>pi-ds4</code> 同名腳本才抓本信 V4.1 Maya-XS 一對檔。
+      直接從兩 repo 開始，不需 pi，也不需 <code>~/.pi/ds4/</code>。兩 repo 都要：<code>ds4</code> 的 <code>download_model.sh</code> 抓 antirez 上游原版配方，<code>pi-kami</code> 同名腳本才抓本信 V4.1 Maya-XS 一對檔。
     </p>
 
     <div class="term">
@@ -2904,9 +3030,9 @@ git clone https://github.com/audreyt/ds4
 git checkout 0dff39f91721bcf3472813c6d2bebf9353df2a1a
 make ds4-server
 
-<span class="c"># <span lang="en-GB">2. The V4.1 Maya-XS download script from pi-ds4, not ds4's own stock-recipe one</span><span lang="zh-TW">2. 用 pi-ds4 的 V4.1 Maya-XS 下載腳本，不是 ds4 自帶的原版配方那支</span></span>
+<span class="c"># <span lang="en-GB">2. The V4.1 Maya-XS download script from pi-kami, not ds4's own stock-recipe one</span><span lang="zh-TW">2. 用 pi-kami 的 V4.1 Maya-XS 下載腳本，不是 ds4 自帶的原版配方那支</span></span>
 curl -fL -o download_model.sh \
-  https://raw.githubusercontent.com/audreyt/pi-ds4/main/download_model.sh
+  https://raw.githubusercontent.com/audreyt/pi-kami/main/download_model.sh
 chmod +x download_model.sh
 ./download_model.sh q1
 <span class="c"># <span lang="en-GB">fetches the ~341.5 GiB language GGUF plus the vision sidecar and links ds4flash.gguf</span><span lang="zh-TW">抓約 341.5 GiB 的語言 GGUF 與視覺附屬檔，並連結為 ds4flash.gguf</span></span>
@@ -2931,10 +3057,10 @@ chmod +x download_model.sh
     <h3 id="8.7"><span class="no">8.7</span><span lang="en-GB">Other hardware: DGX Spark (CUDA) and Strix Halo (ROCm)</span><span lang="zh-TW">其他硬體：DGX Spark（CUDA）與 Strix Halo（ROCm）</span><a id="otherhw"></a></h3>
 
     <p lang="en-GB">
-      Version 0.7 needs a 128 GB Mac, Metal only. ds4 runs this model’s IQ1_S experts and Q5_K/Q6_K dense weights only on Metal, so pi-ds4 refuses Linux CUDA and ROCm hosts (NVIDIA DGX Spark, AMD Strix Halo) before any download. Those hosts stay on v 0.6.1: V4 Vision-Exp IQ2 build as that release describes. Or bring your own: <code>DS4_RUNTIME_DIR</code> at your ds4 checkout and binary, plus a GGUF your backend runs.
+      The ds4 tier needs a 128 GB Mac, Metal only. ds4 runs this model’s IQ1_S experts only on Metal, so pi-kami refuses Linux CUDA and ROCm hosts (NVIDIA DGX Spark, AMD Strix Halo) before any download. Those hosts stay on v 0.6.1: V4 Vision-Exp IQ2 build as that release describes. Or bring your own: <code>DS4_RUNTIME_DIR</code> at your ds4 checkout and binary, plus a GGUF your backend runs. Macs under 128 GB have two paths. An M4 Pro, M5 Pro or M5 Max with 48 GB or more can choose <code>rec/flint</code> (<a href="#flint">§1.1a</a>). Other Macs stay on v 0.6.1.
     </p>
     <p lang="zh-TW">
-      v 0.7 要 128 GB Mac 與 Metal。ds4 只在 Metal 跑這模型 IQ1_S 專家與 Q5_K／Q6_K 稠密權重，pi-ds4 下載前拒 Linux CUDA、ROCm 主機（NVIDIA DGX Spark、AMD Strix Halo）。那些主機留 v 0.6.1，依該版跑 V4 Vision-Exp IQ2。或自備：<code>DS4_RUNTIME_DIR</code> 指你的 ds4 checkout 與執行檔，加後端跑得動的 GGUF。
+      ds4 這一層要 128 GB Mac 與 Metal。ds4 只在 Metal 跑這模型的 IQ1_S 專家，pi-kami 下載前拒 Linux CUDA、ROCm 主機（NVIDIA DGX Spark、AMD Strix Halo）。那些主機留 v 0.6.1，依該版跑 V4 Vision-Exp IQ2。或自備：<code>DS4_RUNTIME_DIR</code> 指你的 ds4 checkout 與執行檔，加後端跑得動的 GGUF。不到 128 GB 的 Mac 有兩條路。48 GB 以上的 M4 Pro、M5 Pro 或 M5 Max 可選 <code>rec/flint</code>（<a href="#flint">§1.1a</a>）。其他 Mac 請留在 v 0.6.1。
     </p>
 
     <p lang="en-GB">
@@ -3021,8 +3147,8 @@ find ~/.pi/ds4/clients -maxdepth 1 -name <span class="s">'*.json'</span> -delete
 
     <div class="caution">
       <span class="label"><span lang="en-GB">Hard restart: three steps, none of them rushed</span><span lang="zh-TW">強制重啟：分三步，每一步都慢慢來</span></span>
-      <p lang="en-GB">A misbehaving watchdog still does not justify <code>pkill -TERM ds4-server</code>. Do <em>not</em> reach for that command: every same-named process stops (another pi-ds4 install, an experimental build, someone else’s server). Follow three steps below. Read output after each step.</p>
-      <p lang="zh-TW">看門狗自己出問題時，<em>千萬不要</em>直接打 <code>pkill -TERM ds4-server</code>。這個指令停掉機器上所有同名程式，包括另一份 pi-ds4、你的實驗版、別人的伺服器。請照下面三步，每步先看輸出再繼續。</p>
+      <p lang="en-GB">A misbehaving watchdog still does not justify <code>pkill -TERM ds4-server</code>. Do <em>not</em> reach for that command: every same-named process stops (another pi-kami install, an experimental build, someone else’s server). Follow three steps below. Read output after each step.</p>
+      <p lang="zh-TW">看門狗自己出問題時，<em>千萬不要</em>直接打 <code>pkill -TERM ds4-server</code>。這個指令停掉機器上所有同名程式，包括另一份 pi-kami、你的實驗版、別人的伺服器。請照下面三步，每步先看輸出再繼續。</p>
 
       <p lang="en-GB"><strong>Step one</strong> inspects current state. Read-only: nothing changes.</p>
       <p lang="zh-TW"><strong>第一步</strong>看現在狀態，只讀不寫不改。</p>
@@ -3099,8 +3225,8 @@ STATE=~/.pi/ds4/server.json
 <span class="c"># <span lang="en-GB">Give it a few seconds to exit cleanly, then run step 2 again to clear the state.</span><span lang="zh-TW">給它幾秒鐘乾淨地退出，然後再跑一次第二步清掉狀態。</span></span></pre>
       </div>
 
-      <p lang="en-GB"><small>Last resort only. Watchdog and lifecycle lock (lock keeping two startups from colliding) handle almost every case alone. Frequent visits mean a bug. Report at <a href="https://github.com/audreyt/pi-ds4/issues">audreyt/pi-ds4 issues</a>.</small></p>
-      <p lang="zh-TW"><small>最後手段。看門狗與生命週期鎖（避免兩邊同時啟動）幾乎都自行處理。常走到這步代表 bug，請到 <a href="https://github.com/audreyt/pi-ds4/issues">audreyt/pi-ds4 issues</a> 回報。</small></p>
+      <p lang="en-GB"><small>Last resort only. Watchdog and lifecycle lock (lock keeping two startups from colliding) handle almost every case alone. Frequent visits mean a bug. Report at <a href="https://github.com/audreyt/pi-kami/issues">audreyt/pi-kami issues</a>.</small></p>
+      <p lang="zh-TW"><small>最後手段。看門狗與生命週期鎖（避免兩邊同時啟動）幾乎都自行處理。常走到這步代表 bug，請到 <a href="https://github.com/audreyt/pi-kami/issues">audreyt/pi-kami issues</a> 回報。</small></p>
     </div>
 
     <h4><span lang="en-GB">“The server is running but <code>/v1/models</code> does not answer”</span><span lang="zh-TW">「伺服器在跑，但 <code>/v1/models</code> 沒有回應」</span></h4>
@@ -3131,12 +3257,12 @@ STATE=~/.pi/ds4/server.json
     <h3 id="10.1"><span class="no">10.1</span><span lang="en-GB">Mounting a checkout</span><span lang="zh-TW">掛上一個 checkout</span></h3>
 
     <div class="term">
-      <div class="term-bar"><span><span lang="en-GB">from the root of a pi-ds4 checkout</span><span lang="zh-TW">在 pi-ds4 checkout 的根目錄</span></span><button class="copy" data-copy="./install-pi-extension-local.sh /path/to/audreyt-ds4-checkout" aria-label="Copy the local development install command"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
+      <div class="term-bar"><span><span lang="en-GB">from the root of a pi-kami checkout</span><span lang="zh-TW">在 pi-kami checkout 的根目錄</span></span><button class="copy" data-copy="./install-pi-extension-local.sh /path/to/audreyt-ds4-checkout" aria-label="Copy the local development install command"><span lang="en-GB">Copy</span><span lang="zh-TW">複製</span></button></div>
       <pre>./install-pi-extension-local.sh /path/to/audreyt-ds4-checkout</pre>
     </div>
 
-    <p lang="en-GB">Script does two things: links <code>~/.pi/agent/extensions/pi-ds4</code> to current pi-ds4 checkout; links <code>~/.pi/ds4/support</code> to named ds4 checkout.</p>
-    <p lang="zh-TW">它做兩件：<code>~/.pi/agent/extensions/pi-ds4</code> 連目前 pi-ds4 checkout，<code>~/.pi/ds4/support</code> 連指定 ds4 checkout。</p>
+    <p lang="en-GB">The script does two things. It links <code>~/.pi/agent/extensions/pi-ds4</code> to the current pi-kami checkout and <code>~/.pi/ds4/support</code> to the ds4 checkout you name.</p>
+    <p lang="zh-TW">它做兩件：<code>~/.pi/agent/extensions/pi-ds4</code> 連目前 pi-kami checkout，<code>~/.pi/ds4/support</code> 連指定 ds4 checkout。</p>
 
     <h3 id="10.2"><span class="no">10.2</span><span lang="en-GB">When a support directory already exists: <code>--force</code></span><span lang="zh-TW">support 目錄已經存在時：<code>--force</code></span></h3>
 
@@ -3166,6 +3292,13 @@ STATE=~/.pi/ds4/server.json
   <section class="chapter" id="advanced">
     <span class="chapter-no"><span lang="en-GB">Chapter 11</span><span lang="zh-TW">第十一章</span></span>
     <h2 class="chapter-title"><span lang="en-GB">Building your own steering direction</span><span lang="zh-TW">自己建一個引導方向</span></h2>
+
+    <div class="aside">
+      <span class="label"><span lang="en-GB">ds4 tier only</span><span lang="zh-TW">只適用 ds4 層</span></span>
+      <p lang="en-GB">Building a steering direction only helps on the ds4 tier. Flint has no directional steering (<a href="#flint">§1.1a</a>).</p>
+      <p lang="zh-TW">自己建引導方向，只有 ds4 那一層用得上。Flint 沒有方向性引導（<a href="#flint">§1.1a</a>）。</p>
+    </div>
+
 
     <p class="lead" lang="en-GB">
       This chapter assumes you read everything above. A different question follows. The bundled vector (long number list pointing one way) expresses one preference: contested questions should open into discussion. Yours may differ: tone, field, hedging style. Tools that built the bundled direction sit in the checkout. Those tools can build yours.
@@ -3293,8 +3426,8 @@ STATE=~/.pi/ds4/server.json
             <li><strong>Hermes Agent</strong>：一 <code>base_url</code>。</li>
             <li><strong>Codex CLI</strong>：<code>~/.codex/config.toml</code> 加一段 <code>[model_providers.ds4]</code>。完整 TOML <a href="#8.1">§8.1</a>。</li>
           </ul>
-          <p lang="en-GB">HTTP route still needs something keeping ds4-server running: pi session left open, manual start from <code>~/.pi/ds4/support</code>, or no-pi setup from <code>audreyt/ds4</code> plus pi-ds4's <code>download_model.sh</code> (<a href="#8.6">§8.6</a>). Native-agent-only: no server at all, <code>/ds4-agent</code> runs alone.</p>
-          <p lang="zh-TW">走 HTTP 還是要有人讓 ds4-server 一直跑：開著的 pi 視窗、從 <code>~/.pi/ds4/support</code> 手動啟動，或不用 pi 從 <code>audreyt/ds4</code> 加 pi-ds4 的 <code>download_model.sh</code> 開始（<a href="#8.6">§8.6</a>）。只用內建智慧體完全不用伺服器：<code>/ds4-agent</code> 自己跑。</p>
+          <p lang="en-GB">HTTP route still needs something keeping ds4-server running: pi session left open, manual start from <code>~/.pi/ds4/support</code>, or no-pi setup from <code>audreyt/ds4</code> plus pi-kami's <code>download_model.sh</code> (<a href="#8.6">§8.6</a>). Native-agent-only: no server at all, <code>/ds4-agent</code> runs alone.</p>
+          <p lang="zh-TW">走 HTTP 還是要有人讓 ds4-server 一直跑：開著的 pi 視窗、從 <code>~/.pi/ds4/support</code> 手動啟動，或不用 pi 從 <code>audreyt/ds4</code> 加 pi-kami 的 <code>download_model.sh</code> 開始（<a href="#8.6">§8.6</a>）。只用內建智慧體完全不用伺服器：<code>/ds4-agent</code> 自己跑。</p>
         </div>
       </div>
 
@@ -3302,13 +3435,15 @@ STATE=~/.pi/ds4/server.json
         <div class="q"><span lang="en-GB">I don’t have a 128 GB Mac. What are my options?</span><span lang="zh-TW">我沒有 128 GB 的 Mac，有什麼選擇？</span></div>
         <div class="a">
           <ul lang="en-GB">
-            <li><strong>Stay on v 0.6.1.</strong> Runs V4 Vision-Exp IQ2 build on 96 GB Mac and Linux CUDA or ROCm hosts.</li>
+            <li><strong>Choose <code>rec/flint</code>.</strong> M4 Pro, M5 Pro or M5 Max with 48 GB or more (<a href="#flint">§1.1a</a>).</li>
+            <li><strong>Stay on v 0.6.1.</strong> Other Macs under 128 GB and Linux CUDA or ROCm hosts. It runs the V4 Vision-Exp IQ2 build on 96 GB.</li>
             <li><strong>Smaller local model.</strong> <code>llama.cpp</code>, MLX, Ollama run smaller open-weight models: Llama, Mistral, Qwen, Gemma families. 64 GB Mac handles 70 B class. ds4 engine: no general runner for other models.</li>
             <li><strong>Rented Mac.</strong> MacStadium, Scaleway, others rent M-series by hour.</li>
             <li><strong>DeepSeek’s own API.</strong> Full capability, per-token payment, no directional steering.</li>
           </ul>
           <ul lang="zh-TW">
-            <li><strong>留 v 0.6.1。</strong>在 96 GB Mac 與 Linux CUDA、ROCm 主機跑 V4 Vision-Exp IQ2。</li>
+            <li><strong>選 <code>rec/flint</code>。</strong>M4 Pro、M5 Pro 或 M5 Max 搭 48 GB 以上（<a href="#flint">§1.1a</a>）。</li>
+            <li><strong>留 v 0.6.1。</strong>其他不到 128 GB 的 Mac，以及 Linux CUDA、ROCm 主機，可在 96 GB 上跑 V4 Vision-Exp IQ2。</li>
             <li><strong>本機跑小一點模型。</strong><code>llama.cpp</code>、MLX、Ollama 可跑較小開放權重模型，如 Llama、Mistral、Qwen、Gemma 系列。64 GB Mac 跑 70 B 量級。ds4 引擎非通用模型執行器。</li>
             <li><strong>租 Mac。</strong>MacStadium、Scaleway 等按小時租 M 系列。</li>
             <li><strong>用 DeepSeek 官方 API。</strong>能力完整，按 token 計費，沒有方向性引導。</li>
@@ -3353,20 +3488,20 @@ STATE=~/.pi/ds4/server.json
           <table class="lic" lang="en-GB">
             <thead><tr><th>Component</th><th>Licence</th><th>On redistribution</th></tr></thead>
             <tbody>
-              <tr><td><a href="https://github.com/audreyt/pi-ds4">audreyt/pi-ds4</a><small>this extension</small></td><td>MIT</td><td>its <code>LICENSE</code></td></tr>
+              <tr><td><a href="https://github.com/audreyt/pi-kami">audreyt/pi-kami</a><small>this extension</small></td><td>MIT</td><td>its <code>LICENSE</code></td></tr>
               <tr><td><a href="https://github.com/audreyt/ds4">audreyt/ds4</a> / <a href="https://github.com/antirez/ds4">antirez/ds4</a><small>the inference engine</small></td><td>MIT</td><td>its <code>LICENSE</code>, antirez as original copyright holder</td></tr>
               <tr><td>DeepSeek V4.1 Flash<small>the upstream checkpoint</small></td><td>see its model card</td><td>the model card’s licence, DeepSeek as copyright holder</td></tr>
-              <tr><td><a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">V4.1 Maya-XS GGUF</a><small>the weights this letter downloads</small></td><td>see that repo</td><td>that repo’s licence, plus the terms of the upstream checkpoint and of the Unsloth tensors it contains</td></tr>
+              <tr><td><a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">V4.1 Maya-XS GGUF</a><small>the weights this letter downloads</small></td><td>see that repo</td><td>that repo’s licence, plus the terms of the upstream checkpoint and of the Project Maya tensors it contains</td></tr>
               <tr><td><strong>This letter</strong><small>the index.html you are reading</small></td><td>CC0</td><td>nothing at all</td></tr>
             </tbody>
           </table>
           <table class="lic" lang="zh-TW">
             <thead><tr><th>元件</th><th>授權</th><th>再散布時</th></tr></thead>
             <tbody>
-              <tr><td><a href="https://github.com/audreyt/pi-ds4">audreyt/pi-ds4</a><small>本擴充套件</small></td><td>MIT</td><td>附它的 <code>LICENSE</code></td></tr>
+              <tr><td><a href="https://github.com/audreyt/pi-kami">audreyt/pi-kami</a><small>本擴充套件</small></td><td>MIT</td><td>附它的 <code>LICENSE</code></td></tr>
               <tr><td><a href="https://github.com/audreyt/ds4">audreyt/ds4</a>、<a href="https://github.com/antirez/ds4">antirez/ds4</a><small>推論引擎</small></td><td>MIT</td><td>附它的 <code>LICENSE</code>，antirez 為原始版權人</td></tr>
               <tr><td>DeepSeek V4.1 Flash<small>上游的模型 checkpoint</small></td><td>見其模型卡</td><td>附模型卡的授權，DeepSeek 為版權人</td></tr>
-              <tr><td><a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">V4.1 Maya-XS GGUF</a><small>這封信下載的權重</small></td><td>見該 repo</td><td>附該 repo 的授權，並附上上游 checkpoint 與其中 Unsloth 張量的條款</td></tr>
+              <tr><td><a href="https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF">V4.1 Maya-XS GGUF</a><small>這封信下載的權重</small></td><td>見該 repo</td><td>附該 repo 的授權，並附上上游 checkpoint 與其中 Project Maya 張量的條款</td></tr>
               <tr><td><strong>這封信</strong><small>你正在讀的這份 index.html</small></td><td>CC0</td><td>什麼都不必附</td></tr>
             </tbody>
           </table>
@@ -3429,14 +3564,9 @@ STATE=~/.pi/ds4/server.json
         <dd lang="zh-TW">非常低位元的量化格式，這裡用在路由專家。d3f4cd6 釘版起 ds4 能在 Metal 上跑（<a href="#3.3">§3.3</a>）。</dd>
       </div>
       <div>
-        <dt>Unsloth<small>Unsloth</small></dt>
-        <dd lang="en-GB">The team whose published quantisations supply most of this Q1: routed experts (UD-IQ1_S), the imatrix for requantised experts and nine dense roles (<a href="#3.3">§3.3</a>).</dd>
-        <dd lang="zh-TW">其發布的量化版提供這個 Q1 大部分內容：路由專家（UD-IQ1_S）、重新量化用的 imatrix、九個稠密角色（<a href="#3.3">§3.3</a>）。</dd>
-      </div>
-      <div>
         <dt>imatrix<small>重要性矩陣</small></dt>
-        <dd lang="en-GB">A calibration file recording which weights matter most for model output. The quantiser spends bits there first. The 32 requantised experts used Unsloth’s imatrix.</dd>
-        <dd lang="zh-TW">記錄哪些權重對模型輸出最重要的校準檔。量化器先把位元花在那些地方。重新量化的 32 個專家用 Unsloth 的 imatrix。</dd>
+        <dd lang="en-GB">A calibration file recording which weights matter most for model output. The quantiser spends bits there first.</dd>
+        <dd lang="zh-TW">記錄哪些權重對模型輸出最重要的校準檔。量化器先把位元花在那些地方。</dd>
       </div>
       <div>
         <dt>vision sidecar<small>視覺附屬檔</small></dt>
@@ -3479,8 +3609,8 @@ STATE=~/.pi/ds4/server.json
       </div>
       <div>
         <dt>Metal 4 / Metal Tensor<small>Apple 的 GPU 介面</small></dt>
-        <dd lang="en-GB">Metal is Apple’s GPU programming interface. Metal 4 adds tensor APIs (tools for big number arrays). The pi-ds4 wrapper picks no backend profile. The ds4 build decides the actual path.</dd>
-        <dd lang="zh-TW">Metal 是 Apple 讓程式使用 GPU 的介面，Metal 4 加入 tensor API。pi-ds4 包裝層不挑後端設定，實際路線由 ds4 建置決定。</dd>
+        <dd lang="en-GB">Metal is Apple’s GPU programming interface. Metal 4 adds tensor APIs (tools for big number arrays). The pi-kami wrapper picks no backend profile. The ds4 build decides the actual path.</dd>
+        <dd lang="zh-TW">Metal 是 Apple 讓程式使用 GPU 的介面，Metal 4 加入 tensor API。pi-kami 包裝層不挑後端設定，實際路線由 ds4 建置決定。</dd>
       </div>
       <div>
         <dt>SSD streaming<small><span lang="en-GB">experts streamed from disk</span><span lang="zh-TW">SSD 串流</span></small></dt>
@@ -3527,8 +3657,8 @@ STATE=~/.pi/ds4/server.json
       </div>
       <div>
         <dt>ds4-agent<small>原生終端機 agent</small></dt>
-        <dd lang="en-GB">The terminal agent inside the ds4 checkout, no server. The agent controls terminal, its own session and KV state, and its own DSML tool loop. pi-ds4 reaches the agent through the foreground handoff <code>/ds4-agent</code>.</dd>
-        <dd lang="zh-TW">ds4 checkout 內建終端智慧體，不是伺服器。終端、對話、KV 狀態與自己 DSML 工具迴圈都它掌管。pi-ds4 以前景交接 <code>/ds4-agent</code> 進入。</dd>
+        <dd lang="en-GB">The terminal agent inside the ds4 checkout, no server. The agent controls terminal, its own session and KV state, and its own DSML tool loop. pi-kami reaches the agent through the foreground handoff <code>/ds4-agent</code>.</dd>
+        <dd lang="zh-TW">ds4 checkout 內建終端智慧體，不是伺服器。終端、對話、KV 狀態與自己 DSML 工具迴圈都它掌管。pi-kami 以前景交接 <code>/ds4-agent</code> 進入。</dd>
       </div>
       <div>
         <dt>lease<small>租約</small></dt>
@@ -3565,16 +3695,16 @@ STATE=~/.pi/ds4/server.json
     <ul lang="en-GB">
       <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong>, upstream of this fork. Armin Ronacher wrote whole lifecycle: leases, watchdog, lock. Readability was point.</li>
       <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>, Salvatore Sanfilippo’s DeepSeek V4 and V4.1 Flash engine in plain C, Redis spirit. V4 GGUF conversion from sibling project <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>. ds4 own <code>gguf-tools</code> builds V4.1 files.</li>
-      <li><strong>ds4 runtime and backend contributors.</strong> antirez led SSD streaming, distributed inference, ROCm integration. elkaix: server observability, agent-loop cache (PR #489). MA: DSpark B2 rejection sampling, adaptive blocks. Nick Parrin: Strix Halo port. Andrea Borio: mixed-quant expert streaming. rinaldofesta: eval grader repair. kamranjon, fry69: agent edit tool, terminal restoration fixes. Andreas Spannagel: MTP speculative verify fix. ivanfioravanti: M5 Metal 4 / MPP. pi-ds4 only packages that runtime, no own tuning.</li>
-      <li><strong><a href="https://huggingface.co/unsloth">Unsloth</a></strong>: UD-IQ1_S quantisation, dense tensors, imatrix make up most of this Q1.</li>
+      <li><strong>ds4 runtime and backend contributors.</strong> antirez led SSD streaming, distributed inference, ROCm integration. elkaix: server observability, agent-loop cache (PR #489). MA: DSpark B2 rejection sampling, adaptive blocks. Nick Parrin: Strix Halo port. Andrea Borio: mixed-quant expert streaming. rinaldofesta: eval grader repair. kamranjon, fry69: agent edit tool, terminal restoration fixes. Andreas Spannagel: MTP speculative verify fix. ivanfioravanti: M5 Metal 4 / MPP. pi-kami only packages that runtime, no own tuning.</li>
+      <li><strong><a href="https://huggingface.co/peasantsmith/DeepSeek-V4.1-Flash-1017-Maya-GGUF">Project Maya</a></strong> by Peasant Smith: the IQ1_S experts and Q8 tensors in the Maya-XS build.</li>
       <li><strong><a href="https://github.com/kernelpool/ds4">kernelpool/ds4</a> and Ivan Fioravanti</strong>: V4.1 Metal work merged in pinned engine.</li>
       <li><strong>cyberneurova research project</strong>: abliterated GGUF first made home DeepSeek V4 Flash runs real option.</li>
     </ul>
     <ul lang="zh-TW">
       <li><strong><a href="https://github.com/mitsuhiko/pi-ds4">mitsuhiko/pi-ds4</a></strong>，本套件分叉自它。Armin Ronacher 寫整套生命週期：租約、看門狗、鎖，寫得能讀。</li>
       <li><strong><a href="https://github.com/antirez/ds4">antirez/ds4</a></strong>，Salvatore Sanfilippo 純 C DeepSeek V4 與 V4.1 Flash 引擎，與 Redis 一脈。V4 GGUF 轉換來自姊妹專案 <a href="https://github.com/antirez/llama.cpp-deepseek-v4-flash">llama.cpp-deepseek-v4-flash</a>，V4.1 檔用 ds4 自己 <code>gguf-tools</code> 做。</li>
-      <li><strong>ds4 執行期與後端貢獻者。</strong>SSD 串流、分散式推論、ROCm 整合：antirez 主導。elkaix：伺服器可觀測性、智慧體迴圈快取（PR #489）。MA：DSpark B2 拒絕取樣、自適應區塊。Nick Parrin：移植 Strix Halo。Andrea Borio：混合量化專家串流。rinaldofesta：修評分器。kamranjon、fry69：智慧體 edit 工具與終端還原。Andreas Spannagel：MTP 推測驗證修正。ivanfioravanti：M5 Metal 4／MPP。pi-ds4 只打包執行期，沒加自己調校。</li>
-      <li><strong><a href="https://huggingface.co/unsloth">Unsloth</a></strong>：UD-IQ1_S 量化、稠密張量、imatrix 構成這 Q1 大部分。</li>
+      <li><strong>ds4 執行期與後端貢獻者。</strong>SSD 串流、分散式推論、ROCm 整合：antirez 主導。elkaix：伺服器可觀測性、智慧體迴圈快取（PR #489）。MA：DSpark B2 拒絕取樣、自適應區塊。Nick Parrin：移植 Strix Halo。Andrea Borio：混合量化專家串流。rinaldofesta：修評分器。kamranjon、fry69：智慧體 edit 工具與終端還原。Andreas Spannagel：MTP 推測驗證修正。ivanfioravanti：M5 Metal 4／MPP。pi-kami 只打包執行期，沒加自己調校。</li>
+      <li><strong><a href="https://huggingface.co/peasantsmith/DeepSeek-V4.1-Flash-1017-Maya-GGUF">Project Maya</a></strong>（Peasant Smith）：Maya-XS 版本裡的 IQ1_S 專家與 Q8 張量。</li>
       <li><strong><a href="https://github.com/kernelpool/ds4">kernelpool/ds4</a> 與 Ivan Fioravanti</strong>：V4.1 Metal 工作合併進釘版引擎。</li>
       <li><strong>cyberneurova 研究專案</strong>：abliterated GGUF 第一次讓在家跑 DeepSeek V4 Flash 可行。</li>
     </ul>
@@ -3608,9 +3738,8 @@ STATE=~/.pi/ds4/server.json
     <div class="signoff">
       <div class="hand">
         <span lang="en-GB">With care,<br>Audrey Tang</span><span lang="zh-TW">敬祝 自由<br>唐鳳</span>
-        <small><span lang="en-GB">22 October 2026 · pi-ds4 v 0.7.3</span><span lang="zh-TW">2026 年 10 月 22 日 · pi-ds4 v 0.7.3</span></small>
+        <small><span lang="en-GB">23 October 2026 · pi-kami v 0.8.0</span><span lang="zh-TW">2026 年 10 月 23 日 · pi-kami v 0.8.0</span></small>
       </div>
-      <div class="seal" aria-label="Seal: 唐鳳" role="img">唐鳳</div>
     </div>
   </section>
 
@@ -3618,7 +3747,7 @@ STATE=~/.pi/ds4/server.json
 
 <footer class="colophon">
   <a href="https://creativecommons.org/publicdomain/zero/1.0/"><span lang="en-GB">text CC0 · public domain</span><span lang="zh-TW">文字 CC0 · 公眾領域</span></a>
-  <a href="https://github.com/audreyt/pi-ds4"><span lang="en-GB">code MIT · github.com/audreyt/pi-ds4</span><span lang="zh-TW">程式碼 MIT · github.com/audreyt/pi-ds4</span></a>
+  <a href="https://github.com/audreyt/pi-kami"><span lang="en-GB">code MIT · github.com/audreyt/pi-kami</span><span lang="zh-TW">程式碼 MIT · github.com/audreyt/pi-kami</span></a>
   <span><span lang="en-GB">set in Source Serif 4, IBM Plex Mono, Departure Mono and Iansui</span><span lang="zh-TW">排版：Source Serif 4、IBM Plex Mono、Departure Mono、Iansui</span></span>
 </footer>
 
@@ -4101,5 +4230,18 @@ STATE=~/.pi/ds4/server.json
 })();
 </script>
 
+<script>
+(function(){
+  // A link into a folded section opens it, and print shows everything.
+  function reveal(){
+    var id = decodeURIComponent((location.hash || '').slice(1));
+    var t = id && document.getElementById(id);
+    for (var d = t && t.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
+  }
+  addEventListener('hashchange', reveal);
+  reveal();
+  addEventListener('beforeprint', function(){ document.querySelectorAll('details.fold').forEach(function(d){ d.open = true; }); });
+})();
+</script>
 </body>
 </html>

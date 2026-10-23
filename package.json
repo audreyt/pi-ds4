@@ -1,7 +1,7 @@
 {
-  "name": "pi-ds4",
-  "version": "0.7.3",
-  "description": "Pi provider and native-agent launcher for deterministic local ds4.c DeepSeek V4.1 Flash inference on 128 GB Apple Silicon (pinned Maya-XS abliterated GGUF and vision sidecar).",
+  "name": "pi-kami",
+  "version": "0.8.0",
+  "description": "Pi provider for deterministic local inference on Apple Silicon: DeepSeek V4.1 Flash Maya-XS through ds4 on 128 GB Macs and Recursive's Flint through rec on M4 Pro, M5 Pro and M5 Max Macs with 48 GB or more. Formerly pi-ds4.",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -20,6 +20,8 @@
     "deepseek-v4.1-flash",
     "vision",
     "abliterated",
+    "flint",
+    "rec",
     "m5"
   ],
   "pi": {

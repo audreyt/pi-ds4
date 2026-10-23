@@ -5,20 +5,26 @@ import { fileURLToPath } from "node:url";
 const startBudget = (ctx, maxTokens) =>
   14_012 + 11_298 + Math.min(maxTokens, Math.floor(ctx * 0.5)) + 16_384 + 8_192 + 12_288;
 
-async function advertisedDeepseek() {
+async function registeredExtension() {
   const { default: register } = await import("../index.ts");
-  let registeredId;
-  let registeredConfig;
+  const providers = new Map();
+  const handlers = new Map();
   register({
     registerProvider(id, config) {
-      registeredId = id;
-      registeredConfig = config;
+      providers.set(id, config);
     },
     registerCommand() {},
-    on() {},
+    on(event, handler) {
+      handlers.set(event, [...(handlers.get(event) ?? []), handler]);
+    },
   });
-  const model = registeredConfig?.models?.find(({ id }) => id === "deepseek-v4-flash");
-  return { registeredId, model };
+  return { providers, handlers };
+}
+
+async function advertisedDeepseek() {
+  const { providers } = await registeredExtension();
+  const model = providers.get("ds4")?.models?.find(({ id }) => id === "deepseek-v4-flash");
+  return { registeredId: providers.has("ds4") ? "ds4" : undefined, model };
 }
 
 if (process.argv.includes("--override-100k")) {
@@ -73,4 +79,50 @@ assert.ok(
   `100k override must still admit (maxTokens=${overridden.maxTokens})`,
 );
 
-console.log("Provider verified: off=none, high=high, max=max; default context=128000; maxTokens=64000; input=text+image");
+// The Flint tier registers next to ds4 on macOS and mirrors rec's own pi transport.
+const { providers, handlers } = await registeredExtension();
+const recSupported = (() => {
+  if (process.platform !== "darwin" || process.arch !== "arm64") return false;
+  const chip = spawnSync("sysctl", ["-n", "machdep.cpu.brand_string"], { encoding: "utf8" }).stdout.trim();
+  const memoryGb = Math.round(Number(spawnSync("sysctl", ["-n", "hw.memsize"], { encoding: "utf8" }).stdout) / 2 ** 30);
+  return /^Apple M(?:4 Pro|5 Pro|5 Max)$/.test(chip) && memoryGb >= 48;
+})();
+if (!recSupported && !process.env.PI_KAMI_REC_UNPINNED) {
+  assert.equal(providers.has("rec"), false, "rec/flint must not be offered where rec 0.1.0 does not run");
+} else if (process.platform === "darwin") {
+  const rec = providers.get("rec");
+  assert.ok(rec, "rec provider was not registered on macOS");
+  assert.equal(rec.api, "openai-completions");
+  assert.equal(rec.baseUrl, "http://127.0.0.1:11500/v1");
+  assert.match(rec.apiKey, /^!.+\/\.local\/bin\/rec'? auth token$/, "pi must fetch the key from rec on each request");
+  const flint = rec.models.find(({ id }) => id === "flint");
+  assert.ok(flint, "rec/flint was not registered");
+  assert.deepEqual(flint.input, ["text"]);
+  assert.equal(flint.contextWindow, 262_144);
+  const ctx = { model: { provider: "rec", id: "flint" } };
+  const payload = {
+    model: "flint",
+    messages: [{ role: "user", content: "hi" }],
+    stream: true,
+    temperature: 0.7,
+    top_p: 1,
+    top_k: 40,
+    max_completion_tokens: 100,
+  };
+  const rewritten = [];
+  for (const handler of handlers.get("before_provider_request") ?? []) {
+    const result = await handler({ payload }, ctx);
+    if (result !== undefined) rewritten.push(result);
+  }
+  assert.equal(rewritten.length, 1, "exactly one handler must rewrite rec/flint requests");
+  const [sent] = rewritten;
+  for (const field of ["temperature", "top_p", "top_k", "max_completion_tokens"]) {
+    assert.equal(field in sent, false, `${field} must be left to rec's defaults`);
+  }
+  assert.equal(sent.max_tokens, 262_144);
+  assert.equal(sent.seed, 42, "reproducible mode must send seed 42 to rec");
+  assert.deepEqual(sent.messages, payload.messages);
+}
+
+const recResult = providers.has("rec") ? "rec/flint seeded with rec's sampling" : "rec/flint not offered on this machine";
+console.log(`Provider verified: off=none, high=high, max=max; default context=128000; maxTokens=64000; input=text+image; ${recResult}`);

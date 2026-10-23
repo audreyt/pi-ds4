@@ -1,44 +1,61 @@
-# pi-ds4 — managed local DeepSeek V4.1 Flash for pi (audreyt fork)
+# pi-kami: local DeepSeek V4.1 Flash and Flint for pi (formerly pi-ds4)
 
 > 👉 [**完整指南 / Full guide: pi.audreyt.org**](https://pi.audreyt.org/)
 
 ![abliteration demo](demo.gif)
 
-`pi-ds4` is a [pi](https://github.com/earendil-works/pi) provider extension that
-turns [audreyt/ds4](https://github.com/audreyt/ds4) into an on-demand local
-backend for `ds4/deepseek-v4-flash`. It is a personal fork of
-[mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds4): same lease / watchdog /
-on-demand server UX, different engine pin, preferred GGUF, and steering defaults.
+`pi-kami` is a [pi](https://github.com/earendil-works/pi) provider extension
+that runs two local engines on demand. It starts
+[audreyt/ds4](https://github.com/audreyt/ds4) for `ds4/deepseek-v4-flash` and
+Recursive's [rec](https://github.com/recursive-oss/rec) for `rec/flint`.
+It used to be called `pi-ds4` and began as a personal fork of
+[mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds4). It keeps that
+project's leases, watchdog and on-demand server, with its own engine pin,
+preferred GGUF and steering defaults.
 
-**Managed path today: Apple Silicon (Metal) with 128 GB unified RAM, with
-Metal's wired-memory ceiling raised (`sudo sysctl iogpu.wired_limit_mb=114688`).** The
-managed model is DeepSeek V4.1 Flash 1017 Maya-XS abliterated. This build uses
-IQ1_S experts and Q8 dense weights on Metal: CUDA and ROCm refuse
-the file at open, so the extension refuses non-macOS hosts before downloading.
-On Linux CUDA/ROCm, or on a 96 GB Mac, stay on `v0.6.1` (V4 Vision-Exp IQ2) or
-bring your own GGUF and binary (see below). The build-target selection for
-CUDA and ROCm below still applies to bring-your-own runs.
+Which engine you get depends on your Mac:
+
+- **128 GB Apple Silicon: DeepSeek V4.1 Flash.** pi-kami runs the 1017 Maya-XS
+  abliterated build through ds4. Raise Metal's wired-memory ceiling first
+  (`sudo sysctl iogpu.wired_limit_mb=114688`). The model's IQ1_S experts run
+  only on Metal, so pi-kami turns away CUDA and ROCm hosts before it downloads
+  anything.
+- **M4 Pro, M5 Pro or M5 Max with 48 GB or more: Flint (experimental).** Choose `rec/flint`
+  and pi-kami runs Recursive's Flint through a pinned rec 0.1.0. A 128 GB Mac
+  can pick it too. Flint is not abliterated or steerable yet, and early reports
+  rate it below Qwen3.8 27B at agentic coding. See [Flint tier (rec)](#flint-tier-rec).
+
+On Linux CUDA or ROCm, or on any other Mac under 128 GB, stay on `v0.6.1`
+(V4 Vision-Exp IQ2 on a 96 GB Mac) or bring your own GGUF and binary (see
+below). The CUDA and
+ROCm build targets below still apply to those runs.
 
 ## Install
 
 ```sh
 pi remove   https://github.com/mitsuhiko/pi-ds4   # if you had the upstream extension
-pi install  https://github.com/audreyt/pi-ds4
+pi install  https://github.com/audreyt/pi-kami
 ```
 
-### What this release serves (tag `v0.7.3`)
+Already installed from `https://github.com/audreyt/pi-ds4`? GitHub redirects
+that URL here, so keep it and run `pi update` as usual. Don't add the pi-kami
+URL as well. pi treats the two URLs as two packages, and the second copy stays
+inactive and prints a warning at startup.
+
+### What this release serves (`v0.8.0`)
 
 | Item | Value |
 |---|---|
-| Package version | **0.7.3** |
+| Package version | **0.8.0** |
 | `SUPPORT_PIN` | `0dff39f` (`audreyt/ds4`: Q8 embedding, compressor and indexer support for Maya-XS) |
 | Preferred GGUF | DeepSeek V4.1 Flash 1017 Maya-XS abliterated from [`audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF`](https://huggingface.co/audreyt/DeepSeek-V4.1-Flash-Abliterated-GGUF) plus the 1017 vision sidecar from [`audreyt/deepseek-v4.1-flash-1017-gguf`](https://huggingface.co/audreyt/deepseek-v4.1-flash-1017-gguf) (selector `maya-xs`, aliases `q1` and `preferred`) |
 | Language revision | `89cba799fcddca88bde8c8cfa8006d28dbf8dc79` |
 | Language SHA-256 | `f414995b3797f77009634fac995f50834e70393771f9423fca984c892503b42a` |
 | Default context | 128 k tokens (`DS4_CONTEXT_KB=128`). The managed vision path fits with 512-row prefill on a 128 GB M5 Max |
-| Guide | **v0.7.3** Maya-XS (~107.35 GiB resident + vision sidecar) |
+| Flint tier | rec `0.1.0` (runtime SHA-256 `09063110dfe9…`), model `flint` (`flint-int4`, about 23 GB), installed on first use of `rec/flint` |
+| Guide | **v0.8.0** Maya-XS (~107.35 GiB resident + vision sidecar), plus the Flint tier |
 
-`pi install https://github.com/audreyt/pi-ds4` installs exactly this tag.
+`pi install https://github.com/audreyt/pi-kami` installs exactly this tag.
 
 ### Fork-specific behaviour (vs mitsuhiko/pi-ds4)
 
@@ -60,7 +77,8 @@ pi install  https://github.com/audreyt/pi-ds4
 |---|---|---|
 | Apple Silicon, 128 GB | Yes, after a wired-limit raise | macOS leaves Metal about 107.5 GiB by default, less than Maya-XS plus vision needs under ds4's 112 GiB budget. Run `sudo sysctl iogpu.wired_limit_mb=114688` (persist via `/etc/sysctl.conf`); the extension checks it before the model download and prints the command. |
 | Apple Silicon, more than 128 GB | Yes | The extension does not check the wired limit here; if ds4 refuses the model at open, raise it the same way. |
-| Apple Silicon, &lt;128 GB | No | Extension refuses: ~107.35 GiB stays resident. Use `v0.6.1`. |
+| Apple Silicon M4 Pro, M5 Pro or M5 Max, 48–96 GB | Yes, Flint tier | Choose `rec/flint`. The DeepSeek tier refuses these Macs: ~107.35 GiB stays resident. |
+| Other Apple Silicon under 128 GB | No | rec needs the chips above and the DeepSeek tier needs 128 GB. Use `v0.6.1` on a 96 GB Mac. |
 | Linux + NVIDIA / AMD | No managed model | ds4 refuses these IQ1_S weights on CUDA and ROCm. Use `v0.6.1`, or bring your own GGUF and binary; the Makefile CUDA/ROCm targets below still apply there. |
 | CPU-only | Opt-in only | `DS4_ALLOW_CPU=1` or `DS4_BACKEND=cpu`. Reference/debug only. |
 
@@ -85,6 +103,47 @@ rm -f ~/.pi/ds4/support/gguf/DeepSeek-V4-Flash-Vision-Exp-Abliterated-IQ2XXS-w2Q
    keep working).
 
 Subsequent launches are idempotent when the pin, build plan, and GGUF already match.
+
+### Flint tier (rec)
+
+**Experimental.** Flint is not abliterated and has no directional steering yet.
+Early [community reports](https://www.reddit.com/r/LocalLLaMA/comments/1xc23iq/recursive_flint_the_qwen38_35b_weve_all_been/) find it weaker than Qwen3.8 27B at agentic
+coding, with invented tool calls and long overthinking. One short read-and-fix
+task through rec worked here. Longer work has not been measured.
+
+Choose `rec/flint` in pi (`/model`, or `pi --model rec/flint`). On the first
+turn pi-kami:
+
+1. Installs rec `0.1.0` with Recursive's installer
+   (`curl -fsSL https://raw.githubusercontent.com/recursive-oss/rec/v0.1.0/install.sh | REC_VERSION=0.1.0 bash`)
+   if `~/.local/bin/rec` is missing. The installer adds `~/.local/bin` to
+   `PATH` in your shell profile. It stops if another `rec` is already on `PATH`.
+2. Reuses a running rec server if there is one. Otherwise it runs `rec pull`
+   (about 23 GB the first time) and starts `rec serve` on `127.0.0.1:11500`.
+3. Checks that the server is the tested runtime (`runtime_sha256` above).
+
+pi asks `rec auth token` for the key on every request. pi-kami strips pi's
+sampling fields so rec uses Flint's tuned defaults, and it sends seed `42` as
+the DeepSeek tier does (`DS4_REPRODUCIBLE` / `DS4_REPRODUCIBLE_SEED`). Two
+identical runs through pi 1.3.0 gave byte-identical output, and seed 7 gave
+something different. rec 0.1.0 still gives tool calls random IDs, so a replayed
+trace differs in those IDs and nowhere else. A pull request,
+[recursive-oss/rec#3](https://github.com/recursive-oss/rec/pull/3), derives them
+from the seed.
+
+When the last pi-kami window quits, pi-kami stops the rec server, but only if it
+started that server. A server you started with `rec launch` or another tool
+keeps running. Leases and the server record live in `~/.pi/kami/rec/`.
+
+Flint here is text only. It has no vision, no directional steering and no
+`ds4-agent`, and it speaks OpenAI chat completions only. Flint is not
+abliterated. pi-kami 0.8 refuses other rec versions and offers `rec/flint` only
+on the chips above. Set `PI_KAMI_REC_UNPINNED=1` to use the rec you have
+installed and let it do its own chip check.
+
+**One engine at a time.** Flint plans its memory as if it had the Mac to
+itself. On a Mac under 192 GB pi-kami won't start it next to a running
+`ds4-server`.
 
 ### Build target selection
 
@@ -256,9 +315,12 @@ deterministic tool-call IDs from seeded requests on audreyt/ds4.
 * `DS4_READY_TIMEOUT_MS` — server ready timeout
 * `DS4_WATCHDOG_SCRIPT` — absolute path to the watchdog; default bundled `ds4-watchdog.sh`
 * `HF_TOKEN` — passed through for HuggingFace downloads
+* `PI_KAMI_REC_UNPINNED` — Flint tier: accept a rec other than `0.1.0` and skip pi-kami's chip check (default off)
 
 ## Known gaps
 
+* **The Flint tier was tested only on a 128 GB M5 Max.** No 48–96 GB Mac was
+  available, and Flint's quality on this guide's tasks has not been measured.
 * **No automated test in this repo** spawns `ds4-server` and exercises
   `/v1/chat/completions` with large tool schemas. Tool-call quality lives in
   `audreyt/ds4` (`test_tool_call_quality`) and live agent runs. The build smoke
@@ -276,6 +338,18 @@ deterministic tool-call IDs from seeded requests on audreyt/ds4.
   under the 112 GiB guard. The managed vision default is 128000.
 
 ## What's new
+
+### v0.8.0 (2026-10-23): pi-kami and an experimental Flint tier
+
+pi-ds4 is now pi-kami, and the old URL keeps working. `rec/flint` (experimental) runs
+Recursive's Flint through a pinned rec 0.1.0 on M4 Pro, M5 Pro and M5 Max Macs
+with 48 GB or more, the Macs the DeepSeek tier turns away. The DeepSeek tier
+keeps the v0.7.3 pin `0dff39f` and its Maya-XS weights. If both the old and the
+new URL are installed, the second copy stays inactive instead of registering
+everything twice.
+
+<details>
+<summary>Earlier releases (0.7.3 and before)</summary>
 
 ### v0.7.3 (Maya-XS)
 
@@ -372,13 +446,15 @@ improvements, disconnect cancel, exact-DSML replay fixes. Opt-in by hand when
 running `ds4-server` yourself: `--ssd-streaming`, MTP/DSpark flags, `--max-queue`,
 distributed / ROCm workflows documented upstream in audreyt/ds4.
 
+</details>
+
 ## Acknowledgements
 
 * **[mitsuhiko/pi-ds4](https://github.com/mitsuhiko/pi-ds4)** — upstream extension;
   lifecycle / watchdog / lease machinery is Armin Ronacher's work.
 * **[antirez/ds4](https://github.com/antirez/ds4)** — DeepSeek V4 / V4.1 Flash engine.
-* **[Unsloth](https://huggingface.co/unsloth/DeepSeek-V4.1-Flash-1017-GGUF)** — the UD-IQ1_S
-  experts and imatrix behind the V4.1 Q1.
+* **[Project Maya](https://huggingface.co/peasantsmith/DeepSeek-V4.1-Flash-1017-Maya-GGUF)**
+  by Peasant Smith — the IQ1_S experts and Q8 tensors in the Maya-XS build.
 * **[kernelpool/ds4](https://github.com/kernelpool/ds4)** and
   **[Ivan Fioravanti](https://github.com/ivanfioravanti/ds4)** — the V4.1 Metal
   decode and prefill work merged into the pinned engine.

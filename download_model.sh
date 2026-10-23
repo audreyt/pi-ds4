@@ -39,7 +39,7 @@ if [ "$QUANT" = "preferred" ] || [ "$QUANT" = "q1" ] || [ "$QUANT" = "ds41f-q1-a
 fi
 
 if [ "$QUANT" != "maya-xs" ]; then
-    echo "audreyt/pi-ds4 automates DeepSeek V4.1 Flash 1017 Maya-XS abliterated (selector: maya-xs; aliases: q1, preferred)." >&2
+    echo "pi-kami automates DeepSeek V4.1 Flash 1017 Maya-XS abliterated (selector: maya-xs; aliases: q1, preferred)." >&2
     echo "The V4 Vision-Exp IQ2 (selector q2) was pi-ds4 v0.6.x. To run another GGUF, start ds4-server manually (see README)." >&2
     echo "Requested quant: $QUANT" >&2
     exit 1

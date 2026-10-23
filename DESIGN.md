@@ -1,4 +1,4 @@
-# pi-ds4 guide: design contract
+# pi-kami guide: design contract
 
 The guide at `index.html` is a letter set on pi.dev's graph paper. This file names the tokens and layout rules the page uses, so later edits stay consistent.
 
@@ -12,7 +12,7 @@ The guide at `index.html` is a letter set on pi.dev's graph paper. This file nam
 | `--ink-2` / `--ink-3` | copy / muted | copy / muted | secondary text, labels |
 | `--rule` / `--rule-2` | hairlines | hairlines | dividers, note edges |
 | `--accent` | `#4b607c` (tidal blue) | `#6a9fcc` | reading thread, focus ring, glossed-term underline, active rail number |
-| `--seal` | `#8f3222` (rust) | `#e8704f` | the sign-off seal and copy confirmations only |
+| `--seal` | `#8f3222` (rust) | `#e8704f` | copy confirmations only |
 | `--term` | `#142433` | `#0d1116` | terminal blocks |
 | `--grid-minor` / `--grid-major` | 4 px / 20 px lines | same, fainter | body background grid |
 
